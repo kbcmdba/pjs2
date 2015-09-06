@@ -33,11 +33,6 @@ function __autoload( $className ) {
              ) :
             $reqFile = 'Libs/Controllers/' . $className . '.php' ;
             break ;
-        case ( preg_match( '/^DaoBase$/', $className )
-            || preg_match( '/Dao(|Interface)$/', $className )
-             ) :
-            $reqFile = 'Libs/Dao/' . $className . '.php' ;
-            break ;
         case ( preg_match( '/Exception$/', $className ) ) :
             $reqFile = 'Libs/Exceptions/' . $className . '.php' ;
             break ;
