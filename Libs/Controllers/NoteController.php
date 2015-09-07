@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS note
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP
-     , note                  TEXT NOT NULL
+     , noteText              TEXT NOT NULL
      , PRIMARY KEY pk_noteId ( noteId )
      , INDEX appliesTo ( appliesToTable, appliesToId, created )
      )

@@ -27,7 +27,6 @@
 // @todo Write ContactView
 // @todo Write JobView
 // @todo Write KeywordView
-// @todo Write NoteModel
 // @todo Write NoteView
 // @todo Write SearchModel
 // @todo Write SearchView
