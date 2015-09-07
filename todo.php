@@ -28,7 +28,4 @@
 // @todo Write JobView
 // @todo Write KeywordView
 // @todo Write NoteView
-// @todo Write SearchModel
 // @todo Write SearchView
-// @todo Write VersionModel
-// @todo Write VersionView

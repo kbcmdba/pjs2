@@ -22,11 +22,11 @@
  */
 
 /**
- * Template Model
+ * _Template Model
  */
-class TemplateModel extends ModelBase {
+class _TemplateModel extends ModelBase {
 
-    // @todo Add TemplateModel specific properties, getters and setters
+    // @todo Add _TemplateModel specific properties, getters and setters
     private $_created ;
     private $_updated ;
 
@@ -41,7 +41,7 @@ class TemplateModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement TemplateModel::validateForAdd()
+     * @todo Implement _TemplateModel::validateForAdd()
      */
     public function validateForAdd() {
         return 0 ;
@@ -51,13 +51,13 @@ class TemplateModel extends ModelBase {
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement TemplateModel::validateForUpdate()
+     * @todo Implement _TemplateModel::validateForUpdate()
      */
     public function validateForUpdate() {
         return 0 ;
     }
 
-    // @todo Implement TemplateModel::populateFromForm()
+    // @todo Implement _TemplateModel::populateFromForm()
     public function populateFromForm() {
         $this->setCreated( Tools::param( 'created' ) ) ;
         $this->setUpdated( Tools::param( 'updated' ) ) ;
