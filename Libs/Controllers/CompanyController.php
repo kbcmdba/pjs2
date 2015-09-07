@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS company
      , companyState          CHAR(2) NOT NULL DEFAULT 'XX'
      , companyZip            INT(5) UNSIGNED NULL DEFAULT NULL
      , companyPhone          INT UNSIGNED NULL DEFAULT NULL
+     , companyUrl            VARCHAR(255) NOT NULL DEFAULT ''
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP

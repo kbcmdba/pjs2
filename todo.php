@@ -23,7 +23,6 @@
 
 // @todo Write ApplicationStatusView
 // @todo Write ApplicationStatusSummaryView
-// @todo Write CompanyModel
 // @todo Write CompanyView
 // @todo Write ContactView
 // @todo Write JobModel
