@@ -46,12 +46,12 @@ CREATE TABLE IF NOT EXISTS job
      , primaryContactId      INT UNSIGNED NULL DEFAULT NULL
      , companyId             INT UNSIGNED NULL DEFAULT NULL
      , applicationStatusId   INT UNSIGNED NOT NULL
-     , lastStatusChange      DATETIME NOT NULL DEFAULT 0
+     , lastStatusChange      TIMESTAMP NOT NULL DEFAULT 0
      , urgency               ENUM( 'high', 'medium', 'low' ) NOT NULL DEFAULT 'low'
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP
-     , nextActionDue         DATETIME NOT NULL DEFAULT 0
+     , nextActionDue         TIMESTAMP NOT NULL DEFAULT 0
      , nextAction            VARCHAR(255) NOT NULL DEFAULT ''
      , positionTitle         VARCHAR(255) NOT NULL DEFAULT ''
      , location              VARCHAR(255) NOT NULL DEFAULT ''

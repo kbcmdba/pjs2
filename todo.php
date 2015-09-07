@@ -25,7 +25,6 @@
 // @todo Write ApplicationStatusSummaryView
 // @todo Write CompanyView
 // @todo Write ContactView
-// @todo Write JobModel
 // @todo Write JobView
 // @todo Write KeywordModel
 // @todo Write KeywordView
