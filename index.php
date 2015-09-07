@@ -2,5 +2,6 @@
 
 require_once 'Libs/autoload.php' ;
 
-$page = new PJSWebPage( 'PHPJobSeeker2' ) ;
+$config = new Config() ;
+$page = new PJSWebPage( $config->getTitle() ) ;
 $page->displayPage() ;

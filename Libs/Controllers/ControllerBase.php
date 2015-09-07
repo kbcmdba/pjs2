@@ -95,4 +95,95 @@ abstract class ControllerBase {
         }
     }
 
+    /**
+     * Drop the underlying table
+     * 
+     * @throws ControllerException
+     */
+    abstract public function dropTable() ;
+
+    /**
+     * Create the underlying table for this structure
+     * 
+     * @throws ControllerException
+     */
+    abstract public function createTable() ;
+
+    /**
+     * Get one model of this object with the id provided
+     *
+     * @param integer $id
+     * @return ModelBase
+     * @throws ControllerException
+     */
+    abstract public function get( $id ) ;
+
+    /**
+     * Get some models of this object using the where clause provided (all by default)
+     * 
+     * @param string $whereClause
+     * @return ModelBase[]
+     * @throws ControllerException
+     */
+    abstract public function getSome( $whereClause = '1 = 1' ) ;
+
+    /**
+     * Get all models of this object
+     * 
+     * @param string $whereClause
+     * @return ModelBase[]
+     * @throws ControllerException
+     */
+    public function getAll() {
+        return $this->getSome( '1 = 1' ) ;
+    }
+
+    /**
+     * Add the given model (may not set model->id)
+     *
+     * @param ModelBase $model
+     * @return integer The ID that was added
+     * @throws ModelException
+     */
+    abstract public function add( $model ) ;
+
+    /**
+     * Update the given model (may not change model->id)
+     *
+     * @param ModelBase $model
+     * @return integer The ID that was updated
+     * @throws ModelException
+     */
+    abstract public function update( $model ) ;
+
+    /**
+     * Delete the specific model given
+     *
+     * @param ModelBase $model
+     * @throws ModelException
+     */
+    abstract public function delete( $model ) ;
+
+    // ///////////////////////////////////////////////////////////////////////
+    // Optional
+    // ///////////////////////////////////////////////////////////////////////
+    
+    /**
+     * Create triggers for this structure
+     *
+     * @throws ControllerException
+     */
+    // public function createTriggers() { return ; }
+    
+    /**
+     * Drop triggers for this structure
+     *
+     * @throws ControllerException
+    */
+    // public function dropTriggers()  { return ; }
+
+    /**
+     * Pre-load the table when appropriate
+     */
+    // public function preLoadData() { return ; }
 }
