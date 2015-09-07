@@ -26,7 +26,6 @@
 // @todo Write CompanyView
 // @todo Write ContactView
 // @todo Write JobView
-// @todo Write KeywordModel
 // @todo Write KeywordView
 // @todo Write NoteModel
 // @todo Write NoteView
