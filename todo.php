@@ -21,9 +21,7 @@
  *
  */
 
-// @todo Write ApplicationStatusModel
 // @todo Write ApplicationStatusView
-// @todo Write ApplicationStatusSummaryModel
 // @todo Write ApplicationStatusSummaryView
 // @todo Write CompanyModel
 // @todo Write CompanyView

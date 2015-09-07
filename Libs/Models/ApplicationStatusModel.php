@@ -22,16 +22,15 @@
  */
 
 /**
- * Contact Model
+ * ApplicationStatus Model
  */
-class ContactModel extends ModelBase {
+class ApplicationStatusModel extends ModelBase {
 
-    private $_contactId ;
-    private $_contactCompanyId ;
-    private $_contactName ;
-    private $_contactEmail ;
-    private $_contactPhone ;
-    private $_contactAlternatePhone ;
+    private $_applicationStatusId ;
+    private $_statusValue ;
+    private $_isActive ;
+    private $_sortKey ;
+    private $_style ;
     private $_created ;
     private $_updated ;
 
@@ -46,7 +45,7 @@ class ContactModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement ContactModel::validateForAdd()
+     * @todo Implement ApplicationStatusModel::validateForAdd()
      */
     public function validateForAdd() {
         return 0 ;
@@ -56,19 +55,18 @@ class ContactModel extends ModelBase {
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement ContactModel::validateForUpdate()
+     * @todo Implement ApplicationStatusModel::validateForUpdate()
      */
     public function validateForUpdate() {
         return 0 ;
     }
 
     public function populateFromForm() {
-        $this->setContactId( Tools::param( 'contactId' ) ) ;
-        $this->setContactCompanyId( Tools::param( 'contactCompanyId' ) ) ;
-        $this->setContactName( Tools::param( 'contactName' ) ) ;
-        $this->setContactEmail( Tools::param( 'contactEmail' ) ) ;
-        $this->setContactPhone( Tools::param( 'contactPhone' ) ) ;
-        $this->setContactAlternatePhone( Tools::param( 'contactAlternatePhone' ) ) ;
+        $this->setApplicationStatusId( Tools::param( 'applicationStatusId' ) ) ;
+        $this->setStatusValue( Tools::param( 'statusValue' ) ) ;
+        $this->setIsActive( Tools::param( 'isActive' ) ) ;
+        $this->setSortKey( Tools::param( 'sortKey' ) ) ;
+        $this->setStyle( Tools::param( 'style' ) ) ;
         $this->setCreated( Tools::param( 'created' ) ) ;
         $this->setUpdated( Tools::param( 'updated' ) ) ;
     }
@@ -76,85 +74,71 @@ class ContactModel extends ModelBase {
     /**
      * @return integer
      */
-    public function getContactId() {
-        return $this->_contactId ;
+    public function getApplicationStatusId() {
+        return $this->_applicationStatusId ;
     }
 
     /**
-     * @param integer $contactId
+     * @param integer $applicationStatusId
      */
-    public function setContactId( $contactId ) {
-        $this->_contactId = $contactId ;
+    public function setApplicationStatusId( $applicationStatusId ) {
+        $this->_applicationStatusId = $applicationStatusId ;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusValue() {
+        return $this->_statusValue ;
+    }
+
+    /**
+     * @param string $statusValue
+     */
+    public function setStatusValue( $statusValue ) {
+        $this->_statusValue = $statusValue ;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsActive() {
+        return $this->_isActive ;
+    }
+
+    /**
+     * @param boolean $isActive
+     */
+    public function setIsActive( $isActive ) {
+        $this->_isActive = $isActive ;
     }
 
     /**
      * @return integer
      */
-    public function getContactCompanyId() {
-        return $this->_contactCompanyId ;
+    public function getSortKey() {
+        return $this->_sortKey ;
     }
 
     /**
-     * @param integer $contactCompanyId
+     * @param integer $sortKey
      */
-    public function setContactCompanyId( $contactCompanyId ) {
-        $this->_contactCompanyId = $contactCompanyId ;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContactName() {
-        return $this->_contactName ;
-    }
-
-    /**
-     * @param string $contactName
-     */
-    public function setContactName( $contactName ) {
-        $this->_contactName = $contactName ;
+    public function setSortKey( $sortKey ) {
+        $this->_sortKey = $sortKey ;
     }
 
     /**
      * @return string
      */
-    public function getContactEmail() {
-        return $this->_contactEmail ;
+    public function getStyle() {
+        return $this->_style ;
     }
 
     /**
-     * @param string $contactEmail
+     * @param string $style
      */
-    public function setContactEmail( $contactEmail ) {
-        $this->_contactEmail = $contactEmail ;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContactPhone() {
-        return $this->_contactPhone ;
-    }
-
-    /**
-     * @param string $contactPhone
-     */
-    public function setContactPhone( $contactPhone ) {
-        $this->_contactPhone = $contactPhone ;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContactAlternatePhone() {
-        return $this->_contactAlternatePhone ;
-    }
-
-    /**
-     * @param string $contactAlternatePhone
-     */
-    public function setContactAlternatePhone( $contactAlternatePhone ) {
-        $this->_contactAlternatePhone = $contactAlternatePhone ;
+    public function setStyle( $style ) {
+        $this->_style = $style ;
     }
 
     /**
