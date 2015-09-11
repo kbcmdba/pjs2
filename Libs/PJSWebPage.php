@@ -117,6 +117,7 @@ HTML;
         $reset = ( $this->_resetOk ) ? "| <a href=\"resetDb.php\">Reset Database</a>" : "" ;
         $html = <<<HTML
 <a href="index.php">Summary</a>
+| <a href="applicationStatuses.php">Application Statuses</a>
 $reset
 $logout
 <p />

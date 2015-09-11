@@ -117,7 +117,47 @@ SQL;
 
     // @todo Implement ApplicationStatusController::getSome( $whereClause ) ;
     public function getSome( $whereClause = '1 = 1' ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT applicationStatusId
+     , statusValue
+     , isActive
+     , sortKey
+     , style
+     , created
+     , updated
+  FROM applicationStatus
+ WHERE $whereClause
+ ORDER
+    BY sortKey
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $applicationStatusId
+                          , $statusValue
+                          , $isActive
+                          , $sortKey
+                          , $style
+                          , $created
+                          , $updated
+                          ) ;
+        $models = array() ;
+        while ( $stmt->fetch() ) {
+            $model = new ApplicationStatusModel() ;
+            $model->setApplicationStatusId( $applicationStatusId ) ;
+            $model->setStatusValue( $statusValue ) ;
+            $model->setIsActive( $isActive ) ;
+            $model->setSortKey( $sortKey ) ;
+            $model->setStyle( $style ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            $models[] = $model ;
+        }
+        return( $models ) ;
     }
 
     // @todo Implement ApplicationStatusController::add( $model ) ;

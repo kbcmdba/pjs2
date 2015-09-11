@@ -43,14 +43,16 @@ class _Template extends ListViewBase {
      * Class constructor
      *
      * @param string View Type
+     * @param _TemplateModel[] $templateModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html' ) {
+    public function __construct( $viewType = 'html', $templateModels ) {
         parent::__construct() ;
         if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
             throw new ViewException( "Unsupported view type\n" ) ;
         }
         $this->_viewType = $viewType ;
+        $this->set_TemplateModels( $templateModels ) ;
     }
 
     /**
