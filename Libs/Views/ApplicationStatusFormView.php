@@ -22,19 +22,19 @@
  */
 
 /**
- * _Template Form View
+ * ApplicationStatus Form View
  *
  * Edit Template to your class description (used for a button)
  */
-class _TemplateFormView extends FormViewBase {
-    /** @var _TemplateModel */
+class ApplicationStatusFormView extends FormViewBase {
+    /** @var ApplicationStatusModel */
     private $_model ;
 
     /**
      * Class constructor
      *
      * @param string Page title and action button
-     * @param _TemplateModel The populated model or null
+     * @param ApplicationStatusModel The populated model or null
      */
     public function __construct( $title = "Add Template", $model = null ) {
         parent::__construct( $title ) ;
@@ -42,7 +42,7 @@ class _TemplateFormView extends FormViewBase {
             $this->_model = $model ;
         }
         else {
-            $this->_model = new _TemplateModel ;
+            $this->_model = new ApplicationStatusModel ;
         }
     }
 
@@ -62,20 +62,35 @@ class _TemplateFormView extends FormViewBase {
         $RO              = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
         $model           = $this->_model ;
         $title           = $this->getTitle() ;
-        // @todo Get variables for view
+        $id              = $applicationStatus->getApplicationStatusId() ;
+        $value           = $applicationStatus->getStatusValue() ;
+        $isActiveChecked = $applicationStatus->getIsActive() ? "checked=\"checked\"" : "" ;
+        $sortKey         = $applicationStatus->getSortKey() ;
+        $style           = htmlspecialchars( $applicationStatus->getStyle() ) ;
         $buttonLabel     = $this->getButtonLabel() ;
-        // @todo Show the form for this view
         $returnValue     = <<<HTML
     <h2>$title</h2>
     <form method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
-          <th>ColumnLabel</th>
-          <td><input type="text" name="someName" value="$someValue" $RO /></td>
+          <th>ID</th>
+          <td><input type="text" name="applicationStatusId" value="$id" readonly="readonly" /></td>
         </tr>
         <tr>
-          <th>DateColumnLabel</th>
-          <td><input type="text" name="someDate" value="$someDate" class="datepicker" $RO/></td>
+          <th>Status Value</th>
+          <td><input type="text" name="statusValue" value="$value" $RO /></td>
+        </tr>
+        <tr>
+          <th>Is Active</th>
+          <td><input type="checkbox" name="isActive" value="1" $isActiveChecked $RO /></td>
+        </tr>
+        <tr>
+          <th>Sort Key</th>
+          <td><input type="text" name="sortKey" value="$sortKey" $RO /></td>
+        </tr>
+        <tr>
+          <th>Style</th>
+          <td><input type="text" name="style" value="$style" $RO /></td>
         </tr>
         <tr>
           <td colspan="2">
