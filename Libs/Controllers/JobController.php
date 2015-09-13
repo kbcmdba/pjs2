@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS job
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      , FOREIGN KEY fk_applicationStatusId ( applicationStatusId )
-        REFERENCES applicationStatus ( applicationStatusId )
+        REFERENCES applicationStatus ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      )
@@ -93,7 +93,7 @@ CREATE TRIGGER jobAfterInsertTrigger
        UPDATE applicationStatusSummary
            AS jss
           SET jss.statusCount = jss.statusCount + 1
-        WHERE jss.applicationStatusId = NEW.applicationStatusId ;
+        WHERE jss.id = NEW.applicationStatusId ;
    END
 SQL;
         $this->_doDDL( $sql ) ;
@@ -108,11 +108,11 @@ CREATE TRIGGER jobAfterUpdateTrigger
             UPDATE applicationStatusSummary
                 AS jss
                SET jss.statusCount = jss.statusCount + 1
-             WHERE jss.applicationStatusId = NEW.applicationStatusId ;
+             WHERE jss.id = NEW.applicationStatusId ;
             UPDATE applicationStatusSummary
                 AS jss
                SET jss.statusCount = jss.statusCount + 1
-             WHERE jss.applicationStatusId = OLD.applicationStatusId ;
+             WHERE jss.id = OLD.applicationStatusId ;
         END IF ;
          IF OLD.jobId <> NEW.jobId
        THEN
@@ -134,7 +134,7 @@ CREATE TRIGGER jobAfterDeleteTrigger
        UPDATE applicationStatusSummary
            AS jss
           SET jss.statusCount = jss.statusCount - 1
-        WHERE jss.applicationStatusId = OLD.applicationStatusId ;
+        WHERE jss.id = OLD.applicationStatusId ;
 
        DELETE
          FROM note

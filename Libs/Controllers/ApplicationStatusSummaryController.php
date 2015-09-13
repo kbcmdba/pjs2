@@ -42,14 +42,14 @@ class ApplicationStatusSummaryController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE applicationStatusSummary
      (
-       applicationStatusId INT UNSIGNED NOT NULL COMMENT 'No auto_increment: foreign key'
-     , statusCount         INT UNSIGNED NOT NULL DEFAULT 0
-     , created             TIMESTAMP NOT NULL DEFAULT 0
-     , updated             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                           ON UPDATE CURRENT_TIMESTAMP
-     , PRIMARY KEY pk_applicationStatusId ( applicationStatusId )
-     , FOREIGN KEY fk_applicationStatusId ( applicationStatusId )
-        REFERENCES applicationStatus ( applicationStatusId )
+       id          INT UNSIGNED NOT NULL COMMENT 'No auto_increment: foreign key'
+     , statusCount INT UNSIGNED NOT NULL DEFAULT 0
+     , created     TIMESTAMP NOT NULL DEFAULT 0
+     , updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                   ON UPDATE CURRENT_TIMESTAMP
+     , PRIMARY KEY pk_applicationStatusId ( id )
+     , FOREIGN KEY fk_applicationStatusId ( id )
+        REFERENCES applicationStatus ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      )

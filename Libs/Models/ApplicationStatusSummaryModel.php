@@ -26,7 +26,7 @@
  */
 class ApplicationStatusSummaryModel extends ModelBase {
 
-    private $_applicationStatusId ;
+    private $_id ;
     private $_statusCount ;
     private $_created ;
     private $_updated ;
@@ -59,7 +59,7 @@ class ApplicationStatusSummaryModel extends ModelBase {
     }
 
     public function populateFromForm() {
-        $this->setApplicationStatusId( Tools::param( 'applicationStatusId' ) ) ;
+        $this->setId( Tools::param( 'id' ) ) ;
         $this->setStatusCount( Tools::param( 'statusCount' ) ) ;
         $this->setCreated( Tools::param( 'created' ) ) ;
         $this->setUpdated( Tools::param( 'updated' ) ) ;
@@ -68,15 +68,15 @@ class ApplicationStatusSummaryModel extends ModelBase {
     /**
      * @return integer
      */
-    public function getApplicationStatusId() {
-        return $this->_applicationStatusId ;
+    public function getId() {
+        return $this->_id ;
     }
 
     /**
-     * @param integer $applicationStatusId
+     * @param integer $id
      */
-    public function setApplicationStatusId( $applicationStatusId ) {
-        $this->_applicationStatusId = $applicationStatusId ;
+    public function setId( $id ) {
+        $this->_id = $id ;
     }
 
     /**

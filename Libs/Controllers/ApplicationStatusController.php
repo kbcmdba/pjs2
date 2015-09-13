@@ -42,15 +42,15 @@ class ApplicationStatusController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS applicationStatus
      (
-       applicationStatusId   INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , statusValue           VARCHAR(50) NOT NULL
-     , isActive              BOOLEAN NOT NULL DEFAULT 1
-     , sortKey               SMALLINT(3) UNSIGNED NOT NULL DEFAULT 100
-     , style                 VARCHAR(4096) NOT NULL DEFAULT ''
-     , created               TIMESTAMP NOT NULL DEFAULT 0
-     , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                             ON UPDATE CURRENT_TIMESTAMP
-     , PRIMARY KEY pk_applicationStatusId ( applicationStatusId )
+       id          INT UNSIGNED NOT NULL AUTO_INCREMENT
+     , statusValue VARCHAR(50) NOT NULL
+     , isActive    BOOLEAN NOT NULL DEFAULT 1
+     , sortKey     SMALLINT(3) UNSIGNED NOT NULL DEFAULT 100
+     , style       VARCHAR(4096) NOT NULL DEFAULT ''
+     , created     TIMESTAMP NOT NULL DEFAULT 0
+     , updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                   ON UPDATE CURRENT_TIMESTAMP
+     , PRIMARY KEY pk_applicationStatusId ( id )
      )
 SQL;
         $this->_doDDL( $sql ) ;
@@ -69,13 +69,13 @@ CREATE TRIGGER applicationStatusAfterInsertTrigger
    FOR EACH ROW
  BEGIN
        INSERT applicationStatusSummary
-            ( applicationStatusId
+            ( id
             , statusCount
             , created
             , updated
             )
        VALUES
-            ( NEW.applicationStatusId
+            ( NEW.id
             , 0
             , NOW()
             , NOW()
@@ -88,7 +88,7 @@ SQL;
     public function preLoadData() {
         $sql = <<<SQL
 INSERT applicationStatus
-     ( applicationStatusId
+     ( id
      , isActive
      , statusValue
      , sortKey
@@ -110,15 +110,55 @@ SQL;
         $this->_doDDL( $sql ) ;
     }
 
-    // @todo Implement ApplicationStatusController::get( $id ) ;
     public function get( $id ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , statusValue
+     , isActive
+     , sortKey
+     , style
+     , created
+     , updated
+  FROM applicationStatus
+ WHERE id = ?
+ ORDER
+    BY sortKey
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_param( 'i', $id ) ;
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $id
+                          , $statusValue
+                          , $isActive
+                          , $sortKey
+                          , $style
+                          , $created
+                          , $updated
+                          ) ;
+        $model = new ApplicationStatusModel() ;
+        if ( $stmt->fetch() ) {
+            $model->setId( $id ) ;
+            $model->setStatusValue( $statusValue ) ;
+            $model->setIsActive( $isActive ) ;
+            $model->setSortKey( $sortKey ) ;
+            $model->setStyle( $style ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            return( $model ) ;
+        }
+        else {
+            return( null ) ;
+        }
     }
 
-    // @todo Implement ApplicationStatusController::getSome( $whereClause ) ;
     public function getSome( $whereClause = '1 = 1' ) {
         $sql = <<<SQL
-SELECT applicationStatusId
+SELECT id
      , statusValue
      , isActive
      , sortKey
@@ -137,7 +177,7 @@ SQL;
         if ( ! $stmt->execute() ) {
             throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
         }
-        $stmt->bind_result( $applicationStatusId
+        $stmt->bind_result( $id
                           , $statusValue
                           , $isActive
                           , $sortKey
@@ -148,7 +188,7 @@ SQL;
         $models = array() ;
         while ( $stmt->fetch() ) {
             $model = new ApplicationStatusModel() ;
-            $model->setApplicationStatusId( $applicationStatusId ) ;
+            $model->setId( $id ) ;
             $model->setStatusValue( $statusValue ) ;
             $model->setIsActive( $isActive ) ;
             $model->setSortKey( $sortKey ) ;
@@ -160,19 +200,133 @@ SQL;
         return( $models ) ;
     }
 
-    // @todo Implement ApplicationStatusController::add( $model ) ;
+    /**
+     * Update an application status model
+     *
+     * @param ApplicationStatusModel $model
+     * @see ControllerBase::update()
+     */
     public function add( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+            if ( $model->validateForAdd() ) {
+            try {
+                $query = <<<SQL
+INSERT applicationStatus
+     ( id
+     , statusValue
+     , isActive
+     , sortKey
+     , style
+     , created
+     , updated
+     )
+VALUES ( ?, ?, ?, ?, ?, NOW(), NOW() )
+SQL;
+                $id          = $model->getId() ;
+                $statusValue = $model->getStatusValue() ;
+                $isActive    = $model->getIsActive() ;
+                $sortKey     = $model->getSortKey() ;
+                $style       = $model->getStyle() ;
+                $stmt = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'isiis'
+                                          , $id
+                                          , $statusValue
+                                          , $isActive
+                                          , $sortKey
+                                          , $style
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( ! $stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                $newId = $stmt->insert_id ;
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( ! $stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $newId ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
-
-    // @todo Implement ApplicationStatusController::update( $model ) ;
+    
+    /**
+     * Update an application status model
+     *
+     * @param ApplicationStatusModel $model
+     * @see ControllerBase::update()
+     */
     public function update( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+            if ( $model->validateForUpdate() ) {
+            try {
+                $query = <<<SQL
+UPDATE applicationStatus
+   SET statusValue = ?
+     , isActive = ?
+     , sortKey = ?
+     , style = ?
+ WHERE id = ?
+SQL;
+                $id          = $model->getId() ;
+                $statusValue = $model->getStatusValue() ;
+                $isActive    = $model->getIsActive() ;
+                $sortKey     = $model->getSortKey() ;
+                $style       = $model->getStyle() ;
+                $stmt = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'siisi'
+                                          , $statusValue
+                                          , $isActive
+                                          , $sortKey
+                                          , $style
+                                          , $id
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( !$stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( !$stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $id ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement ApplicationStatusController::delete( $model ) ;
-    public function delete( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+    /**
+     * Delete an application status
+     *
+     * @param ExpenseModel $applicationStatusModel
+     * @throws ControllerException
+     */
+    public function delete( $applicationStatusModel ) {
+        $this->_deleteModelById( "DELETE FROM applicationStatus WHERE id = ?", $applicationStatusModel ) ;
     }
     
 }

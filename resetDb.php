@@ -81,7 +81,7 @@ try {
             $controller->preLoadData() ;
         }
     }
-    $body .= "</ul>\n" ;
+    $body .= "</ul>\nDone." ;
 }
 catch ( Exception $e ) {
     $body .= "</ul>\n<p />Uncaught exception: " . $e->getMessage() . "\n" ;

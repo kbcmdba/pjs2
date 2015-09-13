@@ -22,7 +22,7 @@ if ( "Edit Application Status" === $act ) {
 }
 else {
     $asc = new ApplicationStatusController() ;
-    $asm = $asc->get( Tools::param( 'applicationStatusId' ) ) ;
+    $asm = $asc->get( Tools::param( 'id' ) ) ;
     $view = new ApplicationStatusFormView( 'Edit Application Status', $asm ) ;
     $body = $view->getForm() ;
 }

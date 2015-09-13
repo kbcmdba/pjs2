@@ -62,7 +62,8 @@ class ApplicationStatusFormView extends FormViewBase {
         $RO              = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
         $model           = $this->_model ;
         $title           = $this->getTitle() ;
-        $id              = $applicationStatus->getApplicationStatusId() ;
+        $applicationStatus = $this->_model ;
+        $id              = $applicationStatus->getId() ;
         $value           = $applicationStatus->getStatusValue() ;
         $isActiveChecked = $applicationStatus->getIsActive() ? "checked=\"checked\"" : "" ;
         $sortKey         = $applicationStatus->getSortKey() ;
@@ -74,7 +75,7 @@ class ApplicationStatusFormView extends FormViewBase {
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
           <th>ID</th>
-          <td><input type="text" name="applicationStatusId" value="$id" readonly="readonly" /></td>
+          <td><input type="text" name="id" value="$id" readonly="readonly" /></td>
         </tr>
         <tr>
           <th>Status Value</th>

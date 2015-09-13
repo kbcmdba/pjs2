@@ -61,7 +61,7 @@ class ApplicationStatusListView extends ListViewBase {
   <tr><th>Actions</th><th>Value</th><th>Is Active</th><th>Sort Key</th></tr>
 HTML;
         foreach ( $this->_applicationStatusModels as $applicationStatus ) {
-            $id       = $applicationStatus->getApplicationStatusId() ;
+            $id       = $applicationStatus->getId() ;
             $value    = $applicationStatus->getStatusValue() ;
             $isActive = $applicationStatus->getIsActive() ? "Yes" : "No" ;
             $sortKey  = $applicationStatus->getSortKey() ;
@@ -69,8 +69,8 @@ HTML;
             $body .= <<<HTML
   <tr>
     <td>
-        <a href="editApplicationStatus.php?applicationStatusId=$id">Edit</a>
-        <a href="deleteApplicationStatus.php?applicationStatusId=$id">Delete</a>
+        <a href="editApplicationStatus.php?id=$id">Edit</a>
+        <a href="deleteApplicationStatus.php?id=$id">Delete</a>
     </td>
     <td style="$style">$value</td>
     <td>$isActive</td>

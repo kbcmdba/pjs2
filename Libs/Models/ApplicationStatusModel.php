@@ -26,7 +26,7 @@
  */
 class ApplicationStatusModel extends ModelBase {
 
-    private $_applicationStatusId ;
+    private $_id ;
     private $_statusValue ;
     private $_isActive ;
     private $_sortKey ;
@@ -45,24 +45,28 @@ class ApplicationStatusModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement ApplicationStatusModel::validateForAdd()
      */
     public function validateForAdd() {
-        return 0 ;
+        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'statusValue' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'sortKey' ) ) )
+                ) ;
     }
 
     /**
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement ApplicationStatusModel::validateForUpdate()
      */
     public function validateForUpdate() {
-        return 0 ;
+        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'statusValue' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'sortKey' ) ) )
+                ) ;
     }
 
     public function populateFromForm() {
-        $this->setApplicationStatusId( Tools::param( 'applicationStatusId' ) ) ;
+        $this->setId( Tools::param( 'id' ) ) ;
         $this->setStatusValue( Tools::param( 'statusValue' ) ) ;
         $this->setIsActive( Tools::param( 'isActive' ) ) ;
         $this->setSortKey( Tools::param( 'sortKey' ) ) ;
@@ -74,15 +78,15 @@ class ApplicationStatusModel extends ModelBase {
     /**
      * @return integer
      */
-    public function getApplicationStatusId() {
-        return $this->_applicationStatusId ;
+    public function getId() {
+        return $this->_id;
     }
 
     /**
-     * @param integer $applicationStatusId
+     * @param integer $id
      */
-    public function setApplicationStatusId( $applicationStatusId ) {
-        $this->_applicationStatusId = $applicationStatusId ;
+    public function setId( $id ) {
+        $this->_id = $id ;
     }
 
     /**
