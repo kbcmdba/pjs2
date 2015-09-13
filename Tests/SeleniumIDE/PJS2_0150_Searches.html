@@ -1,0 +1,722 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost/pjs2/" />
+<title>PJS2_0150_Searches</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">PJS2_0150_Searches</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/pjs2/searches.php</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Add new search</td>
+	<td>Add new search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=caption</td>
+	<td>Current Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>Actions</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[2]</td>
+	<td>Engine</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[3]</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[4]</td>
+	<td>Link</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Add new search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Add Search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>ID</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/th</td>
+	<td>Engine Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/th</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[4]/th</td>
+	<td>URL</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=id</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=engineName</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=searchName</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=url</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=engineName</td>
+	<td>Test Engine 1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=searchName</td>
+	<td>Test Search 1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=url</td>
+	<td>http://www.testme.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=act</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Added search # 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Searches</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Add new search</td>
+	<td>Add new search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=caption</td>
+	<td>Current Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>Actions</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[2]</td>
+	<td>Engine</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[3]</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[4]</td>
+	<td>Link</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=td</td>
+	<td>Edit | Delete</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[2]</td>
+	<td>Test Engine 1</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[3]</td>
+	<td>Test Search 1</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[4]</td>
+	<td>http://www.testme.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Add new search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Add Search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>ID</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/th</td>
+	<td>Engine Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/th</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[4]/th</td>
+	<td>URL</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=id</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=engineName</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=searchName</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=url</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=engineName</td>
+	<td>Test Engine 2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=searchName</td>
+	<td>Test Search 2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=url</td>
+	<td>http://www.testme2.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=act</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Added search # 2</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Searches</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Add new search</td>
+	<td>Add new search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=caption</td>
+	<td>Current Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>Actions</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[2]</td>
+	<td>Engine</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[3]</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[4]</td>
+	<td>Link</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=td</td>
+	<td>Edit | Delete</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[2]</td>
+	<td>Test Engine 1</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[3]</td>
+	<td>Test Search 1</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[4]</td>
+	<td>http://www.testme.com/</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td</td>
+	<td>Edit | Delete</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[2]</td>
+	<td>Test Engine 2</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[3]</td>
+	<td>Test Search 2</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[4]</td>
+	<td>http://www.testme2.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Edit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Edit Search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>ID</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/th</td>
+	<td>Engine Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/th</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[4]/th</td>
+	<td>URL</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=id</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=engineName</td>
+	<td>Test Engine 1</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=searchName</td>
+	<td>Test Search 1</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=url</td>
+	<td>http://www.testme.com/</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=engineName</td>
+	<td>Test Engine 3</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=searchName</td>
+	<td>Test Search 3</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=url</td>
+	<td>http://www.testme3.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=act</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Edited search: Test Search 3 as # 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Searches</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Add new search</td>
+	<td>Add new search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=caption</td>
+	<td>Current Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>Actions</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[2]</td>
+	<td>Engine</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[3]</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[4]</td>
+	<td>Link</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=td</td>
+	<td>Edit | Delete</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[2]</td>
+	<td>Test Engine 2</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[3]</td>
+	<td>Test Search 2</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[4]</td>
+	<td>http://www.testme2.com/</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td</td>
+	<td>Edit | Delete</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[2]</td>
+	<td>Test Engine 3</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[3]</td>
+	<td>Test Search 3</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/td[4]</td>
+	<td>http://www.testme3.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>xpath=(//a[contains(text(),'Delete')])[2]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Delete Search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>ID</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/th</td>
+	<td>Engine Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/th</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[4]/th</td>
+	<td>URL</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=id</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=engineName</td>
+	<td>Test Engine 3</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=searchName</td>
+	<td>Test Search 3</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=url</td>
+	<td>http://www.testme3.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=act</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Deleted search # 1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Searches</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Add new search</td>
+	<td>Add new search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=caption</td>
+	<td>Current Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>Actions</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[2]</td>
+	<td>Engine</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[3]</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[4]</td>
+	<td>Link</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=td</td>
+	<td>Edit | Delete</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[2]</td>
+	<td>Test Engine 2</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[3]</td>
+	<td>Test Search 2</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//td[4]</td>
+	<td>http://www.testme2.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Delete</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Delete Search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>ID</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/th</td>
+	<td>Engine Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/th</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[4]/th</td>
+	<td>URL</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=id</td>
+	<td>2</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=engineName</td>
+	<td>Test Engine 2</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=searchName</td>
+	<td>Test Search 2</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=url</td>
+	<td>http://www.testme2.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=act</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Deleted search # 2</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Searches</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>link=Add new search</td>
+	<td>Add new search</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=caption</td>
+	<td>Current Searches</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>Actions</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[2]</td>
+	<td>Engine</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[3]</td>
+	<td>Search Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//th[4]</td>
+	<td>Link</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

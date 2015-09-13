@@ -59,17 +59,17 @@ class ApplicationStatusFormView extends FormViewBase {
      * @return string
      */
     public function getForm( $readOnly = 'readwrite' ) {
-        $RO              = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
-        $model           = $this->_model ;
-        $title           = $this->getTitle() ;
+        $RO                = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
+        $model             = $this->_model ;
+        $title             = $this->getTitle() ;
         $applicationStatus = $this->_model ;
-        $id              = $applicationStatus->getId() ;
-        $value           = $applicationStatus->getStatusValue() ;
-        $isActiveChecked = $applicationStatus->getIsActive() ? "checked=\"checked\"" : "" ;
-        $sortKey         = $applicationStatus->getSortKey() ;
-        $style           = htmlspecialchars( $applicationStatus->getStyle() ) ;
-        $buttonLabel     = $this->getButtonLabel() ;
-        $returnValue     = <<<HTML
+        $id                = $applicationStatus->getId() ;
+        $value             = htmlspecialchars( $applicationStatus->getStatusValue() ) ;
+        $isActiveChecked   = $applicationStatus->getIsActive() ? "checked=\"checked\"" : "" ;
+        $sortKey           = $applicationStatus->getSortKey() ;
+        $style             = htmlspecialchars( $applicationStatus->getStyle() ) ;
+        $buttonLabel       = $this->getButtonLabel() ;
+        $returnValue       = <<<HTML
     <h2>$title</h2>
     <form method="GET">
       <table border="1" cellspacing="1" cellpadding="2">

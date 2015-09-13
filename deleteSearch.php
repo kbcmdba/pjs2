@@ -24,28 +24,26 @@
 require_once "Libs/autoload.php" ;
 
 $config = new Config() ;
-$webPage = new PJSWebPage( $config->getTitle() . "Application Statuses - Add Application Status" ) ;
-$body = '' ;
+$webPage = new PJSWebPage( $config->getTitle() . ' - Delete Search') ;
 $act = Tools::Param( 'act' ) ;
-if ( "Add Application Status" === $act ) {
-    $model = new ApplicationStatusModel() ;
-    $model->populateFromForm() ;
-    if ( ! $model->validateForAdd() ) {
-        $view = new ApplicationStatusFormView( 'Add Application Status', $model ) ;
-        $body = "<h2>Invalid data</h2>\n" . $view->getForm() ;
+if ( "Delete Search" === $act ) {
+    $searchModel = new SearchModel() ;
+    $searchModel->populateFromForm() ;
+    if ( ! $searchModel->validateForDelete() ) {
+        $searchView = new SearchFormView( 'Delete Search', $searchModel ) ;
+        $body = "<h2>Invalid data</h2>\n" . $searchView->getForm() ;
     }
     else {
-        $applicationStatusController = new ApplicationStatusController() ;
-        $newId = $applicationStatusController->add( $model ) ;
-        if ( $newId > 0 ) {
-            $body = "Added application status # " . $newId . "<br />\n";
-        }
+        $searchController = new SearchController() ;
+        $searchController->delete( $searchModel ) ;
+        $body = "Deleted search # " . $searchModel->getId() . "<br />\n";
     }
 }
 else {
-    $body = "" ;
-    $view = new ApplicationStatusFormView( "Add Application Status", null ) ;
-    $body = $view->getForm() ;
+    $searchController = new SearchController() ;
+    $searchModel = $searchController->get( Tools::param( 'id' ) ) ;
+    $searchView = new SearchFormView( 'Delete Search', $searchModel ) ;
+    $body = $searchView->getForm() ;
 }
 $webPage->setBody( $body ) ;
 $webPage->displayPage() ;

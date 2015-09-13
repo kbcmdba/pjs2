@@ -30,7 +30,7 @@
  * Verify all template values for labels
  */
 
-class _Template extends ListViewBase {
+class _TemplateListView extends ListViewBase {
 
     /** @var string */
     private $_viewType ;
@@ -69,14 +69,11 @@ class _Template extends ListViewBase {
 HTML;
         foreach ( $this->_templateModels as $template ) {
             $id = $template->getId() ;
-            $name = $template->get_TemplateName() ;
-            $primaryPhone = $template->getPrimaryPhone() ;
-            $backupPhone = $template->getBackupPhone() ;
             $body .= <<<HTML
   <tr>
     <td>
         <a href="edit_Template.php?templateId=$id">Edit</a>
-        <a href="delete_Template.php?templateId=$id">Delete</a>
+      | <a href="delete_Template.php?templateId=$id">Delete</a>
     </td>
     <td>$blah</td>
     <td>$blah</td>

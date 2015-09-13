@@ -58,7 +58,7 @@ function __autoload( $className ) {
             break ;
     } // END OF switch ( true )
     if ( ! is_file( $reqFile ) ) {
-        echo 'Class file ' . $reqFile . 'does not exist.' ;
+        echo 'Class file ' . $reqFile . ' does not exist.' ;
         exit(1) ;
     }
     try {

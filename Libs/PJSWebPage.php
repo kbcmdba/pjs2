@@ -119,6 +119,7 @@ HTML;
 <a href="index.php">Summary</a>
 | <a href="applicationStatuses.php">Application Statuses</a>
 | <a href="companies.php">Companies</a>
+| <a href="contacts.php">Contacts</a>
 | <a href="jobs.php">Jobs</a>
 | <a href="keywords.php">Keywords</a>
 | <a href="searches.php">Searches</a>

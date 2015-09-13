@@ -42,14 +42,14 @@ class SearchController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS search
      (
-       searchId              INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , engineName            VARCHAR(255) NOT NULL DEFAULT ''
-     , searchName            VARCHAR(255) NOT NULL DEFAULT ''
-     , url                   VARCHAR(4096) NOT NULL DEFAULT ''
-     , created               TIMESTAMP NOT NULL DEFAULT 0
-     , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                             ON UPDATE CURRENT_TIMESTAMP
-     , PRIMARY KEY pk_searchId ( searchId )
+       id         INT UNSIGNED NOT NULL AUTO_INCREMENT
+     , engineName VARCHAR(255) NOT NULL DEFAULT ''
+     , searchName VARCHAR(255) NOT NULL DEFAULT ''
+     , url        VARCHAR(4096) NOT NULL DEFAULT ''
+     , created    TIMESTAMP NOT NULL DEFAULT 0
+     , updated    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                  ON UPDATE CURRENT_TIMESTAMP
+     , PRIMARY KEY pk_searchId ( id )
      )
 SQL;
         $this->_doDDL( $sql ) ;
@@ -72,7 +72,7 @@ CREATE TRIGGER searchAfterDeleteTrigger
        DELETE
          FROM note
         WHERE appliesToTable = 'search'
-          AND appliesToId = OLD.searchId ;
+          AND appliesToId = OLD.id ;
    END
 SQL;
         $this->_doDDL( $sql ) ;
@@ -82,11 +82,11 @@ CREATE TRIGGER searchAfterUpdateTrigger
     ON search
    FOR EACH ROW
  BEGIN
-         IF OLD.searchId <> NEW.searchId
+         IF OLD.id <> NEW.id
        THEN
             UPDATE note
-               SET note.appliesToId = NEW.searchId
-             WHERE note.appliesToId = OLD.searchId
+               SET note.appliesToId = NEW.id
+             WHERE note.appliesToId = OLD.id
                AND note.appliestoTable = 'search'
                  ;
         END IF ;
@@ -95,29 +95,199 @@ SQL;
         $this->_doDDL( $sql ) ;
     }
 
-    // @todo Implement SearchController::get( $id )
     public function get( $id ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , engineName
+     , searchName
+     , url
+     , created
+     , updated
+  FROM search
+ WHERE id = ?
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $id
+                          , $engineName
+                          , $searchName
+                          , $url
+                          , $created
+                          , $updated
+                          ) ;
+        if ( $stmt->fetch() ) {
+            $model = new SearchModel() ;
+            $model->setId( $id ) ;
+            $model->setEngineName( $engineName ) ;
+            $model->setSearchName( $searchName ) ;
+            $model->setUrl( $url ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+        }
+        else {
+            $model = null ;
+        }
+        return( $model ) ;
     }
 
-    // @todo Implement SearchController::getSome( $whereClause )
     public function getSome( $whereClause = '1 = 1') {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , engineName
+     , searchName
+     , url
+     , created
+     , updated
+  FROM search
+ WHERE $whereClause
+ ORDER
+    BY searchName
+     , engineName
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $id
+                          , $engineName
+                          , $searchName
+                          , $url
+                          , $created
+                          , $updated
+                          ) ;
+        $models = array() ;
+        while ( $stmt->fetch() ) {
+            $model = new SearchModel() ;
+            $model->setId( $id ) ;
+            $model->setEngineName( $engineName ) ;
+            $model->setSearchName( $searchName ) ;
+            $model->setUrl( $url ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            $models[] = $model ;
+        }
+        return( $models ) ;
     }
 
-    // @todo Implement SearchController::add( $model ) ;
+    /**
+     * @param SearchModel $model
+     * @see ControllerBase::add()
+     */
     public function add( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForAdd() ) {
+            try {
+                $query = <<<SQL
+INSERT search
+     ( id
+     , engineName
+     , searchName
+     , url
+     , created
+     , updated
+     )
+VALUES ( ?, ?, ?, ?, NOW(), NOW() )
+SQL;
+                $id         = $model->getId() ;
+                $engineName = $model->getEngineName() ;
+                $searchName = $model->getSearchName() ;
+                $url        = $model->getUrl() ;
+                $stmt = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'isss'
+                                          , $id
+                                          , $engineName
+                                          , $searchName
+                                          , $url
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( ! $stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                $newId = $stmt->insert_id ;
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( ! $stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $newId ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement SearchController::update( $model ) ;
+    /**
+     * @param SearchModel $model
+     * @see ControllerBase::update()
+     */
     public function update( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForUpdate() ) {
+            try {
+                $query = <<<SQL
+UPDATE search
+   SET engineName = ?
+     , searchName = ?
+     , url = ?
+ WHERE id = ?
+SQL;
+                $id         = $model->getId() ;
+                $engineName = $model->getEngineName() ;
+                $searchName = $model->getSearchName() ;
+                $url        = $model->getUrl() ;
+                $stmt = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'sssi'
+                                          , $engineName
+                                          , $searchName
+                                          , $url
+                                          , $id
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( !$stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                            . $this->_dbh->error .
+                            ')' ) ;
+                }
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( !$stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $id ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement SearchController::delete( $model ) ;
-    public function delete( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+    public function delete( $searchModel ) {
+        $this->_deleteModelById( "DELETE FROM search WHERE id = ?", $searchModel ) ;
     }
 
 }

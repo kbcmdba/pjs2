@@ -32,5 +32,3 @@
 // @todo Write KeywordListView
 // @todo Write NoteFormView
 // @todo Write NoteListView
-// @todo Write SearchFormView
-// @todo Write SearchListView

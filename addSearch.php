@@ -24,27 +24,27 @@
 require_once "Libs/autoload.php" ;
 
 $config = new Config() ;
-$webPage = new PJSWebPage( $config->getTitle() . "Application Statuses - Add Application Status" ) ;
+$webPage = new PJSWebPage( $config->getTitle() . "Searches - Add Search" ) ;
 $body = '' ;
 $act = Tools::Param( 'act' ) ;
-if ( "Add Application Status" === $act ) {
-    $model = new ApplicationStatusModel() ;
+if ( "Add Search" === $act ) {
+    $model = new SearchModel() ;
     $model->populateFromForm() ;
     if ( ! $model->validateForAdd() ) {
-        $view = new ApplicationStatusFormView( 'Add Application Status', $model ) ;
+        $view = new SearchFormView( 'Add Search', $model ) ;
         $body = "<h2>Invalid data</h2>\n" . $view->getForm() ;
     }
     else {
-        $applicationStatusController = new ApplicationStatusController() ;
-        $newId = $applicationStatusController->add( $model ) ;
+        $searchController = new SearchController() ;
+        $newId = $searchController->add( $model ) ;
         if ( $newId > 0 ) {
-            $body = "Added application status # " . $newId . "<br />\n";
+            $body = "Added search # " . $newId . "<br />\n";
         }
     }
 }
 else {
     $body = "" ;
-    $view = new ApplicationStatusFormView( "Add Application Status", null ) ;
+    $view = new SearchFormView( "Add Search", null ) ;
     $body = $view->getForm() ;
 }
 $webPage->setBody( $body ) ;

@@ -26,7 +26,7 @@
  */
 class SearchModel extends ModelBase {
 
-    private $_searchId ;
+    private $_id ;
     private $_engineName ;
     private $_searchName ;
     private $_url ;
@@ -44,24 +44,30 @@ class SearchModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement SearchModel::validateForAdd()
      */
     public function validateForAdd() {
-        return 0 ;
+        return  (   Tools::isNullOrEmptyString( Tools::param( 'id' ) )
+               && ! Tools::isNullOrEmptyString( Tools::param( 'engineName' ) )
+               && ! Tools::isNullOrEmptyString( Tools::param( 'searchName' ) )
+               && ! Tools::isNullOrEmptyString( Tools::param( 'url' ) )
+                ) ;
     }
 
     /**
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement SearchModel::validateForUpdate()
      */
     public function validateForUpdate() {
-        return 0 ;
+        return  ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) )
+               && ! Tools::isNullOrEmptyString( Tools::param( 'engineName' ) )
+               && ! Tools::isNullOrEmptyString( Tools::param( 'searchName' ) )
+               && ! Tools::isNullOrEmptyString( Tools::param( 'url' ) )
+                ) ;
     }
 
     public function populateFromForm() {
-        $this->setSearchId( Tools::param( 'searchId' ) ) ;
+        $this->setId( Tools::param( 'id' ) ) ;
         $this->setEngineName( Tools::param( 'engineName' ) ) ;
         $this->setSearchName( Tools::param( 'searchName' ) ) ;
         $this->setUrl( Tools::param( 'url' ) ) ;
@@ -72,15 +78,15 @@ class SearchModel extends ModelBase {
     /**
      * @return integer
      */
-    public function getSearchId() {
-        return $this->_searchId ;
+    public function getId() {
+        return $this->_id ;
     }
 
     /**
-     * @param integer $searchId
+     * @param integer $id
      */
-    public function setSearchId( $searchId ) {
-        $this->_searchId = $searchId ;
+    public function setId( $id ) {
+        $this->_id = $id ;
     }
 
     /**

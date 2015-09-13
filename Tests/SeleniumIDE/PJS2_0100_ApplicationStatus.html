@@ -831,7 +831,101 @@
 	<td>//tr[8]/td[4]</td>
 	<td>900</td>
 </tr>
-
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Add new application status</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Add Application Status</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>ID</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/th</td>
+	<td>Status Value</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/th</td>
+	<td>Is Active</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[4]/th</td>
+	<td>Sort Key</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[5]/th</td>
+	<td>Style</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=id</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=statusValue</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotChecked</td>
+	<td>name=isActive</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=sortKey</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=style</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=statusValue</td>
+	<td>FOUND</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>name=isActive</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=sortKey</td>
+	<td>10</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=style</td>
+	<td>background-color: lightgreen;</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=act</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Added application status # 13</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Application Statuses</td>
+	<td></td>
+</tr>
 </tbody></table>
 </body>
 </html>

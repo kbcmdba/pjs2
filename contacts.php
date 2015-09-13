@@ -24,11 +24,7 @@
 require_once 'Libs/autoload.php' ;
 
 $config = new Config() ;
-$page = new PJSWebPage( $config->getTitle() . " - Searches" ) ;
-$body = "<h2>Searches</h2>\n" ;
-$searchController = new SearchController( 'read' ) ;
-$searchModelList = $searchController->getAll() ;
-$searchListView = new SearchListView( 'html', $searchModelList ) ;
-$body .= $searchListView->getView() ;
+$page = new PJSWebPage( $config->getTitle() . " - Contacts" ) ;
+$body = "<h2>Contacts</h2>\n<div>Not yet written.<div>" ;
 $page->setBody( $body ) ;
 $page->displayPage() ;

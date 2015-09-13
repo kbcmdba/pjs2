@@ -22,30 +22,32 @@
  */
 
 /**
- * Application Status List View
+ * Search List View
  */
-class ApplicationStatusListView extends ListViewBase {
+
+class SearchListView extends ListViewBase {
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
     private $_supportedViewTypes = array( 'html' => 1 ) ;
-    /** @var ApplicationStatusModel[] */
-    private $_applicationStatusModels ;
+    /** @var SearchModel[] */
+    private $searchModels ;
 
     /**
      * Class constructor
      *
      * @param string View Type
+     * @param SearchModel[] $searchModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $applicationStatusModels ) {
+    public function __construct( $viewType = 'html', $searchModels ) {
         parent::__construct() ;
         if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
             throw new ViewException( "Unsupported view type\n" ) ;
         }
         $this->_viewType = $viewType ;
-        $this->_applicationStatusModels = $applicationStatusModels ;
+        $this->setSearchModels( $searchModels ) ;
     }
 
     /**
@@ -55,32 +57,29 @@ class ApplicationStatusListView extends ListViewBase {
      */
     private function _getHtmlView() {
         $body = <<<'HTML'
-<a href="addApplicationStatus.php">Add new application status</a><br />
+<a href="addSearch.php">Add new search</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
-  <caption>Current Application Statuses</caption>
-  <tr><th>Actions</th><th>Value</th><th>Is Active</th><th>Sort Key</th></tr>
+  <caption>Current Searches</caption>
+  <tr><th>Actions</th><th>Engine</th><th>Search Name</th><th>Link</th></tr>
 HTML;
-        foreach ( $this->_applicationStatusModels as $applicationStatus ) {
-            $id       = $applicationStatus->getId() ;
-            $value    = htmlspecialchars( $applicationStatus->getStatusValue() ) ;
-            $isActive = $applicationStatus->getIsActive() ? "Yes" : "No" ;
-            $sortKey  = $applicationStatus->getSortKey() ;
-            $style    = htmlspecialchars( $applicationStatus->getStyle() ) ;
-            $body .= <<<HTML
+        foreach ( $this->getSearchModels() as $search ) {
+            $id          = $search->getId() ;
+            $engineName  = htmlspecialchars( $search->getEngineName() ) ;
+            $searchName  = htmlspecialchars( $search->getSearchName() ) ;
+            $url         = htmlspecialchars( $search->getUrl() ) ;
+            $body       .= <<<HTML
   <tr>
     <td>
-        <a href="editApplicationStatus.php?id=$id">Edit</a>
-      | <a href="deleteApplicationStatus.php?id=$id">Delete</a>
+        <a href="editSearch.php?id=$id">Edit</a>
+      | <a href="deleteSearch.php?id=$id">Delete</a>
     </td>
-    <td style="$style">$value</td>
-    <td>$isActive</td>
-    <td>$sortKey</td>
+    <td>$engineName</td>
+    <td>$searchName</td>
+    <td><a href="$url">$url</a></td>
   </tr>
 HTML;
         }
-
-        $body .= '</table>' ;
-
+        $body .= "</table>\n" ;
         return $body ;
     }
 
@@ -99,17 +98,17 @@ HTML;
     }
 
     /**
-     * @return ApplicationStatusModel[]
+     * @return SearchModel[]
      */
-    public function getApplicationStatusModels() {
-        return $this->_applicationStatusModels ;
+    public function getSearchModels() {
+        return $this->_searchModels ;
     }
 
     /**
-     * @param ApplicationStatusModel[] $applicationStatusModels
+     * @param SearchModel[] $searchModels
      */
-    public function setApplicationStatusModels( $applicationStatusModels ) {
-        $this->_applicationStatusModels = $applicationStatusModels ;
+    public function setSearchModels( $searchModels ) {
+        $this->_searchModels = $searchModels ;
     }
 
 }

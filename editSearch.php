@@ -24,28 +24,29 @@
 require_once "Libs/autoload.php" ;
 
 $config = new Config() ;
-$webPage = new PJSWebPage( $config->getTitle() . "Application Statuses - Add Application Status" ) ;
-$body = '' ;
+$webPage = new PJSWebPage( $config->getTitle() . ' - Edit Search') ;
 $act = Tools::Param( 'act' ) ;
-if ( "Add Application Status" === $act ) {
-    $model = new ApplicationStatusModel() ;
-    $model->populateFromForm() ;
-    if ( ! $model->validateForAdd() ) {
-        $view = new ApplicationStatusFormView( 'Add Application Status', $model ) ;
+if ( "Edit Search" === $act ) {
+    $searchModel = new SearchModel() ;
+    $searchModel->populateFromForm() ;
+    if ( ! $searchModel->validateForUpdate() ) {
+        $view = new SearchFormView( 'Edit Search', $searchModel ) ;
         $body = "<h2>Invalid data</h2>\n" . $view->getForm() ;
     }
     else {
-        $applicationStatusController = new ApplicationStatusController() ;
-        $newId = $applicationStatusController->add( $model ) ;
+        $searchController = new SearchController() ;
+        $newId = $searchController->update( $searchModel ) ;
         if ( $newId > 0 ) {
-            $body = "Added application status # " . $newId . "<br />\n";
+            $body = "Edited search: " . $searchModel->getSearchName() . " as # " . $newId . "<br />\n";
         }
     }
 }
 else {
-    $body = "" ;
-    $view = new ApplicationStatusFormView( "Add Application Status", null ) ;
+    $searchController = new SearchController() ;
+    $searchModel = $searchController->get( Tools::param( 'id' ) ) ;
+    $view = new SearchFormView( 'Edit Search', $searchModel ) ;
     $body = $view->getForm() ;
 }
 $webPage->setBody( $body ) ;
 $webPage->displayPage() ;
+

@@ -22,29 +22,29 @@
  */
 
 /**
- * Template Form View
+ * Search Form View
  *
- * Change template to your model's name
- * Change Template to your model's Name
- * Edit Template to your class description (used for a button)
+ * Change search to your model's name
+ * Change Search to your model's Name
+ * Edit Search to your class description (used for a button)
  */
-class TemplateFormView extends FormViewBase {
-    /** @var TemplateModel */
-    private $_templateModel ;
+class SearchFormView extends FormViewBase {
+    /** @var SearchModel */
+    private $_searchModel ;
 
     /**
      * Class constructor
      *
      * @param string Page title and action button
-     * @param TemplateModel The populated model or null
+     * @param SearchModel The populated model or null
      */
-    public function __construct( $title = "Add Template", $templateModel = null ) {
+    public function __construct( $title = "Add Search", $searchModel = null ) {
         parent::__construct( $title ) ;
-        if ( NULL !== $model ) {
-            $this->_templateModel = $templateModel ;
+        if ( NULL !== $searchModel ) {
+            $this->_searchModel = $searchModel ;
         }
         else {
-            $this->_templateModel = new TemplateModel ;
+            $this->_searchModel = new SearchModel ;
         }
     }
 
@@ -62,22 +62,34 @@ class TemplateFormView extends FormViewBase {
      */
     public function getForm( $readOnly = 'readwrite' ) {
         $RO              = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
-        $templateModel   = $this->_templateModel ;
+        $searchModel     = $this->_searchModel ;
         $title           = $this->getTitle() ;
-        // @todo Get variables for view
+        $id              = $searchModel->getId() ;
+        $engineName      = htmlspecialchars( $searchModel->getEngineName() ) ;
+        $searchName      = htmlspecialchars( $searchModel->getSearchName() ) ;
+        $url             = htmlspecialchars( $searchModel->getUrl() ) ;
+        $created         = $searchModel->getCreated() ;
+        $updated         = $searchModel->getUpdated() ;
         $buttonLabel     = $this->getButtonLabel() ;
-        // @todo Show the form for this view
         $returnValue     = <<<HTML
     <h2>$title</h2>
     <form method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
-          <th>ColumnLabel</th>
-          <td><input type="text" name="someName" value="$someValue" $RO /></td>
+          <th>ID</th>
+          <td><input type="text" name="id" value="$id" readonly="readonly" /></td>
         </tr>
         <tr>
-          <th>DateColumnLabel</th>
-          <td><input type="text" name="someDate" value="$someDate" class="datepicker" $RO/></td>
+          <th>Engine Name</th>
+          <td><input type="text" name="engineName" value="$engineName" $RO /></td>
+        </tr>
+        <tr>
+          <th>Search Name</th>
+          <td><input type="text" name="searchName" value="$searchName" $RO /></td>
+        </tr>
+        <tr>
+          <th>URL</th>
+          <td><input type="text" name="url" value="$url" $RO /></td>
         </tr>
         <tr>
           <td colspan="2">
