@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS job
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      , FOREIGN KEY fk_companyId ( companyId )
-        REFERENCES company ( companyId )
+        REFERENCES company ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      , FOREIGN KEY fk_applicationStatusId ( applicationStatusId )

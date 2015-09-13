@@ -22,11 +22,11 @@
  */
 
 /**
- * Template Model
+ * Company Model
  */
-class TemplateModel extends ModelBase {
+class CompanyModel extends ModelBase {
 
-    private $_companyId ;
+    private $_id ;
     private $_isAnAgency ;
     private $_agencyCompanyId ;
     private $_companyName ;
@@ -51,24 +51,38 @@ class TemplateModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement TemplateModel::validateForAdd()
      */
     public function validateForAdd() {
-        return 0 ;
+        $validAgencyId = (  ( ! Tools::isNullOrEmptyString( Tools::param( 'isAnAgency' ) )
+                           && ! Tools::isNullOrEmptyString( Tools::param( 'agencyCompanyId' ) )
+                            )
+                        || Tools::isNullOrEmptyString( Tools::param( 'isAnAgency' ) )
+                         ) ;
+        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
+               && $validAgencyId
+                ) ;
     }
 
     /**
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement TemplateModel::validateForUpdate()
      */
     public function validateForUpdate() {
-        return 0 ;
+        $validAgencyId = (  ( ! Tools::isNullOrEmptyString( Tools::param( 'isAnAgency' ) )
+                           && ! Tools::isNullOrEmptyString( Tools::param( 'agencyCompanyId' ) )
+                            )
+                        || Tools::isNullOrEmptyString( Tools::param( 'isAnAgency' ) )
+                         ) ;
+        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
+               && $validAgencyId
+                ) ;
     }
 
     public function populateFromForm() {
-        $this->setCompanyId( Tools::param( 'companyId' ) ) ;
+        $this->setId( Tools::param( 'id' ) ) ;
         $this->setIsAnAgency( ( Tools::param( 'isAnAgency' ) === "1" ) ) ;
         $this->setAgencyCompanyId( Tools::param( 'agencyCompanyId' ) ) ;
         $this->setCompanyName( Tools::param( 'companyName' ) ) ;
@@ -85,15 +99,15 @@ class TemplateModel extends ModelBase {
     /**
      * @return integer
      */
-    public function getCompanyId() {
-        return $this->_companyId ;
+    public function getId() {
+        return $this->_id ;
     }
 
     /**
-     * @param integer $companyId
+     * @param integer $id
      */
-    public function setCompanyId( $companyId ) {
-        $this->_companyId = $companyId ;
+    public function setId( $id ) {
+        $this->_id = $id ;
     }
 
     /**

@@ -42,7 +42,7 @@ class CompanyController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS company
      (
-       companyId             INT UNSIGNED NOT NULL AUTO_INCREMENT
+       id             INT UNSIGNED NOT NULL AUTO_INCREMENT
      , isAnAgency            BOOLEAN NOT NULL DEFAULT 0
      , agencyCompanyId       INT UNSIGNED NULL DEFAULT NULL
                              COMMENT 'When isAnAgency is false, point to agency company ID'
@@ -57,9 +57,9 @@ CREATE TABLE IF NOT EXISTS company
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP
-     , PRIMARY KEY pk_companyId ( companyId )
+     , PRIMARY KEY pk_companyId ( id )
      , FOREIGN KEY fk_agencyCompanyId ( agencyCompanyId )
-        REFERENCES company ( companyId )
+        REFERENCES company ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      
@@ -85,7 +85,7 @@ CREATE TRIGGER companyAfterDeleteTrigger
        DELETE
          FROM note
         WHERE appliesToTable = 'company'
-          AND appliesToId = OLD.companyId ;
+          AND appliesToId = OLD.id ;
    END
 SQL;
         $this->_doDDL( $sql ) ;
@@ -95,11 +95,11 @@ CREATE TRIGGER companyAfterUpdateTrigger
     ON company
    FOR EACH ROW
  BEGIN
-             IF OLD.companyId <> NEW.companyId
+             IF OLD.id <> NEW.id
            THEN
             UPDATE note
-               SET note.appliesToId = NEW.companyId
-             WHERE note.appliesToId = OLD.companyId
+               SET note.appliesToId = NEW.id
+             WHERE note.appliesToId = OLD.id
                AND note.appliestoTable = 'company'
                  ;
       END IF ;

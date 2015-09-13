@@ -53,7 +53,7 @@ CREATE TABLE contact
                              ON UPDATE CURRENT_TIMESTAMP
      , PRIMARY KEY pk_contactId ( contactId )
      , FOREIGN KEY fk_contactCompanyId ( contactCompanyId )
-        REFERENCES company ( companyId )
+        REFERENCES company ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      )
