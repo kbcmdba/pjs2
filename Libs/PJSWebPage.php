@@ -118,6 +118,7 @@ HTML;
         $html = <<<HTML
 <a href="index.php">Summary</a>
 | <a href="applicationStatuses.php">Application Statuses</a>
+| <a href="companies.php">Companies</a>
 $reset
 $logout
 <p />

@@ -70,7 +70,7 @@ HTML;
   <tr>
     <td>
         <a href="editApplicationStatus.php?id=$id">Edit</a>
-        <a href="deleteApplicationStatus.php?id=$id">Delete</a>
+      | <a href="deleteApplicationStatus.php?id=$id">Delete</a>
     </td>
     <td style="$style">$value</td>
     <td>$isActive</td>
