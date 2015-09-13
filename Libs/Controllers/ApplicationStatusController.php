@@ -132,14 +132,16 @@ SQL;
         if ( ! $stmt->execute() ) {
             throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
         }
-        $stmt->bind_result( $id
-                          , $statusValue
-                          , $isActive
-                          , $sortKey
-                          , $style
-                          , $created
-                          , $updated
-                          ) ;
+        if ( ! $stmt->bind_result( $id
+                                 , $statusValue
+                                 , $isActive
+                                 , $sortKey
+                                 , $style
+                                 , $created
+                                 , $updated
+                                 ) ) {
+            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        }
         $model = new ApplicationStatusModel() ;
         if ( $stmt->fetch() ) {
             $model->setId( $id ) ;

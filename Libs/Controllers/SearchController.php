@@ -113,13 +113,15 @@ SQL;
         if ( ! $stmt->execute() ) {
             throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
         }
-        $stmt->bind_result( $id
-                          , $engineName
-                          , $searchName
-                          , $url
-                          , $created
-                          , $updated
-                          ) ;
+        if ( ! $stmt->bind_result( $id
+                                 , $engineName
+                                 , $searchName
+                                 , $url
+                                 , $created
+                                 , $updated
+                                 ) ) {
+            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        }
         if ( $stmt->fetch() ) {
             $model = new SearchModel() ;
             $model->setId( $id ) ;

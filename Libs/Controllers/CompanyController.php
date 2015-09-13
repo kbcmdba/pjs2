@@ -62,7 +62,6 @@ CREATE TABLE IF NOT EXISTS company
         REFERENCES company ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
-     
      )
 SQL;
         $this->_doDDL( $sql ) ;
@@ -108,14 +107,131 @@ SQL;
         $this->_doDDL( $sql ) ;
     }
 
-    // @todo Implement CompanyController::get( $id )
     public function get( $id ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , isAnAgency
+     , agencyCompanyId
+     , companyName
+     , companyAddress1
+     , companyAddress2
+     , companyCity
+     , companyState
+     , companyZip
+     , companyPhone
+     , companyUrl
+     , created
+     , updated
+  FROM company
+ WHERE id = ?
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->bind_result( $id
+                                 , $isAnAgency
+                                 , $agencyCompanyId
+                                 , $companyName
+                                 , $companyAddress1
+                                 , $companyAddress2
+                                 , $companyCity
+                                 , $companyState
+                                 , $companyZip
+                                 , $companyPhone
+                                 , $companyUrl
+                                 , $created
+                                 , $updated
+                                 ) ) {
+            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( $stmt->fetch() ) {
+            $model = new CompanyModel() ;
+            $model->setId( $id ) ;
+            $model->setIsAnAgency( $isAnAgency ) ;
+            $model->setAgencyCompanyId( $agencyCompanyId ) ;
+            $model->setCompanyName( $companyName ) ;
+            $model->setCompanyAddress1( $companyAddress1 ) ;
+            $model->setCompanyAddress2( $companyAddress2 ) ;
+            $model->setCompanyCity( $companyCity ) ;
+            $model->setCompanyState( $companyState ) ;
+            $model->setCompanyZip( $companyZip ) ;
+            $model->setCompanyPhone( $companyPhone ) ;
+            $model->setCompanyUrl( $url ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+        }
+        else {
+            $model = null ;
+        }
+        return( $model ) ;
     }
 
-    // @todo Implement CompanyController::getSome( $whereClause )
     public function getSome( $whereClause = '1 = 1') {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , isAnAgency
+     , agencyCompanyId
+     , companyName
+     , companyAddress1
+     , companyAddress2
+     , companyCity
+     , companyState
+     , companyZip
+     , companyPhone
+     , companyUrl
+     , created
+     , updated
+  FROM company
+ WHERE $whereClause
+ ORDER
+    BY companyName
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->bind_result( $id
+                                 , $isAnAgency
+                                 , $agencyCompanyId
+                                 , $companyName
+                                 , $companyAddress1
+                                 , $companyAddress2
+                                 , $companyCity
+                                 , $companyState
+                                 , $companyZip
+                                 , $companyPhone
+                                 , $companyUrl
+                                 , $created
+                                 , $updated
+                                 ) ) {
+            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        }
+        $models = array() ;
+        while ( $stmt->fetch() ) {
+            $model = new CompanyModel() ;
+            $model->setId( $id ) ;
+            $model->setIsAnAgency( $isAnAgency ) ;
+            $model->setAgencyCompanyId( $agencyCompanyId ) ;
+            $model->setCompanyName( $companyName ) ;
+            $model->setCompanyAddress1( $companyAddress1 ) ;
+            $model->setCompanyAddress2( $companyAddress2 ) ;
+            $model->setCompanyCity( $companyCity ) ;
+            $model->setCompanyState( $companyState ) ;
+            $model->setCompanyZip( $companyZip ) ;
+            $model->setCompanyPhone( $companyPhone ) ;
+            $model->setCompanyUrl( $url ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            $models[] = $model ;
+        }
+        return( $models ) ;
     }
 
     // @todo Implement CompanyController::add( $model ) ;
