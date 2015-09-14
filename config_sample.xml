@@ -1,0 +1,15 @@
+<config>
+    <param name="timeZone">America/Chicago</param>
+    <param name="title">PHP Job Seeker 2</param>
+    <param name="dbHost">127.0.0.1</param>
+    <param name="dbName">pjs2</param>
+    <param name="dbPort">3306</param>
+    <param name="dbUser">pjs2_app</param>
+    <param name="dbPass">SomethingComplicated</param>
+    <param name="userId">ChangeToYourUserInterfaceId</param>
+    <param name="userPassword">ChangeToYourInterfacePassword</param>
+    <!-- ONLY ENABLE THE FOLLOWING FOR DEVELOPMENT/TESTING -->
+    <!-- MAY CAUSE DATA LOSS!!! -->
+    <!-- DO NOT ENABLE IN YOUR PERMANENT DATA STORE -->
+    <param name="resetOk">0</param>
+</config>

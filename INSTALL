@@ -1,3 +1,10 @@
 
 This file has not yet been written. The modules I had to load to make this work
 are included below:
+
+...
+
+After verifying the modules, perform the following tasks:
+
+Copy the file config_sample.xml to config.xml
+Update the new config.xml according to your needs
