@@ -25,6 +25,10 @@ require_once 'Libs/autoload.php' ;
 
 $config = new Config() ;
 $page = new PJSWebPage( $config->getTitle() . " - Companies" ) ;
-$body = "<h2>Companies</h2>\n<div>Not yet written.<div>" ;
+$body = "<h2>Companies</h2>\n" ;
+$companyController = new CompanyController( 'read' ) ;
+$companyModelList = $companyController->getAll() ;
+$companyListView = new CompanyListView( 'html', $companyModelList ) ;
+$body .= $companyListView->getView() ;
 $page->setBody( $body ) ;
 $page->displayPage() ;

@@ -22,37 +22,32 @@
  */
 
 /**
- * _Template List View
- *
- * Edit "_Template" appropriately
- * Edit "_template" appropriately.
- * Edit "Template" to your class description (used for a button)
- * Verify all template values for labels
+ * Company List View
  */
 
-class _TemplateListView extends ListViewBase {
+class CompanyListView extends ListViewBase {
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
     private $_supportedViewTypes = array( 'html' => 1 ) ;
-    /** @var _TemplateModel[] */
-    private $_templateModels ;
+    /** @var CompanyModel[] */
+    private $_companyModels ;
 
     /**
      * Class constructor
      *
      * @param string View Type
-     * @param _TemplateModel[] $templateModels
+     * @param CompanyModel[] $companyModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $templateModels ) {
+    public function __construct( $viewType = 'html', $companyModels ) {
         parent::__construct() ;
         if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
             throw new ViewException( "Unsupported view type\n" ) ;
         }
         $this->_viewType = $viewType ;
-        $this->set_TemplateModels( $templateModels ) ;
+        $this->setCompanyModels( $companyModels ) ;
     }
 
     /**
@@ -62,22 +57,36 @@ class _TemplateListView extends ListViewBase {
      */
     private function _getHtmlView() {
         $body = <<<'HTML'
-<a href="add_Template.php">Add new template</a><br />
+<a href="addCompany.php">Add new company</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
-  <caption>Current Templates</caption>
-  <tr><th>Actions</th><th>Blah</th><th>Blah</th><th>Blah</th></tr>
+  <caption>Current Companies</caption>
+  <tr><th>Actions</th><th>Company</th><th>Agency Of</th><th>City</th><th>State</th></tr>
 HTML;
-        foreach ( $this->get_TemplateModels() as $templateModel ) {
-            $id = $templateModel->getId() ;
+        foreach ( $this->getCompanyModels() as $companyModel ) {
+            $id              = $companyModel->getId() ;
+            $isAnAgency      = $companyModel->getIsAnAgency() ;
+            $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
+            $companyName     = $companyModel->getCompanyName() ;
+            $companyAddress1 = $companyModel->getCompanyAddress1() ;
+            $companyAddress2 = $companyModel->getCompanyAddress2() ;
+            $companyCity     = $companyModel->getCompanyCity() ;
+            $companyState    = $companyModel->getCompanyState() ;
+            $companyZip      = $companyModel->getCompanyZip() ;
+            $companyUrl      = $companyModel->getCompanyUrl() ;
+            $created         = $companyModel->getCreated() ;
+            $updated         = $companyModel->getUpdated() ;
+            $agencyOf        = $isAnAgency ? "Yes" : "No" ;
             $body .= <<<HTML
   <tr>
     <td>
-        <a href="edit_Template.php?id=$id">Edit</a>
-      | <a href="delete_Template.php?id=$id">Delete</a>
+        <a href="editCompany.php?id=$id">Edit</a>
+      | <a href="deleteCompany.php?id=$id">Delete</a>
     </td>
-    <td>$blah</td>
-    <td>$blah</td>
-    <td>$blah</td>
+  <tr><th>Actions</th><th>Company</th><th>Agency Of</th><th>City</th><th>State</th></tr>
+    <td>$companyName</td>
+    <td>$agencyOf</td>
+    <td>$companyCity</td>
+    <td>$companyState</td>
   </tr>
 HTML;
         }
@@ -102,17 +111,17 @@ HTML;
     }
 
     /**
-     * @return _TemplateModel[]
+     * @return CompanyModel[]
      */
-    public function get_TemplateModels() {
-        return $this->_templateModels ;
+    public function getCompanyModels() {
+        return $this->_companyModels ;
     }
 
     /**
-     * @param _TemplateModel[] $templateModels
+     * @param CompanyModel[] $companyModels
      */
-    public function set_TemplateModels( $templateModels ) {
-        $this->_templateModels = $templateModels ;
+    public function setCompanyModels( $companyModels ) {
+        $this->_companyModels = $companyModels ;
     }
 
 }
