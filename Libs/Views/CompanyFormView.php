@@ -160,6 +160,12 @@ HTML;
         $companyController = new CompanyController( 'read' ) ;
         $companyModels = $companyController->getAll() ;
         $str = "<select name=\"agencyCompanyId\" $readOnly>\n" ;
+        if ( ( ! isset( $agencyId ) ) || 0 === $agencyId ) {
+            $str .= "  <option value=\"\" selected=\"selected\">None</option>\n" ;
+        }
+        else {
+            $str .= "  <option value=\"\" >None</option>\n" ;
+        }
         foreach ( $companyModels as $companyModel ) {
             $id = $companyModel->getId() ;
             if ( $myId === $id ) {
@@ -169,9 +175,9 @@ HTML;
             $companyCity = $companyModel->getCompanyCity() ;
             $companyState = $companyModel->getCompanyState() ;
             $selected = ( $agencyId === $id ) ? 'selected="selected"' : '' ;
-            $str .= "  <option value=$id $selected>$companyName ($companyCity, $companyState)</option>" ;
+            $str .= "  <option value=\"$id\" $selected>$companyName ($companyCity, $companyState)</option>\n" ;
         }
-        $str .= '</select>' . "\n" ;
+        $str .= "</select>\n" ;
         return $str ;
     }
 

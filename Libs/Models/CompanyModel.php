@@ -136,7 +136,7 @@ class CompanyModel extends ModelBase {
      * @param integer $agencyCompanyId
      */
     public function setAgencyCompanyId( $agencyCompanyId ) {
-        if ( '' === $agencyCompanyId ) {
+        if ( ( '' === $agencyCompanyId ) || ( 0 === $agencyCompanyId ) ) {
             $agencyCompanyId = null ;
         }
         $this->_agencyCompanyId = $agencyCompanyId ;

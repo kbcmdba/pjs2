@@ -51,8 +51,8 @@ CREATE TABLE IF NOT EXISTS company
      , companyAddress2       VARCHAR(255) NOT NULL DEFAULT ''
      , companyCity           VARCHAR(60) NOT NULL DEFAULT ''
      , companyState          CHAR(2) NOT NULL DEFAULT 'XX'
-     , companyZip            INT(5) UNSIGNED NULL DEFAULT NULL
-     , companyPhone          INT UNSIGNED NULL DEFAULT NULL
+     , companyZip            VARCHAR(10) NOT NULL DEFAULT ''
+     , companyPhone          VARCHAR(16) NOT NULL DEFAULT ''
      , companyUrl            VARCHAR(255) NOT NULL DEFAULT ''
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -160,7 +160,7 @@ SQL;
             $model->setCompanyState( $companyState ) ;
             $model->setCompanyZip( $companyZip ) ;
             $model->setCompanyPhone( $companyPhone ) ;
-            $model->setCompanyUrl( $url ) ;
+            $model->setCompanyUrl( $companyUrl ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
         }
@@ -312,14 +312,78 @@ SQL;
         }
     }
 
-    // @todo Implement CompanyController::update( $model ) ;
-    public function update( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+    /**
+     * @var CompanyModel $companyModel
+     */
+    public function update( $companyModel ) {
+        if ( $companyModel->validateForUpdate() ) {
+            try {
+                $query = <<<SQL
+UPDATE company
+   SET isAnAgency = ?
+     , agencyCompanyId = ?
+     , companyName = ?
+     , companyAddress1 = ?
+     , companyAddress2 = ?
+     , companyCity = ?
+     , companyState = ?
+     , companyZip = ?
+     , companyPhone = ?
+     , companyUrl = ?
+ WHERE id = ?
+SQL;
+                $id              = $companyModel->getId() ;
+                $isAnAgency      = $companyModel->getIsAnAgency() ;
+                $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
+                $companyName     = $companyModel->getCompanyName() ;
+                $companyAddress1 = $companyModel->getCompanyAddress1() ;
+                $companyAddress2 = $companyModel->getCompanyAddress2() ;
+                $companyCity     = $companyModel->getCompanyCity() ;
+                $companyState    = $companyModel->getCompanyState() ;
+                $companyZip      = $companyModel->getCompanyZip() ;
+                $companyPhone    = $companyModel->getCompanyPhone() ;
+                $companyUrl      = $companyModel->getCompanyUrl() ;
+                $stmt       = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'iissssssssi'
+                                          , $isAnAgency
+                                          , $agencyCompanyId
+                                          , $companyName
+                                          , $companyAddress1
+                                          , $companyAddress2
+                                          , $companyCity
+                                          , $companyState
+                                          , $companyZip
+                                          , $companyPhone
+                                          , $companyUrl
+                                          , $id
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( !$stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute UPDATE statement. (' . $this->_dbh->error . ')' ) ;
+                }
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( !$stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $id ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement CompanyController::delete( $model ) ;
-    public function delete( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+    public function delete( $companyModel ) {
+        $this->_deleteModelById( "DELETE FROM company WHERE id = ?", $companyModel ) ;
     }
 
 }
