@@ -40,7 +40,7 @@ class TemplateFormView extends FormViewBase {
      */
     public function __construct( $title = "Add Template", $templateModel = null ) {
         parent::__construct( $title ) ;
-        if ( NULL !== $model ) {
+        if ( NULL !== $templateModel ) {
             $this->_templateModel = $templateModel ;
         }
         else {

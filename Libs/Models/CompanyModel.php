@@ -92,6 +92,7 @@ class CompanyModel extends ModelBase {
         $this->setCompanyState( Tools::param( 'companyState' ) ) ;
         $this->setCompanyZip( Tools::param( 'companyZip' ) ) ;
         $this->setCompanyPhone( Tools::param( 'companyPhone' ) ) ;
+        $this->setCompanyUrl( Tools::param( 'companyUrl' ) ) ;
         $this->setCreated( Tools::param( 'created' ) ) ;
         $this->setUpdated( Tools::param( 'updated' ) ) ;
     }
@@ -135,6 +136,9 @@ class CompanyModel extends ModelBase {
      * @param integer $agencyCompanyId
      */
     public function setAgencyCompanyId( $agencyCompanyId ) {
+        if ( '' === $agencyCompanyId ) {
+            $agencyCompanyId = null ;
+        }
         $this->_agencyCompanyId = $agencyCompanyId ;
     }
 

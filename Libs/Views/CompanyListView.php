@@ -75,14 +75,20 @@ HTML;
             $companyUrl      = $companyModel->getCompanyUrl() ;
             $created         = $companyModel->getCreated() ;
             $updated         = $companyModel->getUpdated() ;
-            $agencyOf        = $isAnAgency ? "Yes" : "No" ;
+            if ( $isAnAgency ) {
+                $agencyCompanyController = new CompanyController() ;
+                $agencyCompanyModel      = $agencyCompanyController->get( $agencyCompanyId ) ;
+                $agencyOf                = $agencyCompanyModel->getCompanyName() ;
+            }
+            else {
+                $agencyOf                = 'None' ;
+            }
             $body .= <<<HTML
   <tr>
     <td>
         <a href="editCompany.php?id=$id">Edit</a>
       | <a href="deleteCompany.php?id=$id">Delete</a>
     </td>
-  <tr><th>Actions</th><th>Company</th><th>Agency Of</th><th>City</th><th>State</th></tr>
     <td>$companyName</td>
     <td>$agencyOf</td>
     <td>$companyCity</td>

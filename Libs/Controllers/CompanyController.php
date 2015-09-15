@@ -226,7 +226,7 @@ SQL;
             $model->setCompanyState( $companyState ) ;
             $model->setCompanyZip( $companyZip ) ;
             $model->setCompanyPhone( $companyPhone ) ;
-            $model->setCompanyUrl( $url ) ;
+            $model->setCompanyUrl( $companyUrl ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
             $models[] = $model ;
@@ -234,9 +234,82 @@ SQL;
         return( $models ) ;
     }
 
-    // @todo Implement CompanyController::add( $model ) ;
+    /**
+     * @param CompanyModel $model
+     * @see ControllerBase::add()
+     */
     public function add( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+            if ( $model->validateForAdd() ) {
+            try {
+                $query = <<<SQL
+INSERT company
+     ( id
+     , isAnAgency
+     , agencyCompanyId
+     , companyName
+     , companyAddress1
+     , companyAddress2
+     , companyCity
+     , companyState
+     , companyZip
+     , companyPhone
+     , companyUrl
+     , created
+     , updated
+     )
+VALUES ( NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW() )
+SQL;
+                $isAnAgency      = $model->getIsAnAgency() ;
+                $agencyCompanyId = $model->getAgencyCompanyId() ;
+                $companyName     = $model->getCompanyName() ;
+                $companyAddress1 = $model->getCompanyAddress1() ;
+                $companyAddress2 = $model->getCompanyAddress2() ;
+                $companyCity     = $model->getCompanyCity() ;
+                $companyState    = $model->getCompanyState() ;
+                $companyZip      = $model->getCompanyZip() ;
+                $companyPhone    = $model->getCompanyPhone() ;
+                $companyUrl      = $model->getCompanyUrl() ;
+                $created         = $model->getCreated() ;
+                $updated         = $model->getUpdated() ;
+                $stmt            = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'iissssssss'
+                                          , $isAnAgency
+                                          , $agencyCompanyId
+                                          , $companyName
+                                          , $companyAddress1
+                                          , $companyAddress2
+                                          , $companyCity
+                                          , $companyState
+                                          , $companyZip
+                                          , $companyPhone
+                                          , $companyUrl
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( ! $stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                $newId = $stmt->insert_id ;
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( ! $stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $newId ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
     // @todo Implement CompanyController::update( $model ) ;
