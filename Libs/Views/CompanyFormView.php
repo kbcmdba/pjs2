@@ -90,7 +90,7 @@ class CompanyFormView extends FormViewBase {
         </tr>
         <tr>
           <th>Is An Agency</th>
-          <td><input type="checkbox" name="isAnAgency" value="$1" $isAnAgencyCheckbox $RO /></td>
+          <td><input type="checkbox" name="isAnAgency" value="1" $isAnAgencyCheckbox $RO /></td>
         </tr>
         <tr>
           <th>Agency Of</th>
@@ -130,11 +130,11 @@ class CompanyFormView extends FormViewBase {
         </tr>
         <tr>
           <th>Created</th>
-          <td><input type="text" name="created" value="$created" readonly="readonly" /></td>
+          <td><input type="text" name="created" value="$created" disabled="disabled" /></td>
         </tr>
         <tr>
           <th>Updated</th>
-          <td><input type="text" name="updated" value="$updated" readonly="readonly" /></td>
+          <td><input type="text" name="updated" value="$updated" disabled="disabled" /></td>
         </tr>
         <tr>
           <td colspan="2">

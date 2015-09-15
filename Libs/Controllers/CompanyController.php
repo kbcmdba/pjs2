@@ -271,6 +271,9 @@ SQL;
                 $companyUrl      = $model->getCompanyUrl() ;
                 $created         = $model->getCreated() ;
                 $updated         = $model->getUpdated() ;
+                if ( ! $isAnAgency ) {
+                    $agencyCompanyId = null ;
+                }
                 $stmt            = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
@@ -343,6 +346,9 @@ SQL;
                 $companyZip      = $companyModel->getCompanyZip() ;
                 $companyPhone    = $companyModel->getCompanyPhone() ;
                 $companyUrl      = $companyModel->getCompanyUrl() ;
+                if ( ! $isAnAgency ) {
+                    $agencyCompanyId = null ;
+                }
                 $stmt       = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;

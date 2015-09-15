@@ -92,6 +92,14 @@ class SearchFormView extends FormViewBase {
           <td><input type="text" name="url" value="$url" $RO /></td>
         </tr>
         <tr>
+          <th>Created</th>
+          <td><input type="text" name="created" value="$created" disabled="disabled" /></td>
+        </tr>
+        <tr>
+          <th>Updated</th>
+          <td><input type="text" name="updated" value="$updated" disabled="disabled" /></td>
+        </tr>
+        <tr>
           <td colspan="2">
             <center>
               <input type="reset" /> &nbsp; &nbsp; <input type="submit" name="act" value="$buttonLabel" />
