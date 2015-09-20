@@ -22,13 +22,9 @@
  */
 
 // @todo Write ApplicationStatusSummaryListView
-// @todo Write CompanyFormView
-// @todo Write CompanyListView
 // @todo Write ContactFormView
 // @todo Write ContactListView
 // @todo Write JobFormView
 // @todo Write JobListView
-// @todo Write KeywordFormView
 // @todo Write KeywordListView
-// @todo Write NoteFormView
 // @todo Write NoteListView

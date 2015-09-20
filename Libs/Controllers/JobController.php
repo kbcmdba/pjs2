@@ -145,29 +145,281 @@ SQL;
         $this->_doDDL( $sql ) ;
     }
 
-    // @todo Implement JobController::get( $id )
     public function get( $id ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , primaryContactId
+     , companyId
+     , applicationStatusId
+     , lastStatusChange
+     , urgency
+     , created
+     , updated
+     , nextActionDue
+     , nextAction
+     , positionTitle
+     , location
+     , url
+ WHERE id = ?
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->bind_result( $id
+                                 , $primaryContactId
+                                 , $companyId
+                                 , $applicationStatusId
+                                 , $lastStatusChange
+                                 , $urgency
+                                 , $created
+                                 , $updated
+                                 , $nextActionDue
+                                 , $nextAction
+                                 , $positionTitle
+                                 , $location
+                                 , $url
+                                 ) ) {
+            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( $stmt->fetch() ) {
+            $model = new JobModel() ;
+            $model->setId( $id ) ;
+            $model->setPrimaryContactId( $primaryContactId ) ;
+            $model->setCompanyId( $companyId ) ;
+            $model->setApplicationStatusId( $applicationStatusId ) ;
+            $model->setLastStatusChange( $lastStatusChange ) ;
+            $model->setUrgency( $urgency ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            $model->setNextActionDue( $nextActionDue ) ;
+            $model->setNextAction( $nextAction ) ;
+            $model->setPositionTitle( $positionTitle ) ;
+            $model->setLocation( $location ) ;
+            $model->setUrl( $url ) ;
+        }
+        else {
+            $model = null ;
+        }
+        return( $model ) ;
     }
 
-    // @todo Implement JobController::getSome( $whereClause )
     public function getSome( $whereClause = '1 = 1') {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , primaryContactId
+     , companyId
+     , applicationStatusId
+     , lastStatusChange
+     , urgency
+     , created
+     , updated
+     , nextActionDue
+     , nextAction
+     , positionTitle
+     , location
+     , url
+ WHERE $whereClause
+ ORDER
+    BY nextActionDue DESC
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $id
+                          , $primaryContactId
+                          , $companyId
+                          , $applicationStatusId
+                          , $lastStatusChange
+                          , $urgency
+                          , $created
+                          , $updated
+                          , $nextActionDue
+                          , $nextAction
+                          , $positionTitle
+                          , $location
+                          , $url
+                          ) ;
+        $models = array() ;
+        while ( $stmt->fetch() ) {
+            $model = new JobModel() ;
+            $model->setId( $id ) ;
+            $model->setPrimaryContactId( $primaryContactId ) ;
+            $model->setCompanyId( $companyId ) ;
+            $model->setApplicationStatusId( $applicationStatusId ) ;
+            $model->setLastStatusChange( $lastStatusChange ) ;
+            $model->setUrgency( $urgency ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            $model->setNextActionDue( $nextActionDue ) ;
+            $model->setNextAction( $nextAction ) ;
+            $model->setPositionTitle( $positionTitle ) ;
+            $model->setLocation( $location ) ;
+            $model->setUrl( $url ) ;
+            $models[] = $model ;
+        }
+        return( $models ) ;
     }
 
-    // @todo Implement JobController::add( $model ) ;
+    /**
+     * @param JobModel $model
+     */
     public function add( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForAdd() ) {
+            try {
+                $query = <<<SQL
+INSERT job
+     ( id
+     , primaryContactId
+     , companyId
+     , applicationId
+     , lastStatusChange
+     , urgency
+     , created
+     , updated
+     , nextActionDue
+     , nextAction
+     , positionTitle
+     , location
+     , url
+     )
+VALUES ( NULL, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ? )
+SQL;
+                $id                  = $model->getId() ;
+                $primaryContactId    = $model->getPrimaryContactId() ;
+                $companyId           = $model->getCompanyId() ;
+                $applicationStatusId = $model->getApplicationStatusId() ;
+                $lastStatusChange    = $model->getLastStatusChange() ;
+                $urgency             = $model->getUrgency() ;
+                $nextActionDue       = $model->getNextActionDue() ;
+                $nextAction          = $model->getNextAction() ;
+                $positionTitle       = $model->getPositionTitle() ;
+                $location            = $model->getLocation() ;
+                $url                 = $model->getUrl() ;
+                $stmt                = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'iiiisssssss'
+                                          , $id
+                                          , $primaryContactId
+                                          , $companyId
+                                          , $applicationStatusId
+                                          , $lastStatusChange
+                                          , $urgency
+                                          , $nextActionDue
+                                          , $nextAction
+                                          , $positionTitle
+                                          , $location
+                                          , $url
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( ! $stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                $newId = $stmt->insert_id ;
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( ! $stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $newId ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement JobController::update( $model ) ;
+    /**
+     * @param JobModel $model
+     * @see ControllerBase::update()
+     */
     public function update( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+            if ( $model->validateForUpdate() ) {
+            try {
+                $query = <<<SQL
+UPDATE job
+   SET primaryContactId = ?
+     , companyId = ?
+     , applicationStatusId = ?
+     , lastStatusChange = ?
+     , urgency = ?
+     , nextActionDue = ?
+     , nextAction = ?
+     , positionTitle = ?
+     , location = ?
+     , url = ?
+ WHERE id = ?
+SQL;
+                $id                  = $model->getId() ;
+                $primaryContactId    = $model->getPrimaryContactId() ;
+                $companyId           = $model->getCompanyId() ;
+                $applicationStatusId = $model->getApplicationStatusId() ;
+                $lastStatusChange    = $model->getLastStatusChange() ;
+                $urgency             = $model->getUrgency() ;
+                $nextActionDue       = $model->getNextActionDue() ;
+                $nextAction          = $model->getNextAction() ;
+                $positionTitle       = $model->getPositionTitle() ;
+                $location            = $model->getLocation() ;
+                $url                 = $model->getUrl() ;
+                $stmt                = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'iiisssssssi'
+                                          , $primaryContactId
+                                          , $companyId
+                                          , $applicationStatusId
+                                          , $lastStatusChange
+                                          , $urgency
+                                          , $nextActionDue
+                                          , $nextAction
+                                          , $positionTitle
+                                          , $location
+                                          , $url
+                                          , $id
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( !$stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                            . $this->_dbh->error .
+                            ')' ) ;
+                }
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( !$stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $id ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement JobController::delete( $model ) ;
     public function delete( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $this->_deleteModelById( "DELETE FROM job WHERE id = ?", $model ) ;
     }
 
 }

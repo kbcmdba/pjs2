@@ -26,7 +26,7 @@
  */
 class JobModel extends ModelBase {
 
-    private $_jobId ;
+    private $_id ;
     private $_primaryContactId ;
     private $_companyId ;
     private $_applicationStatusId ;
@@ -51,20 +51,36 @@ class JobModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement JobModel::validateForAdd()
      */
     public function validateForAdd() {
-        return 0 ;
+        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'primaryContactId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'applicationStatusId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'urgency' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'nextActionDue' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'nextAction' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'positionTitle' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'location' ) ) )
+                ) ;
     }
 
     /**
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement JobModel::validateForUpdate()
      */
     public function validateForUpdate() {
-        return 0 ;
+        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'primaryContactId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'applicationStatusId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'urgency' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'nextActionDue' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'nextAction' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'positionTitle' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'location' ) ) )
+                ) ;
     }
 
     public function populateFromForm() {
@@ -80,21 +96,21 @@ class JobModel extends ModelBase {
         $this->setNextAction( Tools::param( 'nextAction' ) ) ;
         $this->setPositionTitle( Tools::param( 'positionTitle' ) ) ;
         $this->setLocation( Tools::param( 'location' ) ) ;
-        $this->seturl( Tools::param( 'url' ) ) ;
+        $this->setUrl( Tools::param( 'url' ) ) ;
     }
 
     /**
      * @return integer
      */
-    public function getJobId() {
-        return $this->_jobId ;
+    public function getId() {
+        return $this->_id ;
     }
 
     /**
-     * @param integer $jobId
+     * @param integer $id
      */
-    public function setJobId( $jobId ) {
-        $this->_jobId = $jobId ;
+    public function setId( $id ) {
+        $this->_id = $id ;
     }
 
     /**
