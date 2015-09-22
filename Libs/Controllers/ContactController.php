@@ -32,12 +32,18 @@ class ContactController extends ControllerBase {
     public function __construct( $readWriteMode = 'write' ) {
         parent::__construct( $readWriteMode ) ;
     }
-    
+
+    /**
+     * @see ControllerBase::dropTable()
+     */
     public function dropTable() {
         $sql = "DROP TABLE IF EXISTS contact" ;
         $this->_doDDL( $sql ) ;
     }
-    
+
+    /**
+     * @see ControllerBase::createTable()
+     */
     public function createTable() {
         $sql = <<<SQL
 CREATE TABLE contact
@@ -101,6 +107,9 @@ SQL;
         $this->_doDDL( $sql ) ;
     }
 
+    /**
+     * @see ControllerBase::get()
+     */
     public function get( $id ) {
         $sql = <<<SQL
 SELECT id
@@ -149,6 +158,9 @@ SQL;
         return( $model ) ;
     }
 
+    /**
+     * @see ControllerBase::getSome()
+     */
     public function getSome( $whereClause = '1 = 1') {
         $sql = <<<SQL
 SELECT id
@@ -259,6 +271,7 @@ SQL;
 
     /**
      * @param ContactModel $model
+     * @see ControllerBase::update()
      */
     public function update( $model ) {
         if ( $model->validateForUpdate() ) {
@@ -314,9 +327,12 @@ SQL;
         }
     }
 
-    // @todo Implement ContactController::delete( $model ) ;
+    /**
+     * @param ContactModel $model
+     * @see ControllerBase::delete()
+     */
     public function delete( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $this->_deleteModelById( "DELETE FROM contact WHERE id = ?", $model ) ;
     }
 
 }
