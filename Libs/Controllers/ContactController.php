@@ -257,9 +257,61 @@ SQL;
         }
     }
 
-    // @todo Implement ContactController::update( $model ) ;
+    /**
+     * @param ContactModel $model
+     */
     public function update( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForUpdate() ) {
+            try {
+                $query = <<<SQL
+UPDATE contact
+   SET contactCompanyId = ?
+     , contactName = ?
+     , contactEmail = ?
+     , contactPhone = ?
+     , contactAlternatePhone = ?
+ WHERE id = ?
+SQL;
+                $id                    = $model->getId() ;
+                $contactCompanyId      = $model->getContactCompanyId() ;
+                $contactName           = $model->getContactName() ;
+                $contactEmail          = $model->getContactEmail() ;
+                $contactPhone          = $model->getContactPhone() ;
+                $contactAlternatePhone = $model->getContactAlternatePhone() ;
+                $stmt                = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'issii'
+                                          , $contactCompanyId
+                                          , $contactName
+                                          , $contactEmail
+                                          , $contactPhone
+                                          , $contactAlternatePhone
+                                          , $id
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( !$stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                            . $this->_dbh->error .
+                            ')' ) ;
+                }
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( !$stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $id ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
     // @todo Implement ContactController::delete( $model ) ;
