@@ -26,7 +26,7 @@
  */
 class ContactModel extends ModelBase {
 
-    private $_contactId ;
+    private $_id ;
     private $_contactCompanyId ;
     private $_contactName ;
     private $_contactEmail ;
@@ -46,20 +46,28 @@ class ContactModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement ContactModel::validateForAdd()
      */
     public function validateForAdd() {
-        return 0 ;
+        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactCompanyid' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactName' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactEmail' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactPhone' ) ) )
+                ) ;
     }
 
     /**
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement ContactModel::validateForUpdate()
      */
     public function validateForUpdate() {
-        return 0 ;
+        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactCompanyid' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactName' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactEmail' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactPhone' ) ) )
+                ) ;
     }
 
     public function populateFromForm() {
@@ -76,15 +84,15 @@ class ContactModel extends ModelBase {
     /**
      * @return integer
      */
-    public function getContactId() {
-        return $this->_contactId ;
+    public function getId() {
+        return $this->_id ;
     }
 
     /**
-     * @param integer $contactId
+     * @param integer $id
      */
-    public function setContactId( $contactId ) {
-        $this->_contactId = $contactId ;
+    public function setId( $id ) {
+        $this->_id = $id ;
     }
 
     /**

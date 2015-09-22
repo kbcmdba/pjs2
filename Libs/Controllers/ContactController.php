@@ -42,16 +42,16 @@ class ContactController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE contact
      (
-       contactId             INT UNSIGNED NOT NULL AUTO_INCREMENT
+       id                    INT UNSIGNED NOT NULL AUTO_INCREMENT
      , contactCompanyId      INT UNSIGNED NOT NULL DEFAULT 0
-     , contactName           VARCHAR(255)
-     , contactEmail          VARCHAR(255)
+     , contactName           VARCHAR(100) NOT NULL DEFAULT ''
+     , contactEmail          VARCHAR(100) NOT NULL DEFAULT ''
      , contactPhone          INT UNSIGNED NOT NULL
      , contactAlternatePhone INT UNSIGNED NULL DEFAULT NULL
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP
-     , PRIMARY KEY pk_contactId ( contactId )
+     , PRIMARY KEY pk_contactId ( id )
      , FOREIGN KEY fk_contactCompanyId ( contactCompanyId )
         REFERENCES company ( id )
                 ON DELETE CASCADE
@@ -78,7 +78,7 @@ CREATE TRIGGER contactAfterDeleteTrigger
        DELETE
          FROM note
         WHERE appliesToTable = 'contact'
-          AND appliesToId = OLD.contactId ;
+          AND appliesToId = OLD.id ;
    END
 SQL;
         $this->_doDDL( $sql ) ;
@@ -88,11 +88,11 @@ CREATE TRIGGER contactAfterUpdateTrigger
     ON contact
    FOR EACH ROW
  BEGIN
-         IF OLD.contactId <> NEW.contactId
+         IF OLD.id <> NEW.id
        THEN
             UPDATE note
-               SET note.appliesToId = NEW.contactId
-             WHERE note.appliesToId = OLD.contactId
+               SET note.appliesToId = NEW.id
+             WHERE note.appliesToId = OLD.id
                AND note.appliestoTable = 'contact'
                  ;
         END IF ;
@@ -101,19 +101,160 @@ SQL;
         $this->_doDDL( $sql ) ;
     }
 
-    // @todo Implement ContactController::get( $id )
     public function get( $id ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , contactCompanyId
+     , contactName
+     , contactEmail
+     , contactPhone
+     , contactAlternatePhone
+     , created
+     , updated
+  FROM contact
+ WHERE id = ?
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->bind_result( $id
+                                 , $contactCompanyId
+                                 , $contactName
+                                 , $contactEmail
+                                 , $contactPhone
+                                 , $contactAlternatePhone
+                                 , $created
+                                 , $updated
+                                 ) ) {
+            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( $stmt->fetch() ) {
+            $model = new ContactModel() ;
+            $model->setId( $id ) ;
+            $model->setContactCompanyId( $contactCompanyId ) ;
+            $model->setContactName( $contactName ) ;
+            $model->setContactEmail( $contactEmail ) ;
+            $model->setContactPhone( $contactPhone ) ;
+            $model->setContactAlternatePhone( $contactAlternatePhone ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+        }
+        else {
+            $model = null ;
+        }
+        return( $model ) ;
     }
 
-    // @todo Implement ContactController::getSome( $whereClause )
     public function getSome( $whereClause = '1 = 1') {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , contactCompanyId
+     , contactName
+     , contactEmail
+     , contactPhone
+     , contactAlternatePhone
+     , created
+     , updated
+  FROM contact
+ WHERE $whereClause
+ ORDER
+    BY contactName
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $id
+                          , $contactCompanyId
+                          , $contactName
+                          , $contactEmail
+                          , $contactPhone
+                          , $contactAlternatePhone
+                          , $created
+                          , $updated
+                          ) ;
+        $models = array() ;
+        while ( $stmt->fetch() ) {
+            $model = new ContactModel() ;
+            $model->setId( $id ) ;
+            $model->setContactCompanyId( $contactCompanyId ) ;
+            $model->setContactName( $contactName ) ;
+            $model->setContactEmail( $contactEmail ) ;
+            $model->setContactPhone( $contactPhone ) ;
+            $model->setContactAlternatePhone( $contactAlternatePhone ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+        }
     }
 
-    // @todo Implement ContactController::add( $model ) ;
+    /**
+     * @param ContactModel $model
+     * @see ControllerBase::add()
+     */
     public function add( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForAdd() ) {
+            try {
+                $query = <<<SQL
+INSERT contact
+     ( id
+     , contactCompanyId
+     , contactName
+     , contactEmail
+     , contactPhone
+     , contactAlternatePhone
+     , created
+     , updated
+     )
+VALUES ( NULL, ?, ?, ?, ?, ?, NOW(), NOW() )
+SQL;
+                $id                    = $model->getId() ;
+                $contactCompanyId      = $model->getContactCompanyId() ;
+                $contactName           = $model->getContactName() ;
+                $contactEmail          = $model->getContactEmail() ;
+                $contactPhone          = $model->getContactPhone() ;
+                $contactAlternatePhone = $model->getContactAlternatePhone() ;
+                $stmt                  = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'iissii'
+                                          , $id
+                                          , $contactCompanyId
+                                          , $contactName
+                                          , $contactEmail
+                                          , $contactPhone
+                                          , $contactAlternatePhone
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( ! $stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                $newId = $stmt->insert_id ;
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( ! $stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $newId ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
     // @todo Implement ContactController::update( $model ) ;
