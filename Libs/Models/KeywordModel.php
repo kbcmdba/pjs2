@@ -26,7 +26,7 @@
  */
 class KeywordModel extends ModelBase {
 
-    private $_keywordId ;
+    private $_id ;
     private $_keywordValue ;
     private $_sortKey ;
     private $_created ;
@@ -43,24 +43,28 @@ class KeywordModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement KeywordModel::validateForAdd()
      */
     public function validateForAdd() {
-        return 0 ;
+        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'value' ) ) )
+               && (   Tools::isNumeric( Tools::param( 'sortKey' ) ) )
+                ) ;
     }
 
     /**
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement KeywordModel::validateForUpdate()
      */
     public function validateForUpdate() {
-        return 0 ;
+        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'value' ) ) )
+               && (   Tools::isNumeric( Tools::param( 'sortKey' ) ) )
+                ) ;
     }
 
     public function populateFromForm() {
-        $this->setKeywordId( Tools::param( 'keywordId' ) ) ;
+        $this->setId( Tools::param( 'id' ) ) ;
         $this->setKeywordValue( Tools::param( 'keywordValue' ) ) ;
         $this->setSortKey( Tools::param( 'sortKey' ) ) ;
         $this->setCreated( Tools::param( 'created' ) ) ;
@@ -70,15 +74,15 @@ class KeywordModel extends ModelBase {
     /**
      * @return integer
      */
-    public function getKeywordId() {
-        return $this->_keywordId ;
+    public function getId() {
+        return $this->_id ;
     }
 
     /**
-     * @param integer $keywordId
+     * @param integer $id
      */
-    public function setKeywordId( $keywordId ) {
-        $this->_keywordId = $keywordId ;
+    public function setId( $id ) {
+        $this->_id = $id ;
     }
 
     /**

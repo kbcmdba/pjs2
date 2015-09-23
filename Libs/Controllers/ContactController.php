@@ -108,6 +108,7 @@ SQL;
     }
 
     /**
+     * @param integer $id
      * @see ControllerBase::get()
      */
     public function get( $id ) {

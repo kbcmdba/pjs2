@@ -42,13 +42,13 @@ class KeywordController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS keyword
      (
-       keywordId             INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , keywordValue          VARCHAR(255) NOT NULL
-     , sortKey               SMALLINT(3) NOT NULL DEFAULT 0
-     , created               TIMESTAMP NOT NULL DEFAULT 0
-     , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                             ON UPDATE CURRENT_TIMESTAMP
-     , PRIMARY KEY pk_keywordId ( keywordId )
+       id           INT UNSIGNED NOT NULL AUTO_INCREMENT
+     , keywordValue VARCHAR(255) NOT NULL
+     , sortKey      SMALLINT(3) NOT NULL DEFAULT 0
+     , created      TIMESTAMP NOT NULL DEFAULT 0
+     , updated      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                    ON UPDATE CURRENT_TIMESTAMP
+     , PRIMARY KEY pk_keywordId ( id )
      , UNIQUE index valueIdx ( keywordValue )
      )
 SQL;
@@ -69,7 +69,7 @@ CREATE TRIGGER keywordAfterDeleteTrigger
        DELETE
          FROM note
         WHERE appliesToTable = 'keyword'
-          AND appliesToId = OLD.keywordId ;
+          AND appliesToId = OLD.id ;
    END
 SQL;
         $this->_doDDL( $sql ) ;
@@ -79,11 +79,11 @@ CREATE TRIGGER keywordAfterUpdateTrigger
     ON keyword
    FOR EACH ROW
  BEGIN
-         IF OLD.keywordId <> NEW.keywordId
+         IF OLD.id <> NEW.id
        THEN
             UPDATE note
-               SET note.appliesToId = NEW.keywordId
-             WHERE note.appliesToId = OLD.keywordId
+               SET note.appliesToId = NEW.id
+             WHERE note.appliesToId = OLD.id
                AND note.appliestoTable = 'keyword'
                  ;
         END IF ;
