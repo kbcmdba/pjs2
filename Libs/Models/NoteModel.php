@@ -24,14 +24,21 @@
 /**
  * Template Model
  */
-class TemplateModel extends ModelBase {
+class NoteModel extends ModelBase {
 
-    private $_noteId ;
+    private $_id ;
     private $_appliesToTable ;
     private $_appliesToId ;
     private $_created ;
     private $_updated ;
     private $_noteText ;
+
+    private static $appliesToTables = array(     'job' => 1
+                                           , 'company' => 1
+                                           , 'contact' => 1
+                                           , 'keyword' => 1
+                                           ,  'search' => 1
+                                           ) ;
 
     /**
      * class constructor
@@ -44,25 +51,40 @@ class TemplateModel extends ModelBase {
      * Validate model for insert
      *
      * @return boolean
-     * @todo Implement TemplateModel::validateForAdd()
      */
     public function validateForAdd() {
-        return 0 ;
+        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'appliesToTable' ) ) )
+               && (   ( 1 === self::$appliesToTables[ Tools::param( 'appliesToTable' ) ] ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'appliesToId' ) ) )
+               && (   Tools::isNumeric( Tools::param( 'appliesToId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'noteText' ) ) )
+                ) ;
     }
 
     /**
      * Validate model for update
      *
      * @return boolean
-     * @todo Implement TemplateModel::validateForUpdate()
      */
     public function validateForUpdate() {
-        return 0 ;
+        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+               && (   Tools::isNumeric( Tools::param( 'id' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'appliesToTable' ) ) )
+               && (    (     'job' === Tools::param( 'appliesToTable' ) )
+                    || ( 'company' === Tools::param( 'appliesToTable' ) )
+                    || ( 'contact' === Tools::param( 'appliesToTable' ) )
+                    || ( 'keyword' === Tools::param( 'appliesToTable' ) )
+                    || (  'search' === Tools::param( 'appliesToTable' ) )
+                  )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'appliesToId' ) ) )
+               && (   Tools::isNumeric( Tools::param( 'appliesToId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'noteText' ) ) )
+                ) ;
     }
 
-    // @todo Implement TemplateModel::populateFromForm()
     public function populateFromForm() {
-        $this->setNoteId( Tools::param( 'noteId' ) ) ;
+        $this->setId( Tools::param( 'id' ) ) ;
         $this->setAppliesToTable( Tools::param( 'appliesToTable' ) ) ;
         $this->setAppliesToId( Tools::param( 'appliesToId' ) ) ;
         $this->setCreated( Tools::param( 'created' ) ) ;
@@ -73,15 +95,15 @@ class TemplateModel extends ModelBase {
     /**
      * @return integer
      */
-    public function getNoteId() {
-        return $this->_noteId ;
+    public function getId() {
+        return $this->_id ;
     }
 
     /**
-     * @param integer $noteId
+     * @param integer $id
      */
-    public function setNoteId( $noteId ) {
-        $this->_noteId = $noteId ;
+    public function setId( $id ) {
+        $this->_id = $id ;
     }
 
     /**
@@ -95,7 +117,17 @@ class TemplateModel extends ModelBase {
      * @param string $appliesToTable
      */
     public function setAppliesToTable( $appliesToTable ) {
-        $this->_appliesToTable = $appliesToTable ;
+        if  ( (     'job' === $appliesToTable )
+           || ( 'company' === $appliesToTable )
+           || ( 'contact' === $appliesToTable )
+           || ( 'keyword' === $appliesToTable )
+           || (  'search' === $appliesToTable )
+            ) {
+            $this->_appliesToTable = $appliesToTable ;
+        }
+        else {
+            throw new ModelException( "Invalid appliesToTable: $appliesToTable" ) ;
+        }
     }
 
     /**

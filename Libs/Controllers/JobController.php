@@ -160,6 +160,7 @@ SELECT id
      , positionTitle
      , location
      , url
+  FROM job
  WHERE id = ?
 SQL;
         $stmt = $this->_dbh->prepare( $sql ) ;

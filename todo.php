@@ -21,6 +21,7 @@
  *
  */
 
+// @todo Trim leading/trailing spaces from "stuff"
 // @todo Write ApplicationStatusSummaryListView
 // @todo Write ContactFormView
 // @todo Write ContactListView

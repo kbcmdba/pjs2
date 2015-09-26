@@ -204,7 +204,9 @@ SQL;
             $model->setContactAlternatePhone( $contactAlternatePhone ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
+            $models[] = $model ;
         }
+        return( $models ) ;
     }
 
     /**

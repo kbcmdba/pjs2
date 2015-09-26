@@ -56,29 +56,212 @@ SQL;
         $this->_doDDL( $sql ) ;
     }
 
-    // @todo Implement NoteController::get( $id )
+    /**
+     * @param integer $id
+     * @see ControllerBase::get()
+     */
     public function get( $id ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , appliesToTable
+     , appliesToId
+     , created
+     , updated
+     , noteText
+  FROM note
+ WHERE id = ?
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->bind_result( $id
+                                 , $appliesToTable
+                                 , $appliesToId
+                                 , $created
+                                 , $updated
+                                 , $noteText
+                                 ) ) {
+            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( $stmt->fetch() ) {
+            $model = new NoteModel() ;
+            $model->setId( $id ) ;
+            $model->setAppliesToTable( $appliesToTable ) ;
+            $model->setAppliesToId( $appliesToId ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            $model->setNoteText( $noteText ) ;
+        }
+        else {
+            $model = null ;
+        }
+        return( $model ) ;
     }
 
-    // @todo Implement NoteController::getSome( $whereClause )
+    /**
+     * @param string $whereClause
+     * @see ControllerBase::getSome()
+     */
     public function getSome( $whereClause = '1 = 1') {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , appliesToTable
+     , appliesToId
+     , created
+     , updated
+     , noteText
+  FROM note
+ WHERE $whereClause
+ ORDER
+    BY updated
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $id
+                          , $appliesToTable
+                          , $appliesToTableId
+                          , $created
+                          , $updated
+                          , $noteText
+                          ) ;
+        $models = array() ;
+        while ( $stmt->fetch() ) {
+            $model = new NoteModel() ;
+            $model->setId( $id ) ;
+            $model->setAppliesToTable( $appliesToTable ) ;
+            $model->setAppliesToId( $appliesToId ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            $model->setNoteText( $noteText ) ;
+            $models[] = $model ;
+        }
+        return( $models ) ;
     }
 
-    // @todo Implement NoteController::add( $model ) ;
+    /**
+     * @param NoteModel $model
+     * @see ControllerBase::add()
+     */
     public function add( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForAdd() ) {
+            try {
+                $query = <<<SQL
+INSERT note
+     ( id
+     , appliesToTable
+     , appliesToId
+     , created
+     , updated
+     , noteText
+     )
+VALUES ( NULL, ?, ?, NOW(), NOW(), ? )
+SQL;
+                $id             = $model->getId() ;
+                $appliesToTable = $model->getAppliesToTable() ;
+                $appliesToId    = $model->getAppliesToId() ;
+                $noteText       = $model->getNoteText() ;
+                $stmt           = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'isib'
+                                          , $id
+                                          , $appliesToTable
+                                          , $appliesToId
+                                          , $noteText
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( ! $stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                $newId = $stmt->insert_id ;
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( ! $stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $newId ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement NoteController::update( $model ) ;
+    /**
+     * @param NoteModel $model
+     * @see ControllerBase::update()
+     */
     public function update( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForUpdate() ) {
+            try {
+                $query = <<<SQL
+UPDATE note
+   SET appliesToTable = ?
+     , appliesToId = ?
+     , noteText = ?
+ WHERE id = ?
+SQL;
+                $id             = $model->getId() ;
+                $appliesToTable = $model->getAppliesToTable() ;
+                $appliesToId    = $model->getSortKey() ;
+                $noteText       = $model->getNoteText() ;
+                $stmt           = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'sibi'
+                                          , $appliesToTable
+                                          , $appliesToId
+                                          , $noteText
+                                          , $id
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( ! $stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( !$stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $id ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement NoteController::delete( $model ) ;
+    /**
+     * @param NoteModel $model
+     * @see ControllerBase::delete()
+     */
     public function delete( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $this->_deleteModelById( "DELETE FROM note WHERE id = ?", $model ) ;
     }
 
 }
