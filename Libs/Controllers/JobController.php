@@ -42,7 +42,7 @@ class JobController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS job
      (
-       jobId                 INT UNSIGNED NOT NULL AUTO_INCREMENT
+       id                 INT UNSIGNED NOT NULL AUTO_INCREMENT
      , primaryContactId      INT UNSIGNED NULL DEFAULT NULL
      , companyId             INT UNSIGNED NULL DEFAULT NULL
      , applicationStatusId   INT UNSIGNED NOT NULL
@@ -56,9 +56,9 @@ CREATE TABLE IF NOT EXISTS job
      , positionTitle         VARCHAR(255) NOT NULL DEFAULT ''
      , location              VARCHAR(255) NOT NULL DEFAULT ''
      , url                   VARCHAR(4096) NOT NULL DEFAULT ''
-     , PRIMARY KEY pk_jobId ( jobId )
+     , PRIMARY KEY pk_jobId ( id )
      , FOREIGN KEY fk_primaryContactId ( primaryContactId )
-        REFERENCES contact ( contactId )
+        REFERENCES contact ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      , FOREIGN KEY fk_companyId ( companyId )
@@ -114,11 +114,11 @@ CREATE TRIGGER jobAfterUpdateTrigger
                SET jss.statusCount = jss.statusCount + 1
              WHERE jss.id = OLD.applicationStatusId ;
         END IF ;
-         IF OLD.jobId <> NEW.jobId
+         IF OLD.id <> NEW.id
        THEN
             UPDATE note
-               SET note.appliesToId = NEW.jobId
-             WHERE note.appliesToId = OLD.jobId
+               SET note.appliesToId = NEW.id
+             WHERE note.appliesToId = OLD.id
                AND note.appliestoTable = 'job'
                  ;
       END IF ;
@@ -139,7 +139,7 @@ CREATE TRIGGER jobAfterDeleteTrigger
        DELETE
          FROM note
         WHERE note.appliesToTable = 'job'
-          AND note.appliesToId = OLD.jobId ;
+          AND note.appliesToId = OLD.id ;
    END
 SQL;
         $this->_doDDL( $sql ) ;

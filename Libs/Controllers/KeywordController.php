@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS keyword
      , updated      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                     ON UPDATE CURRENT_TIMESTAMP
      , PRIMARY KEY pk_keywordId ( id )
-     , UNIQUE index valueIdx ( keywordValue )
+     , UNIQUE INDEX valueIdx ( keywordValue )
      )
 SQL;
         $this->_doDDL( $sql ) ;
@@ -139,7 +139,7 @@ SQL;
      * @see ControllerBase::getSome()
      */
     public function getSome( $whereClause = '1 = 1') {
-            $sql = <<<SQL
+        $sql = <<<SQL
 SELECT id
      , keywordValue
      , sortKey
@@ -187,7 +187,7 @@ SQL;
 INSERT keyword
      ( id
      , keywordValue
-     , sortkey
+     , sortKey
      , created
      , updated
      )
@@ -200,8 +200,7 @@ SQL;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'isi'
-                                          , $id
+                if ( ! ( $stmt->bind_param( 'si'
                                           , $keywordValue
                                           , $sortKey
                                           ) ) ) {

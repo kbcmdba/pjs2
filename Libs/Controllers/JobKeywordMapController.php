@@ -42,42 +42,232 @@ class JobKeywordMapController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS jobKeywordMap
      (
-       jobKeywordMapId             INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , jobKeywordMapValue          VARCHAR(255) NOT NULL
-     , sortKey               SMALLINT(3) NOT NULL DEFAULT 0
-     , created               TIMESTAMP NOT NULL DEFAULT 0
-     , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                             ON UPDATE CURRENT_TIMESTAMP
-     , PRIMARY KEY pk_jobKeywordMapId ( jobKeywordMapId )
-     , UNIQUE index valueIdx ( jobKeywordMapValue )
+       id        INT UNSIGNED NOT NULL AUTO_INCREMENT
+     , jobId     INT UNSIGNED NOT NULL
+     , keywordId INT UNSIGNED NOT NULL
+     , sortKey   SMALLINT(3) NOT NULL DEFAULT 0
+     , created   TIMESTAMP NOT NULL DEFAULT 0
+     , updated   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                 ON UPDATE CURRENT_TIMESTAMP
+     , PRIMARY KEY pk_jobKeywordMapId ( id )
+     , FOREIGN KEY fk_jobIdx ( jobId )
+        REFERENCES job ( id )
+                ON UPDATE CASCADE
+                ON DELETE CASCADE
+     , FOREIGN KEY fk_keywordIdx ( keywordId )
+        REFERENCES keyword ( id )
+                ON UPDATE CASCADE
+                ON DELETE CASCADE
+     , UNIQUE KEY uk_jobKeyword ( jobId, keywordId )
      )
 SQL;
         $this->_doDDL( $sql ) ;
     }
 
-    // @todo Implement JobKeywordMapController::get( $id )
+    /**
+     * @param integer $id
+     * @see ControllerBase::get()
+     */
     public function get( $id ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , jobId
+     , keywordId
+     , sortKey
+     , created
+     , updated
+  FROM jobKeywordMap
+ WHERE id = ?
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->bind_result( $id
+                                 , $jobId
+                                 , $keywordId
+                                 , $sortKey
+                                 , $created
+                                 , $updated
+                                 ) ) {
+            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( $stmt->fetch() ) {
+            $model = new JobKeywordMapModel() ;
+            $model->setId( $id ) ;
+            $model->setJobId( $jobId ) ;
+            $model->setKeywordId( $keywordId ) ;
+            $model->setSortKey( $sortKey ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+        }
+        else {
+            $model = null ;
+        }
+        return( $model ) ;
     }
 
-    // @todo Implement JobKeywordMapController::getSome( $whereClause )
+    /**
+     * @param string $whereClause
+     * @see ControllerBase::getSome()
+     */
     public function getSome( $whereClause = '1 = 1') {
-        throw new ControllerException( "Not implemented." ) ;
+        $sql = <<<SQL
+SELECT id
+     , jobId
+     , keywordId
+     , sortKey
+     , created
+     , updated
+  FROM jobKeywordMap
+ WHERE $whereClause
+ ORDER
+    BY sortKey
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $id
+                          , $jobId
+                          , $keywordId
+                          , $sortKey
+                          , $created
+                          , $updated
+                          ) ;
+        $models = array() ;
+        while ( $stmt->fetch() ) {
+            $model = new JobKeywordMapModel() ;
+            $model->setId( $id ) ;
+            $model->setJobId( $jobId ) ;
+            $model->setKeywordId( $keywordId ) ;
+            $model->setSortKey( $sortKey ) ;
+            $model->setCreated( $created ) ;
+            $model->setUpdated( $updated ) ;
+            $models[] = $model ;
+        }
+        return( $models ) ;
     }
 
-    // @todo Implement JobKeywordMapController::add( $model ) ;
+    /**
+     * @param JobKeywordMapModel $model
+     * @see ControllerBase::add()
+     */
     public function add( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForAdd() ) {
+            try {
+                $query = <<<SQL
+INSERT jobKeywordMap
+     ( id
+     , jobId
+     , keywordId
+     , sortKey
+     , created
+     , updated
+     )
+VALUES ( NULL, ?, ?, ?, NOW(), NOW() )
+SQL;
+                $jobId     = $model->getJobId() ;
+                $keywordId = $model->getKeywordId() ;
+                $sortKey   = $model->getSortKey() ;
+                $stmt      = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'iii'
+                                          , $jobId
+                                          , $keywordId
+                                          , $sortKey
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( ! $stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                                                 . $this->_dbh->error .
+                                                 ')' ) ;
+                }
+                $newId = $stmt->insert_id ;
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( ! $stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $newId ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement JobKeywordMapController::update( $model ) ;
+    /**
+     * @param JobKeywordMapModel $model
+     * @see ControllerBase::update()
+     */
     public function update( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        if ( $model->validateForUpdate() ) {
+            try {
+                $query = <<<SQL
+UPDATE jobKeywordMap
+   SET jobId = ?
+     , keywordId = ?
+     , sortKey = ?
+ WHERE id = ?
+SQL;
+                $id        = $model->getId() ;
+                $jobId     = $model->getJobId() ;
+                $keywordId = $model->getKeywordId() ;
+                $sortKey   = $model->getSortKey() ;
+                $stmt      = $this->_dbh->prepare( $query ) ;
+                if ( ! $stmt ) {
+                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                }
+                if ( ! ( $stmt->bind_param( 'iiii'
+                                          , $jobId
+                                          , $keywordId
+                                          , $sortKey
+                                          , $id
+                                          ) ) ) {
+                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                }
+                if ( !$stmt->execute() ) {
+                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                            . $this->_dbh->error .
+                            ')' ) ;
+                }
+                /**
+                 * @SuppressWarnings checkAliases
+                 */
+                if ( !$stmt->close() ) {
+                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                }
+                return $id ;
+            }
+            catch ( Exception $e ) {
+                throw new ControllerException( $e->getMessage() ) ;
+            }
+        }
+        else {
+            throw new ControllerException( "Invalid data." ) ;
+        }
     }
 
-    // @todo Implement JobKeywordMapController::delete( $model ) ;
+    /**
+     * @param JobKeywordModel $model
+     * @see ControllerBase::delete()
+     */
     public function delete( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+        $this->_deleteModelById( "DELETE FROM jobKeywordMap WHERE id = ?", $model ) ;
     }
 
 }
