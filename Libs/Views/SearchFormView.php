@@ -23,10 +23,6 @@
 
 /**
  * Search Form View
- *
- * Change search to your model's name
- * Change Search to your model's Name
- * Edit Search to your class description (used for a button)
  */
 class SearchFormView extends FormViewBase {
     /** @var SearchModel */
@@ -61,17 +57,22 @@ class SearchFormView extends FormViewBase {
      * @return string
      */
     public function getForm( $readOnly = 'readwrite' ) {
-        $RO              = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
-        $searchModel     = $this->_searchModel ;
-        $title           = $this->getTitle() ;
-        $id              = $searchModel->getId() ;
-        $engineName      = htmlspecialchars( $searchModel->getEngineName() ) ;
-        $searchName      = htmlspecialchars( $searchModel->getSearchName() ) ;
-        $url             = htmlspecialchars( $searchModel->getUrl() ) ;
-        $created         = $searchModel->getCreated() ;
-        $updated         = $searchModel->getUpdated() ;
-        $buttonLabel     = $this->getButtonLabel() ;
-        $returnValue     = <<<HTML
+        $RO               = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
+        $searchModel      = $this->_searchModel ;
+        $title            = $this->getTitle() ;
+        $id               = $searchModel->getId() ;
+        $engineName       = htmlspecialchars( $searchModel->getEngineName() ) ;
+        $searchName       = htmlspecialchars( $searchModel->getSearchName() ) ;
+        $url              = htmlspecialchars( $searchModel->getUrl() ) ;
+        $created          = $searchModel->getCreated() ;
+        $updated          = $searchModel->getUpdated() ;
+        $buttonLabel      = $this->getButtonLabel() ;
+        $noteController   = new NoteController( 'read' ) ;
+        $noteModels       = $noteController->getSome( "appliesToTable = 'search' and appliesToId = $id" ) ;
+        $noteListView     = new NoteListView( $noteModels ) ;
+        $noteListView->setNoteModels( 'search' ) ;
+        $noteListViewText = $noteListView->getView() ;
+        $returnValue      = <<<HTML
     <h2>$title</h2>
     <form method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
@@ -108,6 +109,7 @@ class SearchFormView extends FormViewBase {
         </tr>
       </table>
     </form>
+    $noteListViewText
 HTML;
         return $returnValue ;
     }
