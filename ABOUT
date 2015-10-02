@@ -1,0 +1,13 @@
+Welcome to PHP Job Seeker 2
+
+PJS2 is a job search tracking tool that helps candidates track their searches,
+companies, specific jobs and contacts in order to help them stay on-track while
+seeking a position. While this tool doesn't do the work of searching for jobs,
+it makes keeping track of opportunities candidates have found much easier.
+
+At this time, we assume that users are able to install a SSL-enabled web server
+with PHP, can use git to download updates, and can set up their own local
+installation of MySQL.
+
+Eventually, PJS may evolve into a multi-user resource that will allow others
+to host PJS for you but that's not the case today.
