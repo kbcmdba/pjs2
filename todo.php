@@ -28,5 +28,8 @@
 // @todo Write JobFormView
 // @todo Write JobListView
 // @todo Write KeywordListView
-// @todo Write NoteListView
+// @todo Write note interface for companies
+// @todo Write note interface for contacts
+// @todo Write note interface for jobs
+// @todo Write note interface for keywords
 // @FIXME Improve input validation
