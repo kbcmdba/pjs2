@@ -67,11 +67,18 @@ class SearchFormView extends FormViewBase {
         $created          = $searchModel->getCreated() ;
         $updated          = $searchModel->getUpdated() ;
         $buttonLabel      = $this->getButtonLabel() ;
-        $noteController   = new NoteController( 'read' ) ;
-        $noteModels       = $noteController->getSome( "appliesToTable = 'search' and appliesToId = $id" ) ;
-        $noteListView     = new NoteListView( $noteModels ) ;
-        $noteListView->setNoteModels( 'search' ) ;
-        $noteListViewText = $noteListView->getView() ;
+        if ( Tools::isNumeric( $id ) ) {
+            $noteController   = new NoteController( 'read' ) ;
+            $noteModels       = $noteController->getSome( "appliesToTable = 'search' and appliesToId = $id" ) ;
+            $noteListView     = new NoteListView( 'html', $noteModels ) ;
+            $noteListView->setNoteModels( $noteModels ) ;
+            $noteListView->setAppliesToTable( 'search' ) ;
+            $noteListView->setAppliesToId( $id ) ;
+            $noteListViewText = $noteListView->getView() ;
+        }
+        else {
+            $noteListViewText = '' ;
+        }
         $returnValue      = <<<HTML
     <h2>$title</h2>
     <form method="GET">

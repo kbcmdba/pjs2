@@ -28,7 +28,9 @@
 class NoteListView extends ListViewBase {
 
     /** @var string */
-    private $_noteType ;
+    private $_noteAppliesToTable ;
+    /** @var integer */
+    private $_noteAppliesToId ;
     /** @var string */
     private $_viewType ;
     /** @var mixed */
@@ -58,23 +60,24 @@ class NoteListView extends ListViewBase {
      * @return string
      */
     private function _getHtmlView() {
-        $noteType = $this->getNoteType() ;
-        $body = <<<HTML
-<a href="addNote.php?noteType=$noteType">Add new $noteType note</a><br />
+        $noteAppliesToTable = $this->getNoteAppliesToTable() ;
+        $noteAppliesToId    = $this->getNoteAppliesToId() ;
+        $body               = <<<HTML
+<a href="addNote.php?appliesToTable=$noteAppliesToTable&appliesToId=$noteAppliesToId">Add new $noteAppliesToTable note</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Notes</caption>
   <tr><th>Actions</th><th>ID</th><th>Note</th><th>Created</th><th>Updated</th></tr>
 HTML;
         foreach ( $this->getNoteModels() as $noteModel ) {
-            $id = $noteModel->getId() ;
-            $created = $noteModel->getCreated() ;
-            $updated = $noteModel->getUpdated() ;
+            $id       = $noteModel->getId() ;
+            $created  = $noteModel->getCreated() ;
+            $updated  = $noteModel->getUpdated() ;
             $noteText = htmlspecialchars( $noteModel->getNoteText() ) ;
-            $body .= <<<HTML
+            $body     .= <<<HTML
   <tr>
     <td>
-        <a href="editNote.php?noteType=$noteType&id=$id">Edit</a>
-      | <a href="deleteNote.php?noteType=$noteType&id=$id">Delete</a>
+        <a href="editNote.php?id=$id">Edit</a>
+      | <a href="deleteNote.php?id=$id">Delete</a>
     </td>
     <td>$id</td>
     <td>$noteText</td>
@@ -83,9 +86,7 @@ HTML;
   </tr>
 HTML;
         }
-
-        $body .= '</table>' ;
-
+        $body .= "</table>\n" ;
         return $body ;
     }
 
@@ -106,15 +107,29 @@ HTML;
     /**
      * @return string
      */
-    public function getNoteType() {
-        return $this->_noteType ;
+    public function getNoteAppliesToTable() {
+        return $this->_noteAppliesToTable ;
     }
 
     /**
-     * @param string $noteType
+     * @param string $noteAppliesToTable
      */
-    public function setNoteType( $noteType ) {
-        $this->_noteType = $noteType ;
+    public function setAppliesToTable( $noteAppliesToTable ) {
+        $this->_noteAppliesToTable = $noteAppliesToTable ;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getNoteAppliesToId() {
+        return $this->_noteAppliesToId ;
+    }
+
+    /**
+     * @param string $noteAppliesToId
+     */
+    public function setAppliesToId( $noteAppliesToId ) {
+        $this->_noteAppliesToId = $noteAppliesToId ;
     }
 
     /**

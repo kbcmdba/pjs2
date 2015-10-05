@@ -42,14 +42,14 @@ class NoteController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS note
      (
-       noteId                INT UNSIGNED NOT NULL AUTO_INCREMENT
+       id                INT UNSIGNED NOT NULL AUTO_INCREMENT
      , appliesToTable        ENUM( 'job', 'company', 'contact', 'keyword', 'search' ) NOT NULL
      , appliesToId           INT UNSIGNED NOT NULL
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP
      , noteText              TEXT NOT NULL
-     , PRIMARY KEY pk_noteId ( noteId )
+     , PRIMARY KEY pk_noteId ( id )
      , INDEX appliesTo ( appliesToTable, appliesToId, created )
      )
 SQL;
@@ -121,14 +121,14 @@ SELECT id
 SQL;
         $stmt = $this->_dbh->prepare( $sql ) ;
         if ( ! $stmt ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ') from this SQL: ' . $sql ) ;
         }
         if ( ! $stmt->execute() ) {
             throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
         }
         $stmt->bind_result( $id
                           , $appliesToTable
-                          , $appliesToTableId
+                          , $appliesToId
                           , $created
                           , $updated
                           , $noteText
@@ -173,8 +173,7 @@ SQL;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'isib'
-                                          , $id
+                if ( ! ( $stmt->bind_param( 'sis'
                                           , $appliesToTable
                                           , $appliesToId
                                           , $noteText
@@ -220,13 +219,13 @@ UPDATE note
 SQL;
                 $id             = $model->getId() ;
                 $appliesToTable = $model->getAppliesToTable() ;
-                $appliesToId    = $model->getSortKey() ;
-                $noteText       = $model->getNoteText() ;
+                $appliesToId    = $model->getAppliesToId() ;
+                $noteText       = htmlspecialchars( $model->getNoteText() ) ;
                 $stmt           = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'sibi'
+                if ( ! ( $stmt->bind_param( 'sisi'
                                           , $appliesToTable
                                           , $appliesToId
                                           , $noteText
