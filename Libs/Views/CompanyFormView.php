@@ -80,6 +80,18 @@ class CompanyFormView extends FormViewBase {
         $updated            = $companyModel->getUpdated() ;
         $buttonLabel        = $this->getButtonLabel() ;
         $agencySelectList   = $this->getAgencySelectList( $id, $agencyCompanyId, $RO ) ;
+        if ( Tools::isNumeric( $id ) ) {
+            $noteController   = new NoteController( 'read' ) ;
+            $noteModels       = $noteController->getSome( "appliesToTable = 'company' and appliesToId = $id" ) ;
+            $noteListView     = new NoteListView( 'html', $noteModels ) ;
+            $noteListView->setNoteModels( $noteModels ) ;
+            $noteListView->setAppliesToTable( 'company' ) ;
+            $noteListView->setAppliesToId( $id ) ;
+            $noteListViewText = $noteListView->getView() ;
+        }
+        else {
+            $noteListViewText = '' ;
+        }
         $returnValue     = <<<HTML
     <h2>$title</h2>
     <form method="GET">
@@ -145,6 +157,7 @@ class CompanyFormView extends FormViewBase {
         </tr>
       </table>
     </form>
+    $noteListViewText
 HTML;
         return $returnValue ;
     }
