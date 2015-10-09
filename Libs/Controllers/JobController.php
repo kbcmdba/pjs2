@@ -223,13 +223,14 @@ SELECT id
      , positionTitle
      , location
      , url
+  FROM job
  WHERE $whereClause
  ORDER
     BY nextActionDue DESC
 SQL;
         $stmt = $this->_dbh->prepare( $sql ) ;
         if ( ! $stmt ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ') ' . $sql ) ;
         }
         if ( ! $stmt->execute() ) {
             throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;

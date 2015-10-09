@@ -25,6 +25,10 @@ require_once 'Libs/autoload.php' ;
 
 $config = new Config() ;
 $page = new PJSWebPage( $config->getTitle() . " - Jobs" ) ;
-$body = "<h2>Jobs</h2>\n<div>Not yet written.<div>" ;
+$body = "<h2>Jobs</h2>\n" ;
+$controller = new JobController( 'read' ) ;
+$modelList = $controller->getAll() ;
+$modelListView = new JobListView( 'html', $modelList ) ;
+$body .= $modelListView->getView() ;
 $page->setBody( $body ) ;
 $page->displayPage() ;
