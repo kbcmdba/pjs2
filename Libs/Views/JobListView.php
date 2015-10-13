@@ -57,7 +57,7 @@ class JobListView extends ListViewBase {
      */
     private function _getHtmlView() {
         $body = <<<'HTML'
-<a href="addJobs.php">Add a new job</a><br />
+<a href="addJob.php">Add a new job</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Jobs</caption>
   <tr>
@@ -87,6 +87,29 @@ HTML;
             $positionTitle       = $jobModel->getPositionTitle() ;
             $location            = $jobModel->getLocation() ;
             $url                 = $jobModel->getUrl() ;
+            if ( $primaryContactId >= 1 ) {
+                $contactController = new ContactController( 'read' ) ;
+                $contactModel      = $contactController->get( $primaryContactId ) ;
+                $contactName       = $contactModel->getContactName() ;
+            }
+            if ( $companyId >= 1 ) {
+                $companyController   = new CompanyController( 'read' ) ;
+                $companyModel        = $companyController->get( $companyId ) ;
+                $companyName         = $companyModel->getCompanyName() ;
+            }
+            else {
+                $companyName         = '' ;
+            }
+            if ( $applicationStatusId >= 1 ) {
+                $applicationStatusController = new ApplicationStatusController( 'read' ) ;
+                $applicationStatusModel      = $applicationStatusController->get( $applicationStatusId ) ;
+                $applicationStatusValue      = $applicationStatusModel->getStatusValue() ;
+                $applicationStatusStyle      = $applicationStatusModel->getStyle() ;
+            }
+            else {
+                $applicationStatusValue      = '' ;
+                $applicationStatusStyle      = '' ;
+            }
             // @FIXME left off here.
             $body .= <<<HTML
   <tr>
@@ -94,9 +117,15 @@ HTML;
         <a href="editJobs.php?id=$id">Edit</a>
       | <a href="deleteJobs.php?id=$id">Delete</a>
     </td>
-    <td>$blah</td>
-    <td>$blah</td>
-    <td>$blah</td>
+    <td>$urgency</td>
+    <td>$positionTitle</td>
+    <td>$location</td>
+    <td>$companyName</td>
+    <td>$contactName</td>
+    <td style="$applicationStatusStyle">$applicationStatusValue</td>
+    <td>$nextAction</td>
+    <td>$nextActionDue</td>
+    <td>$url</td>
   </tr>
 HTML;
         }

@@ -26,7 +26,6 @@
 // @todo Write ContactFormView
 // @todo Write ContactListView
 // @todo Write JobFormView
-// @todo Write JobListView
 // @todo Write KeywordFormView
 // @todo Write KeywordListView
 // @todo Write note interface for contacts
