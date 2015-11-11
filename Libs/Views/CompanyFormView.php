@@ -194,4 +194,33 @@ HTML;
         return $str ;
     }
 
+    /**
+     * Return a selection list of agency names
+     *
+     * @param integer $selectedCompanyId
+     * @param string  $readOnly
+     * @throws ControllerException
+     */
+    public function getCompanySelectList( $selectedCompanyId, $readOnly ) {
+        $companyController = new CompanyController( 'read' ) ;
+        $companyModels = $companyController->getAll() ;
+        $str = "<select name=\"companyId\" $readOnly>\n" ;
+        if ( ( ! isset( $selectedCompanyId ) ) || ( 0 === $selectedCompanyId ) ) {
+            $str .= "  <option value=\"\" selected=\"selected\">None</option>\n" ;
+        }
+        else {
+            $str .= "  <option value=\"\" >None</option>\n" ;
+        }
+        foreach ( $companyModels as $companyModel ) {
+            $id = $companyModel->getId() ;
+            $companyName = $companyModel->getCompanyName() ;
+            $companyCity = $companyModel->getCompanyCity() ;
+            $companyState = $companyModel->getCompanyState() ;
+            $selected = ( $selectedCompanyId === $id ) ? 'selected="selected"' : '' ;
+            $str .= "  <option value=\"$id\" $selected>$companyName ($companyCity, $companyState)</option>\n" ;
+        }
+        $str .= "</select>\n" ;
+        return $str ;
+    }
+
 }

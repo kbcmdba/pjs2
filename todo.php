@@ -21,15 +21,16 @@
  *
  */
 
+// Sorry all - my time is limited at the moment so development has been slow.
+// After the holidays, I should have more time again. In the meantime, here's
+// an intermediate check-in. :-)
+
 // @FIXME Improve input validation
 // @todo Trim leading/trailing spaces from "stuff"
-// @todo Write ApplicationStatusFormView::getApplicationStatusSelectList( $applicationStatusId )
 // @todo Write ApplicationStatusListView
-// @todo Write ContactFormView
-// @todo Write ContactFormView::getContactSelectList( $contactId )
 // @todo Write ContactListView
 // @todo Write KeywordFormView
-// @todo Write KeywordFormView::getKeywordSelectList( $keywordId )
+// @todo Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )
 // @todo Write KeywordListView
 // @todo Write note interface for contacts
 // @todo Write note interface for jobs

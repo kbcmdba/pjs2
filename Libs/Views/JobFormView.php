@@ -57,9 +57,9 @@ class JobFormView extends FormViewBase {
      * @return string
      */
     public function getForm( $readOnly = 'readwrite' ) {
-        $RO                  = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
-        $jobModel            = $this->_jobModel ;
-        $title               = $this->getTitle() ;
+        $RO                    = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
+        $jobModel              = $this->_jobModel ;
+        $title                 = $this->getTitle() ;
         $id                    = $jobModel->getId() ;
         $primaryContactId      = $jobModel->getPrimaryContactId() ;
         $companyId             = $jobModel->getCompanyId() ;
@@ -74,10 +74,12 @@ class JobFormView extends FormViewBase {
         $location              = $jobModel->getLocation() ;
         $url                   = $jobModel->getUrl() ;
         $buttonLabel           = $this->getButtonLabel() ;
-        $contactListView       = new ContactFormView() ;
-        $contactList           = $contactListView->getContactSelectList( $primaryContactId ) ;
+        $contactFormView       = new ContactFormView() ;
+        $contactList           = $contactFormView->getContactSelectList( $primaryContactId, $RO ) ;
+        $companyFormView       = new CompanyFormView() ;
+        $companyList           = $companyFormView->getCompanySelectList( $companyId, $RO ) ;
         $applicationStatusView = new ApplicationStatusFormView( ) ;
-        $applicationStatusList = $applicationStatusView->getApplicationStatusSelectList( $applicationStatusId ) ;
+        $applicationStatusList = $applicationStatusView->getApplicationStatusSelectList( $applicationStatusId, $RO ) ;
         $returnValue           = <<<HTML
     <h2>$title</h2>
     <form method="GET">
@@ -88,15 +90,51 @@ class JobFormView extends FormViewBase {
         </tr>
         <tr>
           <th>Primary Contact</th>
-          <td>$primaryContactList</td>
+          <td>$contactList</td>
         </tr>
         <tr>
-          <th>ColumnLabel</th>
-          <td><input type="text" name="someName" value="$someValue" $RO /></td>
+          <th>Company</th>
+          <td>$companyList</th>
         </tr>
         <tr>
-          <th>DateColumnLabel</th>
-          <td><input type="text" name="someDate" value="$someDate" class="datepicker" $RO/></td>
+          <th>Application Status</th>
+          <td>$applicationStatusList</td>
+        </tr>
+        <tr>
+          <th>Last Status Change</th>
+          <td><input type="text" name="lastStatusChange" value="$lastStatusChange" readonly="readonly" /></td>
+        </tr>
+        <tr>
+          <th>Urgency</th>
+          <td><input type="text" name="urgency" value="$urgency" $RO /></td>
+        </tr>
+        <tr>
+          <th>Created</th>
+          <td><input type="text" name="created" value="$created" readonly="readonly" /></td>
+        </tr>
+        <tr>
+          <th>Updated</th>
+          <td><input type="text" name="updated" value="$updated" readonly="readonly" /></td>
+        </tr>
+        <tr>
+          <th>Next Action Due</th>
+          <td><input type="text" name="nextActionDue" value="$nextActionDue" class="datepicker" $RO/></td>
+        </tr>
+        <tr>
+          <th>Next Action</th>
+          <td><input type="text" name="nextAction" value="$nextAction" $RO /></td>
+        </tr>
+        <tr>
+          <th>Position Title</th>
+          <td><input type="text" name="positionTitle" value="$positionTitle" $RO /></td>
+        </tr>
+        <tr>
+          <th>Location</th>
+          <td><input type="text" name="location" value="$location" $RO /></td>
+        </tr>
+        <tr>
+          <th>URL</th>
+          <td><input type="text" name="url" value="$url" $RO /></td>
         </tr>
         <tr>
           <td colspan="2">

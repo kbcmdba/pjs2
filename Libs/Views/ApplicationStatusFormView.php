@@ -106,4 +106,26 @@ HTML;
         return $returnValue ;
     }
 
+    // @todo Write ApplicationStatusFormView::getApplicationStatusSelectList( $selectedApplicationStatusId, $readOnly )
+    public function getApplicationStatusSelectList( $selectedApplicationStatusId, $readOnly ) {
+        $applicationStatusController = new ApplicationStatusController( 'read' ) ;
+        $applicationStatusModels = $applicationStatusController->getSome( 'isActive = 1' ) ;
+        $str = "<select name=\"applicationStatusId\" $readOnly>\n" ;
+        if ( ( ! isset( $selectedApplicationStatusId ) ) || ( 0 === $selectedApplicationStatusId ) ) {
+            $str .= "  <option value=\"\" selected=\"selected\">None</option>\n" ;
+        }
+        else {
+            $str .= "  <option value=\"\" >None</option>\n" ;
+        }
+        foreach ( $applicationStatusModels as $applicationStatusModel ) {
+            $id = $applicationStatusModel->getId() ;
+            $statusValue = $applicationStatusModel->getStatusValue() ;
+            $style       = $applicationStatusModel->getStyle() ;
+            $selected = ( $selectedApplicationStatusId === $id ) ? 'selected="selected"' : '' ;
+            $str .= "  <option value=\"$id\" $selected style=\"$style\">$statusValue</option>\n" ;
+        }
+        $str .= "</select>\n" ;
+        return $str ;
+    }
+
 }
