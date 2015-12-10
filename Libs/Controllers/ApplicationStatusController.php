@@ -92,20 +92,21 @@ INSERT applicationStatus
      , isActive
      , statusValue
      , sortKey
+     , style
      , created
      , updated
      )
-VALUES (  1, 1, 'FOUND'        , 10  , NOW(), NOW() )
-     , (  2, 1, 'CONTACTED'    , 20  , NOW(), NOW() )
-     , (  3, 1, 'APPLIED'      , 30  , NOW(), NOW() )
-     , (  4, 1, 'INTERVIEWING' , 40  , NOW(), NOW() )
-     , (  5, 1, 'FOLLOWUP'     , 50  , NOW(), NOW() )
-     , (  6, 1, 'CHASING'      , 60  , NOW(), NOW() )
-     , (  7, 1, 'NETWORKING'   , 70  , NOW(), NOW() )
-     , (  8, 0, 'UNAVAILABLE'  , 999 , NOW(), NOW() )
-     , (  9, 0, 'INVALID'      , 999 , NOW(), NOW() )
-     , ( 10, 0, 'DUPLICATE'    , 999 , NOW(), NOW() )
-     , ( 11, 0, 'CLOSED'       , 999 , NOW(), NOW() )
+VALUES (  1, 1, 'FOUND'       , 10  , 'background-color: lightgreen; color: blue;', NOW(), NOW() )
+     , (  2, 1, 'CONTACTED'   , 20  , 'background-color: orange; color: blue;'    , NOW(), NOW() )
+     , (  3, 1, 'APPLIED'     , 30  , 'background-color: yellow; color: blue;'    , NOW(), NOW() )
+     , (  4, 1, 'INTERVIEWING', 40  , 'background-color: white; color: red;'      , NOW(), NOW() )
+     , (  5, 1, 'FOLLOWUP'    , 50  , 'background-color: yellow; color: black;'   , NOW(), NOW() )
+     , (  6, 1, 'CHASING'     , 60  , 'background-color: red; color: black;'      , NOW(), NOW() )
+     , (  7, 1, 'NETWORKING'  , 70  , 'background-color: cyan; color: black;'     , NOW(), NOW() )
+     , (  8, 0, 'UNAVAILABLE' , 999 , 'background-color: black; color: white;'    , NOW(), NOW() )
+     , (  9, 0, 'INVALID'     , 999 , 'background-color: black; color: white;'    , NOW(), NOW() )
+     , ( 10, 0, 'DUPLICATE'   , 999 , 'background-color: black; color: white;'    , NOW(), NOW() )
+     , ( 11, 0, 'CLOSED'      , 999 , 'background-color: black; color: white;'    , NOW(), NOW() )
 SQL;
         $this->_doDDL( $sql ) ;
     }
