@@ -60,6 +60,7 @@ class ContactFormView extends FormViewBase {
         $RO              = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
         $contactModel    = $this->_contactModel ;
         $title           = $this->getTitle() ;
+        $contactId       = $contactModel->getId() ;
         $companyId       = $contactModel->getContactCompanyId() ;
         $contactName     = $contactModel->getContactName() ;
         $contactEmail    = $contactModel->getContactEmail() ;
@@ -68,7 +69,7 @@ class ContactFormView extends FormViewBase {
         $created         = $contactModel->getCreated() ;
         $updated         = $contactModel->getUpdated() ;
         $companyFormView = new CompanyFormView() ;
-        $companyList = $companyFormView->getCompanySelectList( $companyId, $RO ) ;
+        $companyList     = $companyFormView->getCompanySelectList( $companyId, $RO ) ;
         $buttonLabel     = $this->getButtonLabel() ;
         $returnValue     = <<<HTML
     <h2>$title</h2>
@@ -76,7 +77,7 @@ class ContactFormView extends FormViewBase {
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
           <th>ID</th>
-          <td><input type="text" name="id" value="$id" readonly="readonly" /></td>
+          <td><input type="text" name="id" value="$contactId" readonly="readonly" /></td>
         </tr>
         <tr>
           <th>Contact's Company</th>

@@ -71,7 +71,7 @@ class ContactModel extends ModelBase {
     }
 
     public function populateFromForm() {
-        $this->setContactId( Tools::param( 'contactId' ) ) ;
+        $this->setId( Tools::param( 'id' ) ) ;
         $this->setContactCompanyId( Tools::param( 'contactCompanyId' ) ) ;
         $this->setContactName( Tools::param( 'contactName' ) ) ;
         $this->setContactEmail( Tools::param( 'contactEmail' ) ) ;

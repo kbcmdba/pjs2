@@ -25,6 +25,10 @@ require_once 'Libs/autoload.php' ;
 
 $config = new Config() ;
 $page = new PJSWebPage( $config->getTitle() . " - Contacts" ) ;
-$body = "<h2>Contacts</h2>\n<div>Not yet written.<div>" ;
+$body = "<h2>Contacts</h2>\n" ;
+$contactController = new ContactController( 'read' ) ;
+$contactModelList = $contactController->getAll() ;
+$contactListView = new ContactListView( 'html', $contactModelList ) ;
+$body .= $contactListView->getView() ;
 $page->setBody( $body ) ;
 $page->displayPage() ;
