@@ -52,8 +52,8 @@ CREATE TABLE contact
      , contactCompanyId      INT UNSIGNED NOT NULL DEFAULT 0
      , contactName           VARCHAR(100) NOT NULL DEFAULT ''
      , contactEmail          VARCHAR(100) NOT NULL DEFAULT ''
-     , contactPhone          INT UNSIGNED NOT NULL
-     , contactAlternatePhone INT UNSIGNED NULL DEFAULT NULL
+     , contactPhone          VARCHAR(25) NOT NULL DEFAULT ''
+     , contactAlternatePhone VARCHAR(25) NOT NULL DEFAULT ''
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP
@@ -239,8 +239,7 @@ SQL;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'iissii'
-                                          , $id
+                if ( ! ( $stmt->bind_param( 'issss'
                                           , $contactCompanyId
                                           , $contactName
                                           , $contactEmail
@@ -298,7 +297,7 @@ SQL;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'issii'
+                if ( ! ( $stmt->bind_param( 'issssi'
                                           , $contactCompanyId
                                           , $contactName
                                           , $contactEmail

@@ -28,7 +28,6 @@
 // @FIXME Improve input validation
 // @todo Trim leading/trailing spaces from "stuff"
 // @todo Write ApplicationStatusListView
-// @todo Write ContactListView
 // @todo Write KeywordFormView
 // @todo Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )
 // @todo Write KeywordListView

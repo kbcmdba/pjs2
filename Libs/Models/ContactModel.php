@@ -49,7 +49,7 @@ class ContactModel extends ModelBase {
      */
     public function validateForAdd() {
         return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactCompanyid' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactName' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactEmail' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactPhone' ) ) )
@@ -63,7 +63,7 @@ class ContactModel extends ModelBase {
      */
     public function validateForUpdate() {
         return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactCompanyid' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactName' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactEmail' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactPhone' ) ) )
@@ -72,7 +72,7 @@ class ContactModel extends ModelBase {
 
     public function populateFromForm() {
         $this->setId( Tools::param( 'id' ) ) ;
-        $this->setContactCompanyId( Tools::param( 'contactCompanyId' ) ) ;
+        $this->setContactCompanyId( Tools::param( 'companyId' ) ) ;
         $this->setContactName( Tools::param( 'contactName' ) ) ;
         $this->setContactEmail( Tools::param( 'contactEmail' ) ) ;
         $this->setContactPhone( Tools::param( 'contactPhone' ) ) ;

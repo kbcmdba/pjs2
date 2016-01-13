@@ -736,6 +736,196 @@
 	<td>link=Companies</td>
 	<td></td>
 </tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Add new company</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=h2</td>
+	<td>Add Company</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>ID</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/th</td>
+	<td>Is An Agency</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[3]/th</td>
+	<td>Agency Of</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[4]/th</td>
+	<td>Company Name</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[5]/th</td>
+	<td>Company Address</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[6]/th</td>
+	<td>Company Address (Line 2)</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[7]/th</td>
+	<td>Company City</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[8]/th</td>
+	<td>Company State</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[9]/th</td>
+	<td>Company Zip Code</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[10]/th</td>
+	<td>Company Phone Number</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[11]/th</td>
+	<td>Company URL (Main)</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[12]/th</td>
+	<td>Created</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[13]/th</td>
+	<td>Updated</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=id</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotChecked</td>
+	<td>name=isAnAgency</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertSelectedLabel</td>
+	<td>name=agencyCompanyId</td>
+	<td>None</td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=companyName</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=companyAddress1</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=companyAddress2</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=companyCity</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=companyState</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=companyZip</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=companyPhone</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=companyUrl</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=created</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertValue</td>
+	<td>name=updated</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=companyName</td>
+	<td>Company 4</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=companyAddress1</td>
+	<td>Company4Addr1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=companyAddress2</td>
+	<td>Company4Addr2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=companyCity</td>
+	<td>Company4City1</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=companyState</td>
+	<td>S4</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=companyZip</td>
+	<td>00004</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=companyPhone</td>
+	<td>004-000-0000</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=companyUrl</td>
+	<td>http://www.testme4.com/</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>name=act</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td>Added company # 4</td>
+	<td></td>
+</tr>
 </tbody></table>
 </body>
 </html>
