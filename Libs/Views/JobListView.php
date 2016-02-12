@@ -82,7 +82,7 @@ HTML;
             $urgency             = $jobModel->getUrgency() ;
             $created             = $jobModel->getCreated() ;
             $updated             = $jobModel->getUpdated() ;
-            $nextActionDue       = $jobModel->getNexActionDue() ;
+            $nextActionDue       = $jobModel->getNextActionDue() ;
             $nextAction          = $jobModel->getNextAction() ;
             $positionTitle       = $jobModel->getPositionTitle() ;
             $location            = $jobModel->getLocation() ;
@@ -110,7 +110,6 @@ HTML;
                 $applicationStatusValue      = '' ;
                 $applicationStatusStyle      = '' ;
             }
-            // @FIXME left off here.
             $body .= <<<HTML
   <tr>
     <td>

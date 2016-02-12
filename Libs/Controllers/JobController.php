@@ -281,7 +281,7 @@ INSERT job
      ( id
      , primaryContactId
      , companyId
-     , applicationId
+     , applicationStatusId
      , lastStatusChange
      , urgency
      , created
@@ -294,7 +294,6 @@ INSERT job
      )
 VALUES ( NULL, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ? )
 SQL;
-                $id                  = $model->getId() ;
                 $primaryContactId    = $model->getPrimaryContactId() ;
                 $companyId           = $model->getCompanyId() ;
                 $applicationStatusId = $model->getApplicationStatusId() ;
@@ -307,10 +306,9 @@ SQL;
                 $url                 = $model->getUrl() ;
                 $stmt                = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                    throw new ControllerException( 'Prepared statement failed for ' . $query . ' - ' . $this->_dbh->error ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'iiiisssssss'
-                                          , $id
+                if ( ! ( $stmt->bind_param( 'iiisssssss'
                                           , $primaryContactId
                                           , $companyId
                                           , $applicationStatusId

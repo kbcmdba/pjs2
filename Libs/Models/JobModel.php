@@ -54,7 +54,7 @@ class JobModel extends ModelBase {
      */
     public function validateForAdd() {
         return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'primaryContactId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'applicationStatusId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'urgency' ) ) )
@@ -72,7 +72,7 @@ class JobModel extends ModelBase {
      */
     public function validateForUpdate() {
         return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'primaryContactId' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'applicationStatusId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'urgency' ) ) )
@@ -84,8 +84,8 @@ class JobModel extends ModelBase {
     }
 
     public function populateFromForm() {
-        $this->setJobId( Tools::param( 'jobId' ) ) ;
-        $this->setPrimaryContactId( Tools::param( 'primaryContactId' ) ) ;
+        $this->setId( Tools::param( 'id' ) ) ;
+        $this->setPrimaryContactId( Tools::param( 'contactId' ) ) ;
         $this->setCompanyId( Tools::param( 'companyId' ) ) ;
         $this->setApplicationStatusId( Tools::param( 'applicationStatusId' ) ) ;
         $this->setLastStatusChange( Tools::param( 'lastStatusChange' ) ) ;
