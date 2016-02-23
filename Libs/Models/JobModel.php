@@ -159,7 +159,12 @@ class JobModel extends ModelBase {
      * @return string
      */
     public function getLastStatusChange() {
-        return $this->_lastStatusChange ;
+        if ( "0000-00-00 00:00:00" === $this->_lastStatusChange ) {
+            return "" ;
+        }
+        else {
+            return $this->_lastStatusChange ;
+        }
     }
 
     /**

@@ -113,8 +113,8 @@ HTML;
             $body .= <<<HTML
   <tr>
     <td>
-        <a href="editJobs.php?id=$id">Edit</a>
-      | <a href="deleteJobs.php?id=$id">Delete</a>
+        <a href="editJob.php?id=$id">Edit</a>
+      | <a href="deleteJob.php?id=$id">Delete</a>
     </td>
     <td>$urgency</td>
     <td>$positionTitle</td>
@@ -124,7 +124,7 @@ HTML;
     <td style="$applicationStatusStyle">$applicationStatusValue</td>
     <td>$nextAction</td>
     <td>$nextActionDue</td>
-    <td>$url</td>
+    <td><a href="$url">$url</a></td>
   </tr>
 HTML;
         }

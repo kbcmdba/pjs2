@@ -42,7 +42,7 @@ class JobController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS job
      (
-       id                 INT UNSIGNED NOT NULL AUTO_INCREMENT
+       id                    INT UNSIGNED NOT NULL AUTO_INCREMENT
      , primaryContactId      INT UNSIGNED NULL DEFAULT NULL
      , companyId             INT UNSIGNED NULL DEFAULT NULL
      , applicationStatusId   INT UNSIGNED NOT NULL
@@ -99,12 +99,16 @@ SQL;
         $this->_doDDL( $sql ) ;
         $sql = <<<SQL
 CREATE TRIGGER jobAfterUpdateTrigger
- AFTER UPDATE
+BEFORE UPDATE
     ON job
    FOR EACH ROW
  BEGIN
          IF OLD.applicationStatusId <> NEW.applicationStatusId
        THEN
+              IF 0 = NEW.lastStatusChange
+            THEN
+                 SET NEW.lastStatusChange = NOW() ;
+             END IF ;
             UPDATE applicationStatusSummary
                 AS jss
                SET jss.statusCount = jss.statusCount + 1

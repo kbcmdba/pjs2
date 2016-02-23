@@ -21,11 +21,9 @@
  *
  */
 
-// Sorry all - my time is limited at the moment so development has been slow.
-// After the holidays, I should have more time again. In the meantime, here's
-// an intermediate check-in. :-)
-
-// @FIXME Improve input validation
+// @todo Improve input validation
+// @todo Prompt user for "valid" input in invalid fields.
+// @todo Indicate which field are required
 // @todo Implement and test editJob.php
 // @todo Implement and test deleteJob.php
 // @todo Make it possible to log time and date together with jobs
@@ -37,3 +35,5 @@
 // @todo Write note interface for contacts
 // @todo Write note interface for jobs
 // @todo Write note interface for keywords
+// @todo Make the interface multi-user
+// @todo Style the site
