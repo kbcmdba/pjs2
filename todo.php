@@ -37,3 +37,5 @@
 // @todo Write note interface for keywords
 // @todo Make the interface multi-user
 // @todo Style the site
+// @todo Javascript user input checks
+// @todo Make input fields mobile-friendly
