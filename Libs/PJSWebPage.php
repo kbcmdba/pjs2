@@ -51,7 +51,8 @@ class PJSWebPage extends WebPage {
             $_SESSION[ 'password' ] = $_REQUEST[ 'password' ] ;
         }
         $header = <<<HTML
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script>
@@ -59,6 +60,7 @@ class PJSWebPage extends WebPage {
       $( ".datepicker" ).datepicker( { dateFormat: 'yy-mm-dd' } );
     } ) ;
   </script>
+  <script src="js/main.js"></script>
 HTML;
         $this->setHead( $header ) ;
         $this->setMeta( array( "Cache-Control: no-cache, must-revalidate"
@@ -112,19 +114,23 @@ HTML;
            && ( $userId === $_SESSION[ 'username' ] )
            && ( $password === $_SESSION[ 'password' ] )
             ) {
-            $logout  = '| <a href="logout.php">Log Out</a>' ;
+            $logout  = '  <li><a href="logout.php">Log Out</a></li>' ;
         }
-        $reset = ( $this->_resetOk ) ? "| <a href=\"resetDb.php\">Reset Database</a>" : "" ;
+        $reset = ( $this->_resetOk ) ? "  <li><a href=\"resetDb.php\">Reset Database</a></li>" : "" ;
         $html = <<<HTML
-<a href="index.php">Summary</a>
-| <a href="applicationStatuses.php">Application Statuses</a>
-| <a href="companies.php">Companies</a>
-| <a href="contacts.php">Contacts</a>
-| <a href="jobs.php">Jobs</a>
-| <a href="keywords.php">Keywords</a>
-| <a href="searches.php">Searches</a>
+<ul id="navBar">
+  <li><a href="index.php">Summary</a></li>
+  <li><a href="applicationStatuses.php">Application Statuses</a></li>
+  <li><a href="companies.php">Companies</a></li>
+  <li><a href="contacts.php">Contacts</a></li>
+  <li><a href="jobs.php">Jobs</a></li>
+  <li><a href="keywords.php">Keywords</a></li>
+  <li><a href="searches.php">Searches</a></li>
+  <ul style="float: right; list-style-type: none;">
 $reset
 $logout
+  </ul>
+</ul>
 <p />
 HTML;
         return $html ;

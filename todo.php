@@ -27,7 +27,6 @@
 // @todo Implement and test editJob.php
 // @todo Implement and test deleteJob.php
 // @todo Make it possible to log time and date together with jobs
-// @todo Trim leading/trailing spaces from "stuff"
 // @todo Write ApplicationStatusListView
 // @todo Write KeywordFormView
 // @todo Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )

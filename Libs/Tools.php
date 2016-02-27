@@ -42,7 +42,7 @@ class Tools {
      * @return String
      */
     public static function param( $key ) {
-        return ( isset( $key ) && ( isset( $_REQUEST[ $key ] ) ) ) ? $_REQUEST[ $key ] : '' ;
+        return ( isset( $key ) && ( isset( $_REQUEST[ $key ] ) ) ) ? trim( $_REQUEST[ $key ] ) : '' ;
     }
 
     /**
