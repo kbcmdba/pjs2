@@ -60,7 +60,9 @@ class CompanyModel extends ModelBase {
                          ) ;
         return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
-               && $validAgencyId
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyCity' ) ) )
+               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyState' ) ) )
+                && $validAgencyId
                 ) ;
     }
 

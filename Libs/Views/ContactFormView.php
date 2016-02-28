@@ -73,26 +73,26 @@ class ContactFormView extends FormViewBase {
         $buttonLabel     = $this->getButtonLabel() ;
         $returnValue     = <<<HTML
     <h2>$title</h2>
-    <form method="GET">
+    <form name="contact" onsubmit="return validateContact()" method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
           <th>ID</th>
           <td><input type="text" name="id" value="$contactId" readonly="readonly" /></td>
         </tr>
         <tr>
-          <th>Contact's Company</th>
+          <th>Contact's Company *</th>
           <td>$companyList</td>
         </tr>
         <tr>
-          <th>Contact's Name</th>
+          <th>Contact's Name *</th>
           <td><input type="text" name="contactName" value="$contactName" $RO /></td>
         </tr>
         <tr>
-          <th>Contact's Email</th>
+          <th>Contact's Email *</th>
           <td><input type="text" name="contactEmail" value="$contactEmail" $RO /></td>
         </tr>
         <tr>
-          <th>Contact's Phone</th>
+          <th>Contact's Phone *</th>
           <td><input type="text" name="contactPhone" value="$contactPhone" $RO /></td>
         </tr>
         <tr>

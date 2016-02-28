@@ -71,14 +71,14 @@ class ApplicationStatusFormView extends FormViewBase {
         $buttonLabel       = $this->getButtonLabel() ;
         $returnValue       = <<<HTML
     <h2>$title</h2>
-    <form method="GET">
+    <form name="applicationStatus" onsubmit="return validateApplicationStatus()" method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
           <th>ID</th>
           <td><input type="text" name="id" value="$id" readonly="readonly" /></td>
         </tr>
         <tr>
-          <th>Status Value</th>
+          <th>Status Value *</th>
           <td><input type="text" name="statusValue" value="$value" $RO /></td>
         </tr>
         <tr>
@@ -86,7 +86,7 @@ class ApplicationStatusFormView extends FormViewBase {
           <td><input type="checkbox" name="isActive" value="1" $isActiveChecked $RO /></td>
         </tr>
         <tr>
-          <th>Sort Key</th>
+          <th>Sort Key *</th>
           <td><input type="text" name="sortKey" value="$sortKey" $RO /></td>
         </tr>
         <tr>

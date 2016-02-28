@@ -94,7 +94,7 @@ class CompanyFormView extends FormViewBase {
         }
         $returnValue     = <<<HTML
     <h2>$title</h2>
-    <form method="GET">
+    <form name="company" onsubmit="return validateCompany()" method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
           <th>ID</th>
@@ -109,7 +109,7 @@ class CompanyFormView extends FormViewBase {
           <td>$agencySelectList
         </tr>
         <tr>
-          <th>Company Name</th>
+          <th>Company Name *</th>
           <td><input type="text" name="companyName" value="$companyName" $RO /></td>
         </tr>
         <tr>
@@ -121,11 +121,11 @@ class CompanyFormView extends FormViewBase {
           <td><input type="text" name="companyAddress2" value="$companyAddress2" $RO /></td>
         </tr>
         <tr>
-          <th>Company City</th>
+          <th>Company City *</th>
           <td><input type="text" name="companyCity" value="$companyCity" $RO /></td>
         </tr>
         <tr>
-          <th>Company State</th>
+          <th>Company State *</th>
           <td><input type="text" name="companyState" value="$companyState" $RO /></td>
         </tr>
         <tr>
