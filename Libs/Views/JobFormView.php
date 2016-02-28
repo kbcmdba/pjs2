@@ -82,22 +82,22 @@ class JobFormView extends FormViewBase {
         $applicationStatusList = $applicationStatusView->getApplicationStatusSelectList( $applicationStatusId, $RO ) ;
         $returnValue           = <<<HTML
     <h2>$title</h2>
-    <form method="GET">
+    <form name="job" onsubmit="return validateJob()" method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
           <th>ID</th>
           <td><input type="text" name="id" value="$id" readonly="readonly" /></td>
         </tr>
         <tr>
-          <th>Primary Contact</th>
+          <th>Primary Contact *</th>
           <td>$contactList</td>
         </tr>
         <tr>
-          <th>Company</th>
+          <th>Company *</th>
           <td>$companyList</th>
         </tr>
         <tr>
-          <th>Application Status</th>
+          <th>Application Status *</th>
           <td>$applicationStatusList</td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@ class JobFormView extends FormViewBase {
           <td><input type="text" name="lastStatusChange" value="$lastStatusChange" readonly="readonly" /></td>
         </tr>
         <tr>
-          <th>Urgency</th>
+          <th>Urgency *</th>
           <td><input type="text" name="urgency" value="$urgency" $RO /></td>
         </tr>
         <tr>
@@ -117,19 +117,19 @@ class JobFormView extends FormViewBase {
           <td><input type="text" name="updated" value="$updated" readonly="readonly" /></td>
         </tr>
         <tr>
-          <th>Next Action Due</th>
+          <th>Next Action Due *</th>
           <td><input type="text" name="nextActionDue" value="$nextActionDue" class="datepicker" $RO/></td>
         </tr>
         <tr>
-          <th>Next Action</th>
+          <th>Next Action *</th>
           <td><input type="text" name="nextAction" value="$nextAction" $RO /></td>
         </tr>
         <tr>
-          <th>Position Title</th>
+          <th>Position Title *</th>
           <td><input type="text" name="positionTitle" value="$positionTitle" $RO /></td>
         </tr>
         <tr>
-          <th>Location</th>
+          <th>Location *</th>
           <td><input type="text" name="location" value="$location" $RO /></td>
         </tr>
         <tr>

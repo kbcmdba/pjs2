@@ -68,7 +68,7 @@ class NoteFormView extends FormViewBase {
         // @todo Show the form for this view
         $returnValue     = <<<HTML
     <h2>$title</h2>
-    <form method="GET">
+    <form name="note" onsubmit="return validateNote()" method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
           <th>ID</th>

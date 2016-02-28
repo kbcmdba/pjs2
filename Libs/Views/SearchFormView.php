@@ -81,22 +81,22 @@ class SearchFormView extends FormViewBase {
         }
         $returnValue      = <<<HTML
     <h2>$title</h2>
-    <form method="GET">
+    <form name="search" onsubmit="return validateSearch()" method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
         <tr>
           <th>ID</th>
           <td><input type="text" name="id" value="$id" readonly="readonly" /></td>
         </tr>
         <tr>
-          <th>Engine Name</th>
+          <th>Engine Name *</th>
           <td><input type="text" name="engineName" value="$engineName" $RO /></td>
         </tr>
         <tr>
-          <th>Search Name</th>
+          <th>Search Name *</th>
           <td><input type="text" name="searchName" value="$searchName" $RO /></td>
         </tr>
         <tr>
-          <th>URL</th>
+          <th>URL *</th>
           <td><input type="text" name="url" value="$url" $RO /></td>
         </tr>
         <tr>

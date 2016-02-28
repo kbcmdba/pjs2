@@ -21,9 +21,7 @@
  *
  */
 
-// @todo Improve input validation
-// @todo Prompt user for "valid" input in invalid fields.
-// @todo Indicate which field are required
+// @FIXME Fix display of company name, city and state in select lists
 // @todo Implement and test editJob.php
 // @todo Implement and test deleteJob.php
 // @todo Make it possible to log time and date together with jobs
