@@ -21,9 +21,6 @@
  *
  */
 
-// @FIXME Fix display of company name, city and state in select lists
-// @todo Implement and test editJob.php
-// @todo Implement and test deleteJob.php
 // @todo Make it possible to log time and date together with jobs
 // @todo Write ApplicationStatusListView
 // @todo Write KeywordFormView
@@ -34,5 +31,5 @@
 // @todo Write note interface for keywords
 // @todo Make the interface multi-user
 // @todo Style the site
-// @todo Javascript user input checks
 // @todo Make input fields mobile-friendly
+// @todo Ajaxify the site
