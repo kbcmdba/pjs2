@@ -71,6 +71,8 @@ class JobListView extends ListViewBase {
     <th>Next Action</th>
     <th>Next Action Due</th>
     <th>Link</th>
+    <th>Created</th>
+    <th>Updated</th>
   </tr>
 HTML;
         foreach ( $this->getJobModels() as $jobModel ) {
@@ -125,6 +127,8 @@ HTML;
     <td>$nextAction</td>
     <td>$nextActionDue</td>
     <td><a href="$url">$url</a></td>
+    <td>$created</td>
+    <td>$updated</td>
   </tr>
 HTML;
         }

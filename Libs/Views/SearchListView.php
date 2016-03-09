@@ -60,13 +60,22 @@ class SearchListView extends ListViewBase {
 <a href="addSearch.php">Add new search</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Searches</caption>
-  <tr><th>Actions</th><th>Engine</th><th>Search Name</th><th>Link</th></tr>
+  <tr>
+    <th>Actions</th>
+    <th>Engine</th>
+    <th>Search Name</th>
+    <th>Link</th>
+    <th>Created</th>
+    <th>Updated</th>
+  </tr>
 HTML;
         foreach ( $this->getSearchModels() as $search ) {
             $id          = $search->getId() ;
             $engineName  = htmlspecialchars( $search->getEngineName() ) ;
             $searchName  = htmlspecialchars( $search->getSearchName() ) ;
             $url         = htmlspecialchars( $search->getUrl() ) ;
+            $created     = $search->getCreated() ;
+            $updated     = $search->getUpdated() ;
             $body       .= <<<HTML
   <tr>
     <td>
@@ -75,7 +84,9 @@ HTML;
     </td>
     <td>$engineName</td>
     <td>$searchName</td>
-    <td><a href="$url">$url</a></td>
+    <td><a href="$url">$url</a></td></td>
+    <td>$created</td>
+    <td>$updated</td>
   </tr>
 HTML;
         }

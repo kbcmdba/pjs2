@@ -37,3 +37,15 @@ ul#navBar li a {
 ul#navBar li a:hover {
 	background-color: #111;
 }
+
+.thead th {
+	background-color: #F0F0F0 ;
+}
+
+.treven td {
+    background-color: #F8F8FF;
+}
+
+.trodd td {
+	background-color: #FFFFF0;
+}

@@ -56,13 +56,36 @@ class CompanyListView extends ListViewBase {
      * @return string
      */
     private function _getHtmlView() {
+        $rowStyle = "even" ;
         $body = <<<'HTML'
 <a href="addCompany.php">Add new company</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Companies</caption>
-  <tr><th>Actions</th><th>Company</th><th>Agency Of</th><th>City</th><th>State</th></tr>
+  <thead>
+    <tr class="thead">
+      <th rowspan="2">Actions</th>
+      <th><font size="+2">Company</font></th>
+      <th>Address 1</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Zip</th>
+    </tr>
+    <tr class="thead">
+      <th>Agency Of</th>
+      <th>Address 2</th>
+      <th>Phone</th>
+      <th colspan="2">URL</th>
+    </tr>
+  </thead>
+  <tbody>
 HTML;
         foreach ( $this->getCompanyModels() as $companyModel ) {
+            if ( "even" === $rowStyle ) {
+                $rowStyle = "odd" ;
+            }
+            else {
+                $rowStyle = "even" ;
+            }
             $id              = $companyModel->getId() ;
             $isAnAgency      = $companyModel->getIsAnAgency() ;
             $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
@@ -72,9 +95,11 @@ HTML;
             $companyCity     = $companyModel->getCompanyCity() ;
             $companyState    = $companyModel->getCompanyState() ;
             $companyZip      = $companyModel->getCompanyZip() ;
+            $companyPhone     = $companyModel->getCompanyPhone() ;
             $companyUrl      = $companyModel->getCompanyUrl() ;
             $created         = $companyModel->getCreated() ;
             $updated         = $companyModel->getUpdated() ;
+            $encodedUrl      = htmlspecialchars( $companyUrl ) ;
             if ( $isAnAgency ) {
                 $agencyCompanyController = new CompanyController() ;
                 $agencyCompanyModel      = $agencyCompanyController->get( $agencyCompanyId ) ;
@@ -84,21 +109,26 @@ HTML;
                 $agencyOf                = 'None' ;
             }
             $body .= <<<HTML
-  <tr>
-    <td>
-        <a href="editCompany.php?id=$id">Edit</a>
-      | <a href="deleteCompany.php?id=$id">Delete</a>
-    </td>
-    <td>$companyName</td>
-    <td>$agencyOf</td>
-    <td>$companyCity</td>
-    <td>$companyState</td>
-  </tr>
+    <tr class="tr$rowStyle">
+      <td rowspan="2">
+          <a href="editCompany.php?id=$id">Edit</a>
+        | <a href="deleteCompany.php?id=$id">Delete</a>
+      </td>
+      <td><font size="+2">$companyName</font></td>
+      <td>$companyAddress1</th>
+      <td>$companyCity</td>
+      <td>$companyState</td>
+      <td>$companyZip</td>
+    </tr>
+    <tr class="tr$rowStyle">
+      <td>$agencyOf</td>
+      <td>$companyAddress2</th>
+      <td>$companyPhone</td>
+      <td colspan="2"><a href="$encodedUrl">$encodedUrl</a></td>
+    </tr>
 HTML;
         }
-
-        $body .= '</table>' ;
-
+        $body .= "  </tbody>\n</table>\n" ;
         return $body ;
     }
 

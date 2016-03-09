@@ -68,6 +68,8 @@ class ContactListView extends ListViewBase {
     <th>Email</th>
     <th>Phone</th>
     <th>Alternate Phone</th>
+    <th>Created</th>
+    <th>Updated</th>
   </tr>
 HTML;
         foreach ( $this->getContactModels() as $contactModel ) {
@@ -80,6 +82,8 @@ HTML;
             $email             = $contactModel->getContactEmail() ;
             $aphone            = $contactModel->getContactPhone() ;
             $bphone            = $contactModel->getContactAlternatePhone() ;
+            $created           = $contactModel->getCreated() ;
+            $updated           = $contactModel->getUpdated() ;
             $body .= <<<HTML
   <tr>
     <td>
@@ -91,6 +95,8 @@ HTML;
     <td>$email</td>
     <td>$aphone</td>
     <td>$bphone</td>
+    <td>$created</td>
+    <td>$updated</td>
   </tr>
 HTML;
         }

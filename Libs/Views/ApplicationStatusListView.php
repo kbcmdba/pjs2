@@ -58,7 +58,18 @@ class ApplicationStatusListView extends ListViewBase {
 <a href="addApplicationStatus.php">Add new application status</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Application Statuses</caption>
-  <tr><th>Actions</th><th>Value</th><th>Is Active</th><th>Sort Key</th></tr>
+  <thead>
+    <tr>
+      <th>Actions</th>
+      <th>Value</th>
+      <th>Style</th>
+      <th>Is Active</th>
+      <th>Sort Key</th>
+      <th>Created</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
 HTML;
         foreach ( $this->_applicationStatusModels as $applicationStatus ) {
             $id       = $applicationStatus->getId() ;
@@ -66,20 +77,25 @@ HTML;
             $isActive = $applicationStatus->getIsActive() ? "Yes" : "No" ;
             $sortKey  = $applicationStatus->getSortKey() ;
             $style    = htmlspecialchars( $applicationStatus->getStyle() ) ;
+            $created  = $applicationStatus->getCreated() ;
+            $updated  = $applicationStatus->getUpdated() ;
             $body .= <<<HTML
-  <tr>
-    <td>
-        <a href="editApplicationStatus.php?id=$id">Edit</a>
-      | <a href="deleteApplicationStatus.php?id=$id">Delete</a>
-    </td>
-    <td style="$style">$value</td>
-    <td>$isActive</td>
-    <td>$sortKey</td>
-  </tr>
+    <tr>
+      <td>
+          <a href="editApplicationStatus.php?id=$id">Edit</a>
+        | <a href="deleteApplicationStatus.php?id=$id">Delete</a>
+      </td>
+      <td style="$style">$value</td>
+      <td>$style</td>
+      <td>$isActive</td>
+      <td>$sortKey</td>
+      <td>$created</td>
+      <td>$updated</td>
+    </tr>
 HTML;
         }
 
-        $body .= '</table>' ;
+        $body .= "  </tbody>\n</table>\n" ;
 
         return $body ;
     }

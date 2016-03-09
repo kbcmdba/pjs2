@@ -66,7 +66,13 @@ class NoteListView extends ListViewBase {
 <a href="addNote.php?appliesToTable=$noteAppliesToTable&appliesToId=$noteAppliesToId">Add new $noteAppliesToTable note</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Notes</caption>
-  <tr><th>Actions</th><th>ID</th><th>Note</th><th>Created</th><th>Updated</th></tr>
+  <tr>
+    <th>Actions</th>
+    <th>ID</th>
+    <th>Note</th>
+    <th>Created</th>
+    <th>Updated</th>
+  </tr>
 HTML;
         foreach ( $this->getNoteModels() as $noteModel ) {
             $id       = $noteModel->getId() ;
