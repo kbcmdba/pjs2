@@ -65,7 +65,6 @@ class NoteFormView extends FormViewBase {
         $appliesToId     = $noteModel->getAppliesToId() ;
         $noteText        = htmlspecialchars( $noteModel->getNoteText() ) ;
         $buttonLabel     = $this->getButtonLabel() ;
-        // @todo Show the form for this view
         $returnValue     = <<<HTML
     <h2>$title</h2>
     <form name="note" onsubmit="return validateNote()" method="GET">
