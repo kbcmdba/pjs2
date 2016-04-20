@@ -1,3 +1,44 @@
+/**
+ * Load the results of an AJAX call into the target ID
+ *
+ * @param uri		URI
+ * @param data		Data in URL-encoded format
+ * @param targetId	The response will be loaded here.
+ * @param isAsync	Load the response asynchronously.
+ */
+function doLoadAjaxJsonResult( uri, data, targetId, isAsync ) {
+	var xhttp = new XMLHttpRequest() ;
+	xhttp.onreadystatechange = function() {
+		if ( xhttp.readyState == 4 && xhttp.status == 200 ) {
+			document.getElementById( targetId ).innerHTML = xhttp.responseText ;
+		}
+	} ;
+	xhttp.open( "PUT", uri, isAsync ) ;
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send( data ) ;
+}
+
+/**
+ * Load the results of an AJAX call into the target ID
+ *
+ * @param uri		URI
+ * @param data		Data in URL-encoded format
+ * @param targetId	The response will be loaded here.
+ * @param isAsync	Load the response asynchronously.
+ * @param callback	A user-defined routine to handle the results.
+ */
+function doLoadAjaxJsonResultWithCallback( uri, data, targetId, isAsync, callback ) {
+	var xhttp = new XMLHttpRequest() ;
+	xhttp.onreadystatechange = function() {
+		if ( xhttp.readyState == 4 && xhttp.status == 200 ) {
+			callback( xhttp, targetId ) ;
+		}
+	} ;
+	xhttp.open( "PUT", uri, isAsync ) ;
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send( data ) ;
+}
+
 function isNumeric(n) {
     return ! isNaN( parseFloat( n ) ) && isFinite( n ) ;
 }
@@ -157,4 +198,64 @@ function validateSearch() {
 		alert( message ) ;
 	}
 	return retVal ;
+}
+
+function doEditApplicationStatus( id ) {
+	document.getElementById( 'disp_' + id ).style.display = 'none' ;
+	document.getElementById( 'edit_' + id ).style.display = 'table-row' ;
+	document.getElementById( 'status_' + id ).style.display = 'none' ;
+	return false ;
+}
+
+function doCancelApplicationStatusChange( id ) {
+	document.getElementById( 'disp_' + id ).style.display = 'table-row' ;
+	document.getElementById( 'edit_' + id ).style.display = 'none' ;
+	document.getElementById( 'status_' + id ).style.display = 'none' ;
+	// @todo Put the original values back.
+	return false ;
+}
+
+function doSaveApplicationStatus( id ) {
+	document.getElementById( 'disp_' + id ).style.display = 'table-row' ;
+	document.getElementById( 'edit_' + id ).style.display = 'none' ;
+	document.getElementById( 'status_' + id ).style.display = 'table-row' ;
+	document.getElementById( 'result_' + id ).innerHTML = "Saving..." ;
+	var formObj = document.forms[ "appstat_" + id ] ;
+	var proceed = true ;
+	var message = '' ;
+	var statusValue = formObj[ 'statusValue' ].value ;
+	var style       = formObj[ 'style' ].value ;
+	var isActive    = formObj[ 'isActive' ].checked ;
+	var sortKey     = formObj[ 'sortKey' ].value ;
+	if ( ( null == formObj[ 'statusValue' ].value ) || ( '' == formObj[ 'statusValue' ].value ) ) {
+		proceed = false ;
+		message += "Value is required.\n" ;
+	}
+	if ( ( null == sortKey ) || ( '' == sortKey ) || ( ! isNumeric( sortKey ) ) ) {
+		proceed = false ;
+		message += "Sort Key is required.\n" ;
+	}
+	if ( ! proceed ) {
+		alert( message ) ;
+		return false ;
+	}
+	// Data is validated. Now make the AJAX call and save the row.
+	// ajaxSaveApplicationStatusRow?id=$id&statusValue=
+	var uri = 'ajaxSaveApplicationStatusRow.php?id='
+		    + id
+		    + '&statusValue='
+		    + encodeURIComponent( statusValue )
+		    + '&style='
+		    + encodeURIComponent( style )
+		    + '&isActive='
+		    + ( ( isActive ) ? '1' : '0' )
+		    + '&sortKey='
+		    + encodeURIComponent( sortKey )
+		    ;
+	alert( 'When implemented, would call ' + uri ) ;
+	return false ;
+}
+
+function doDeleteApplicationStatus( id ) {
+	return false ;
 }

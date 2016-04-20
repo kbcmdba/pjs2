@@ -55,9 +55,18 @@ class PJSWebPage extends WebPage {
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script src='https://cdn.tinymce.com/4/tinymce.min.js'></script>
   <script>
     $( function() {
-      $( ".datepicker" ).datepicker( { dateFormat: 'yy-mm-dd' } );
+        $( ".datepicker" ).datepicker( { dateFormat: 'yy-mm-dd' } );
+    } ) ;
+    tinymce.init({
+        selector: ".tinymce"
+      , theme: "modern"
+      , plugins: "code, advlist"
+      , toolbar: "code, bullist, numlist"
+      , advlist_bullet_styles: "square"
+      , advlist_number_styles: "lower-alpha,lower-roman,upper-alpha,upper-roman"
     } ) ;
   </script>
   <script src="js/main.js"></script>

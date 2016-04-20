@@ -72,26 +72,46 @@ class ApplicationStatusListView extends ListViewBase {
   <tbody>
 HTML;
         foreach ( $this->_applicationStatusModels as $applicationStatus ) {
-            $id       = $applicationStatus->getId() ;
-            $value    = htmlspecialchars( $applicationStatus->getStatusValue() ) ;
-            $isActive = $applicationStatus->getIsActive() ? "Yes" : "No" ;
-            $sortKey  = $applicationStatus->getSortKey() ;
-            $style    = htmlspecialchars( $applicationStatus->getStyle() ) ;
-            $created  = $applicationStatus->getCreated() ;
-            $updated  = $applicationStatus->getUpdated() ;
+            $id              = $applicationStatus->getId() ;
+            $value           = htmlspecialchars( $applicationStatus->getStatusValue() ) ;
+            $isActive        = $applicationStatus->getIsActive() ? "Yes" : "No" ;
+            $isActiveChecked = $applicationStatus->getIsActive() ? 'checked="checked"' : '' ;
+            $sortKey         = $applicationStatus->getSortKey() ;
+            $style           = htmlspecialchars( $applicationStatus->getStyle() ) ;
+            $created         = $applicationStatus->getCreated() ;
+            $updated         = $applicationStatus->getUpdated() ;
             $body .= <<<HTML
-    <tr>
-      <td>
-          <a href="editApplicationStatus.php?id=$id">Edit</a>
-        | <a href="deleteApplicationStatus.php?id=$id">Delete</a>
-      </td>
-      <td style="$style">$value</td>
-      <td>$style</td>
-      <td>$isActive</td>
-      <td>$sortKey</td>
-      <td>$created</td>
-      <td>$updated</td>
-    </tr>
+      <form name="appstat_$id">
+        <tr id="disp_$id" style="display: table-row;">
+        <td>
+            <input type="button" onclick="return doEditApplicationStatus( $id );" name="act" value="Edit" >
+            <input type="button" onclick="return doDeleteApplicationStatus( $id );" name="act" value="Delete" >
+        </td>
+        <td style="$style">$value</td>
+        <td>$style</td>
+        <td><input type="checkbox" name="isActivex" value="1" $isActiveChecked onclick="return false" onkeydown="return false" /></td>
+        <td>$sortKey</td>
+        <td>$created</td>
+        <td>$updated</td>
+      </tr>
+      <tr id="edit_$id" style="display: none;">
+        <td>
+          <input type="button" onclick="return doSaveApplicationStatus( $id );" name="act" value="Save" >
+          <input type="button" onclick="return doCancelApplicationStatusChange( $id );" name="act" value="Cancel" >
+        </td>
+        <td style="$style"><input type="text" name="statusValue" value="$value" size=15 /></td>
+        <td><input type="text" name="style" value="$style" size=40 /></td>
+        <td><input type="checkbox" name="isActive" value="1" $isActiveChecked /></td>
+        <td><input type="text" name="sortKey" value="$sortKey" size="5" /></td>
+        <td>$created</td>
+        <td>$updated</td>
+      </tr>
+      <tr id="status_$id" style="display: none;">
+        <td><input type="button" onclick="return doHideResult( $id );" name="act" value="Hide" ></td>
+        <td colspan="6" id="result_$id"></td>
+      </tr>
+    </form>
+    
 HTML;
         }
 
