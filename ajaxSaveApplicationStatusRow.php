@@ -25,9 +25,7 @@ require_once "Libs/autoload.php" ;
 
 $auth = new AjaxAuth() ;
 if ( ! $auth->isAuthorized() ) {
-    header( "HTTP/1.0 403 Forbidden" ) ;
-    echo "Forbidden" ;
-    exit ;
+    $auth->forbidden() ;
 }
 
 // Sample call ajaxSaveApplicationStatusRow.php
