@@ -82,7 +82,7 @@ HTML;
             $updated         = $applicationStatus->getUpdated() ;
             $body .= <<<HTML
       <form name="appstat_$id">
-        <tr id="disp_$id" style="display: table-row;">
+        <tr id="view_$id" style="display: table-row;">
         <td>
             <input type="button" onclick="return doEditApplicationStatus( $id );" name="act" value="Edit" >
             <input type="button" onclick="return doDeleteApplicationStatus( $id );" name="act" value="Delete" >
@@ -106,7 +106,7 @@ HTML;
         <td>$created</td>
         <td>$updated</td>
       </tr>
-      <tr id="status_$id" style="display: none;">
+      <tr id="result_$id" style="display: none;">
         <td><input type="button" onclick="return doHideResult( $id );" name="act" value="Hide" ></td>
         <td colspan="6" id="result_$id"></td>
       </tr>

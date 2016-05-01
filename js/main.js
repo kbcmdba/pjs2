@@ -39,10 +39,21 @@ function doLoadAjaxJsonResultWithCallback( uri, data, targetId, isAsync, callbac
 	xhttp.send( data ) ;
 }
 
+/**
+ * Return true when the passed value is numeric
+ *
+ * @param n
+ * @returns {Boolean}
+ */
 function isNumeric(n) {
     return ! isNaN( parseFloat( n ) ) && isFinite( n ) ;
 }
 
+/**
+ * Validate the application status form
+ *
+ * @returns {Boolean}
+ */
 function validateApplicationStatus() {
 	var retVal = true ;
 	var message = '' ;
@@ -62,6 +73,11 @@ function validateApplicationStatus() {
 	return retVal ;
 }
 
+/**
+ * Validate the company form
+ *
+ * @returns {Boolean}
+ */
 function validateCompany() {
 	var retVal = true ;
 	var message = '' ;
@@ -84,6 +100,11 @@ function validateCompany() {
 	return retVal ;
 }
 
+/**
+ * Validate the contact form
+ *
+ * @returns {Boolean}
+ */
 function validateContact() {
 	var retVal = true ;
 	var message = '' ;
@@ -111,6 +132,11 @@ function validateContact() {
 	return retVal ;
 }
 
+/**
+ * Validate the job form
+ *
+ * @returns {Boolean}
+ */
 function validateJob() {
 	var retVal = true ;
 	var message = '' ;
@@ -156,6 +182,11 @@ function validateJob() {
 	return retVal ;
 }
 
+/**
+ * Validate the note form
+ *
+ * @returns {Boolean}
+ */
 function validateNote() {
 	var retVal = true ;
 	var message = '' ;
@@ -178,6 +209,11 @@ function validateNote() {
 	return retVal ;
 }
 
+/**
+ * Validate the search form
+ *
+ * @returns {Boolean}
+ */
 function validateSearch() {
 	var retVal = true ;
 	var message = '' ;
@@ -200,33 +236,54 @@ function validateSearch() {
 	return retVal ;
 }
 
+/**
+ * When the user clicks on the edit button, hide the fixed-value row, display
+ * the editable row, and hide the result row.
+ * 
+ * @param id
+ * @returns {Boolean}
+ */
 function doEditApplicationStatus( id ) {
-	document.getElementById( 'disp_' + id ).style.display = 'none' ;
+	document.getElementById( 'view_' + id ).style.display = 'none' ;
 	document.getElementById( 'edit_' + id ).style.display = 'table-row' ;
-	document.getElementById( 'status_' + id ).style.display = 'none' ;
+	document.getElementById( 'result_' + id ).style.display = 'none' ;
 	return false ;
 }
 
+/**
+ * When the user cancels an update, redisplay the read-only row, hide the
+ * editable row and the result row then put the original values back in the form.
+ * 
+ * @param id
+ * @returns {Boolean}
+ */
 function doCancelApplicationStatusChange( id ) {
-	document.getElementById( 'disp_' + id ).style.display = 'table-row' ;
+	document.getElementById( 'view_' + id ).style.display = 'table-row' ;
 	document.getElementById( 'edit_' + id ).style.display = 'none' ;
-	document.getElementById( 'status_' + id ).style.display = 'none' ;
+	document.getElementById( 'result_' + id ).style.display = 'none' ;
 	// @todo Put the original values back.
 	return false ;
 }
 
+/**
+ * Hide the editable row, display the edit status and fixed-value row Validate
+ * the data prior to sending it back for update, then cause the AJAX call to
+ * fire. When the AJAX comes back successfully, copy the edited values back to
+ * the read-only row and show the result of the AJAX call.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
 function doSaveApplicationStatus( id ) {
-	document.getElementById( 'disp_' + id ).style.display = 'table-row' ;
-	document.getElementById( 'edit_' + id ).style.display = 'none' ;
-	document.getElementById( 'status_' + id ).style.display = 'table-row' ;
-	document.getElementById( 'result_' + id ).innerHTML = "Saving..." ;
-	var formObj = document.forms[ "appstat_" + id ] ;
-	var proceed = true ;
-	var message = '' ;
+	var viewObj     = document.getElementById( 'view_' + id ) ;
+	var formObj     = document.forms[ "appstat_" + id ] ;
+	var proceed     = true ;
+	var message     = '' ;
 	var statusValue = formObj[ 'statusValue' ].value ;
 	var style       = formObj[ 'style' ].value ;
 	var isActive    = formObj[ 'isActive' ].checked ;
 	var sortKey     = formObj[ 'sortKey' ].value ;
+	var editObj     = document.getElementById( "edit_" + id ) ;
 	if ( ( null == formObj[ 'statusValue' ].value ) || ( '' == formObj[ 'statusValue' ].value ) ) {
 		proceed = false ;
 		message += "Value is required.\n" ;
@@ -239,23 +296,46 @@ function doSaveApplicationStatus( id ) {
 		alert( message ) ;
 		return false ;
 	}
+	editObj.style.display = 'none' ;
+	document.getElementById( 'result_' + id ).style.display = 'table-row' ;
+	document.getElementById( 'result_' + id ).innerHTML = "Saving..." ;
 	// Data is validated. Now make the AJAX call and save the row.
 	// ajaxSaveApplicationStatusRow?id=$id&statusValue=
-	var uri = 'ajaxSaveApplicationStatusRow.php?id='
-		    + id
-		    + '&statusValue='
-		    + encodeURIComponent( statusValue )
-		    + '&style='
-		    + encodeURIComponent( style )
-		    + '&isActive='
-		    + ( ( isActive ) ? '1' : '0' )
-		    + '&sortKey='
-		    + encodeURIComponent( sortKey )
-		    ;
-	alert( 'When implemented, would call ' + uri ) ;
+	var uri  = 'ajaxSaveApplicationStatusRow.php' ;
+	var data = 'id='
+		     + id
+		     + '&statusValue='
+		     + encodeURIComponent( statusValue )
+		     + '&style='
+		     + encodeURIComponent( style )
+		     + '&isActive='
+		     + ( ( isActive ) ? '1' : '0' )
+		     + '&sortKey='
+		     + encodeURIComponent( sortKey )
+		     ;
+    doLoadAjaxJsonResultWithCallback( uri, data, 'result_' + id, true, function() {
+    	var jsonObj = JSON.parse( xhttp.responseText ) ;
+    	document.getElementById( "result_" + id ).innerHTML = jsonObj.result ;
+        if ( isNumeric( jsonObj.record.id ) ) {
+        	var viewObj = document.forms[ "view_" + id ] ;
+        	viewObj.children[ 1 ].innerHTML = jsonObj.record.statusValue ;
+        	viewObj.children[ 2 ].innerHTML = jsonObj.record.style ;
+        	viewObj.children[ 3 ].checked   = jsonObj.record.isActive ;
+        	viewObj.children[ 4 ].innerHTML = jsonObj.record.sortKey ;
+        	// Don't bother created since it should never change.
+        	viewObj.children[ 6 ].innerHTML = jsonObj.record.updated ;
+        } // END OF if ( isNumeric( jsonObj.record.id ) )
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( uri, data, 'result_' + id, true, function() ... )
+	viewObj.style.display = 'table-row' ;
 	return false ;
 }
 
+/**
+ * Not implemented yet.
+ * 
+ * @param id
+ * @returns {Boolean}
+ */
 function doDeleteApplicationStatus( id ) {
 	return false ;
 }
