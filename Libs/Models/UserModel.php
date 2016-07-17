@@ -24,7 +24,7 @@
 /**
  * _User Model
  */
-class _UserModel extends ModelBase {
+class UserModel extends ModelBase {
 
     private $_userName ;
     private $_password ;
