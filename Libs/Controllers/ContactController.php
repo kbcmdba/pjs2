@@ -209,6 +209,10 @@ SQL;
         return( $models ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     /**
      * @param ContactModel $model
      * @see ControllerBase::add()

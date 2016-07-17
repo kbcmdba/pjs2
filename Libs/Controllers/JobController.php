@@ -274,6 +274,10 @@ SQL;
         return( $models ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     /**
      * @param JobModel $model
      */

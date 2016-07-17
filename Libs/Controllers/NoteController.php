@@ -147,6 +147,10 @@ SQL;
         return( $models ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     /**
      * @param NoteModel $model
      * @see ControllerBase::add()

@@ -234,6 +234,10 @@ SQL;
         return( $models ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     /**
      * @param CompanyModel $model
      * @see ControllerBase::add()

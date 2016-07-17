@@ -157,6 +157,10 @@ SQL;
         return( $models ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     /**
      * @param UserModel $model
      * @see ControllerBase::add()

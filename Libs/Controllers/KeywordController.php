@@ -176,6 +176,10 @@ SQL;
         return( $models ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     /**
      * @param KeywordModel $model
      * @see ControllerBase::add()

@@ -25,6 +25,7 @@ require_once 'Libs/autoload.php' ;
 // Be sure to specify these in apply order. The reset script will automatically
 // reverse the order for safe removal.
 $controllerNames = array ( 'VersionController'
+                         , 'AuthTicketController'
                          , 'ApplicationStatusController' 
                          , 'ApplicationStatusSummaryController' 
                          , 'CompanyController' 

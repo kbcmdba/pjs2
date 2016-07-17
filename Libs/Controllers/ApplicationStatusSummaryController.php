@@ -67,6 +67,10 @@ SQL;
         throw new ControllerException( "Not implemented." ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     // @todo Implement ApplicationStatusSummaryController::add( $model ) ;
     public function add( $model ) {
         throw new ControllerException( "Not implemented." ) ;

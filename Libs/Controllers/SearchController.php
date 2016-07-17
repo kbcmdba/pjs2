@@ -179,6 +179,10 @@ SQL;
         return( $models ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     /**
      * @param SearchModel $model
      * @see ControllerBase::add()

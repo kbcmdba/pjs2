@@ -155,6 +155,10 @@ SQL;
         return( $models ) ;
     }
 
+    public function getAll() {
+        return $this->getSome() ;
+    }
+
     /**
      * @param JobKeywordMapModel $model
      * @see ControllerBase::add()
