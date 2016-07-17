@@ -21,15 +21,31 @@
  *
  */
 
-// @todo Make it possible to log time and date together with jobs
-// @todo Write ApplicationStatusListView
-// @todo Write KeywordFormView
-// @todo Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )
-// @todo Write KeywordListView
-// @todo Write note interface for contacts
-// @todo Write note interface for jobs
-// @todo Write note interface for keywords
-// @todo Make the interface multi-user
-// @todo Style the site
-// @todo Make input fields mobile-friendly
-// @todo Ajaxify the site
+// @todo 10 AJAX: View Applciation Status in ajax-friendly format
+// @todo 10 AJAX: Add Application Status
+// @todo 10 AJAX: Edit Application Status
+// @todo 10 AJAX: Delete Application Status
+// @todo 20 AJAX: View Companies in ajax-friendly format
+// @todo 20 AJAX: Add Company
+// @todo 20 AJAX: Edit Company
+// @todo 20 AJAX: Delete Company
+// @todo 30 AJAX: View Contacts in ajax-friendly format
+// @todo 30 AJAX: Add Contact
+// @todo 30 AJAX: Edit Contact
+// @todo 30 AJAX: Delete Contact
+// @todo 40 AJAX: View Jobs in ajax-friendly format
+// @todo 40 AJAX: Add Job
+// @todo 40 AJAX: Edit Job
+// @todo 40 AJAX: Delete Job
+// @todo 45 Write ApplicationStatusListView
+// @todo 50 Jobs: Make it possible to log time and date together with jobs
+// @todo 60 Write KeywordFormView
+// @todo 60 Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )
+// @todo 60 Write KeywordListView
+// @todo 70 Write note interface for contacts
+// @todo 70 Write note interface for jobs
+// @todo 70 Write note interface for keywords
+// @todo 80 Make the interface multi-user
+// @todo 80 User entitlements
+// @todo 90 Make input fields mobile-friendly
+// @todo 90 Style the site
