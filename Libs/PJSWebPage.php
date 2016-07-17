@@ -26,8 +26,7 @@
  */
 class PJSWebPage extends WebPage {
 
-    private $_userId ;
-    private $_password ;
+    private $_auth ;
     private $_resetOk ;
 
     /**
@@ -37,19 +36,10 @@ class PJSWebPage extends WebPage {
      */
     public function __construct( $title = '' ) {
         parent::__construct( $title ) ;
-        session_start() ;
+        $auth = new Auth() ;
+        $this->_auth = $auth ;
         $config = new Config() ;
-        $userId = $config->getUserId() ;
-        $password = $config->getUserPassword() ;
-        $this->_userId = $userId ;
-        $this->_password = $password ;
         $this->_resetOk = $config->getResetOk() ;
-        if ( isset( $_POST[ 'username' ] )
-                && isset( $_POST[ 'password' ] )
-        ) {
-            $_SESSION[ 'username' ] = $_REQUEST[ 'username' ] ;
-            $_SESSION[ 'password' ] = $_REQUEST[ 'password' ] ;
-        }
         $header = <<<HTML
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
@@ -71,30 +61,8 @@ HTML;
         $this->setTop( $this->_getTop() ) ;
         $this->setBottom( '<!-- EndOfPage -->' ) ;
 
-        if ( ! isset( $_SESSION[ 'username' ] ) 
-          || ! isset( $_SESSION[ 'password' ] )
-          || ( $userId !== $_SESSION[ 'username' ] )
-          || ( $password !== $_SESSION[ 'password' ] )
-           ) {
-            $body = <<<HTML
-<form action="index.php" method="POST">
-Login Page
-  <table>
-    <tr>
-      <th>Login</th>
-      <td><input type="text" name="username" /></td>
-    </tr>
-    <tr>
-      <th>Password</th>
-      <td><input type="password" name="password" /></td>
-    </tr>
-    <tr>
-      <th colspan="2"><input type="submit" value="Log In" /></td>
-    </tr>
-  </table>
-</form>
-HTML;
-            $this->setBody( $body ) ;
+        if ( ! $auth->isAuthorized() ) {
+            $this->setBody( $auth->getLoginPage() ) ;
             $this->displayPage() ;
             exit ;
         }
@@ -106,14 +74,8 @@ HTML;
      * @return string
      */
     private function _getTop() {
-        $userId = $this->_userId ;
-        $password = $this->_password ;
         $logout = '' ;
-        if  ( isset( $_SESSION[ 'username' ] )
-           && isset( $_SESSION[ 'password' ] )
-           && ( $userId === $_SESSION[ 'username' ] )
-           && ( $password === $_SESSION[ 'password' ] )
-            ) {
+            if ( $this->_auth->isAuthorized() ) {
             $logout  = '  <li><a href="logout.php">Log Out</a></li>' ;
         }
         $reset = ( $this->_resetOk ) ? "  <li><a href=\"resetDb.php\">Reset Database</a></li>" : "" ;
