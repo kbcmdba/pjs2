@@ -21,12 +21,9 @@
  *
  */
 
-session_start() ;
+require_once "Libs/autoload.php" ;
 
-if ( isset( $_SESSION[ 'username' ] ) ) {
-    unset( $_SESSION[ 'username' ] ) ;
-}
-if ( isset( $_SESSION[ 'password' ] ) ) {
-    unset( $_SESSION[ 'password' ] ) ;
-}
+$auth = new Auth() ;
+$auth->doLogOut() ;
+
 header( "Location: index.php" ) ;

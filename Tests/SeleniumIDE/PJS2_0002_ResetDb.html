@@ -109,102 +109,142 @@
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[16]</td>
-	<td>Dropping Tables: VersionController</td>
+	<td>Dropping Tables: AuthTicketController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[17]</td>
-	<td>Creating Tables: VersionController</td>
+	<td>Dropping Tables: VersionController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[18]</td>
-	<td>Creating Tables: ApplicationStatusController</td>
+	<td>Creating Tables: VersionController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[19]</td>
-	<td>Creating Tables: ApplicationStatusSummaryController</td>
+	<td>Creating Tables: AuthTicketController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[20]</td>
-	<td>Creating Tables: CompanyController</td>
+	<td>Creating Tables: ApplicationStatusController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[21]</td>
-	<td>Creating Tables: ContactController</td>
+	<td>Creating Tables: ApplicationStatusSummaryController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[22]</td>
-	<td>Creating Tables: JobController</td>
+	<td>Creating Tables: CompanyController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[23]</td>
-	<td>Creating Tables: KeywordController</td>
+	<td>Creating Tables: ContactController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[24]</td>
-	<td>Creating Tables: NoteController</td>
+	<td>Creating Tables: JobController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[25]</td>
-	<td>Creating Tables: SearchController</td>
+	<td>Creating Tables: KeywordController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[26]</td>
-	<td>Creating Tables: JobKeywordMapController</td>
+	<td>Creating Tables: NoteController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[27]</td>
-	<td>Creating Triggers: ApplicationStatusController</td>
+	<td>Creating Tables: SearchController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[28]</td>
-	<td>Creating Triggers: CompanyController</td>
+	<td>Creating Tables: JobKeywordMapController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[29]</td>
-	<td>Creating Triggers: ContactController</td>
+	<td>Creating Triggers: ApplicationStatusController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[30]</td>
-	<td>Creating Triggers: JobController</td>
+	<td>Creating Triggers: CompanyController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[31]</td>
-	<td>Creating Triggers: KeywordController</td>
+	<td>Creating Triggers: ContactController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[32]</td>
-	<td>Creating Triggers: SearchController</td>
+	<td>Creating Triggers: JobController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[33]</td>
-	<td>Pre-populating tables: VersionController</td>
+	<td>Creating Triggers: KeywordController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//ul[2]/li[34]</td>
+	<td>Creating Triggers: SearchController</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//ul[2]/li[35]</td>
+	<td>Pre-populating tables: VersionController</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//ul[2]/li[36]</td>
 	<td>Pre-populating tables: ApplicationStatusController</td>
 </tr>
 <tr>
 	<td>assertText</td>
 	<td>//p[2]</td>
 	<td>Done.</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log Out</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>css=th</td>
+	<td>Login</td>
+</tr>
+<tr>
+	<td>assertText</td>
+	<td>//tr[2]/th</td>
+	<td>Password</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=auth_username</td>
+	<td>kbpjs</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=auth_password</td>
+	<td>silly1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input[type=&quot;submit&quot;]</td>
+	<td></td>
 </tr>
 </tbody></table>
 </body>
