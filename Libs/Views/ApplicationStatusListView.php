@@ -55,7 +55,7 @@ class ApplicationStatusListView extends ListViewBase {
      */
     private function _getHtmlView() {
         $body = <<<'HTML'
-<a href="addApplicationStatus.php">Add new application status</a><br />
+<button type="button" onclick="addApplicationStatus()" >Add Application Status</button>
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Application Statuses</caption>
   <thead>
@@ -70,28 +70,16 @@ class ApplicationStatusListView extends ListViewBase {
     </tr>
   </thead>
   <tbody>
+
 HTML;
         foreach ( $this->_applicationStatusModels as $applicationStatus ) {
             $id       = $applicationStatus->getId() ;
-            $value    = htmlspecialchars( $applicationStatus->getStatusValue() ) ;
-            $isActive = $applicationStatus->getIsActive() ? "Yes" : "No" ;
-            $sortKey  = $applicationStatus->getSortKey() ;
-            $style    = htmlspecialchars( $applicationStatus->getStyle() ) ;
-            $created  = $applicationStatus->getCreated() ;
-            $updated  = $applicationStatus->getUpdated() ;
+            $row      = $this->displayApplicationStatusRow( $applicationStatus, 'list' ) ;
             $body .= <<<HTML
-    <tr>
-      <td>
-          <a href="editApplicationStatus.php?id=$id">Edit</a>
-        | <a href="deleteApplicationStatus.php?id=$id">Delete</a>
-      </td>
-      <td style="$style">$value</td>
-      <td>$style</td>
-      <td>$isActive</td>
-      <td>$sortKey</td>
-      <td>$created</td>
-      <td>$updated</td>
+    <tr id="ux$id">
+      $row
     </tr>
+
 HTML;
         }
 
@@ -113,6 +101,81 @@ HTML;
                 throw new ViewException( "Unsupported view type." ) ;
         }
     }
+
+    /**
+     * Return the display of an application status table row
+     *
+     * @param ApplicationStatusModel $applicationStatusModel
+     * @param string $displayMode 'add', 'edit', 'delete', 'list'
+     * @return string
+     */
+    public function displayApplicationStatusRow( $applicationStatusModel, $displayMode ) {
+        $id              = $applicationStatusModel->getId() ;
+        $statusValue     = $applicationStatusModel->getStatusValue() ;
+        $style           = $applicationStatusModel->getStyle() ;
+        $isActive        = $applicationStatusModel->getIsActive() ;
+        $isActiveChecked = ( $isActive ) ? "checked=\"checked\"" : "" ;
+        $isActiveDisplay = ( $isActive ) ? "Yes" : "No" ;
+        $sortKey         = $applicationStatusModel->getSortKey() ;
+        $created         = $applicationStatusModel->getCreated() ;
+        $updated         = $applicationStatusModel->getUpdated() ;
+        switch ( $displayMode ) {
+            case 'add'    :
+                return <<<RETVAL
+      <td><button type="button" onclick="doAddApplicationStatus( '$id' )">Save</button>
+          <button type="button" onclick="deleteRow( 'ix$id' )">Cancel</button>
+      </td>
+      <td><input type="text" id="statusValueix$id" value="$statusValue" /></td>
+      <td><input type="text" id="styleix$id" value="$style" /></td>
+      <td><input type="checkbox" id="isActiveix$id" $isActiveChecked /></td>
+      <td><input type="text" id="sortKeyix$id" value="$sortKey" /></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+
+RETVAL;
+            case 'edit'   :
+                return <<<RETVAL
+      <td><button type="button" onclick="doEditApplicationStatus( '$id' )">Save</button>
+          <button type="button" onclick="dogetApplicatoinStatusRow( '$id' )">Cancel</button>
+      </td>
+      <td><input type="text" id="statusValueix$id" value="$statusValue" /></td>
+      <td><input type="text" id="styleix$id" value="$style" /></td>
+      <td><input type="checkbox" id="isActiveix$id" $isActiveChecked /></td>
+      <td><input type="text" id="sortKeyix$id" value="$sortKey" /></td>
+      <td>$created</td>
+      <td>$updated</td>
+
+RETVAL;
+            case 'delete' :
+                return <<<RETVAL
+      <td><button type="button" onclick="doDeleteApplicationStatus( '$id' )">Confirm Delete</button>
+          <button type="button" onclick="doGetApplicationStatusRow( '$id' )">Cancel</button>
+      </td>
+      <td>$statusValue</td>
+      <td>$style</td>
+      <td>$isActiveDisplay</td>
+      <td>$sortKey</td>
+      <td>$created</td>
+      <td>$updated</td>
+
+RETVAL;
+            case 'list'   :
+                return <<<RETVAL
+      <td><button type="button" onclick="editApplicationStatus( '$id' )">Edit</button>
+          <button type="button" onclick="deleteApplicationStatusRow( '$id' )">Delete</button>
+      </td>
+      <td style="$style">$statusValue</td>
+      <td>$style</td>
+      <td>$isActiveDisplay</td>
+      <td>$sortKey</td>
+      <td>$created</td>
+      <td>$updated</td>
+
+RETVAL;
+        }
+        return "" ;
+    }
+
 
     /**
      * @return ApplicationStatusModel[]
