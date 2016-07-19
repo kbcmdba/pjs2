@@ -56,7 +56,7 @@ class ApplicationStatusListView extends ListViewBase {
     private function _getHtmlView() {
         $body = <<<'HTML'
 <button type="button" onclick="addApplicationStatus()" >Add Application Status</button>
-<table border="1" cellspacing="0" cellpadding="2">
+<table border="1" cellspacing="0" cellpadding="2" id="applicationStatus" >
   <caption>Current Application Statuses</caption>
   <thead>
     <tr>
@@ -88,6 +88,7 @@ HTML;
         return $body ;
     }
 
+
     /**
      *
      * @return string
@@ -101,6 +102,7 @@ HTML;
                 throw new ViewException( "Unsupported view type." ) ;
         }
     }
+
 
     /**
      * Return the display of an application status table row

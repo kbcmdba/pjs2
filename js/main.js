@@ -26,6 +26,27 @@ function isNumeric(n) {
 }
 
 /**
+ * Load the results of an AJAX call into the target ID
+ *
+ * @param uri        URI
+ * @param data        Data in URL-encoded format
+ * @param targetId    The response will be loaded here.
+ * @param isAsync    Load the response asynchronously.
+ * @param callback    A user-defined routine to handle the results.
+ */
+function doLoadAjaxJsonResultWithCallback( uri, data, targetId, isAsync, callback ) {
+    var xhttp = new XMLHttpRequest() ;
+    xhttp.onreadystatechange = function() {
+        if ( xhttp.readyState == 4 && xhttp.status == 200 ) {
+            callback( xhttp, targetId ) ;
+        }
+    } ;
+    xhttp.open( "POST", uri, isAsync ) ;
+    xhttp.setRequestHeader( "Content-type", "application/x-www-form-urlencoded" ) ;
+    xhttp.send( data ) ;
+}
+
+/**
  * Add an application status row for user input.
  *
  * @returns {Boolean}
@@ -35,7 +56,7 @@ function addApplicationStatus() {
     var row    = table.insertRow( 1 ) ;
     row.id     = "ix" + rowNumber ;
     var data   = 'id=' + rowNumber + '&mode=add' ;
-    doLoadAjaxJsonResultWithCallback( 'AJAXDisplayApplicationStatusRow.php'
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetApplicationStatusRow.php'
                                     , data
                                     , 'ix'
                                     + rowNumber
@@ -47,6 +68,115 @@ function addApplicationStatus() {
     rowNumber ++ ;
 	return false ;
 }
+
+/**
+ * Display the Application Status row to be updated based on the id provided.
+ * 
+ * @param id
+ * @returns {Boolean}
+ */
+function updateApplicationStatus( id ) {
+	var row  = document.getElementById( 'ux' + id ) ;
+    var data = 'id=' + id + '&mode=update' ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetApplicationStatusRow.php'
+                                    , data
+                                    , 'ux'
+                                    + id
+                                    , true
+                                    , function ( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        row.innerHTML = jsonObj.row ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Display the Application Status row to be removed based on the id provided.
+ * 
+ * @param id
+ * @returns {Boolean}
+ */
+function deleteApplicationStatus( id ) {
+	var row  = document.getElementById( 'ux' + id ) ;
+    var data = 'id=' + id + '&mode=delete' ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetApplicationStatusRow.php'
+                                    , data
+                                    , 'ux'
+                                    + id
+                                    , true
+                                    , function ( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        row.innerHTML = jsonObj.row ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Validate an Application Status row prior to submission. When there are errors, the
+ * errors are reported back in the return string. Otherwise, the empty string
+ * is returned.
+ *
+ * @param displayValue
+ * @param style
+ * @param isActive
+ * @param amount
+ * @param tipAmount
+ * @param checkNumber
+ * @returns {String}
+ */
+function ajaxValidateApplicationStatus( displayValue, style, isActive, sortKey ) {
+    var message = '' ;
+    if ( ( null == displayValue ) || ( '' == displayValue ) ) {
+        message += "Value cannot be blank.\n" ;
+    }
+    if ( ( null == style ) || ( '' == style ) ) {
+        message += "Style cannot be blank.\n" ;
+    }
+    if ( ( null == sortKey ) || ( '' == sortKey ) || ( ! isNumeric( sortKey ) ) ) {
+        message += "Sort Key must be numeric.\n" ;
+    }
+    return message ;
+}
+
+/**
+ * Save the ApplicationStatus row displayed and display a replacement row that can be
+ * updated or deleted.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function saveAddApplicationStatus( id ) {
+	var rowId       = 'ix' + id ;
+    var statusValue = document.getElementById( "statusValue" + rowId ).value ;
+    var style       = document.getElementById( "style" + rowId ).value ;
+    var isActive    = document.getElementById( "isActive" + rowId ).value ;
+    var sortKey     = document.getElementById( "sortKey" + rowId ).value ;
+    var msg         = ajaxValidateApplicationStatus( displayValue
+                                                   , style
+                                                   , isActive
+                                                   , sortKey
+                                                   ) ;
+    if ( '' !== msg ) {
+        alert( msg ) ;
+        return false ;
+    }
+    var uri     = "AJAXAddApplicationStatus.php" ;
+    var data    = "displayValue=" + encodeURIComponent( displayValue )
+                + "&style=" + encodeURIComponent( style )
+                + "&isActive=" + encodeURIComponent( isActive )
+                + "&sortKey=" + encodeURIComponent( sortKey )
+                ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj   = JSON.parse( xhttp.responseText ) ;
+        var row       = document.getElementById( "ix" + targetId ) ;
+        row.id        = "ux" + jsonObj.newId ;
+        row.innerHTML = jsonObj.row ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 function validateApplicationStatus() {
 	var retVal = true ;

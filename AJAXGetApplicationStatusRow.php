@@ -32,7 +32,7 @@ $result = "OK" ;
 $id   = $_POST[ 'id' ] ;
 $mode = $_POST[ 'mode' ] ;
 $html = '' ;
-$applicationStatusListView = new ApplicationStatusListView() ;
+$applicationStatusListView = new ApplicationStatusListView( 'html', null ) ;
 if ( 'add' == $mode ) {
     $applicationStatusModel = new ApplicationStatusModel() ;
     $applicationStatusModel->setId( $id ) ;
