@@ -2,4 +2,4 @@ config.xml
 .settings
 .project
 .buildpath
-/login.log
+login.log
