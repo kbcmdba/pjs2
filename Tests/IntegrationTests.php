@@ -2,7 +2,7 @@
 
 set_include_path( get_include_path()
                 . PATH_SEPARATOR
-                . $ENV[ 'HOME' ] . '/.config/composer'
+                . '/home/kbenton/.config/composer'
                 ) ;
 
 use Facebook\WebDriver\Remote\DesiredCapabilities ;
@@ -19,8 +19,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     protected $webDriver ;
     private $_headerTags = array( 'Summary'
                                 ) ;
-    private $_userName   = '' ;
-    private $_password   = '' ;
+    private $_userName   = 'pjs2_test' ;
+    private $_password   = 'pjs2_test' ;
     protected $url = 'http://127.0.0.1/pjs2/' ;
 
     public function setUp() {
@@ -113,17 +113,20 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * @group minimal
      */
     public function testWebsiteLoads() {
-        $url = $this->url ;
+        $driver = $this->webDriver ;
+        $url    = $this->url ;
         $driver->get( $this->url ) ;
         $this->checkHeaderLoads() ;
         $this->doLogOutLogIn() ;
         $this->checkHeaderLoads() ;
     }
 
+    /*
      * @group minimal
      */
     public function testResetDatabase() {
-        $url = $this->url ;
+        $driver = $this->webDriver ;
+        $url    = $this->url ;
         $driver->get( $this->url ) ;
         $this->checkHeaderLoads() ;
         $this->doLogOutLogIn() ;
@@ -138,7 +141,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     public function testWebSite() {
         $this->doLogOutLogIn() ;
         $driver = $this->webDriver ;
-        $url = $this->url ;
+        $url    = $this->url ;
         $driver->get( $this->url ) ;
         $this->checkHeaderLoads() ;
         // Check that all the pages in the header load properly
