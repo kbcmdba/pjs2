@@ -26,30 +26,30 @@ require_once 'Libs/autoload.php' ;
 // reverse the order for safe removal.
 $controllerNames = array ( 'VersionController'
                          , 'AuthTicketController'
-                         , 'ApplicationStatusController' 
-                         , 'ApplicationStatusSummaryController' 
-                         , 'CompanyController' 
-                         , 'ContactController' 
-                         , 'JobController' 
-                         , 'KeywordController' 
-                         , 'NoteController' 
-                         , 'SearchController' 
-                         , 'JobKeywordMapController' 
+                         , 'ApplicationStatusController'
+                         , 'ApplicationStatusSummaryController'
+                         , 'CompanyController'
+                         , 'ContactController'
+                         , 'JobController'
+                         , 'KeywordController'
+                         , 'NoteController'
+                         , 'SearchController'
+                         , 'JobKeywordMapController'
                          ) ;
 $controllers = array () ;
 
 try {
     $config = new Config() ;
-    $page = new PJSWebPage( $config->getTitle() . " - Reset DB" ) ;
-    $body = "<ul>" ;
+    $page = new PJSWebPage( $config->getTitle() . " - Reset DB", true ) ;
+    $body = "<ul>\n" ;
 
-    if ( "1" !== $config->getResetOk() ) {
-        throw new Exception( "Reset capability is turned off! See config.xml" ) ;
+    $dbc = new DBConnection( "admin", null, null, null, null, null, 'mysqli', true ) ;
+    if ( ! $dbc->getCreatedDb() ) {
+        if ( "1" !== $config->getResetOk() ) {
+            throw new Exception( "Reset capability is turned off! See config.xml" ) ;
+        }
     }
-    $dbc = new DBConnection( 'admin' ) ;
     $dbh = $dbc->getConnection() ;
-    $dbh->query( 'CREATE DATABASE IF NOT EXISTS ' . $config->getDbName() ) ;
-    
     foreach ( array_reverse( $controllerNames ) as $controllerName ) {
         $controller = new $controllerName( 'write' ) ;
         $controllers[ $controllerName ] = $controller ;
@@ -58,24 +58,24 @@ try {
             $controller->dropTriggers() ;
         }
     }
-    
+
     foreach ( $controllers as $controllerName => $controller ) {
         $body .= "<li>Dropping Tables: $controllerName</li>\n" ;
         $controller->dropTable() ;
     }
-    
+
     foreach ( array_reverse( $controllers ) as $controllerName => $controller ) {
         $body .= "<li>Creating Tables: $controllerName</li>\n" ;
         $controller->createTable() ;
     }
-    
+
     foreach ( array_reverse( $controllers ) as $controllerName => $controller ) {
         if ( method_exists( $controller, 'createTriggers' ) ) {
             $body .= "<li>Creating Triggers: $controllerName</li>\n" ;
             $controller->createTriggers() ;
         }
     }
-    
+
     foreach ( array_reverse( $controllers ) as $controllerName => $controller ) {
         if ( method_exists( $controller, 'preLoadData' ) ) {
             $body .= "<li>Pre-populating tables: $controllerName</li>\n" ;

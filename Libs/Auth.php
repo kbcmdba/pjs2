@@ -23,7 +23,7 @@
 
 /**
  * User Authorization Class
- * 
+ *
  * Note: This is *NOT* secure enough to use over a public internet connection.
  * At this point, it is a stub to be improved at a future time.
  */
@@ -33,14 +33,22 @@ class Auth {
     static private $_authTicket = null ;
     static private $_userValidated = null ;
 
+    /** @var Config */
+    static private $_config = null ;
+
     /**
      * Class constructor
-     * 
+     *
      * @param string $readOnly If readOnly is true, don't refresh the user's expire time.
      */
     public function __construct( $readOnly = false ) {
         session_start() ;
         $config = new Config() ;
+        $this->_config = $config ;
+        // Users are always authorized if the configuration tells us to skip authentication.
+        if ( $config->getSkipAuth() ) {
+            return ;
+        }
         self::$_userId = $config->getUserId() ;
         self::$_password = $config->getUserPassword() ;
         if ( $this->isAuthorized( $readOnly ) ) {
@@ -66,11 +74,15 @@ class Auth {
 
     /**
      * Checks to make sure that the user's session is logged in.
-     * 
+     *
      * @param string $readOnly If readOnly is true, don't refresh the user's expire time.
      * @return boolean
      */
     public function isAuthorized( $readOnly = false ) {
+        // Users are always authorized if the configuration tells us to skip authentication.
+        if ( $this->_config->getSkipAuth() ) {
+            return true ;
+        }
         // Has this user already been validated during this transaction?
         if ( isset( self::$_userValidated ) ) {
             return self::$_userValidated ;

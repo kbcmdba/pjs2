@@ -34,10 +34,13 @@ class PJSWebPage extends WebPage {
      *
      * @param string
      */
-    public function __construct( $title = '' ) {
+    public function __construct( $title = '', $skipAuth = false ) {
         parent::__construct( $title ) ;
-        $auth = new Auth() ;
-        $this->_auth = $auth ;
+        $this->_skipAuth = $skipAuth ;
+        if ( ! $skipAuth ) {
+            $auth = new Auth() ;
+            $this->_auth = $auth ;
+        }
         $config = new Config() ;
         $this->_resetOk = $config->getResetOk() ;
         $header = <<<HTML
@@ -61,7 +64,7 @@ HTML;
         $this->setTop( $this->_getTop() ) ;
         $this->setBottom( '<!-- EndOfPage -->' ) ;
 
-        if ( ! $auth->isAuthorized() ) {
+        if ( ( ! $skipAuth ) && ( ! $auth->isAuthorized() ) ) {
             $this->setBody( $auth->getLoginPage() ) ;
             $this->displayPage() ;
             exit ;
@@ -75,7 +78,7 @@ HTML;
      */
     private function _getTop() {
         $logout = '' ;
-            if ( $this->_auth->isAuthorized() ) {
+        if ( ( ! $this->_skipAuth ) && ( $this->_auth->isAuthorized() ) ) {
             $logout  = '  <li><a href="logout.php">Log Out</a></li>' ;
         }
         $reset = ( $this->_resetOk ) ? "  <li><a href=\"resetDb.php\">Reset Database</a></li>" : "" ;

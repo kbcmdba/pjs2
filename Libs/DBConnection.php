@@ -32,6 +32,8 @@ class DBConnection {
     private $_oConfig ;
     /** ConnectionType */
     private $_connectionClass ;
+    /** When the database is created during construction, this is set to true, false otherwise */
+    private $_createdDb ;
 
     /**
      * Class Constructor
@@ -55,6 +57,7 @@ class DBConnection {
                                , $dbPass = NULL
                                , $dbPort = NULL
                                , $connClass = 'mysqli'
+                               , $createDb = false
                                ) {
         $oConfig = new Config( $connType
                              , $dbHost
@@ -85,25 +88,37 @@ class DBConnection {
             case 'mysqli' :
                 $mysqli = mysqli_init() ;
                 if ( ! $mysqli ) {
-                    throw new Exception( "Failed to allocate connection class!" ) ;
+                    throw new DaoException( "Failed to allocate connection class!" ) ;
                 }
                 if ( ! $mysqli->options( MYSQLI_OPT_CONNECT_TIMEOUT, 2 ) ) {
-                    throw new Exception( 'Failed setting connection timeout.' ) ;
+                    throw new DaoException( 'Failed setting connection timeout.' ) ;
                 }
                 $result = $mysqli->real_connect( $oConfig->getDbHost()
                                                , $oConfig->getDbUser()
                                                , $oConfig->getDbPass()
-                                               , $oConfig->getDbName()
+                                               , null
                                                , $oConfig->getDbPort()
                                                ) ;
                 if ( ( ! $result ) || ( $mysqli->connect_errno ) ) {
-                    throw new Exception( 'Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . $mysqli->connect_error ) ;
+                    throw new DaoException( 'Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . $mysqli->connect_error ) ;
                 }
                 $this->_dbh = $mysqli ;
                 if ( $this->_dbh->connect_error ) {
-                    throw new Exception( 'Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . $this->_dbh->connect_error ) ;
+                    throw new DaoException( 'Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . $this->_dbh->connect_error ) ;
                 }
                 $this->_dbh->query( "SET @@SESSION.SQL_MODE = 'ALLOW_INVALID_DATES'" ) ;
+                if ( ! $mysqli->select_db( $oConfig->getDbName() ) ) {
+                    if ( $createDb ) {
+                        $this->_createdDb = true ;
+                        $this->_dbh->query( "CREATE DATABASE IF NOT EXISTS " . $oConfig->getDbName() ) ;
+                        if ( ! $mysqli->select_db( $oConfig->getDbName() ) ) {
+                            throw new DaoException( "Database: {$oConfig->getDbName()} is missing. Please use resetDb.php to install the database." ) ;
+                        }
+                    }
+                    else {
+                        throw new DaoException( "Database: {$oConfig->getDbName()} is missing. Please use resetDb.php to install the database." ) ;
+                    }
+                }
                 break ;
             case 'PDO' :
                 // May throw PDOException by itself.
@@ -111,11 +126,11 @@ class DBConnection {
                                      , $oConfig->getDbPass()
                                      ) ;
                 if ( ! $this->_dbh ) {
-                    throw new Exception( 'Error connecting to database server(' . $oConfig->getDbHost() . ')!' ) ;
+                    throw new DaoException( 'Error connecting to database server(' . $oConfig->getDbHost() . ')!' ) ;
                 }
                 break ;
             default :
-                throw new Exception( 'Unknown connection class: ' . $connClass ) ;
+                throw new DaoException( 'Unknown connection class: ' . $connClass ) ;
         } // END OF switch ( $connClass )
         $this->_connectionClass = $connClass ;
     }
@@ -156,6 +171,13 @@ class DBConnection {
      */
     public function getConnectionClass() {
         return $this->_connectionClass ;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCreatedDb() {
+        return $this->_createdDb ;
     }
 
 }

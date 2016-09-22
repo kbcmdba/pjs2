@@ -26,5 +26,14 @@ require_once 'Libs/autoload.php' ;
 // @todo Show application statuses in index page
 
 $config = new Config() ;
+try {
+    $dbc = new DBConnection() ;
+}
+catch ( DaoException $ex ) {
+    echo "Has this system been set up yet? Have you used resetDb.php?\n" ;
+    exit() ;
+}
+
+$config = new Config() ;
 $page = new PJSWebPage( $config->getTitle() ) ;
 $page->displayPage() ;

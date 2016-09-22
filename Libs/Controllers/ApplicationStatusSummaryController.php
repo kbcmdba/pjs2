@@ -48,7 +48,7 @@ CREATE TABLE applicationStatusSummary
      , updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                    ON UPDATE CURRENT_TIMESTAMP
      , PRIMARY KEY pk_applicationStatusId ( id )
-     , FOREIGN KEY fk_applicationStatusId ( id )
+     , FOREIGN KEY fk_apstatsumm_applicationStatusId ( id )
         REFERENCES applicationStatus ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE

@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS job
        id                    INT UNSIGNED NOT NULL AUTO_INCREMENT
      , primaryContactId      INT UNSIGNED NULL DEFAULT NULL
      , companyId             INT UNSIGNED NULL DEFAULT NULL
-     , applicationStatusId   INT UNSIGNED NOT NULL
+     , applicationStatusId   INT UNSIGNED NULL DEFAULT NULL
      , lastStatusChange      TIMESTAMP NOT NULL DEFAULT 0
      , urgency               ENUM( 'high', 'medium', 'low' ) NOT NULL DEFAULT 'low'
      , created               TIMESTAMP NOT NULL DEFAULT 0
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS job
         REFERENCES company ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
-     , FOREIGN KEY fk_applicationStatusId ( applicationStatusId )
+     , FOREIGN KEY fk_job_applicationStatusId ( applicationStatusId )
         REFERENCES applicationStatus ( id )
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
