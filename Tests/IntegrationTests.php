@@ -108,9 +108,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->assertEquals( 0, $this->webDriver->findElements( $locator ) ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doLogOutLogIn() {
         $username = null ;
         $password = null ;
@@ -149,9 +146,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->assertEquals( true, $this->doWaitFor( WebDriverBy::linkText( 'Log Out' ) ) ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doResetDb() {
         $this->doLoadFromHeader( 'Reset Database' ) ;
         $resetElements = array( 'Dropping Triggers: SearchController'
@@ -201,6 +195,62 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * FIXME Implement this
+     */
+    public function doTestSummary1() {
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
+     * FIXME Implement this
+     */
+    public function doTestApplicationStatuses() {
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
+     * FIXME Implement this
+     */
+    public function doTestCompanies() {
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
+     * FIXME Implement this
+     */
+    public function doTestContacts() {
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
+     * FIXME Implement this
+     */
+    public function doTestJobs() {
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
+     * FIXME Implement this
+     */
+    public function doTestKeywords() {
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
+     * FIXME Implement this
+     */
+    public function doTestSearches() {
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
+     * FIXME Implement this
+     */
+    public function doTestSummary2() {
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
      * @group minimal
      */
     public function testWebsiteLoads() {
@@ -212,9 +262,10 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkHeaderLoads() ;
     }
 
+
     /*
      * @group minimal
-     * @group reset
+     * @group doReset
      */
     public function testResetDatabase() {
         $driver = $this->webDriver ;
@@ -230,7 +281,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * FIXME Implement this
      * @group full
      * @group skipReset
      */
@@ -244,8 +294,16 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         foreach ( $this->_headerTags as $headerTag ) {
             $this->doLoadFromHeader( $headerTag ) ;
         }
-        sleep( 5 ) ;
-        $this->markTestIncomplete( 'Incomplete test' ) ;
+
+//         $this->doTestSummary1() ;
+        $this->doTestApplicationStatuses() ;
+//         $this->doTestCompanies() ;
+//         $this->doTestContacts() ;
+//         $this->doTestJobs() ;
+//         $this->doTestKeywords() ;
+//         $this->doTestSearches() ;
+//         $this->doTestSummary2() ;
+
     }
 
 }
