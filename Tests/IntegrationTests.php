@@ -205,6 +205,18 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * FIXME Implement this
      */
     public function doTestApplicationStatuses() {
+        $this->doLoadFromHeader( 'Application Statuses' ) ;
+        $this->checkXpathText( '//button', 'Add Application Status' ) ;
+        $this->checkXpathText( '//caption', 'Current Application Statuses' ) ;
+        $this->checkXpathText( '//tr/th', 'Actions' ) ;
+        $this->checkXpathText( '//tr/th[2]', 'Value' ) ;
+        $this->checkXpathText( '//tr/th[3]', 'Style' ) ;
+        $this->checkXpathText( '//tr/th[4]', 'Is Active' ) ;
+        $this->checkXpathText( '//tr/th[5]', 'Sort Key' ) ;
+        $this->checkXpathText( '//tr/th[6]', 'Created' ) ;
+        $this->checkXpathText( '//tr/th[7]', 'Updated' ) ;
+
+        sleep( 5 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
