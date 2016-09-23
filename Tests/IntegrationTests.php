@@ -18,6 +18,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      */
     protected $webDriver ;
     private $_headerTags = array( 'Summary'
+                                , "Application Statuses"
+                                , "Companies"
+                                , "Contacts"
+                                , "Jobs"
+                                , "Keywords"
+                                , "Searches"
                                 ) ;
     private $_userName   = 'pjs2_test' ;
     private $_password   = 'pjs2_test' ;
@@ -37,7 +43,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         global $lookFor ;
         global $ret ;
         $lookFor = $target ;
-        $this->webDriver->wait($timeout, $interval)->until( function ($webDriver) {
+        $this->webDriver->wait($timeout, $interval)->until( function ( $webDriver ) {
             global $lookFor ;
             global $ret ;
             $ret = ( 1 === count( $this->webDriver->findElements( $lookFor ) ) ) ;
@@ -51,6 +57,13 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $element = $this->webDriver->findElement( $target )->click() ;
         $element->clear() ;
         $this->webDriver->getKeyboard()->sendKeys( $value ) ;
+    }
+
+    public function doLoadFromHeader( $tag ) {
+        $this->assertTrue( $this->doWaitFor( WebDriverBy::linkText( $tag ) ) ) ;
+        $element = $this->webDriver->findElement( WebDriverBy::linkText( $tag ) ) ;
+        $element->click() ;
+        $this->checkHeaderLoads() ;
     }
 
     public function checkFooterLoads() {
@@ -98,14 +111,49 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     /**
      * FIXME Implement this
      */
-    public function doLogOutLogIn(){
-        $this->markTestIncomplete( 'Left off here.' ) ;
+    public function doLogOutLogIn() {
+        $username = null ;
+        $password = null ;
+        $driver = $this->webDriver ;
+        $driver->get( $this->url . "logout.php" ) ;
+        $driver->wait(15, 300)->until(function ($webDriver) {
+            return $webDriver->getCurrentURL() === $this->url . 'index.php' ;
+        } ) ;
+        $indexURL = $this->url . 'index.php' ;
+        $currentURL = $this->webDriver->getCurrentURL() ;
+        $this->assertEquals( $indexURL, $currentURL ) ;
+        if ( $indexURL !== $currentURL ) {
+            $this->markTestSkipped( 'Logout page failed.' ) ;
+            return ;
+        }
+        $this->assertEquals( 'PHP Job Seeker 2', $this->webDriver->getTitle() ) ;
+        $this->checkHeaderLoads() ;
+        try {
+            $username = $this->webDriver->findElement( WebDriverBy::name( 'auth_username' ) ) ;
+            $password = $this->webDriver->findElement( WebDriverBy::name( 'auth_password' ) ) ;
+        }
+        catch( NoSuchElementException $ex ) {
+            $this->markTestIncomplete( 'This part of the test has not been written.' ) ;
+            return ;
+        }
+        $this->assertNotNull( $username ) ;
+        $this->assertNotNull( $password ) ;
+        if ( ( null === $username ) || ( null === $password ) ) {
+            $this->markTestSkipped( 'Unable to test login screen - fields missing.' ) ;
+            return false ;
+        }
+        $username->sendKeys( $this->_userName ) ;
+        $password->sendKeys( $this->_password )->submit() ;
+        $url = $this->webDriver->getCurrentURL() ;
+        $this->assertEquals( ( $this->url . "index.php" ), $url ) ;
+        $this->assertEquals( true, $this->doWaitFor( WebDriverBy::linkText( 'Log Out' ) ) ) ;
     }
 
     /**
      * FIXME Implement this
      */
-    public function doResetDb(){
+    public function doResetDb() {
+        $this->checkHeaderLoads() ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
@@ -135,6 +183,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     /**
+     * FIXME Implement this
      * @group full
      * @group skipReset
      */
@@ -148,6 +197,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         foreach ( $this->_headerTags as $headerTag ) {
             $this->doLoadFromHeader( $headerTag ) ;
         }
+        sleep( 5 ) ;
+        $this->markTestIncomplete( 'Incomplete test' ) ;
     }
 
 }
