@@ -153,8 +153,51 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * FIXME Implement this
      */
     public function doResetDb() {
-        $this->checkHeaderLoads() ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->doLoadFromHeader( 'Reset Database' ) ;
+        $resetElements = array( 'Dropping Triggers: SearchController'
+                              , 'Dropping Triggers: KeywordController'
+                              , 'Dropping Triggers: JobController'
+                              , 'Dropping Triggers: ContactController'
+                              , 'Dropping Triggers: CompanyController'
+                              , 'Dropping Triggers: ApplicationStatusController'
+                              , 'Dropping Tables: JobKeywordMapController'
+                              , 'Dropping Tables: SearchController'
+                              , 'Dropping Tables: NoteController'
+                              , 'Dropping Tables: KeywordController'
+                              , 'Dropping Tables: JobController'
+                              , 'Dropping Tables: ContactController'
+                              , 'Dropping Tables: CompanyController'
+                              , 'Dropping Tables: ApplicationStatusSummaryController'
+                              , 'Dropping Tables: ApplicationStatusController'
+                              , 'Dropping Tables: AuthTicketController'
+                              , 'Dropping Tables: VersionController'
+                              , 'Creating Tables: VersionController'
+                              , 'Creating Tables: AuthTicketController'
+                              , 'Creating Tables: ApplicationStatusController'
+                              , 'Creating Tables: ApplicationStatusSummaryController'
+                              , 'Creating Tables: CompanyController'
+                              , 'Creating Tables: ContactController'
+                              , 'Creating Tables: JobController'
+                              , 'Creating Tables: KeywordController'
+                              , 'Creating Tables: NoteController'
+                              , 'Creating Tables: SearchController'
+                              , 'Creating Tables: JobKeywordMapController'
+                              , 'Creating Triggers: ApplicationStatusController'
+                              , 'Creating Triggers: CompanyController'
+                              , 'Creating Triggers: ContactController'
+                              , 'Creating Triggers: JobController'
+                              , 'Creating Triggers: KeywordController'
+                              , 'Creating Triggers: SearchController'
+                              , 'Pre-populating tables: VersionController'
+                              , 'Pre-populating tables: ApplicationStatusController'
+        ) ;
+
+        $cnt = count( $resetElements ) ;
+        $this->doWaitFor( WebDriverBy::xpath( "//ul[2]/li[$cnt]" ) ) ;
+        for( $i=1 ; $i <= $cnt ; $i++ ) {
+            $this->checkXpathText( "//ul[2]/li[$i]", $resetElements[ $i - 1 ] ) ;
+        }
+        $this->checkXpathText( '//p[2]', 'Done.' ) ;
     }
 
     /**
@@ -171,6 +214,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
 
     /*
      * @group minimal
+     * @group reset
      */
     public function testResetDatabase() {
         $driver = $this->webDriver ;
@@ -179,7 +223,10 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkHeaderLoads() ;
         $this->doLogOutLogIn() ;
         $this->checkHeaderLoads() ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->doResetDb() ;
+        // Log back in since the database was reset and my session is gone.
+        $this->doLogOutLogIn() ;
+        $this->checkHeaderLoads() ;
     }
 
     /**

@@ -37,6 +37,7 @@ $controllerNames = array ( 'VersionController'
                          , 'JobKeywordMapController'
                          ) ;
 $controllers = array () ;
+// @FIXME 00 Users must be logged in to reset the database unless the database doesn't exist!
 
 try {
     $config = new Config() ;
