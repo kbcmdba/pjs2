@@ -32,7 +32,7 @@ try {
     $row = $applicationStatusRowView->displayApplicationStatusRow( $newApplicationStatusModel, 'list' ) ;
 }
 catch ( ControllerException $e ) {
-    $applicationStatusRowView = new ApplicationStatusListView() ;
+    $applicationStatusRowView = new ApplicationStatusListView( 'html', null ) ;
     $row = $applicationStatusRowView->displayApplicationStatusRow( $newApplicationStatusModel
                                            , 'list'
                                            , 'Add Application Status record failed. '

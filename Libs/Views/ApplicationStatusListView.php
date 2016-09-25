@@ -124,8 +124,8 @@ HTML;
         switch ( $displayMode ) {
             case 'add'    :
                 return <<<RETVAL
-      <td><button type="button" id="SaveButtonix$id" onclick="doAddApplicationStatus( '$id' )">Save</button>
-          <button type="button" id="DeleteButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
+      <td><button type="button" id="SaveButtonix$id" onclick="saveAddApplicationStatus( '$id' )">Save</button>
+          <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
       </td>
       <td><input type="text" id="statusValueix$id" value="$statusValue" /></td>
       <td><input type="text" id="styleix$id" value="$style" /></td>
@@ -138,7 +138,7 @@ RETVAL;
             case 'edit'   :
                 return <<<RETVAL
       <td><button type="button" id="UpdateButton$id" onclick="doEditApplicationStatus( '$id' )">Save</button>
-          <button type="button" id="CancelButton$id" onclick="dogetApplicatoinStatusRow( '$id' )">Cancel</button>
+          <button type="button" id="CancelButton$id" onclick="doGetApplicatoinStatusRow( '$id' )">Cancel</button>
       </td>
       <td><input type="text" id="statusValueix$id" value="$statusValue" /></td>
       <td><input type="text" id="styleix$id" value="$style" /></td>

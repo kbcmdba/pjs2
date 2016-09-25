@@ -59,6 +59,23 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->webDriver->getKeyboard()->sendKeys( $value ) ;
     }
 
+    function doToggleCheckBox( $locator ) {
+        $this->webDriver->findElement( $locator )->click() ;
+    }
+
+    function doSelectOption( $location, $displayedValue ) {
+        $select   = $this->webDriver->findElement( $location ) ;
+        $options  = $select->findElements( WebDriverBy::tagName( 'option' ) ) ;
+        $wasFound = 0 ;
+        foreach ( $options as $option ) {
+            if ( $displayedValue === $option->getText() ) {
+                $option->click() ;
+                $wasFound = 1 ;
+            }
+        }
+        $this->assertEquals( 1, $wasFound ) ;
+    }
+
     public function doLoadFromHeader( $tag ) {
         $this->assertTrue( $this->doWaitFor( WebDriverBy::linkText( $tag ) ) ) ;
         $element = $this->webDriver->findElement( WebDriverBy::linkText( $tag ) ) ;
@@ -69,7 +86,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     public function checkFooterLoads() {
         global $lookFor ;
         $lookFor = "<!-- EndOfPage --></body>\n</html>" ;
-        $this->webDriver->wait( 15, 300 )->until( function ( $webDriver ) {
+        $this->webDriver->wait( 30, 300 )->until( function ( $webDriver ) {
             global $lookFor ;
             return strpos( $webDriver->getPageSource(), $lookFor ) !== null ;
         }) ;
@@ -110,7 +127,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkNotPresent( $locator ) {
-        $this->assertEquals( 0, $this->webDriver->findElements( $locator ) ) ;
+        $this->assertEquals( 0, count( $this->webDriver->findElements( $locator ) ) ) ;
     }
 
     public function doLogOutLogIn() {
@@ -210,6 +227,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * FIXME Implement this
      */
     public function doTestApplicationStatuses() {
+        $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Application Statuses' ) ;
         $this->checkHeaderLoads() ;
         $this->checkXpathText( '//button', 'Add Application Status' ) ;
@@ -309,8 +327,23 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//tr[11]/td[5]', '999' ) ;
         $this->checkXpathPattern( '//tr[11]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
         $this->checkXpathPattern( '//tr[11]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        // Add Verify fill
-        // Add Verify fill Cancel 2nd add
+        $driver->findElement( WebDriverBy::xpath( '//button' ) )->click() ; // Add button
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
+        $driver->findElement( WebDriverBy::xpath( '//button' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButtonix2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkNotPresent( WebDriverBy::id( 'SaveButtonix2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButtonix2' ) ) ;
+        // We could verify the entire table, but that's a little silly.
+        $this->doTypeAt( WebDriverBy::id( 'statusValueix1' ), 'FOO' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'styleix1' ), 'background-color: white; color: black;' ) ;
+        $this->doToggleCheckBox( WebDriverBy::id( 'isActiveix1' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'sortKeyix1' ), '5' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
+
         // Populate add 1, save, verify
         // Verify Page
         // Reload Page
@@ -320,7 +353,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         // Update new row, save, verify
         // Delete new row, verify, cancel, verify
 
-        sleep( 5 ) ;
+        sleep( 10 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 

@@ -46,6 +46,16 @@ class Tools {
     }
 
     /**
+     * Return the value from $_POST[ $key ] if available or an empty string.
+     *
+     * @param String $key
+     * @return String
+     */
+    public static function post( $key ) {
+        return ( isset( $key ) && ( isset( $_POST[ $key ] ) ) ) ? $_POST[ $key ] : '' ;
+    }
+
+    /**
      * Display a table cell but put a non-blank space in it if it's empty or
      * null. Typically, this helps get around empty boxes without lines in
      * browsers that don't properly support styles to make this happen.

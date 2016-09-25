@@ -46,6 +46,8 @@ function doLoadAjaxJsonResultWithCallback( uri, data, targetId, isAsync, callbac
     xhttp.send( data ) ;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Add an application status row for user input.
  *
@@ -151,7 +153,7 @@ function saveAddApplicationStatus( id ) {
     var style       = document.getElementById( "style" + rowId ).value ;
     var isActive    = document.getElementById( "isActive" + rowId ).value ;
     var sortKey     = document.getElementById( "sortKey" + rowId ).value ;
-    var msg         = ajaxValidateApplicationStatus( displayValue
+    var msg         = ajaxValidateApplicationStatus( statusValue
                                                    , style
                                                    , isActive
                                                    , sortKey
@@ -161,7 +163,7 @@ function saveAddApplicationStatus( id ) {
         return false ;
     }
     var uri     = "AJAXAddApplicationStatus.php" ;
-    var data    = "displayValue=" + encodeURIComponent( displayValue )
+    var data    = "displayValue=" + encodeURIComponent( statusValue )
                 + "&style=" + encodeURIComponent( style )
                 + "&isActive=" + encodeURIComponent( isActive )
                 + "&sortKey=" + encodeURIComponent( sortKey )
@@ -173,6 +175,20 @@ function saveAddApplicationStatus( id ) {
         row.id        = "ux" + jsonObj.newId ;
         row.innerHTML = jsonObj.row ;
     } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Dynamically remove a row that was created.
+ *
+ * @param rowId
+ * @returns {Boolean}
+ */
+function deleteRow( rowId ) {
+    var row = document.getElementById( rowId ) ;
+    row.parentNode.removeChild( row ) ;
     return false ;
 }
 
