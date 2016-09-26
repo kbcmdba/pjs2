@@ -135,10 +135,10 @@ HTML;
       <td>&nbsp;</td>
 
 RETVAL;
-            case 'edit'   :
+            case 'update' :
                 return <<<RETVAL
-      <td><button type="button" id="UpdateButton$id" onclick="doEditApplicationStatus( '$id' )">Save</button>
-          <button type="button" id="CancelButton$id" onclick="doGetApplicatoinStatusRow( '$id' )">Cancel</button>
+      <td><button type="button" id="UpdateButton$id" onclick="doUpdateApplicationStatus( '$id' )">Save</button>
+          <button type="button" id="CancelButton$id" onclick="cancelUpdateApplicationStatusRow( '$id' )">Cancel</button>
       </td>
       <td><input type="text" id="statusValueix$id" value="$statusValue" /></td>
       <td><input type="text" id="styleix$id" value="$style" /></td>
@@ -151,7 +151,7 @@ RETVAL;
             case 'delete' :
                 return <<<RETVAL
       <td><button type="button" id="DeleteButton$id" onclick="doDeleteApplicationStatus( '$id' )">Confirm Delete</button>
-          <button type="button" id="CancelButton$id" onclick="doGetApplicationStatusRow( '$id' )">Cancel</button>
+          <button type="button" id="CancelButton$id" onclick="cancelUpdateApplicationStatusRow( '$id' )">Cancel</button>
       </td>
       <td>$statusValue</td>
       <td>$style</td>
@@ -163,8 +163,8 @@ RETVAL;
 RETVAL;
             case 'list'   :
                 return <<<RETVAL
-      <td><button type="button" id="UpdateButton$id" onclick="editApplicationStatus( '$id' )">Edit</button>
-          <button type="button" id="DeleteButton$id" onclick="deleteApplicationStatusRow( '$id' )">Delete</button>
+      <td><button type="button" id="UpdateButton$id" onclick="updateApplicationStatus( '$id' )">Edit</button>
+          <button type="button" id="DeleteButton$id" onclick="deleteApplicationStatus( '$id' )">Delete</button>
       </td>
       <td style="$style">$statusValue</td>
       <td>$style</td>

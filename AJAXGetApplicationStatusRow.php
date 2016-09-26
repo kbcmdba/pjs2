@@ -29,8 +29,8 @@ if ( ! $auth->isAuthorized() ) {
     exit( 0 ) ; // Should never get here but just in case...
 }
 $result = "OK" ;
-$id   = $_POST[ 'id' ] ;
-$mode = $_POST[ 'mode' ] ;
+$id   = Tools::post( 'id' ) ;
+$mode = Tools::post( 'mode' ) ;
 $html = '' ;
 $applicationStatusListView = new ApplicationStatusListView( 'html', null ) ;
 if ( 'add' == $mode ) {

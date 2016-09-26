@@ -141,6 +141,25 @@ function ajaxValidateApplicationStatus( displayValue, style, isActive, sortKey )
 }
 
 /**
+ * Revert the displayed row back to the updatable / deletable row.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function cancelUpdateApplicationStatusRow( id ) {
+    var rowId   = 'ux' + id ;
+    var uri     = "AJAXGetApplicationStatusRow.php" ;
+    var data    = "id=" + encodeURIComponent( id ) + '&mode=list' ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj   = JSON.parse( xhttp.responseText ) ;
+        var row       = document.getElementById( rowId ) ;
+        row.innerHTML = jsonObj.row ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
  * Save the ApplicationStatus row displayed and display a replacement row that can be
  * updated or deleted.
  *
