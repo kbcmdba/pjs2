@@ -151,7 +151,7 @@ function saveAddApplicationStatus( id ) {
     var rowId       = 'ix' + id ;
     var statusValue = document.getElementById( "statusValue" + rowId ).value ;
     var style       = document.getElementById( "style" + rowId ).value ;
-    var isActive    = document.getElementById( "isActive" + rowId ).value ;
+    var isActive    = document.getElementById( "isActive" + rowId ).checked ;
     var sortKey     = document.getElementById( "sortKey" + rowId ).value ;
     var msg         = ajaxValidateApplicationStatus( statusValue
                                                    , style
@@ -165,7 +165,7 @@ function saveAddApplicationStatus( id ) {
     var uri     = "AJAXAddApplicationStatus.php" ;
     var data    = "statusValue=" + encodeURIComponent( statusValue )
                 + "&style=" + encodeURIComponent( style )
-                + "&isActive=" + encodeURIComponent( isActive )
+                + "&isActive=" + ( isActive ? '1' : '0' )
                 + "&sortKey=" + encodeURIComponent( sortKey )
                 ;
     var isAsync = true ;
