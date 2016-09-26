@@ -163,7 +163,7 @@ function saveAddApplicationStatus( id ) {
         return false ;
     }
     var uri     = "AJAXAddApplicationStatus.php" ;
-    var data    = "displayValue=" + encodeURIComponent( statusValue )
+    var data    = "statusValue=" + encodeURIComponent( statusValue )
                 + "&style=" + encodeURIComponent( style )
                 + "&isActive=" + encodeURIComponent( isActive )
                 + "&sortKey=" + encodeURIComponent( sortKey )

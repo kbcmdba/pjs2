@@ -1,5 +1,26 @@
 <?php
 
+/**
+ * phpjobseeker
+ *
+ * Copyright (C) 2009, 2015 Kevin Benton - kbenton at bentonfam dot org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ */
+
 set_include_path( get_include_path()
                 . PATH_SEPARATOR
                 . '/home/kbenton/.config/composer'
@@ -223,13 +244,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
-    public function doTestApplicationStatuses() {
-        $driver = $this->webDriver ;
-        $this->doLoadFromHeader( 'Application Statuses' ) ;
-        $this->checkHeaderLoads() ;
+    function checkASHR() {
         $this->checkXpathText( '//button', 'Add Application Status' ) ;
         $this->checkXpathText( '//caption', 'Current Application Statuses' ) ;
         $this->checkXpathText( '//th', 'Actions' ) ;
@@ -239,95 +254,39 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//th[5]', 'Sort Key' ) ;
         $this->checkXpathText( '//th[6]', 'Created' ) ;
         $this->checkXpathText( '//th[7]', 'Updated' ) ;
-        $this->checkIdText( 'UpdateButton1', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton1', 'Delete' ) ;
-        $this->checkXpathText( '//td[2]', 'FOUND' ) ;
-        $this->checkXpathText( '//td[3]', 'background-color: lightgreen; color: blue;' ) ;
-        $this->checkXpathText( '//td[4]', 'Yes' ) ;
-        $this->checkXpathText( '//td[5]', '10' ) ;
-        $this->checkXpathPattern( '//td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton2', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton2', 'Delete' ) ;
-        $this->checkXpathText( '//tr[2]/td[2]', 'CONTACTED' ) ;
-        $this->checkXpathText( '//tr[2]/td[3]', 'background-color: orange; color: blue;' ) ;
-        $this->checkXpathText( '//tr[2]/td[4]', 'Yes' ) ;
-        $this->checkXpathText( '//tr[2]/td[5]', '20' ) ;
-        $this->checkXpathPattern( '//tr[2]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[2]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton3', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton3', 'Delete' ) ;
-        $this->checkXpathText( '//tr[3]/td[2]', 'APPLIED' ) ;
-        $this->checkXpathText( '//tr[3]/td[3]', 'background-color: yellow; color: blue;' ) ;
-        $this->checkXpathText( '//tr[3]/td[4]', 'Yes' ) ;
-        $this->checkXpathText( '//tr[3]/td[5]', '30' ) ;
-        $this->checkXpathPattern( '//tr[3]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[3]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton4', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton4', 'Delete' ) ;
-        $this->checkXpathText( '//tr[4]/td[2]', 'INTERVIEWING' ) ;
-        $this->checkXpathText( '//tr[4]/td[3]', 'background-color: white; color: red;' ) ;
-        $this->checkXpathText( '//tr[4]/td[4]', 'Yes' ) ;
-        $this->checkXpathText( '//tr[4]/td[5]', '40' ) ;
-        $this->checkXpathPattern( '//tr[4]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[4]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton5', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton5', 'Delete' ) ;
-        $this->checkXpathText( '//tr[5]/td[2]', 'FOLLOWUP' ) ;
-        $this->checkXpathText( '//tr[5]/td[3]', 'background-color: yellow; color: black;' ) ;
-        $this->checkXpathText( '//tr[5]/td[4]', 'Yes' ) ;
-        $this->checkXpathText( '//tr[5]/td[5]', '50' ) ;
-        $this->checkXpathPattern( '//tr[5]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[5]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton6', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton6', 'Delete' ) ;
-        $this->checkXpathText( '//tr[6]/td[2]', 'CHASING' ) ;
-        $this->checkXpathText( '//tr[6]/td[3]', 'background-color: red; color: black;' ) ;
-        $this->checkXpathText( '//tr[6]/td[4]', 'Yes' ) ;
-        $this->checkXpathText( '//tr[6]/td[5]', '60' ) ;
-        $this->checkXpathPattern( '//tr[6]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[6]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton7', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton7', 'Delete' ) ;
-        $this->checkXpathText( '//tr[7]/td[2]', 'NETWORKING' ) ;
-        $this->checkXpathText( '//tr[7]/td[3]', 'background-color: cyan; color: black;' ) ;
-        $this->checkXpathText( '//tr[7]/td[4]', 'Yes' ) ;
-        $this->checkXpathText( '//tr[7]/td[5]', '70' ) ;
-        $this->checkXpathPattern( '//tr[7]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[7]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton8', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton8', 'Delete' ) ;
-        $this->checkXpathText( '//tr[8]/td[2]', 'UNAVAILABLE' ) ;
-        $this->checkXpathText( '//tr[8]/td[3]', 'background-color: black; color: white;' ) ;
-        $this->checkXpathText( '//tr[8]/td[4]', 'No' ) ;
-        $this->checkXpathText( '//tr[8]/td[5]', '999' ) ;
-        $this->checkXpathPattern( '//tr[8]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[8]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton9', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton9', 'Delete' ) ;
-        $this->checkXpathText( '//tr[9]/td[2]', 'INVALID' ) ;
-        $this->checkXpathText( '//tr[9]/td[3]', 'background-color: black; color: white;' ) ;
-        $this->checkXpathText( '//tr[9]/td[4]', 'No' ) ;
-        $this->checkXpathText( '//tr[9]/td[5]', '999' ) ;
-        $this->checkXpathPattern( '//tr[9]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[9]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton10', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton10', 'Delete' ) ;
-        $this->checkXpathText( '//tr[10]/td[2]', 'DUPLICATE' ) ;
-        $this->checkXpathText( '//tr[10]/td[3]', 'background-color: black; color: white;' ) ;
-        $this->checkXpathText( '//tr[10]/td[4]', 'No' ) ;
-        $this->checkXpathText( '//tr[10]/td[5]', '999' ) ;
-        $this->checkXpathPattern( '//tr[10]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[10]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkIdText( 'UpdateButton11', 'Edit' ) ;
-        $this->checkIdText( 'DeleteButton11', 'Delete' ) ;
-        $this->checkXpathText( '//tr[11]/td[2]', 'CLOSED' ) ;
-        $this->checkXpathText( '//tr[11]/td[3]', 'background-color: black; color: white;' ) ;
-        $this->checkXpathText( '//tr[11]/td[4]', 'No' ) ;
-        $this->checkXpathText( '//tr[11]/td[5]', '999' ) ;
-        $this->checkXpathPattern( '//tr[11]/td[6]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $this->checkXpathPattern( '//tr[11]/td[7]', '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
-        $driver->findElement( WebDriverBy::xpath( '//button' ) )->click() ; // Add button
+    }
+
+    function checkASR( $id, $prefix, $label, $css, $isActive, $sortKey ) {
+        $this->checkIdText( "UpdateButton$id", 'Edit' ) ;
+        $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
+        $this->checkXpathText( "/$prefix/td[2]", $label ) ;
+        $this->checkXpathText( "/$prefix/td[3]", $css ) ;
+        $this->checkXpathText( "/$prefix/td[4]", $isActive ) ;
+        $this->checkXpathText( "/$prefix/td[5]", $sortKey ) ;
+        $this->checkXpathPattern( "/$prefix/td[6]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
+        $this->checkXpathPattern( "/$prefix/td[7]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
+    }
+
+    /**
+     * FIXME Implement this
+     */
+    public function doTestApplicationStatuses() {
+        $driver = $this->webDriver ;
+        $this->doLoadFromHeader( 'Application Statuses' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 1, '', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[2]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[3]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[4]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[5]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[6]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[7]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[8]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[9]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[10]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[11]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        $driver->findElement( WebDriverBy::xpath( '//button' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
         $driver->findElement( WebDriverBy::xpath( '//button' ) )->click() ;
@@ -343,11 +302,34 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doToggleCheckBox( WebDriverBy::id( 'isActiveix1' ) ) ;
         $this->doTypeAt( WebDriverBy::id( 'sortKeyix1' ), '5' ) ;
         $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
-
-        // Populate add 1, save, verify
-        // Verify Page
-        // Reload Page
-        // Verify Page
+        $this->checkASHR() ;
+        $this->checkASR( 12, '', 'FOO', 'background-color: white; color: black;', 'Yes', '5' ) ;
+        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->doLoadFromHeader( 'Application Statuses' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 12, '', 'FOO', 'background-color: white; color: black;', 'Yes', '5' ) ;
+        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
         // Update new row, cancel
         // Delete new row, cancel
         // Update new row, save, verify

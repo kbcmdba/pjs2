@@ -21,6 +21,7 @@
  *
  */
 
+// @FIXME 00 Fix Application Statuses Add - IsActive checkbox doesn't work.
 // @todo 10 AJAX: View Application Status in ajax-friendly format
 // @todo 10 AJAX: Add Application Status
 // @todo 10 AJAX: Edit Application Status
