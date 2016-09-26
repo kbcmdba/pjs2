@@ -137,13 +137,13 @@ HTML;
 RETVAL;
             case 'update' :
                 return <<<RETVAL
-      <td><button type="button" id="UpdateButton$id" onclick="doUpdateApplicationStatus( '$id' )">Save</button>
+      <td><button type="button" id="UpdateButton$id" onclick="saveUpdateApplicationStatus( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateApplicationStatusRow( '$id' )">Cancel</button>
       </td>
-      <td><input type="text" id="statusValueix$id" value="$statusValue" /></td>
-      <td><input type="text" id="styleix$id" value="$style" /></td>
-      <td><input type="checkbox" id="isActiveix$id" $isActiveChecked /></td>
-      <td><input type="text" id="sortKeyix$id" value="$sortKey" /></td>
+      <td><input type="text" id="statusValue$id" value="$statusValue" /></td>
+      <td><input type="text" id="style$id" value="$style" /></td>
+      <td><input type="checkbox" id="isActive$id" $isActiveChecked /></td>
+      <td><input type="text" id="sortKey$id" value="$sortKey" /></td>
       <td>$created</td>
       <td>$updated</td>
 

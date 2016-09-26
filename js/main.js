@@ -197,6 +197,78 @@ function saveAddApplicationStatus( id ) {
     return false ;
 }
 
+/**
+ * Actually save the changes to the row and redisplay it.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function saveUpdateApplicationStatus( id ) {
+    var rowId        = 'ux' + id ;
+    var statusValue = document.getElementById( "statusValue" + id ).value ;
+    var style       = document.getElementById( "style" + id ).value ;
+    var isActive    = document.getElementById( "isActive" + id ).checked ;
+    var sortKey     = document.getElementById( "sortKey" + id ).value ;
+    var msg         = ajaxValidateApplicationStatus( statusValue
+                                                   , style
+                                                   , isActive
+                                                   , sortKey
+                                                   ) ;
+    if ( '' !== msg ) {
+        alert( msg ) ;
+        return false ;
+    }
+    var uri     = "AJAXUpdateApplicationStatus.php" ;
+    var data    = "id=" + id
+                + "&statusValue=" + encodeURIComponent( statusValue )
+                + "&style=" + encodeURIComponent( style )
+                + "&isActive=" + ( isActive ? '1' : '0' )
+                + "&sortKey=" + encodeURIComponent( sortKey )
+                ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj   = JSON.parse( xhttp.responseText ) ;
+        var row       = document.getElementById( "ux" + targetId ) ;
+        row.innerHTML = jsonObj.row ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Actually remove the displayed row from the database and the user's screen.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function doDeleteApplicationStatus( id ) {
+    var uri     = "AJAXDeleteApplicationStatus.php" ;
+    var data    = "id=" + encodeURIComponent( id ) ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        if ( "OK" == jsonObj.result ) {
+            deleteRow( "ux" + id ) ;
+        }
+        else {
+            var uri2 = "AJAXGetApplicationStatus.php" ;
+            var jsonObj2 = JSON.parse( xhttp.responseText ) ;
+            var result = jsonObj2.result ;
+            var data2 = "id=" + id + "&warning=" + result ;
+            doLoadAjaxJsonResultWithCallback( uri2, data2, id, isAsync, function( xhttp2, targetId2 ) {
+                var jsonObj = JSON.parse( xhttp.responseText ) ;
+                var row       = document.getElementById( "ux" + id ) ;
+                if ( "OK" == jsonObj.result ) {
+                    row.innerHTML = jsonObj.row ;
+                }
+                else {
+                    row.innerHTML = "Undefined result!" ;
+                }
+            } ) ;  // END OF doAjaxJsonResultWithCallback( 2 )
+        }
+    } ) ; // END OF doAjaxJsonResultWithCallback( 1 )
+    return false ;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
