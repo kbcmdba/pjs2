@@ -296,7 +296,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkHeaderLoads() ;
         $this->checkNotPresent( WebDriverBy::id( 'SaveButtonix2' ) ) ;
         $this->checkNotPresent( WebDriverBy::id( 'CancelButtonix2' ) ) ;
-        // We could verify the entire table, but that's a little silly.
         $this->doTypeAt( WebDriverBy::id( 'statusValueix1' ), 'FOO' ) ;
         $this->doTypeAt( WebDriverBy::id( 'styleix1' ), 'background-color: white; color: black;' ) ;
         $this->doToggleCheckBox( WebDriverBy::id( 'isActiveix1' ) ) ;
@@ -330,13 +329,100 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        // Update new row, cancel
-        // Delete new row, cancel
-        // Update new row, save, verify
-        // Delete new row, verify, cancel, verify
-
-        sleep( 10 ) ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 12, '', 'FOO', 'background-color: white; color: black;', 'Yes', '5' ) ;
+        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 12, '', 'FOO', 'background-color: white; color: black;', 'Yes', '5' ) ;
+        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'statusValue12' ), 'FOO2' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'style12' ), 'background-color: silver; color: black;' ) ;
+        $this->doToggleCheckBox( WebDriverBy::id( 'isActive12' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'sortKey12' ), '15' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 12, '', 'FOO2', 'background-color: silver; color: black;', 'No', '15' ) ;
+        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->doLoadFromHeader( 'Application Statuses' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 1, '', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 12, '/tr[2]', 'FOO2', 'background-color: silver; color: black;', 'No', '15' ) ;
+        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 1, '', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[2]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[3]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[4]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[5]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[6]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[7]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[8]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[9]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[10]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[11]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
     }
 
     /**

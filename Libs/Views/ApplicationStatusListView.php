@@ -88,7 +88,6 @@ HTML;
         return $body ;
     }
 
-
     /**
      *
      * @return string
@@ -102,7 +101,6 @@ HTML;
                 throw new ViewException( "Unsupported view type." ) ;
         }
     }
-
 
     /**
      * Return the display of an application status table row
@@ -137,7 +135,7 @@ HTML;
 RETVAL;
             case 'update' :
                 return <<<RETVAL
-      <td><button type="button" id="UpdateButton$id" onclick="saveUpdateApplicationStatus( '$id' )">Save</button>
+      <td><button type="button" id="SaveButton$id" onclick="saveUpdateApplicationStatus( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateApplicationStatusRow( '$id' )">Cancel</button>
       </td>
       <td><input type="text" id="statusValue$id" value="$statusValue" /></td>
@@ -177,7 +175,6 @@ RETVAL;
         }
         return "" ;
     }
-
 
     /**
      * @return ApplicationStatusModel[]
