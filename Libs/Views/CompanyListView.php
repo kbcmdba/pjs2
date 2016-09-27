@@ -112,14 +112,53 @@ HTML;
         else {
             $agencyOf                = 'None' ;
         }
+        $row1 = $row2 = "" ;
         switch ( $displayMode ) {
             case 'add'    :
+                $agencyList = $this->getAgencyList( "ix$id", null ) ;
+                $row1 = <<<HTML
+      <td rowspan="2">
+        <button type="button" id="SaveButton$id" onclick="saveAddCompany( '$id' )">Save</button>
+        <button type="button" id="CancelButton$id" onclick="deleteRow( 'ix$id-1' ); deleteRow( 'ix$id-2' );">Cancel</button>
+      </td>
+      <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
+      <td><input type="text" id="companyAddress1" value="$companyAddress1" /></th>
+      <td><input type="text" id="companyCity" value="$companyCity" /></td>
+      <td><input type="text" id="companyState" value="$companyState" /></td>
+      <td><input type="text" id="companyZip" value="$companyZip" /></td>
+      <td>$created</td>
+HTML;
+                $row2 = <<<HTML
+      <td>$agencyList</td>
+      <td><input type="text" id="" value="$companyAddress2" /></th>
+      <td><input type="text" id="" value="$companyPhone" /></td>
+      <td colspan="2"><input type="text" id="companyUrlix$id" value="$encodedUrl" /></a></td>
+      <td>$updated</td>
+HTML;
                 break ;
             case 'delete' :
+                $row1 = <<<HTML
+      <td rowspan="2">
+        <button type="button" id="DeleteButton$id" onclick="doDeleteCompany( '$id' )">Confirm Delete</button>
+        <button type="button" id="CancelButton$id" onclick="cancelUpdateCompany( '$id' )">Cancel</button>
+      </td>
+      <td><font size="+2">$companyName</font></td>
+      <td>$companyAddress1</th>
+      <td>$companyCity</td>
+      <td>$companyState</td>
+      <td>$companyZip</td>
+      <td>$created</td>
+HTML;
+                $row2 = <<<HTML
+      <td>$agencyOf</td>
+      <td>$companyAddress2</th>
+      <td>$companyPhone</td>
+      <td colspan="2"><a href="$encodedUrl">$encodedUrl</a></td>
+      <td>$updated</td>
+HTML;
                 break ;
             case 'list'   :
-                $body .= <<<HTML
-    <tr class="tr$rowStyle" id="ux$id-1">
+                $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="UpdateButton$id" onclick="updateCompany( '$id' )">Update</button>
         <button type="button" id="DeleteButton$id" onclick="deleteCompany( '$id' )">Delete</button>
@@ -129,18 +168,40 @@ HTML;
       <td>$companyCity</td>
       <td>$companyState</td>
       <td>$companyZip</td>
-    </tr>
-    <tr class="tr$rowStyle" id="ux$id-2">
+      <td>$created</td>
+HTML;
+                $row2 = <<<HTML
       <td>$agencyOf</td>
       <td>$companyAddress2</th>
       <td>$companyPhone</td>
       <td colspan="2"><a href="$encodedUrl">$encodedUrl</a></td>
-    </tr>
+      <td>$updated</td>
 HTML;
                 break ;
             case 'update' :
+                $agencyList = $this->getAgencyList( $id, $id ) ;
+                $row1 = <<<HTML
+      <td rowspan="2">
+        <button type="button" id="SaveButton$id" onclick="saveAddCompany( '$id' )">Save</button>
+        <button type="button" id="CancelButton$id" onclick="cancelUpdateCompany( '$id' )">Cancel</button>
+      </td>
+      <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
+      <td><input type="text" id="companyAddress1" value="$companyAddress1" /></th>
+      <td><input type="text" id="companyCity" value="$companyCity" /></td>
+      <td><input type="text" id="companyState" value="$companyState" /></td>
+      <td><input type="text" id="companyZip" value="$companyZip" /></td>
+      <td>$created</td>
+HTML;
+                $row2 = <<<HTML
+      <td>$agencyList</td>
+      <td><input type="text" id="" value="$companyAddress2" /></th>
+      <td><input type="text" id="" value="$companyPhone" /></td>
+      <td colspan="2"><input type="text" id="companyUrlix$id" value="$encodedUrl" /></a></td>
+      <td>$updated</td>
+HTML;
                 break ;
         }
+        return array( $row1, $row2 ) ;
     }
 
     /**
@@ -169,6 +230,23 @@ HTML;
      */
     public function setCompanyModels( $companyModels ) {
         $this->_companyModels = $companyModels ;
+    }
+
+    public function getAgencyList( $id, $value ) {
+        $retVal = "<select id=\"$id\" >\n  <option value=\"\">---</option>" ;
+        if ( ! isset( $value ) ) {
+            $retVal .= "  <option value=\"self\">Self</option>\n" ;
+        }
+        $companyController = new CompanyController() ;
+        $agencies = $companyController->getAll() ;
+        foreach ( $agencies as $agency ) {
+            $selected = ( $agency->getId() === $id ) ? "selected=\"selected\"" : "" ;
+            $aname = $agency->getCompanyName() ;
+            $aid   = $agency->getId() ;
+            $retVal .= "  <option value=\"$aid\" $selected>$aname</option>\n" ;
+        }
+        $retVal .= "</select>\n" ;
+        return $retVal ;
     }
 
 }
