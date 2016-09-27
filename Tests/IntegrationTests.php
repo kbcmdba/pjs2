@@ -244,7 +244,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
-    function checkASHR() {
+    public function checkASHR() {
         $this->checkXpathText( '//button', 'Add Application Status' ) ;
         $this->checkXpathText( '//caption', 'Current Application Statuses' ) ;
         $this->checkXpathText( '//th', 'Actions' ) ;
@@ -256,7 +256,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//th[7]', 'Updated' ) ;
     }
 
-    function checkASR( $id, $prefix, $label, $css, $isActive, $sortKey ) {
+    public function checkASR( $id, $prefix, $label, $css, $isActive, $sortKey ) {
         $this->checkIdText( "UpdateButton$id", 'Edit' ) ;
         $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
         $this->checkXpathText( "/$prefix/td[2]", $label ) ;
@@ -267,9 +267,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathPattern( "/$prefix/td[7]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doTestApplicationStatuses() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Application Statuses' ) ;
@@ -296,6 +293,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkHeaderLoads() ;
         $this->checkNotPresent( WebDriverBy::id( 'SaveButtonix2' ) ) ;
         $this->checkNotPresent( WebDriverBy::id( 'CancelButtonix2' ) ) ;
+        // We could verify the entire table, but that's a little silly.
         $this->doTypeAt( WebDriverBy::id( 'statusValueix1' ), 'FOO' ) ;
         $this->doTypeAt( WebDriverBy::id( 'styleix1' ), 'background-color: white; color: black;' ) ;
         $this->doToggleCheckBox( WebDriverBy::id( 'isActiveix1' ) ) ;
@@ -329,106 +327,58 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        $driver->findElement( WebDriverBy::id( 'UpdateButton12' ) )->click() ;
-        $this->checkHeaderLoads() ;
-        $this->doWaitFor( WebDriverBy::id( 'SaveButton12' ) ) ;
-        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
-        $driver->findElement( WebDriverBy::id( 'CancelButton12' ) )->click() ;
-        $this->checkHeaderLoads() ;
-        $this->checkASHR() ;
-        $this->checkASR( 12, '', 'FOO', 'background-color: white; color: black;', 'Yes', '5' ) ;
-        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
-        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
-        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
-        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
-        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
-        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
-        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
-        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
-        $this->checkHeaderLoads() ;
-        $this->doWaitFor( WebDriverBy::id( 'DeleteButton12' ) ) ;
-        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
-        $driver->findElement( WebDriverBy::id( 'CancelButton12' ) )->click() ;
-        $this->checkHeaderLoads() ;
-        $this->checkASHR() ;
-        $this->checkASR( 12, '', 'FOO', 'background-color: white; color: black;', 'Yes', '5' ) ;
-        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
-        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
-        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
-        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
-        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
-        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
-        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
-        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        $driver->findElement( WebDriverBy::id( 'UpdateButton12' ) )->click() ;
-        $this->checkHeaderLoads() ;
-        $this->doWaitFor( WebDriverBy::id( 'SaveButton12' ) ) ;
-        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
-        $this->doTypeAt( WebDriverBy::id( 'statusValue12' ), 'FOO2' ) ;
-        $this->doTypeAt( WebDriverBy::id( 'style12' ), 'background-color: silver; color: black;' ) ;
-        $this->doToggleCheckBox( WebDriverBy::id( 'isActive12' ) ) ;
-        $this->doTypeAt( WebDriverBy::id( 'sortKey12' ), '15' ) ;
-        $driver->findElement( WebDriverBy::id( 'SaveButton12' ) )->click() ;
-        $this->checkHeaderLoads() ;
-        $this->checkASHR() ;
-        $this->checkASR( 12, '', 'FOO2', 'background-color: silver; color: black;', 'No', '15' ) ;
-        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
-        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
-        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
-        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
-        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
-        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
-        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
-        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->doLoadFromHeader( 'Application Statuses' ) ;
-        $this->checkHeaderLoads() ;
-        $this->checkASHR() ;
-        $this->checkASR( 1, '', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
-        $this->checkASR( 12, '/tr[2]', 'FOO2', 'background-color: silver; color: black;', 'No', '15' ) ;
-        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
-        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
-        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
-        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
-        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
-        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
-        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
-        $this->checkHeaderLoads() ;
-        $this->doWaitFor( WebDriverBy::id( 'DeleteButton12' ) ) ;
-        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
-        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
-        $this->checkHeaderLoads() ;
-        $this->checkASHR() ;
-        $this->checkASR( 1, '', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
-        $this->checkASR( 2, '/tr[2]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
-        $this->checkASR( 3, '/tr[3]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
-        $this->checkASR( 4, '/tr[4]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
-        $this->checkASR( 5, '/tr[5]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
-        $this->checkASR( 6, '/tr[6]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
-        $this->checkASR( 7, '/tr[7]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
-        $this->checkASR( 8, '/tr[8]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 9, '/tr[9]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 10, '/tr[10]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
-        $this->checkASR( 11, '/tr[11]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        // Update new row, cancel
+        // Delete new row, cancel
+        // Update new row, save, verify
+        // Delete new row, verify, cancel, verify
+
+        sleep( 10 ) ;
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    public function checkC1HR() {
+        $this->checkXpathText( '//button', 'Add Company' ) ;
+        $this->checkXpathText( '//caption', 'Current Companies' ) ;
+        $this->checkXpathText( '//th', 'Actions' ) ;
+        $this->checkXpathText( '//th[2]', 'Company' ) ;
+        $this->checkXpathText( '//th[3]', 'Address1' ) ;
+        $this->checkXpathText( '//th[4]', 'City' ) ;
+        $this->checkXpathText( '//th[5]', 'State' ) ;
+        $this->checkXpathText( '//th[6]', 'Zip' ) ;
+        $this->checkXpathText( '//th[7]', 'Created' ) ;
+        $this->checkXpathText( '//tr[2]/th[2]', 'Agency Of' ) ;
+        $this->checkXpathText( '//tr[2]/th[3]', 'Address 2' ) ;
+        $this->checkXpathText( '//tr[2]/th[4]', 'Phone' ) ;
+        $this->checkXpathText( '//tr[2]/th[5]', 'URL' ) ;
+        $this->checkXpathText( '//tr[2]/th[6]', 'Updated' ) ;
+    }
+
+    public function checkC1R( $id, $prefix1, $prefix2, $company, $city, $state, $zip
+                                                    , $agencyId, $address2, $phone, $url ) {
+        $this->checkIdText( "UpdateButton$id", 'Edit' ) ;
+        $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
+        $this->checkXpathText( "/$prefix1/td[2]", $company ) ;
+        $this->checkXpathText( "/$prefix1/td[3]", $city ) ;
+        $this->checkXpathText( "/$prefix1/td[4]", $state ) ;
+        $this->checkXpathText( "/$prefix1/td[5]", $zip ) ;
+        $this->checkXpathPattern( "/$prefix1/td[7]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ; // created
+        $this->checkXpathText( "/$prefix2/td[2]", $agencyId ) ;
+        $this->checkXpathText( "/$prefix2/td[3]", $address2 ) ;
+        $this->checkXpathText( "/$prefix2/td[4]", $phone ) ;
+        $this->checkXpathText( "/$prefix2/td[5]/a", $url ) ;
+        $this->checkXpathPattern( "/$prefix2/td[6]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ; // updated
     }
 
     /**
      * FIXME Implement this
      */
     public function doTestCompanies() {
+        $driver = $this->webDriver ;
+        $this->doLoadFromHeader( 'Companies' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1HR() ;
+
+        sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
@@ -436,6 +386,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * FIXME Implement this
      */
     public function doTestContacts() {
+        $driver = $this->webDriver ;
+        $this->doLoadFromHeader( 'Contacts' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkC2HR() ;
+
+        sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
@@ -443,6 +399,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * FIXME Implement this
      */
     public function doTestJobs() {
+        $driver = $this->webDriver ;
+        $this->doLoadFromHeader( 'Jobs' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkJHR() ;
+
+        sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
@@ -450,6 +412,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * FIXME Implement this
      */
     public function doTestKeywords() {
+        $driver = $this->webDriver ;
+        $this->doLoadFromHeader( 'Keywords' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1HR() ;
+
+        sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
@@ -457,6 +425,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * FIXME Implement this
      */
     public function doTestSearches() {
+        $driver = $this->webDriver ;
+        $this->doLoadFromHeader( 'Searches' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkSeHR() ;
+
+        sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
@@ -464,6 +438,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * FIXME Implement this
      */
     public function doTestSummary2() {
+        $driver = $this->webDriver ;
+        $this->doLoadFromHeader( 'Summary' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkSuHR() ;
+
+        sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 

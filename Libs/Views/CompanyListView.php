@@ -80,39 +80,49 @@ class CompanyListView extends ListViewBase {
   <tbody>
 HTML;
         foreach ( $this->getCompanyModels() as $companyModel ) {
-            if ( "even" === $rowStyle ) {
-                $rowStyle = "odd" ;
-            }
-            else {
-                $rowStyle = "even" ;
-            }
-            $id              = $companyModel->getId() ;
-            $isAnAgency      = $companyModel->getIsAnAgency() ;
-            $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
-            $companyName     = $companyModel->getCompanyName() ;
-            $companyAddress1 = $companyModel->getCompanyAddress1() ;
-            $companyAddress2 = $companyModel->getCompanyAddress2() ;
-            $companyCity     = $companyModel->getCompanyCity() ;
-            $companyState    = $companyModel->getCompanyState() ;
-            $companyZip      = $companyModel->getCompanyZip() ;
-            $companyPhone     = $companyModel->getCompanyPhone() ;
-            $companyUrl      = $companyModel->getCompanyUrl() ;
-            $created         = $companyModel->getCreated() ;
-            $updated         = $companyModel->getUpdated() ;
-            $encodedUrl      = htmlspecialchars( $companyUrl ) ;
-            if ( $isAnAgency ) {
-                $agencyCompanyController = new CompanyController() ;
-                $agencyCompanyModel      = $agencyCompanyController->get( $agencyCompanyId ) ;
-                $agencyOf                = $agencyCompanyModel->getCompanyName() ;
-            }
-            else {
-                $agencyOf                = 'None' ;
-            }
-            $body .= <<<HTML
-    <tr class="tr$rowStyle">
+            $id       = $companyModel->getId() ;
+            $rowStyle = ( "even" === $rowStyle ) ? 'odd' : 'even' ;
+            $row      = $this->displayCompanyRow( $companyModel, 'list', $rowStyle ) ;
+            $body    .= "    <tr id='ux$id'>\n      $row\n    </tr>\n" ;
+        }
+        $body .= "  </tbody>\n</table>\n" ;
+        return $body ;
+    }
+
+    public function displayCompanyRow( $companyModel, $displayMode, $rowStyle ) {
+        $id              = $companyModel->getId() ;
+        $isAnAgency      = $companyModel->getIsAnAgency() ;
+        $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
+        $companyName     = $companyModel->getCompanyName() ;
+        $companyAddress1 = $companyModel->getCompanyAddress1() ;
+        $companyAddress2 = $companyModel->getCompanyAddress2() ;
+        $companyCity     = $companyModel->getCompanyCity() ;
+        $companyState    = $companyModel->getCompanyState() ;
+        $companyZip      = $companyModel->getCompanyZip() ;
+        $companyPhone    = $companyModel->getCompanyPhone() ;
+        $companyUrl      = $companyModel->getCompanyUrl() ;
+        $created         = $companyModel->getCreated() ;
+        $updated         = $companyModel->getUpdated() ;
+        $encodedUrl      = htmlspecialchars( $companyUrl ) ;
+        if ( $isAnAgency ) {
+            $agencyCompanyController = new CompanyController() ;
+            $agencyCompanyModel      = $agencyCompanyController->get( $agencyCompanyId ) ;
+            $agencyOf                = $agencyCompanyModel->getCompanyName() ;
+        }
+        else {
+            $agencyOf                = 'None' ;
+        }
+        switch ( $displayMode ) {
+            case 'add'    :
+                break ;
+            case 'delete' :
+                break ;
+            case 'list'   :
+                $body .= <<<HTML
+    <tr class="tr$rowStyle" id="ux$id-1">
       <td rowspan="2">
-          <a href="editCompany.php?id=$id">Edit</a>
-        | <a href="deleteCompany.php?id=$id">Delete</a>
+        <button type="button" id="UpdateButton$id" onclick="updateCompany( '$id' )">Update</button>
+        <button type="button" id="DeleteButton$id" onclick="deleteCompany( '$id' )">Delete</button>
       </td>
       <td><font size="+2">$companyName</font></td>
       <td>$companyAddress1</th>
@@ -120,16 +130,17 @@ HTML;
       <td>$companyState</td>
       <td>$companyZip</td>
     </tr>
-    <tr class="tr$rowStyle">
+    <tr class="tr$rowStyle" id="ux$id-2">
       <td>$agencyOf</td>
       <td>$companyAddress2</th>
       <td>$companyPhone</td>
       <td colspan="2"><a href="$encodedUrl">$encodedUrl</a></td>
     </tr>
 HTML;
+                break ;
+            case 'update' :
+                break ;
         }
-        $body .= "  </tbody>\n</table>\n" ;
-        return $body ;
     }
 
     /**
