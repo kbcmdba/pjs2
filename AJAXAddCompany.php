@@ -62,12 +62,12 @@ try {
         throw new ControllerException( "Add failed." ) ;
     }
     $newCompanyModel = $companyController->get( $companyId ) ;
-    $companyRowView = new CompanyListView() ;
-    $row = $companyRowView->displayCompanyRow( $newCompanyModel, 'list', $rowStyle ) ;
+    $companyRowView = new CompanyListView( 'html', null ) ;
+    $rows = $companyRowView->displayCompanyRow( $newCompanyModel, 'list', $rowStyle ) ;
 }
 catch ( ControllerException $e ) {
     $companyRowView = new CompanyListView( 'html', null ) ;
-    $rows = $companyRowView->displayCompanyRow( $newCompanyModel
+    $rows = $companyRowView->displayCompanyRow( $companyModel
                                               , 'add'
                                               , $rowStyle
                                               , 'Add Company record failed. '

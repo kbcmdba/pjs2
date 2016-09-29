@@ -396,9 +396,9 @@ function cancelUpdateCompanyRow( id ) {
  */
 function saveAddCompany( id ) {
     var rowId           = 'ix' + id ;
-    var companyName     = document.getElementById( "companyName" + rowId ).value ;
-    var isAnAgency      = document.getElementById( 'isAnAgency' + rowId )
     var agencyCompanyId = document.getElementById( "agencyCompanyId" + rowId ).value ;
+    var isAnAgency      = ( agencyCompanyId > 0 ) ? 1 : 0 ;
+    var companyName     = document.getElementById( "companyName" + rowId ).value ;
     var companyAddress1 = document.getElementById( "companyAddress1" + rowId ).value ;
     var companyAddress2 = document.getElementById( "companyAddress2" + rowId ).value ;
     var companyCity     = document.getElementById( "companyCity" + rowId ).value ;
@@ -436,12 +436,12 @@ function saveAddCompany( id ) {
                 ;
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
-        var jsonObj   = JSON.parse( xhttp.responseText ) ;
-        var row1      = document.getElementById( "ix" + targetId + "-1" ) ;
-        var row2      = document.getElementById( "ix" + targetId + "-2" ) ;
+        var jsonObj    = JSON.parse( xhttp.responseText ) ;
+        var row1       = document.getElementById( "ix" + targetId + "-1" ) ;
+        var row2       = document.getElementById( "ix" + targetId + "-2" ) ;
         row1.id        = "ux" + jsonObj.newId + "-1" ;
-        row1.innerHTML = jsonObj.rows[ 0 ] ;
         row2.id        = "ux" + jsonObj.newId + "-2" ;
+        row1.innerHTML = jsonObj.rows[ 0 ] ;
         row2.innerHTML = jsonObj.rows[ 1 ] ;
     } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
     return false ;
@@ -453,7 +453,7 @@ function saveAddCompany( id ) {
  * @param id
  * @returns {Boolean}
  */
-function saveUpdateApplicationStatus( id ) {
+function saveUpdateCompany( id ) {
     var rowId        = 'ux' + id ;
     var statusValue = document.getElementById( "statusValue" + id ).value ;
     var style       = document.getElementById( "style" + id ).value ;
@@ -490,7 +490,7 @@ function saveUpdateApplicationStatus( id ) {
  * @param id
  * @returns {Boolean}
  */
-function doDeleteApplicationStatus( id ) {
+function doDeleteCompany( id ) {
     var uri     = "AJAXDeleteApplicationStatus.php" ;
     var data    = "id=" + encodeURIComponent( id ) ;
     var isAsync = true ;
