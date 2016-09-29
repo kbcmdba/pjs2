@@ -388,39 +388,61 @@ function cancelUpdateCompanyRow( id ) {
 }
 
 /**
- * Save the ApplicationStatus row displayed and display a replacement row that can be
+ * Save the Company row displayed and display a replacement row that can be
  * updated or deleted.
  *
  * @param id
  * @returns {Boolean}
  */
-function saveAddApplicationStatus( id ) {
-    var rowId       = 'ix' + id ;
-    var statusValue = document.getElementById( "statusValue" + rowId ).value ;
-    var style       = document.getElementById( "style" + rowId ).value ;
-    var isActive    = document.getElementById( "isActive" + rowId ).checked ;
-    var sortKey     = document.getElementById( "sortKey" + rowId ).value ;
-    var msg         = ajaxValidateApplicationStatus( statusValue
-                                                   , style
-                                                   , isActive
-                                                   , sortKey
-                                                   ) ;
+function saveAddCompany( id ) {
+    var rowId           = 'ix' + id ;
+    var companyName     = document.getElementById( "companyName" + rowId ).value ;
+    var isAnAgency      = document.getElementById( 'isAnAgency' + rowId )
+    var agencyCompanyId = document.getElementById( "agencyCompanyId" + rowId ).value ;
+    var companyAddress1 = document.getElementById( "companyAddress1" + rowId ).value ;
+    var companyAddress2 = document.getElementById( "companyAddress2" + rowId ).value ;
+    var companyCity     = document.getElementById( "companyCity" + rowId ).value ;
+    var companyState    = document.getElementById( "companyState" + rowId ).value ;
+    var companyZip      = document.getElementById( "companyZip" + rowId ).value ;
+    var companyPhone    = document.getElementById( "companyPhone" + rowId ).value ;
+    var companyUrl      = document.getElementById( "CompanyUrl" + rowId ).value ;
+    var msg             = ajaxValidateComany( companyName
+                                            , isAnAgency
+                                            , agencyCompanyId
+                                            , companyAddress1
+                                            , companyAddress1
+                                            , companyCity
+                                            , companyState
+                                            , companyZip
+                                            , companyPhone
+                                            , companyUrl
+                                            ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
         return false ;
     }
-    var uri     = "AJAXAddApplicationStatus.php" ;
-    var data    = "statusValue=" + encodeURIComponent( statusValue )
-                + "&style=" + encodeURIComponent( style )
-                + "&isActive=" + ( isActive ? '1' : '0' )
-                + "&sortKey=" + encodeURIComponent( sortKey )
+    var uri     = "AJAXAddCompany.php" ;
+    var data    = "companyName=" + encodeURIComponent( companyName )
+                + "&isAnAgency=" + encodeURIComponent( isAnAgency )
+                + "&agencyCompanyId=" + encodeURIComponent( agencyCompanyId )
+                + "&companyAddress1=" + encodeURIComponent( companyAddress1 )
+                + "&companyAddress2=" + encodeURIComponent( companyAddress2 )
+                + "&companyCity=" + encodeURIComponent( companyCity )
+                + "&companyState=" + encodeURIComponent( companyState )
+                + "&companyZip=" + encodeURIComponent( companyZip )
+                + "&companyPhone=" + encodeURIComponent( companyPhone )
+                + "&companyUrl=" + encodeURIComponent( companyUrl )
+                + "&rowStyle=add"
                 ;
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
         var jsonObj   = JSON.parse( xhttp.responseText ) ;
-        var row       = document.getElementById( "ix" + targetId ) ;
-        row.id        = "ux" + jsonObj.newId ;
-        row.innerHTML = jsonObj.row ;
+        var row1      = document.getElementById( "ix" + targetId + "-1" ) ;
+        var row2      = document.getElementById( "ix" + targetId + "-2" ) ;
+        row1.id        = "ux" + jsonObj.newId + "-1" ;
+        row1.innerHTML = jsonObj.rows[ 0 ] ;
+        row2.id        = "ux" + jsonObj.newId + "-2" ;
+        row2.innerHTML = jsonObj.rows[ 1 ] ;
     } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
     return false ;
 }
