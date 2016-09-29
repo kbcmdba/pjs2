@@ -125,16 +125,16 @@ HTML;
         <button type="button" id="CancelButton$id" onclick="deleteRow( 'ix$id-1' ); deleteRow( 'ix$id-2' );">Cancel</button>
       </td>
       <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
-      <td><input type="text" id="companyAddress1" value="$companyAddress1" /></th>
-      <td><input type="text" id="companyCity" value="$companyCity" /></td>
-      <td><input type="text" id="companyState" size="2" value="$companyState" /></td>
-      <td><input type="text" id="companyZip" size="10" value="$companyZip" /></td>
+      <td><input type="text" id="companyAddress1ix$id" value="$companyAddress1" /></th>
+      <td><input type="text" id="companyCityix$id" value="$companyCity" /></td>
+      <td><input type="text" id="companyStateix$id" size="2" value="$companyState" /></td>
+      <td><input type="text" id="companyZipix$id" size="10" value="$companyZip" /></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
       <td>$agencyList</td>
-      <td><input type="text" id="" value="$companyAddress2" /></th>
-      <td><input type="text" id="" value="$companyPhone" /></td>
+      <td><input type="text" id="companyAddress2ix$id" value="$companyAddress2" /></th>
+      <td><input type="text" id="companyPhoneix$id" value="$companyPhone" /></td>
       <td colspan="2"><input type="text" id="companyUrlix$id" value="$encodedUrl" /></a></td>
       <td>$updated</td>
 HTML;
@@ -189,16 +189,16 @@ HTML;
         <button type="button" id="CancelButton$id" onclick="cancelUpdateCompanyRow( '$id' )">Cancel</button>
       </td>
       <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
-      <td><input type="text" id="companyAddress1" value="$companyAddress1" /></th>
-      <td><input type="text" id="companyCity" value="$companyCity" /></td>
-      <td><input type="text" id="companyState" size="2" value="$companyState" /></td>
-      <td><input type="text" id="companyZip" size="10" value="$companyZip" /></td>
+      <td><input type="text" id="companyAddress1$id" value="$companyAddress1" /></th>
+      <td><input type="text" id="companyCity$id" value="$companyCity" /></td>
+      <td><input type="text" id="companyState$id" size="2" value="$companyState" /></td>
+      <td><input type="text" id="companyZip$id" size="10" value="$companyZip" /></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
       <td>$agencyList</td>
-      <td><input type="text" id="" value="$companyAddress2" /></th>
-      <td><input type="text" id="" value="$companyPhone" /></td>
+      <td><input type="text" id="companyAddress2$id" value="$companyAddress2" /></th>
+      <td><input type="text" id="companyPhone$id" value="$companyPhone" /></td>
       <td colspan="2"><input type="text" id="companyUrlix$id" value="$encodedUrl" /></a></td>
       <td>$updated</td>
 HTML;
@@ -236,10 +236,7 @@ HTML;
     }
 
     public function getAgencyList( $id, $value ) {
-        $retVal = "<select id=\"$id\" >\n  <option value=\"\">---</option>" ;
-        if ( ! isset( $value ) ) {
-            $retVal .= "  <option value=\"self\">Self</option>\n" ;
-        }
+        $retVal = "<select id=\"agencyCompanyId$id\" >\n  <option value=\"\">---</option>" ;
         $companyController = new CompanyController() ;
         $agencies = $companyController->getAll() ;
         foreach ( $agencies as $agency ) {
