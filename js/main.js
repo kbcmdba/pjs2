@@ -405,18 +405,18 @@ function saveAddCompany( id ) {
     var companyState    = document.getElementById( "companyState" + rowId ).value ;
     var companyZip      = document.getElementById( "companyZip" + rowId ).value ;
     var companyPhone    = document.getElementById( "companyPhone" + rowId ).value ;
-    var companyUrl      = document.getElementById( "CompanyUrl" + rowId ).value ;
-    var msg             = ajaxValidateComany( companyName
-                                            , isAnAgency
-                                            , agencyCompanyId
-                                            , companyAddress1
-                                            , companyAddress1
-                                            , companyCity
-                                            , companyState
-                                            , companyZip
-                                            , companyPhone
-                                            , companyUrl
-                                            ) ;
+    var companyUrl      = document.getElementById( "companyUrl" + rowId ).value ;
+    var msg             = ajaxValidateCompany( companyName
+                                             , isAnAgency
+                                             , agencyCompanyId
+                                             , companyAddress1
+                                             , companyAddress1
+                                             , companyCity
+                                             , companyState
+                                             , companyZip
+                                             , companyPhone
+                                             , companyUrl
+                                             ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
         return false ;
@@ -437,8 +437,8 @@ function saveAddCompany( id ) {
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
         var jsonObj    = JSON.parse( xhttp.responseText ) ;
-        var row1       = document.getElementById( "ix" + targetId + "-1" ) ;
-        var row2       = document.getElementById( "ix" + targetId + "-2" ) ;
+        var row1       = document.getElementById( "ix" + id + "-1" ) ;
+        var row2       = document.getElementById( "ix" + id + "-2" ) ;
         row1.id        = "ux" + jsonObj.newId + "-1" ;
         row2.id        = "ux" + jsonObj.newId + "-2" ;
         row1.innerHTML = jsonObj.rows[ 0 ] ;

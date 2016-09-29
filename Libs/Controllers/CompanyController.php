@@ -243,7 +243,7 @@ SQL;
      * @see ControllerBase::add()
      */
     public function add( $model ) {
-            if ( $model->validateForAdd() ) {
+        if ( $model->validateForAdd() ) {
             try {
                 $query = <<<SQL
 INSERT company

@@ -29,9 +29,9 @@ if ( ! $auth->isAuthorized() ) {
     exit( 0 ) ; // Should never get here but just in case...
 }
 $result   = "OK" ;
-$id       = Tools::post( 'id' ) ;
-$mode     = Tools::post( 'mode' ) ;
-$rowStyle = Tools::post( 'rowStyle' ) ;
+$id       = Tools::param( 'id' ) ;
+$mode     = Tools::param( 'mode' ) ;
+$rowStyle = Tools::param( 'rowStyle' ) ;
 $html     = '' ;
 $companyListView = new CompanyListView( 'html', null ) ;
 if ( 'add' == $mode ) {

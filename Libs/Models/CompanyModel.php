@@ -53,17 +53,19 @@ class CompanyModel extends ModelBase {
      * @return boolean
      */
     public function validateForAdd() {
-        $validAgencyId = (  ( ! Tools::isNullOrEmptyString( Tools::param( 'isAnAgency' ) )
+        $isAnAgency = Tools::param( 'isAnAgency' ) ;
+        $validAgencyId = (  ( ! Tools::isNullOrEmptyString( $isAnAgency )
                            && ! Tools::isNullOrEmptyString( Tools::param( 'agencyCompanyId' ) )
                             )
-                        || Tools::isNullOrEmptyString( Tools::param( 'isAnAgency' ) )
+                        || Tools::isNullOrEmptyString( $isAnAgency )
+                        || ( 0 === $isAnAgency )
+                        || ( '0' === $isAnAgency )
                          ) ;
-        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyCity' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyState' ) ) )
-                && $validAgencyId
-                ) ;
+        $result =  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+                  && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
+                  && $validAgencyId
+                   ) ;
+        return $result ;
     }
 
     /**
@@ -124,7 +126,7 @@ class CompanyModel extends ModelBase {
      * @param boolean $isAnAgency
      */
     public function setIsAnAgency( $isAnAgency ) {
-        $this->_isAnAgency = $isAnAgency ;
+        $this->_isAnAgency = ( ( $isAnAgency == 1 ) || ( $isAnAgency == '1' ) ) ;
     }
 
     /**

@@ -41,6 +41,7 @@ $companyZip      = Tools::param( 'companyZip' ) ;
 $companyPhone    = Tools::param( 'companyPhone' ) ;
 $companyUrl      = Tools::param( 'companyUrl' ) ;
 $rowStyle        = Tools::param( 'rowStyle' ) ;
+$rowId           = Tools::param( 'rowId' ) ;
 $newCompanyModel = null ;
 try {
     $companyModel = new CompanyModel() ;
@@ -73,6 +74,7 @@ catch ( ControllerException $e ) {
                                               , 'Add Company record failed. '
                                               . $e->getMessage()
                                               ) ;
+    $result = 'FAILED' ;
 }
 
 $result = array( 'result' => $result, 'rows' => $rows, 'newId' => $companyId ) ;

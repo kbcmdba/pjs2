@@ -93,12 +93,7 @@ HTML;
     }
 
     public function displayCompanyRow( $companyModel, $displayMode, $rowStyle ) {
-        if ( "add" === $displayMode ) {
-            $id = '' ;
-        }
-        else {
-            $id              = $companyModel->getId() ;
-        }
+        $id              = $companyModel->getId() ;
         $isAnAgency      = $companyModel->getIsAnAgency() ;
         $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
         $companyName     = $companyModel->getCompanyName() ;
