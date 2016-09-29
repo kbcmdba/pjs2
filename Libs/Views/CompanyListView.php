@@ -58,8 +58,8 @@ class CompanyListView extends ListViewBase {
     private function _getHtmlView() {
         $rowStyle = "even" ;
         $body = <<<'HTML'
-<a href="addCompany.php">Add new company</a><br />
-<table border="1" cellspacing="0" cellpadding="2">
+<button id="AddButton" onclick="addCompany()">Add Company</button><br />
+<table border="1" cellspacing="0" cellpadding="2" id="companies">
   <caption>Current Companies</caption>
   <thead>
     <tr class="thead">
@@ -69,12 +69,14 @@ class CompanyListView extends ListViewBase {
       <th>City</th>
       <th>State</th>
       <th>Zip</th>
+      <th>Created</th>
     </tr>
     <tr class="thead">
       <th>Agency Of</th>
       <th>Address 2</th>
       <th>Phone</th>
       <th colspan="2">URL</th>
+      <th>Updated</th>
     </tr>
   </thead>
   <tbody>
@@ -82,8 +84,9 @@ HTML;
         foreach ( $this->getCompanyModels() as $companyModel ) {
             $id       = $companyModel->getId() ;
             $rowStyle = ( "even" === $rowStyle ) ? 'odd' : 'even' ;
-            $row      = $this->displayCompanyRow( $companyModel, 'list', $rowStyle ) ;
-            $body    .= "    <tr id='ux$id'>\n      $row\n    </tr>\n" ;
+            $rows     = $this->displayCompanyRow( $companyModel, 'list', $rowStyle ) ;
+            $body    .= "    <tr id='ux$id-1'>\n      {$rows[0]}\n    </tr>\n" ;
+            $body    .= "    <tr id='ux$id-2'>\n      {$rows[1]}\n    </tr>\n" ;
         }
         $body .= "  </tbody>\n</table>\n" ;
         return $body ;
@@ -124,8 +127,8 @@ HTML;
       <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
       <td><input type="text" id="companyAddress1" value="$companyAddress1" /></th>
       <td><input type="text" id="companyCity" value="$companyCity" /></td>
-      <td><input type="text" id="companyState" value="$companyState" /></td>
-      <td><input type="text" id="companyZip" value="$companyZip" /></td>
+      <td><input type="text" id="companyState" size="2" value="$companyState" /></td>
+      <td><input type="text" id="companyZip" size="10" value="$companyZip" /></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
@@ -140,7 +143,7 @@ HTML;
                 $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="DeleteButton$id" onclick="doDeleteCompany( '$id' )">Confirm Delete</button>
-        <button type="button" id="CancelButton$id" onclick="cancelUpdateCompany( '$id' )">Cancel</button>
+        <button type="button" id="CancelButton$id" onclick="cancelUpdateCompanyRow( '$id' )">Cancel</button>
       </td>
       <td><font size="+2">$companyName</font></td>
       <td>$companyAddress1</th>
@@ -183,13 +186,13 @@ HTML;
                 $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="SaveButton$id" onclick="saveAddCompany( '$id' )">Save</button>
-        <button type="button" id="CancelButton$id" onclick="cancelUpdateCompany( '$id' )">Cancel</button>
+        <button type="button" id="CancelButton$id" onclick="cancelUpdateCompanyRow( '$id' )">Cancel</button>
       </td>
       <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
       <td><input type="text" id="companyAddress1" value="$companyAddress1" /></th>
       <td><input type="text" id="companyCity" value="$companyCity" /></td>
-      <td><input type="text" id="companyState" value="$companyState" /></td>
-      <td><input type="text" id="companyZip" value="$companyZip" /></td>
+      <td><input type="text" id="companyState" size="2" value="$companyState" /></td>
+      <td><input type="text" id="companyZip" size="10" value="$companyZip" /></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML

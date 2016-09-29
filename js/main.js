@@ -272,6 +272,234 @@ function doDeleteApplicationStatus( id ) {
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Add a company row for user input.
+ *
+ * @returns {Boolean}
+ */
+function addCompany() {
+    var table  = document.getElementById( "companies" ) ;
+    var row2   = table.insertRow( 2 ) ;
+    var row1   = table.insertRow( 2 ) ;
+    row1.id    = "ix" + rowNumber + "-1" ;
+    row2.id    = "ix" + rowNumber + "-2" ;
+    var data   = 'id=' + rowNumber + '&mode=add&rowStyle=add' ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetCompanyRow.php'
+                                    , data
+                                    , 'ix'
+                                    + rowNumber
+                                    , true
+                                    , function ( xhttp, id ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        row1.innerHTML = jsonObj.rows[ 0 ] ;
+        row2.innerHTML = jsonObj.rows[ 1 ] ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    rowNumber ++ ;
+    return false ;
+}
+
+/**
+ * Display the Company row to be updated based on the id provided.
+ * 
+ * @param id
+ * @returns {Boolean}
+ */
+function updateCompany( id ) {
+    var row1  = document.getElementById( 'ux' + id + '-1' ) ;
+    var row2  = document.getElementById( 'ux' + id + '-2' ) ;
+    var data = 'id=' + id + '&mode=update&rowStyle=add' ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetCompanyRow.php'
+                                    , data
+                                    , 'ux'
+                                    + id
+                                    , true
+                                    , function ( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        row1.innerHTML = jsonObj.rows[ 0 ] ;
+        row2.innerHTML = jsonObj.rows[ 1 ] ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Display the Company row to be removed based on the id provided.
+ * 
+ * @param id
+ * @returns {Boolean}
+ */
+function deleteCompany( id ) {
+    var row1  = document.getElementById( 'ux' + id + '-1' ) ;
+    var row2  = document.getElementById( 'ux' + id + '-2' ) ;
+    var data = 'id=' + id + '&mode=delete&rowStyle=add' ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetCompanyRow.php'
+                                    , data
+                                    , 'ux'
+                                    + id
+                                    , true
+                                    , function ( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        row1.innerHTML = jsonObj.rows[ 0 ] ;
+        row2.innerHTML = jsonObj.rows[ 1 ] ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Validate a Company row prior to submission. When there are errors, the errors
+ * are reported back in the return string. Otherwise, the empty string is
+ * returned.
+ *
+ * @param companyName
+ * @param agencyOf
+ * @param addr1
+ * @param addr2
+ * @param city
+ * @param state
+ * @param zip
+ * @param phone
+ * @param url
+ * @returns {String}
+ */
+function ajaxValidateCompany( companyName, agencyOf, addr1, addr2, city, state, zip, phone, url ) {
+    var message = '' ;
+    if ( ( null == companyName ) || ( '' == companyName ) ) {
+        message += "Company Name cannot be blank.\n" ;
+    }
+    return message ;
+}
+
+/**
+ * Revert the displayed row back to the updatable / deletable row.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function cancelUpdateCompanyRow( id ) {
+    var uri     = "AJAXGetCompanyRow.php" ;
+    var data    = "id=" + encodeURIComponent( id ) + '&mode=list' ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj    = JSON.parse( xhttp.responseText ) ;
+        var row1       = document.getElementById( "ux" + id + "-1" ) ;
+        var row2       = document.getElementById( "ux" + id + "-2" ) ;
+        row1.innerHTML = jsonObj.rows[ 0 ] ;
+        row2.innerHTML = jsonObj.rows[ 1 ] ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Save the ApplicationStatus row displayed and display a replacement row that can be
+ * updated or deleted.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function saveAddApplicationStatus( id ) {
+    var rowId       = 'ix' + id ;
+    var statusValue = document.getElementById( "statusValue" + rowId ).value ;
+    var style       = document.getElementById( "style" + rowId ).value ;
+    var isActive    = document.getElementById( "isActive" + rowId ).checked ;
+    var sortKey     = document.getElementById( "sortKey" + rowId ).value ;
+    var msg         = ajaxValidateApplicationStatus( statusValue
+                                                   , style
+                                                   , isActive
+                                                   , sortKey
+                                                   ) ;
+    if ( '' !== msg ) {
+        alert( msg ) ;
+        return false ;
+    }
+    var uri     = "AJAXAddApplicationStatus.php" ;
+    var data    = "statusValue=" + encodeURIComponent( statusValue )
+                + "&style=" + encodeURIComponent( style )
+                + "&isActive=" + ( isActive ? '1' : '0' )
+                + "&sortKey=" + encodeURIComponent( sortKey )
+                ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj   = JSON.parse( xhttp.responseText ) ;
+        var row       = document.getElementById( "ix" + targetId ) ;
+        row.id        = "ux" + jsonObj.newId ;
+        row.innerHTML = jsonObj.row ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Actually save the changes to the row and redisplay it.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function saveUpdateApplicationStatus( id ) {
+    var rowId        = 'ux' + id ;
+    var statusValue = document.getElementById( "statusValue" + id ).value ;
+    var style       = document.getElementById( "style" + id ).value ;
+    var isActive    = document.getElementById( "isActive" + id ).checked ;
+    var sortKey     = document.getElementById( "sortKey" + id ).value ;
+    var msg         = ajaxValidateApplicationStatus( statusValue
+                                                   , style
+                                                   , isActive
+                                                   , sortKey
+                                                   ) ;
+    if ( '' !== msg ) {
+        alert( msg ) ;
+        return false ;
+    }
+    var uri     = "AJAXUpdateApplicationStatus.php" ;
+    var data    = "id=" + id
+                + "&statusValue=" + encodeURIComponent( statusValue )
+                + "&style=" + encodeURIComponent( style )
+                + "&isActive=" + ( isActive ? '1' : '0' )
+                + "&sortKey=" + encodeURIComponent( sortKey )
+                ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj   = JSON.parse( xhttp.responseText ) ;
+        var row       = document.getElementById( "ux" + targetId ) ;
+        row.innerHTML = jsonObj.row ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Actually remove the displayed row from the database and the user's screen.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function doDeleteApplicationStatus( id ) {
+    var uri     = "AJAXDeleteApplicationStatus.php" ;
+    var data    = "id=" + encodeURIComponent( id ) ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        if ( "OK" == jsonObj.result ) {
+            deleteRow( "ux" + id ) ;
+        }
+        else {
+            var uri2 = "AJAXGetApplicationStatus.php" ;
+            var jsonObj2 = JSON.parse( xhttp.responseText ) ;
+            var result = jsonObj2.result ;
+            var data2 = "id=" + id + "&warning=" + result ;
+            doLoadAjaxJsonResultWithCallback( uri2, data2, id, isAsync, function( xhttp2, targetId2 ) {
+                var jsonObj = JSON.parse( xhttp.responseText ) ;
+                var row       = document.getElementById( "ux" + id ) ;
+                if ( "OK" == jsonObj.result ) {
+                    row.innerHTML = jsonObj.row ;
+                }
+                else {
+                    row.innerHTML = "Undefined result!" ;
+                }
+            } ) ;  // END OF doAjaxJsonResultWithCallback( 2 )
+        }
+    } ) ; // END OF doAjaxJsonResultWithCallback( 1 )
+    return false ;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
  * Dynamically remove a row that was created.
  *
  * @param rowId
