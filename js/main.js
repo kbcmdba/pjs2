@@ -511,24 +511,27 @@ function saveUpdateCompany( id ) {
  * @returns {Boolean}
  */
 function doDeleteCompany( id ) {
-    var uri     = "AJAXDeleteApplicationStatus.php" ;
+    var uri     = "AJAXDeleteCompany.php" ;
     var data    = "id=" + encodeURIComponent( id ) ;
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
         var jsonObj = JSON.parse( xhttp.responseText ) ;
         if ( "OK" == jsonObj.result ) {
-            deleteRow( "ux" + id ) ;
+            deleteRow( "ux" + id + "-1" ) ;
+            deleteRow( "ux" + id + "-2" ) ;
         }
         else {
-            var uri2 = "AJAXGetApplicationStatus.php" ;
+            var uri2 = "AJAXGetCompany.php" ;
             var jsonObj2 = JSON.parse( xhttp.responseText ) ;
             var result = jsonObj2.result ;
             var data2 = "id=" + id + "&warning=" + result ;
             doLoadAjaxJsonResultWithCallback( uri2, data2, id, isAsync, function( xhttp2, targetId2 ) {
                 var jsonObj = JSON.parse( xhttp.responseText ) ;
-                var row       = document.getElementById( "ux" + id ) ;
+                var row1    = document.getElementById( "ux" + id + "-1" ) ;
+                var row2    = document.getElementById( "ux" + id + "-2" ) ;
                 if ( "OK" == jsonObj.result ) {
-                    row.innerHTML = jsonObj.row ;
+                    row1.innerHTML = jsonObj.rows[ 0 ] ;
+                    row2.innerHTML = jsonObj.rows[ 1 ] ;
                 }
                 else {
                     row.innerHTML = "Undefined result!" ;
