@@ -185,10 +185,10 @@ HTML;
                 $agencyList = $this->getAgencyList( $id, $id ) ;
                 $row1 = <<<HTML
       <td rowspan="2">
-        <button type="button" id="SaveButton$id" onclick="saveAddCompany( '$id' )">Save</button>
+        <button type="button" id="SaveButton$id" onclick="saveUpdateCompany( '$id' )">Save</button>
         <button type="button" id="CancelButton$id" onclick="cancelUpdateCompanyRow( '$id' )">Cancel</button>
       </td>
-      <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
+      <td><font size="+2"><input type="text" id="companyName$id" value="$companyName" /></font></td>
       <td><input type="text" id="companyAddress1$id" value="$companyAddress1" /></th>
       <td><input type="text" id="companyCity$id" value="$companyCity" /></td>
       <td><input type="text" id="companyState$id" size="2" value="$companyState" /></td>
@@ -199,7 +199,7 @@ HTML;
       <td>$agencyList</td>
       <td><input type="text" id="companyAddress2$id" value="$companyAddress2" /></th>
       <td><input type="text" id="companyPhone$id" value="$companyPhone" /></td>
-      <td colspan="2"><input type="text" id="companyUrlix$id" value="$encodedUrl" /></a></td>
+      <td colspan="2"><input type="text" id="companyUrl$id" value="$encodedUrl" /></a></td>
       <td>$updated</td>
 HTML;
                 break ;

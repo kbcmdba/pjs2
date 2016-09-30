@@ -32,12 +32,12 @@ class CompanyController extends ControllerBase {
     public function __construct( $readWriteMode = 'write' ) {
         parent::__construct( $readWriteMode ) ;
     }
-    
+
     public function dropTable() {
         $sql = "DROP TABLE IF EXISTS company" ;
         $this->_doDDL( $sql ) ;
     }
-    
+
     public function createTable() {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS company
@@ -73,7 +73,7 @@ SQL;
         $sql = "DROP TRIGGER IF EXISTS companyAfterUpdateTrigger" ;
         $this->_doDDL( $sql ) ;
     }
-    
+
     public function createTriggers() {
        $sql = <<<SQL
 CREATE TRIGGER companyAfterDeleteTrigger

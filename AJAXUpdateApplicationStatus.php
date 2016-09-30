@@ -54,7 +54,7 @@ try {
 catch ( ControllerException $e ) {
     $row = $asrv->displayApplicationStatusRow( $newApplicationStatusModel
                                              , 'list'
-                                             , 'Add Application Status record failed. '
+                                             , 'Update Application Status record failed. '
                                              . $e->getMessage()
                                              ) ;
 }

@@ -395,17 +395,16 @@ function cancelUpdateCompanyRow( id ) {
  * @returns {Boolean}
  */
 function saveAddCompany( id ) {
-    var rowId           = 'ix' + id ;
-    var agencyCompanyId = document.getElementById( "agencyCompanyId" + rowId ).value ;
+    var agencyCompanyId = document.getElementById( "agencyCompanyId" + id ).value ;
     var isAnAgency      = ( agencyCompanyId > 0 ) ? 1 : 0 ;
-    var companyName     = document.getElementById( "companyName" + rowId ).value ;
-    var companyAddress1 = document.getElementById( "companyAddress1" + rowId ).value ;
-    var companyAddress2 = document.getElementById( "companyAddress2" + rowId ).value ;
-    var companyCity     = document.getElementById( "companyCity" + rowId ).value ;
-    var companyState    = document.getElementById( "companyState" + rowId ).value ;
-    var companyZip      = document.getElementById( "companyZip" + rowId ).value ;
-    var companyPhone    = document.getElementById( "companyPhone" + rowId ).value ;
-    var companyUrl      = document.getElementById( "companyUrl" + rowId ).value ;
+    var companyName     = document.getElementById( "companyName" + id ).value ;
+    var companyAddress1 = document.getElementById( "companyAddress1" + id ).value ;
+    var companyAddress2 = document.getElementById( "companyAddress2" + id ).value ;
+    var companyCity     = document.getElementById( "companyCity" + id ).value ;
+    var companyState    = document.getElementById( "companyState" + id ).value ;
+    var companyZip      = document.getElementById( "companyZip" + id ).value ;
+    var companyPhone    = document.getElementById( "companyPhone" + id ).value ;
+    var companyUrl      = document.getElementById( "companyUrl" + id ).value ;
     var msg             = ajaxValidateCompany( companyName
                                              , isAnAgency
                                              , agencyCompanyId
@@ -421,10 +420,10 @@ function saveAddCompany( id ) {
         alert( msg ) ;
         return false ;
     }
-    var uri     = "AJAXAddCompany.php" ;
+    var uri     = "AJAXUpdateCompany.php" ;
     var data    = "companyName=" + encodeURIComponent( companyName )
-                + "&isAnAgency=" + encodeURIComponent( isAnAgency )
                 + "&agencyCompanyId=" + encodeURIComponent( agencyCompanyId )
+                + "&isAnAgency=" + encodeURIComponent( isAnAgency )
                 + "&companyAddress1=" + encodeURIComponent( companyAddress1 )
                 + "&companyAddress2=" + encodeURIComponent( companyAddress2 )
                 + "&companyCity=" + encodeURIComponent( companyCity )
@@ -437,8 +436,8 @@ function saveAddCompany( id ) {
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
         var jsonObj    = JSON.parse( xhttp.responseText ) ;
-        var row1       = document.getElementById( "ix" + id + "-1" ) ;
-        var row2       = document.getElementById( "ix" + id + "-2" ) ;
+        var row1       = document.getElementById( "ux" + id + "-1" ) ;
+        var row2       = document.getElementById( "ux" + id + "-2" ) ;
         row1.id        = "ux" + jsonObj.newId + "-1" ;
         row2.id        = "ux" + jsonObj.newId + "-2" ;
         row1.innerHTML = jsonObj.rows[ 0 ] ;
@@ -454,32 +453,53 @@ function saveAddCompany( id ) {
  * @returns {Boolean}
  */
 function saveUpdateCompany( id ) {
-    var rowId        = 'ux' + id ;
-    var statusValue = document.getElementById( "statusValue" + id ).value ;
-    var style       = document.getElementById( "style" + id ).value ;
-    var isActive    = document.getElementById( "isActive" + id ).checked ;
-    var sortKey     = document.getElementById( "sortKey" + id ).value ;
-    var msg         = ajaxValidateApplicationStatus( statusValue
-                                                   , style
-                                                   , isActive
-                                                   , sortKey
-                                                   ) ;
+    var rowId           = 'ux' + id ;
+    var agencyCompanyId = document.getElementById( "agencyCompanyId" + id ).value ;
+    var isAnAgency      = ( agencyCompanyId > 0 ) ? 1 : 0 ;
+    var companyName     = document.getElementById( "companyName" + id ).value ;
+    var companyAddress1 = document.getElementById( "companyAddress1" + id ).value ;
+    var companyAddress2 = document.getElementById( "companyAddress2" + id ).value ;
+    var companyCity     = document.getElementById( "companyCity" + id ).value ;
+    var companyState    = document.getElementById( "companyState" + id ).value ;
+    var companyZip      = document.getElementById( "companyZip" + id ).value ;
+    var companyPhone    = document.getElementById( "companyPhone" + id ).value ;
+    var companyUrl      = document.getElementById( "companyUrl" + id ).value ;
+    var msg             = ajaxValidateCompany( companyName
+                                             , isAnAgency
+                                             , agencyCompanyId
+                                             , companyAddress1
+                                             , companyAddress1
+                                             , companyCity
+                                             , companyState
+                                             , companyZip
+                                             , companyPhone
+                                             , companyUrl
+                                             ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
         return false ;
     }
-    var uri     = "AJAXUpdateApplicationStatus.php" ;
+    var uri     = "AJAXUpdateCompany.php" ;
     var data    = "id=" + id
-                + "&statusValue=" + encodeURIComponent( statusValue )
-                + "&style=" + encodeURIComponent( style )
-                + "&isActive=" + ( isActive ? '1' : '0' )
-                + "&sortKey=" + encodeURIComponent( sortKey )
+                + "&companyName=" + encodeURIComponent( companyName )
+                + "&isAnAgency=" + encodeURIComponent( isAnAgency )
+                + "&agencyCompanyId=" + encodeURIComponent( agencyCompanyId )
+                + "&companyAddress1=" + encodeURIComponent( companyAddress1 )
+                + "&companyAddress2=" + encodeURIComponent( companyAddress2 )
+                + "&companyCity=" + encodeURIComponent( companyCity )
+                + "&companyState=" + encodeURIComponent( companyState )
+                + "&companyZip=" + encodeURIComponent( companyZip )
+                + "&companyPhone=" + encodeURIComponent( companyPhone )
+                + "&companyUrl=" + encodeURIComponent( companyUrl )
+                + "&rowStyle=add"
                 ;
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
         var jsonObj   = JSON.parse( xhttp.responseText ) ;
-        var row       = document.getElementById( "ux" + targetId ) ;
-        row.innerHTML = jsonObj.row ;
+        var row1      = document.getElementById( "ux" + targetId + "-1" ) ;
+        var row2      = document.getElementById( "ux" + targetId + "-2" ) ;
+        row1.innerHTML = jsonObj.rows[ 0 ] ;
+        row2.innerHTML = jsonObj.rows[ 1 ] ;
     } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
     return false ;
 }

@@ -74,15 +74,19 @@ class CompanyModel extends ModelBase {
      * @return boolean
      */
     public function validateForUpdate() {
-        $validAgencyId = (  ( ! Tools::isNullOrEmptyString( Tools::param( 'isAnAgency' ) )
+        $isAnAgency = Tools::param( 'isAnAgency' ) ;
+        $validAgencyId = (  ( ! Tools::isNullOrEmptyString( $isAnAgency )
                            && ! Tools::isNullOrEmptyString( Tools::param( 'agencyCompanyId' ) )
                             )
-                        || Tools::isNullOrEmptyString( Tools::param( 'isAnAgency' ) )
+                        || Tools::isNullOrEmptyString( $isAnAgency )
+                        || ( 0 === $isAnAgency )
+                        || ( '0' === $isAnAgency )
                          ) ;
-        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
-               && $validAgencyId
-                ) ;
+        $result =  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
+                  && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
+                  && $validAgencyId
+                   ) ;
+        return $result ;
     }
 
     public function populateFromForm() {
