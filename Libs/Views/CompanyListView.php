@@ -121,8 +121,8 @@ HTML;
                 $agencyList = $this->getAgencyList( "ix$id", null ) ;
                 $row1 = <<<HTML
       <td rowspan="2">
-        <button type="button" id="SaveButton$id" onclick="saveAddCompany( '$id' )">Save</button>
-        <button type="button" id="CancelButton$id" onclick="deleteRow( 'ix$id-1' ); deleteRow( 'ix$id-2' );">Cancel</button>
+        <button type="button" id="SaveButtonix$id" onclick="saveAddCompany( '$id' )">Save</button>
+        <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id-1' ); deleteRow( 'ix$id-2' );">Cancel</button>
       </td>
       <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
       <td><input type="text" id="companyAddress1ix$id" value="$companyAddress1" /></th>

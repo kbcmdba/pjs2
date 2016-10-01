@@ -341,32 +341,35 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//caption', 'Current Companies' ) ;
         $this->checkXpathText( '//th', 'Actions' ) ;
         $this->checkXpathText( '//th[2]', 'Company' ) ;
-        $this->checkXpathText( '//th[3]', 'Address1' ) ;
+        $this->checkXpathText( '//th[3]', 'Address 1' ) ;
         $this->checkXpathText( '//th[4]', 'City' ) ;
         $this->checkXpathText( '//th[5]', 'State' ) ;
         $this->checkXpathText( '//th[6]', 'Zip' ) ;
         $this->checkXpathText( '//th[7]', 'Created' ) ;
-        $this->checkXpathText( '//tr[2]/th[2]', 'Agency Of' ) ;
-        $this->checkXpathText( '//tr[2]/th[3]', 'Address 2' ) ;
-        $this->checkXpathText( '//tr[2]/th[4]', 'Phone' ) ;
-        $this->checkXpathText( '//tr[2]/th[5]', 'URL' ) ;
-        $this->checkXpathText( '//tr[2]/th[6]', 'Updated' ) ;
+        $this->checkXpathText( '//tr[2]/th', 'Agency Of' ) ;
+        $this->checkXpathText( '//tr[2]/th[2]', 'Address 2' ) ;
+        $this->checkXpathText( '//tr[2]/th[3]', 'Phone' ) ;
+        $this->checkXpathText( '//tr[2]/th[4]', 'URL' ) ;
+        $this->checkXpathText( '//tr[2]/th[5]', 'Updated' ) ;
     }
 
-    public function checkC1R( $id, $prefix1, $prefix2, $company, $city, $state, $zip
-                                                    , $agencyId, $address2, $phone, $url ) {
+    public function checkC1R( $id, $prefix1, $prefix2
+                            , $company, $address1, $city, $state, $zip
+                            , $agencyId, $address2, $phone, $url
+                            ) {
         $this->checkIdText( "UpdateButton$id", 'Edit' ) ;
         $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
         $this->checkXpathText( "/$prefix1/td[2]", $company ) ;
-        $this->checkXpathText( "/$prefix1/td[3]", $city ) ;
-        $this->checkXpathText( "/$prefix1/td[4]", $state ) ;
-        $this->checkXpathText( "/$prefix1/td[5]", $zip ) ;
+        $this->checkXpathText( '/$prefix1/td[3]', $address1 ) ;
+        $this->checkXpathText( "/$prefix1/td[4]", $city ) ;
+        $this->checkXpathText( "/$prefix1/td[5]", $state ) ;
+        $this->checkXpathText( "/$prefix1/td[6]", $zip ) ;
         $this->checkXpathPattern( "/$prefix1/td[7]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ; // created
-        $this->checkXpathText( "/$prefix2/td[2]", $agencyId ) ;
-        $this->checkXpathText( "/$prefix2/td[3]", $address2 ) ;
-        $this->checkXpathText( "/$prefix2/td[4]", $phone ) ;
-        $this->checkXpathText( "/$prefix2/td[5]/a", $url ) ;
-        $this->checkXpathPattern( "/$prefix2/td[6]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ; // updated
+        $this->checkXpathText( "/$prefix2/td", $agencyId ) ;
+        $this->checkXpathText( "/$prefix2/td[2]", $address2 ) ;
+        $this->checkXpathText( "/$prefix2/td[3]", $phone ) ;
+        $this->checkXpathText( "/$prefix2/td[4]/a", $url ) ;
+        $this->checkXpathPattern( "/$prefix2/td[5]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ; // updated
     }
 
     /**
@@ -377,6 +380,24 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doLoadFromHeader( 'Companies' ) ;
         $this->checkHeaderLoads() ;
         $this->checkC1HR() ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyNameix1' ), 'Company 1' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress1ix1' ), '1 Any Street' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyCityix1' ), 'City 1' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyStateix1' ), 'S1' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyZipix1' ), '11111-1111' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress2ix1' ), '' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyPhoneix1' ), '111-111-1111' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyUrlix1' ), 'http://testme1.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->checkC1HR() ;
+        $this->checkC1R( 1, '', '/tr[2]'
+                       , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                       , 'Company 1', '', '111-111-1111', 'http://testme1.com/' ) ;
 
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
@@ -492,8 +513,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         }
 
 //         $this->doTestSummary1() ;
-        $this->doTestApplicationStatuses() ;
-//         $this->doTestCompanies() ;
+//         $this->doTestApplicationStatuses() ;
+        $this->doTestCompanies() ;
 //         $this->doTestContacts() ;
 //         $this->doTestJobs() ;
 //         $this->doTestKeywords() ;
