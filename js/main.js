@@ -395,16 +395,16 @@ function cancelUpdateCompanyRow( id ) {
  * @returns {Boolean}
  */
 function saveAddCompany( id ) {
-    var agencyCompanyId = document.getElementById( "agencyCompanyId" + id ).value ;
+    var agencyCompanyId = document.getElementById( "agencyCompanyIdix" + id ).value ;
     var isAnAgency      = ( agencyCompanyId > 0 ) ? 1 : 0 ;
-    var companyName     = document.getElementById( "companyName" + id ).value ;
-    var companyAddress1 = document.getElementById( "companyAddress1" + id ).value ;
-    var companyAddress2 = document.getElementById( "companyAddress2" + id ).value ;
-    var companyCity     = document.getElementById( "companyCity" + id ).value ;
-    var companyState    = document.getElementById( "companyState" + id ).value ;
-    var companyZip      = document.getElementById( "companyZip" + id ).value ;
-    var companyPhone    = document.getElementById( "companyPhone" + id ).value ;
-    var companyUrl      = document.getElementById( "companyUrl" + id ).value ;
+    var companyName     = document.getElementById( "companyNameix" + id ).value ;
+    var companyAddress1 = document.getElementById( "companyAddress1ix" + id ).value ;
+    var companyAddress2 = document.getElementById( "companyAddress2ix" + id ).value ;
+    var companyCity     = document.getElementById( "companyCityix" + id ).value ;
+    var companyState    = document.getElementById( "companyStateix" + id ).value ;
+    var companyZip      = document.getElementById( "companyZipix" + id ).value ;
+    var companyPhone    = document.getElementById( "companyPhoneix" + id ).value ;
+    var companyUrl      = document.getElementById( "companyUrlix" + id ).value ;
     var msg             = ajaxValidateCompany( companyName
                                              , isAnAgency
                                              , agencyCompanyId
@@ -420,7 +420,7 @@ function saveAddCompany( id ) {
         alert( msg ) ;
         return false ;
     }
-    var uri     = "AJAXUpdateCompany.php" ;
+    var uri     = "AJAXAddCompany.php" ;
     var data    = "companyName=" + encodeURIComponent( companyName )
                 + "&agencyCompanyId=" + encodeURIComponent( agencyCompanyId )
                 + "&isAnAgency=" + encodeURIComponent( isAnAgency )
@@ -436,8 +436,8 @@ function saveAddCompany( id ) {
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
         var jsonObj    = JSON.parse( xhttp.responseText ) ;
-        var row1       = document.getElementById( "ux" + id + "-1" ) ;
-        var row2       = document.getElementById( "ux" + id + "-2" ) ;
+        var row1       = document.getElementById( "ix" + id + "-1" ) ;
+        var row2       = document.getElementById( "ix" + id + "-2" ) ;
         row1.id        = "ux" + jsonObj.newId + "-1" ;
         row2.id        = "ux" + jsonObj.newId + "-2" ;
         row1.innerHTML = jsonObj.rows[ 0 ] ;

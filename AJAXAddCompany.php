@@ -68,6 +68,7 @@ try {
 }
 catch ( ControllerException $e ) {
     $companyRowView = new CompanyListView( 'html', null ) ;
+    $companyModel->setId( $rowId ) ;
     $rows = $companyRowView->displayCompanyRow( $companyModel
                                               , 'add'
                                               , $rowStyle

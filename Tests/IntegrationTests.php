@@ -257,7 +257,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkASR( $id, $prefix, $label, $css, $isActive, $sortKey ) {
-        $this->checkIdText( "UpdateButton$id", 'Edit' ) ;
+        $this->checkIdText( "UpdateButton$id", 'Update' ) ;
         $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
         $this->checkXpathText( "/$prefix/td[2]", $label ) ;
         $this->checkXpathText( "/$prefix/td[3]", $css ) ;
@@ -357,10 +357,10 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                             , $company, $address1, $city, $state, $zip
                             , $agencyId, $address2, $phone, $url
                             ) {
-        $this->checkIdText( "UpdateButton$id", 'Edit' ) ;
+        $this->checkIdText( "UpdateButton$id", 'Update' ) ;
         $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
         $this->checkXpathText( "/$prefix1/td[2]", $company ) ;
-        $this->checkXpathText( '/$prefix1/td[3]', $address1 ) ;
+        $this->checkXpathText( "/$prefix1/td[3]", $address1 ) ;
         $this->checkXpathText( "/$prefix1/td[4]", $city ) ;
         $this->checkXpathText( "/$prefix1/td[5]", $state ) ;
         $this->checkXpathText( "/$prefix1/td[6]", $zip ) ;
@@ -395,9 +395,37 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
         $this->checkC1HR() ;
-        $this->checkC1R( 1, '', '/tr[2]'
+        $this->checkC1R( 1, '/tr[3]', '/tr[4]'
                        , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
-                       , 'Company 1', '', '111-111-1111', 'http://testme1.com/' ) ;
+                       , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton1' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1HR() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton1' ) ) ;
+        $this->checkIdText( 'SaveButton1', 'Save' ) ;
+        $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton1' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1HR() ;
+        $this->checkC1R( 1, '/tr[3]', '/tr[4]'
+                , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1HR() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton1' ) ) ;
+        $this->checkIdText( 'DeleteButton1', 'Confirm Delete' ) ;
+        $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton1' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1HR() ;
+        $this->checkC1R( 1, '/tr[3]', '/tr[4]'
+                , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
 
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
