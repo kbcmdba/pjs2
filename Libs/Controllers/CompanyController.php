@@ -60,8 +60,8 @@ CREATE TABLE IF NOT EXISTS company
      , PRIMARY KEY pk_companyId ( id )
      , FOREIGN KEY fk_agencyCompanyId ( agencyCompanyId )
         REFERENCES company ( id )
-                ON DELETE CASCADE
-                ON UPDATE CASCADE
+                ON DELETE RESTRICT
+                ON UPDATE RESTRICT
      )
 SQL;
         $this->_doDDL( $sql ) ;

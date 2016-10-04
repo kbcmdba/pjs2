@@ -524,7 +524,13 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                 , 'Company 2c', 'c/o Me 3', 'City 2c', '32', '22222-222c'
                 , 'Company 1', '2c Any Street', '222-222-222c', 'http://www3.testme2.com/' ) ;
         $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
-        // FIXME Should not be able to delete Company 1 because it's referenced by Company 2c
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton1' ) ) ;
+        $this->checkIdText( 'DeleteButton1', 'Confirm Delete' ) ;
+        $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
+        // This should have thrown an error back to the user because Company 1 is referenced by Company 2
+
         sleep( 5 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
