@@ -447,12 +447,13 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix2' ) ) ;
         $driver->findElement( WebDriverBy::id( 'CancelButtonix1' ) )->click() ;
+        $this->doSelectOption( WebDriverBy::id( 'agencyCompanyIdix2' ), 'Company 1' ) ;
         $this->doTypeAt( WebDriverBy::id( 'companyNameix2' ), 'Company 2' ) ;
-        $this->doTypeAt( WebDriverBy::id( 'companyAddress1ix2' ), '2 Any Street' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress1ix2' ), 'c/o Me' ) ;
         $this->doTypeAt( WebDriverBy::id( 'companyCityix2' ), 'City 2' ) ;
         $this->doTypeAt( WebDriverBy::id( 'companyStateix2' ), 'S2' ) ;
         $this->doTypeAt( WebDriverBy::id( 'companyZipix2' ), '22222-2222' ) ;
-        $this->doTypeAt( WebDriverBy::id( 'companyAddress2ix2' ), '' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress2ix2' ), '2 Any Street' ) ;
         $this->doTypeAt( WebDriverBy::id( 'companyPhoneix2' ), '222-222-2222' ) ;
         $this->doTypeAt( WebDriverBy::id( 'companyUrlix2' ), 'http://testme2.com/' ) ;
         $driver->findElement( WebDriverBy::id( 'SaveButtonix2' ) )->click() ;
@@ -466,9 +467,64 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                 , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
-                , 'Company 2', '2 Any Street', 'City 2', 'S2', '22222-2222'
-                , 'None', '', '222-222-2222', 'http://testme2.com/' ) ;
-
+                , 'Company 2', 'c/o Me', 'City 2', 'S2', '22222-2222'
+                , 'Company 1', '2 Any Street', '222-222-2222', 'http://testme2.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $this->checkIdText( 'SaveButton2', 'Save' ) ;
+        $this->checkIdText( 'CancelButton2', 'Cancel' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'agencyCompanyId2' ), '---' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyName2' ), 'Company 2b' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress12' ), 'c/o Me 2' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyCity2' ), 'City 2b' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyState2' ), '22' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyZip2' ), '22222-222B' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress22' ), '2B Any Street' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyPhone2' ), '222-222-222B' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyUrl2' ), 'http://www.testme2.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButton2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'SaveButtonIx1' ) ) ) ) ;
+        $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'CancelButtonIx1' ) ) ) ) ;
+        $this->checkC1HR() ;
+        $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
+                , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+        $this->checkC1HR() ;
+        $this->checkC1R( 1, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
+                , 'Company 2b', 'c/o Me 2', 'City 2b', '22', '22222-222B'
+                , 'None', '2B Any Street', '222-222-222B', 'http://www.testme2.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $this->checkIdText( 'SaveButton2', 'Save' ) ;
+        $this->checkIdText( 'CancelButton2', 'Cancel' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'agencyCompanyId2' ), 'Company 1' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyName2' ), 'Company 2c' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress12' ), 'c/o Me 3' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyCity2' ), 'City 2c' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyState2' ), '32' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyZip2' ), '22222-222c' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress22' ), '2c Any Street' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyPhone2' ), '222-222-222c' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyUrl2' ), 'http://www3.testme2.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButton2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'SaveButtonIx1' ) ) ) ) ;
+        $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'CancelButtonIx1' ) ) ) ) ;
+        $this->checkC1HR() ;
+        $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
+                , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+        $this->checkC1HR() ;
+        $this->checkC1R( 1, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
+                , 'Company 2c', 'c/o Me 3', 'City 2c', '32', '22222-222c'
+                , 'Company 1', '2c Any Street', '222-222-222c', 'http://www3.testme2.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
+        // FIXME Should not be able to delete Company 1 because it's referenced by Company 2c
         sleep( 5 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
