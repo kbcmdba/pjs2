@@ -92,7 +92,13 @@ HTML;
         return $body ;
     }
 
-    public function displayCompanyRow( $companyModel, $displayMode, $rowStyle ) {
+    public function displayCompanyRow( $companyModel, $displayMode, $rowStyle, $warningMsg = null ) {
+        if ( null === $warningMsg ) {
+            $warningMsg = '' ;
+        }
+        else {
+            $warningMsg = "<br /><span style=\"color: red;\">$warningMsg</span>" ;
+        }
         $id              = $companyModel->getId() ;
         $isAnAgency      = $companyModel->getIsAnAgency() ;
         $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
@@ -123,6 +129,7 @@ HTML;
       <td rowspan="2">
         <button type="button" id="SaveButtonix$id" onclick="saveAddCompany( '$id' )">Save</button>
         <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id-1' ); deleteRow( 'ix$id-2' );">Cancel</button>
+        $warningMsg
       </td>
       <td><font size="+2"><input type="text" id="companyNameix$id" value="$companyName" /></font></td>
       <td><input type="text" id="companyAddress1ix$id" value="$companyAddress1" /></th>
@@ -144,6 +151,7 @@ HTML;
       <td rowspan="2">
         <button type="button" id="DeleteButton$id" onclick="doDeleteCompany( '$id' )">Confirm Delete</button>
         <button type="button" id="CancelButton$id" onclick="cancelUpdateCompanyRow( '$id' )">Cancel</button>
+        $warningMsg
       </td>
       <td><font size="+2">$companyName</font></td>
       <td>$companyAddress1</th>
@@ -165,6 +173,7 @@ HTML;
       <td rowspan="2">
         <button type="button" id="UpdateButton$id" onclick="updateCompany( '$id' )">Update</button>
         <button type="button" id="DeleteButton$id" onclick="deleteCompany( '$id' )">Delete</button>
+        $warningMsg
       </td>
       <td><font size="+2">$companyName</font></td>
       <td>$companyAddress1</th>
@@ -187,6 +196,7 @@ HTML;
       <td rowspan="2">
         <button type="button" id="SaveButton$id" onclick="saveUpdateCompany( '$id' )">Save</button>
         <button type="button" id="CancelButton$id" onclick="cancelUpdateCompanyRow( '$id' )">Cancel</button>
+        $warningMsg
       </td>
       <td><font size="+2"><input type="text" id="companyName$id" value="$companyName" /></font></td>
       <td><input type="text" id="companyAddress1$id" value="$companyAddress1" /></th>

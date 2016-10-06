@@ -521,7 +521,7 @@ function doDeleteCompany( id ) {
             deleteRow( "ux" + id + "-2" ) ;
         }
         else {
-            var uri2 = "AJAXGetCompany.php" ;
+            var uri2 = "AJAXGetCompanyRow.php" ;
             var jsonObj2 = JSON.parse( xhttp.responseText ) ;
             var result = jsonObj2.result ;
             var data2 = "id=" + id + "&warning=" + result ;
@@ -530,11 +530,12 @@ function doDeleteCompany( id ) {
                 var row1    = document.getElementById( "ux" + id + "-1" ) ;
                 var row2    = document.getElementById( "ux" + id + "-2" ) ;
                 if ( "OK" == jsonObj.result ) {
-                    row1.innerHTML = jsonObj.rows[ 0 ] ;
-                    row2.innerHTML = jsonObj.rows[ 1 ] ;
+                    row1.innerHTML = jsonObj2.rows[ 0 ] ;
+                    row2.innerHTML = jsonObj2.rows[ 1 ] ;
                 }
                 else {
-                    row.innerHTML = "Undefined result!" ;
+                    row1.innerHTML = "<td colspan=\"7\">Undefined result!</td>" ;
+                    row2.innerHTML = "<td colspan=\"7\">Reload this page.</td>" ;
                 }
             } ) ;  // END OF doAjaxJsonResultWithCallback( 2 )
         }
