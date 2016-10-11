@@ -327,10 +327,53 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        // Update new row, cancel
-        // Delete new row, cancel
-        // Update new row, save, verify
-        // Delete new row, verify, cancel, verify
+        $driver->findElement( WebDriverBy::id( 'UpdateButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
+        $this->checkIdValue( 'statusValue12', 'FOO' ) ;
+        $this->checkIdValue( 'style12', 'background-color: white; color: black;' ) ;
+        $this->assertEquals( true, $driver->findElement( WebDriverBy::id( 'isActive12' ) )->isSelected() ) ;
+        $this->checkIdValue( 'sortKey12', '5' ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton12' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
+        $this->checkIdText( 'DeleteButton12', 'Confirm Delete' ) ;
+        $this->checkIdText( 'CancelButton12', 'Cancel' ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton12' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'statusValue12' ), 'FOO1' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'style12' ), 'background-color: silver; color: black;' ) ;
+        $this->doToggleCheckBox( WebDriverBy::id( 'isActive12' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'sortKey12' ), '15' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 12, '', 'FOO1', 'background-color: silver; color: black;', 'No', '15' ) ;
+        $this->checkASR( 1, '/tr[2]', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[3]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[4]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[5]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[6]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[7]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[8]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[9]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        
+        // FIXME Implement Delete new row, verify, Confirm Delete, verify
 
         sleep( 10 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
@@ -529,6 +572,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkIdText( 'DeleteButton1', 'Confirm Delete' ) ;
         $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
         $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
+        // FIXME look for "Undefined Result"
         // This should have thrown an error back to the user because Company 1 is referenced by Company 2
 
         sleep( 5 ) ;
@@ -644,9 +688,10 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
             $this->doLoadFromHeader( $headerTag ) ;
         }
 
+        // FIXME Finish implementation of these routines.
 //         $this->doTestSummary1() ;
-//         $this->doTestApplicationStatuses() ;
-        $this->doTestCompanies() ;
+        $this->doTestApplicationStatuses() ;
+//         $this->doTestCompanies() ;
 //         $this->doTestContacts() ;
 //         $this->doTestJobs() ;
 //         $this->doTestKeywords() ;

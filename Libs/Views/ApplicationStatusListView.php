@@ -161,7 +161,7 @@ RETVAL;
 RETVAL;
             case 'list'   :
                 return <<<RETVAL
-      <td><button type="button" id="UpdateButton$id" onclick="updateApplicationStatus( '$id' )">Edit</button>
+      <td><button type="button" id="UpdateButton$id" onclick="updateApplicationStatus( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteApplicationStatus( '$id' )">Delete</button>
       </td>
       <td style="$style">$statusValue</td>
