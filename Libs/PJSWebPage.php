@@ -36,13 +36,14 @@ class PJSWebPage extends WebPage {
      */
     public function __construct( $title = '', $skipAuth = false ) {
         parent::__construct( $title ) ;
+        $config = new Config() ;
         $this->_skipAuth = $skipAuth ;
         if ( ! $skipAuth ) {
             $auth = new Auth() ;
             $this->_auth = $auth ;
         }
-        $config = new Config() ;
-        $this->_resetOk = $config->getResetOk() ;
+        // Only allow reset to authenticated users and only if the config allows it.
+        $this->_resetOk = $config->getResetOk() && ( $skipAuth || $auth->isAuthorized() ) ;
         $header = <<<HTML
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
@@ -80,8 +81,11 @@ HTML;
         $logout = '' ;
         if ( ( ! $this->_skipAuth ) && ( $this->_auth->isAuthorized() ) ) {
             $logout  = '  <li><a href="logout.php">Log Out</a></li>' ;
+            $reset = ( $this->_resetOk ) ? "  <li><a href=\"resetDb.php\">Reset Database</a></li>" : "" ;
         }
-        $reset = ( $this->_resetOk ) ? "  <li><a href=\"resetDb.php\">Reset Database</a></li>" : "" ;
+        else {
+            $logout = $reset = '' ;
+        }
         $html = <<<HTML
 <ul id="navBar">
   <li><a href="index.php">Summary</a></li>

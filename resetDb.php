@@ -46,6 +46,11 @@ try {
 
     $dbc = new DBConnection( "admin", null, null, null, null, null, 'mysqli', true ) ;
     if ( ! $dbc->getCreatedDb() ) {
+        // Database exists. Don't allow reset if the user is not logged in.
+        $auth = new Auth() ;
+        if ( ! $auth->isAuthorized() ) {
+            throw new Exception( "User must be logged in to reset the database!" ) ;
+        }
         if ( "1" !== $config->getResetOk() ) {
             throw new Exception( "Reset capability is turned off! See config.xml" ) ;
         }
