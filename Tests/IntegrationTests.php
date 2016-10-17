@@ -238,7 +238,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * FIXME Implement this
+     * FIXME Implement Tests/IntegrationTests.php:doTestSummary1()
      */
     public function doTestSummary1() {
         $this->markTestIncomplete( 'Left off here.' ) ;
@@ -372,11 +372,30 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkASR( 9, '/tr[10]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 10, '/tr[11]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 11, '/tr[12]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        
-        // FIXME Implement Delete new row, verify, Confirm Delete, verify
-
-        sleep( 10 ) ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton12' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton12' ) ) ;
+        $this->checkIdText( 'DeleteButton12', 'Confirm Delete' ) ;
+        $this->checkIdText( 'CancelButton12', 'Cancel' ) ;
+        $this->checkXpathText( "//tr[@id='ux12']/td[2]", 'FOO1' ) ;
+        $this->checkXpathText( "//tr[@id='ux12']/td[3]", 'background-color: silver; color: black;' ) ;
+        $this->checkXpathText( "//tr[@id='ux12']/td[4]", 'No' ) ;
+        $this->checkXpathText( "//tr[@id='ux12']/td[5]", '15' ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton12' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkASHR() ;
+        $this->checkASR( 1, '', 'FOUND', 'background-color: lightgreen; color: blue;', 'Yes', '10' ) ;
+        $this->checkASR( 2, '/tr[2]', 'CONTACTED', 'background-color: orange; color: blue;', 'Yes', '20' ) ;
+        $this->checkASR( 3, '/tr[3]', 'APPLIED', 'background-color: yellow; color: blue;', 'Yes', '30' ) ;
+        $this->checkASR( 4, '/tr[4]', 'INTERVIEWING', 'background-color: white; color: red;', 'Yes', '40' ) ;
+        $this->checkASR( 5, '/tr[5]', 'FOLLOWUP', 'background-color: yellow; color: black;', 'Yes', '50' ) ;
+        $this->checkASR( 6, '/tr[6]', 'CHASING', 'background-color: red; color: black;', 'Yes', '60' ) ;
+        $this->checkASR( 7, '/tr[7]', 'NETWORKING', 'background-color: cyan; color: black;', 'Yes', '70' ) ;
+        $this->checkASR( 8, '/tr[8]', 'UNAVAILABLE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 9, '/tr[9]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 10, '/tr[10]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
+        $this->checkASR( 11, '/tr[11]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
     }
 
     public function checkC1HR() {
@@ -415,9 +434,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathPattern( "/$prefix2/td[5]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ; // updated
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doTestCompanies() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Companies' ) ;
@@ -572,74 +588,65 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkIdText( 'DeleteButton1', 'Confirm Delete' ) ;
         $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
         $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
-        // FIXME look for "Undefined Result"
+        // FIXME Tests/IntegrationTests.php:doTestCompanies() - look for "Undefined Result" in output
         // This should have thrown an error back to the user because Company 1 is referenced by Company 2
 
         sleep( 5 ) ;
+        // @todo Finish implementation of Tests/IntegrationTests.php:doTestCompanies()
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doTestContacts() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Contacts' ) ;
         $this->checkHeaderLoads() ;
         $this->checkC2HR() ;
 
+        // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doTestJobs() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Jobs' ) ;
         $this->checkHeaderLoads() ;
         $this->checkJHR() ;
 
+        // @todo Implement Tests/IntegrationTests.php:doTestJobs()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doTestKeywords() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Keywords' ) ;
         $this->checkHeaderLoads() ;
         $this->checkC1HR() ;
 
+        // @todo Implement IntegrationTests.php:doTestKeywords()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doTestSearches() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Searches' ) ;
         $this->checkHeaderLoads() ;
         $this->checkSeHR() ;
 
+        // @todo Implement IntegrationTests.php:doTestSearches()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
 
-    /**
-     * FIXME Implement this
-     */
     public function doTestSummary2() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Summary' ) ;
         $this->checkHeaderLoads() ;
         $this->checkSuHR() ;
 
+        // @todo Implement IntegrationTests.php:doTestSummary2()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
     }
@@ -688,15 +695,15 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
             $this->doLoadFromHeader( $headerTag ) ;
         }
 
-        // FIXME Finish implementation of these routines.
+        // FIXME Finish implementation of Tests/IntegrationTests.php:testWebSite sub-routines.
 //         $this->doTestSummary1() ;
         $this->doTestApplicationStatuses() ;
-//         $this->doTestCompanies() ;
-//         $this->doTestContacts() ;
-//         $this->doTestJobs() ;
-//         $this->doTestKeywords() ;
-//         $this->doTestSearches() ;
-//         $this->doTestSummary2() ;
+        $this->doTestCompanies() ;
+        $this->doTestContacts() ;
+        $this->doTestJobs() ;
+        $this->doTestKeywords() ;
+        $this->doTestSearches() ;
+        $this->doTestSummary2() ;
 
     }
 
