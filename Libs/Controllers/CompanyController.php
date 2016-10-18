@@ -58,22 +58,29 @@ CREATE TABLE IF NOT EXISTS company
      , updated         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                        ON UPDATE CURRENT_TIMESTAMP
      , PRIMARY KEY pk_companyId ( id )
+     , FOREIGN KEY agencyCompanyIdFk( agencyCompanyId )
+                       REFERENCES company( id )
+                       ON UPDATE CASCADE ON DELETE SET NULL
      )
 SQL;
         $this->_doDDL( $sql ) ;
     }
 
     public function dropTriggers() {
-        $sql = "DROP TRIGGER IF EXISTS companyAfterDeleteTrigger" ;
-        $this->_doDDL( $sql ) ;
-        $sql = "DROP TRIGGER IF EXISTS companyAfterUpdateTrigger" ;
-        $this->_doDDL( $sql ) ;
+        $sqls = [ "DROP TRIGGER IF EXISTS companyBeforeDeleteTrigger ;"
+                , "DROP TRIGGER IF EXISTS companyAfterDeleteTrigger ;"
+                , "DROP TRIGGER IF EXISTS companyBeforeUpdateTrigger ;"
+                , "DROP TRIGGER IF EXISTS companyAfterUpdateTrigger ;" 
+                ] ;
+        foreach ( $sqls as $sql ) {
+            $this->_doDDL( $sql ) ;
+        }
     }
 
     public function createTriggers() {
        $sql = <<<SQL
-CREATE TRIGGER companyAfterDeleteTrigger
- AFTER DELETE
+CREATE TRIGGER companyBeforeDeleteTrigger
+BEFORE DELETE
     ON company
    FOR EACH ROW
  BEGIN
@@ -85,18 +92,22 @@ CREATE TRIGGER companyAfterDeleteTrigger
 SQL;
         $this->_doDDL( $sql ) ;
         $sql = <<<SQL
-CREATE TRIGGER companyAfterUpdateTrigger
- AFTER UPDATE
+CREATE TRIGGER companyBeforeUpdateTrigger
+BEFORE UPDATE
     ON company
    FOR EACH ROW
  BEGIN
-             IF OLD.id <> NEW.id
-           THEN
-            UPDATE note
-               SET note.appliesToId = NEW.id
-             WHERE note.appliesToId = OLD.id
-               AND note.appliestoTable = 'company'
+          IF OLD.id <> NEW.id
+        THEN
+             UPDATE note
+                SET note.appliesToId = NEW.id
+              WHERE note.appliesToId = OLD.id
+                AND note.appliestoTable = 'company'
                  ;
+                 IF NEW.id IS NULL
+               THEN
+                    SET NEW.isAnAgency = false ;
+             END IF ;
       END IF ;
    END
 SQL;

@@ -589,11 +589,11 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
         $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
         // FIXME Tests/IntegrationTests.php:doTestCompanies() - look for "Undefined Result" in output
-        // This should have thrown an error back to the user because Company 1 is referenced by Company 2
-
-        sleep( 5 ) ;
-        // @todo Finish implementation of Tests/IntegrationTests.php:doTestCompanies()
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->doLoadFromHeader( 'Companies' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
+                       , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                       , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
     }
 
     public function doTestContacts() {

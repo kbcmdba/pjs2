@@ -21,9 +21,8 @@
  *
  */
 
-// @todo 10 Core: Rename isAnAgency to isAClient
-// @todo 10 Core: Rename agencyCompanyId to clientOfCompanyId
-// @todo 20 AJAX: Delete Company
+// @todo 05 Core: Get rid of company.isAnAgency
+// @todo 05 Core: Rename company.agencyCompanyId to company.clientOfCompanyId
 // @todo 30 AJAX: View Contacts in ajax-friendly format
 // @todo 30 AJAX: Add Contact
 // @todo 30 AJAX: Edit Contact

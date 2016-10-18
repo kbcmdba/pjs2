@@ -1,5 +1,7 @@
-config.xml
-.settings
-.project
 .buildpath
+.project
+.settings
+config.xml
+config.xml.auth
+config.xml.noauth
 login.log

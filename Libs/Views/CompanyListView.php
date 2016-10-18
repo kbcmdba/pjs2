@@ -113,7 +113,7 @@ HTML;
         $created         = $companyModel->getCreated() ;
         $updated         = $companyModel->getUpdated() ;
         $encodedUrl      = htmlspecialchars( $companyUrl ) ;
-        if ( $isAnAgency ) {
+        if ( $isAnAgency && ( $agencyCompanyId > 0 ) ) {
             $agencyCompanyController = new CompanyController() ;
             $agencyCompanyModel      = $agencyCompanyController->get( $agencyCompanyId ) ;
             $agencyOf                = $agencyCompanyModel->getCompanyName() ;
