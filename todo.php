@@ -21,13 +21,8 @@
  *
  */
 
-// @todo 10 AJAX: View Application Status in ajax-friendly format
-// @todo 10 AJAX: Add Application Status
-// @todo 10 AJAX: Edit Application Status
-// @todo 10 AJAX: Delete Application Status
-// @todo 20 AJAX: View Companies in ajax-friendly format
-// @todo 20 AJAX: Add Company
-// @todo 20 AJAX: Edit Company
+// @todo 10 Core: Rename isAnAgency to isAClient
+// @todo 10 Core: Rename agencyCompanyId to clientOfCompanyId
 // @todo 20 AJAX: Delete Company
 // @todo 30 AJAX: View Contacts in ajax-friendly format
 // @todo 30 AJAX: Add Contact

@@ -42,26 +42,22 @@ class CompanyController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS company
      (
-       id             INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , isAnAgency            BOOLEAN NOT NULL DEFAULT 0
-     , agencyCompanyId       INT UNSIGNED NULL DEFAULT NULL
-                             COMMENT 'When isAnAgency is false, point to agency company ID'
-     , companyName           VARCHAR(100) NOT NULL DEFAULT ''
-     , companyAddress1       VARCHAR(255) NOT NULL DEFAULT ''
-     , companyAddress2       VARCHAR(255) NOT NULL DEFAULT ''
-     , companyCity           VARCHAR(60) NOT NULL DEFAULT ''
-     , companyState          CHAR(2) NOT NULL DEFAULT 'XX'
-     , companyZip            VARCHAR(10) NOT NULL DEFAULT ''
-     , companyPhone          VARCHAR(16) NOT NULL DEFAULT ''
-     , companyUrl            VARCHAR(255) NOT NULL DEFAULT ''
-     , created               TIMESTAMP NOT NULL DEFAULT 0
-     , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                             ON UPDATE CURRENT_TIMESTAMP
+       id              INT UNSIGNED NOT NULL AUTO_INCREMENT
+     , isAnAgency      BOOLEAN NOT NULL DEFAULT 0
+     , agencyCompanyId INT UNSIGNED NULL DEFAULT NULL
+                       COMMENT 'When isAnAgency is false, point to agency company ID'
+     , companyName     VARCHAR(100) NOT NULL DEFAULT ''
+     , companyAddress1 VARCHAR(255) NOT NULL DEFAULT ''
+     , companyAddress2 VARCHAR(255) NOT NULL DEFAULT ''
+     , companyCity     VARCHAR(60) NOT NULL DEFAULT ''
+     , companyState    CHAR(2) NOT NULL DEFAULT 'XX'
+     , companyZip      VARCHAR(10) NOT NULL DEFAULT ''
+     , companyPhone    VARCHAR(16) NOT NULL DEFAULT ''
+     , companyUrl      VARCHAR(255) NOT NULL DEFAULT ''
+     , created         TIMESTAMP NOT NULL DEFAULT 0
+     , updated         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                       ON UPDATE CURRENT_TIMESTAMP
      , PRIMARY KEY pk_companyId ( id )
-     , FOREIGN KEY fk_agencyCompanyId ( agencyCompanyId )
-        REFERENCES company ( id )
-                ON DELETE RESTRICT
-                ON UPDATE RESTRICT
      )
 SQL;
         $this->_doDDL( $sql ) ;
