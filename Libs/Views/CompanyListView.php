@@ -100,7 +100,6 @@ HTML;
             $warningMsg = "<br /><span style=\"color: red;\">$warningMsg</span>" ;
         }
         $id              = $companyModel->getId() ;
-        $isAnAgency      = $companyModel->getIsAnAgency() ;
         $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
         $companyName     = $companyModel->getCompanyName() ;
         $companyAddress1 = $companyModel->getCompanyAddress1() ;
@@ -113,7 +112,7 @@ HTML;
         $created         = $companyModel->getCreated() ;
         $updated         = $companyModel->getUpdated() ;
         $encodedUrl      = htmlspecialchars( $companyUrl ) ;
-        if ( $isAnAgency && ( $agencyCompanyId > 0 ) ) {
+        if ( $agencyCompanyId > 0 ) {
             $agencyCompanyController = new CompanyController() ;
             $agencyCompanyModel      = $agencyCompanyController->get( $agencyCompanyId ) ;
             $agencyOf                = $agencyCompanyModel->getCompanyName() ;

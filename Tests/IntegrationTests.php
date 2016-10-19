@@ -591,11 +591,16 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         // FIXME Tests/IntegrationTests.php:doTestCompanies() - look for "Undefined Result" in output
         $this->doLoadFromHeader( 'Companies' ) ;
         $this->checkHeaderLoads() ;
-        $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
-                       , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
-                       , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+        $this->checkC1R( 2, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
+                       , 'Company 2c', 'c/o Me 3', 'City 2c', '32', '22222-222c'
+                       , 'None', '2c Any Street', '222-222-222c', 'http://www3.testme2.com/' ) ;
     }
 
+    public function checkC2HR() {
+        // FIXME Implement Tests/IntegrationTests/checkC2HR() ;
+
+        $this->markTestIncomplete( 'Left off here.' ) ;
+    }
     public function doTestContacts() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Contacts' ) ;

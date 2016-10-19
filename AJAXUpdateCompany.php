@@ -32,7 +32,6 @@ $id              = Tools::param( 'id' ) ;
 $result          = 'OK' ;
 $companyId       = '' ;
 $agencyCompanyId = Tools::param( 'agencyCompanyId' ) ;
-$isAnAgency      = ( $agencyCompanyId > 0 ) ? 1 : 0 ;
 $companyName     = Tools::param( 'companyName' ) ;
 $companyAddress1 = Tools::param( 'companyAddress1' ) ;
 $companyAddress2 = Tools::param( 'companyAddress2' ) ;
@@ -48,7 +47,6 @@ $clv             = new CompanyListView( 'html', null ) ;
 try {
     $companyController = new CompanyController() ;
     $companyModel = $companyController->get( $id ) ;
-    $companyModel->setIsAnAgency( $isAnAgency ) ;
     $companyModel->setAgencyCompanyId( $agencyCompanyId ) ;
     $companyModel->setCompanyName( $companyName ) ;
     $companyModel->setCompanyAddress1( $companyAddress1 ) ;

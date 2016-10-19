@@ -396,7 +396,6 @@ function cancelUpdateCompanyRow( id ) {
  */
 function saveAddCompany( id ) {
     var agencyCompanyId = document.getElementById( "agencyCompanyIdix" + id ).value ;
-    var isAnAgency      = ( agencyCompanyId > 0 ) ? 1 : 0 ;
     var companyName     = document.getElementById( "companyNameix" + id ).value ;
     var companyAddress1 = document.getElementById( "companyAddress1ix" + id ).value ;
     var companyAddress2 = document.getElementById( "companyAddress2ix" + id ).value ;
@@ -406,7 +405,6 @@ function saveAddCompany( id ) {
     var companyPhone    = document.getElementById( "companyPhoneix" + id ).value ;
     var companyUrl      = document.getElementById( "companyUrlix" + id ).value ;
     var msg             = ajaxValidateCompany( companyName
-                                             , isAnAgency
                                              , agencyCompanyId
                                              , companyAddress1
                                              , companyAddress1
@@ -423,7 +421,6 @@ function saveAddCompany( id ) {
     var uri     = "AJAXAddCompany.php" ;
     var data    = "companyName=" + encodeURIComponent( companyName )
                 + "&agencyCompanyId=" + encodeURIComponent( agencyCompanyId )
-                + "&isAnAgency=" + encodeURIComponent( isAnAgency )
                 + "&companyAddress1=" + encodeURIComponent( companyAddress1 )
                 + "&companyAddress2=" + encodeURIComponent( companyAddress2 )
                 + "&companyCity=" + encodeURIComponent( companyCity )
@@ -455,7 +452,6 @@ function saveAddCompany( id ) {
 function saveUpdateCompany( id ) {
     var rowId           = 'ux' + id ;
     var agencyCompanyId = document.getElementById( "agencyCompanyId" + id ).value ;
-    var isAnAgency      = ( agencyCompanyId > 0 ) ? 1 : 0 ;
     var companyName     = document.getElementById( "companyName" + id ).value ;
     var companyAddress1 = document.getElementById( "companyAddress1" + id ).value ;
     var companyAddress2 = document.getElementById( "companyAddress2" + id ).value ;
@@ -465,7 +461,6 @@ function saveUpdateCompany( id ) {
     var companyPhone    = document.getElementById( "companyPhone" + id ).value ;
     var companyUrl      = document.getElementById( "companyUrl" + id ).value ;
     var msg             = ajaxValidateCompany( companyName
-                                             , isAnAgency
                                              , agencyCompanyId
                                              , companyAddress1
                                              , companyAddress1
@@ -482,7 +477,6 @@ function saveUpdateCompany( id ) {
     var uri     = "AJAXUpdateCompany.php" ;
     var data    = "id=" + id
                 + "&companyName=" + encodeURIComponent( companyName )
-                + "&isAnAgency=" + encodeURIComponent( isAnAgency )
                 + "&agencyCompanyId=" + encodeURIComponent( agencyCompanyId )
                 + "&companyAddress1=" + encodeURIComponent( companyAddress1 )
                 + "&companyAddress2=" + encodeURIComponent( companyAddress2 )

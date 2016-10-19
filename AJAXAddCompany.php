@@ -30,7 +30,6 @@ if ( ! $auth->isAuthorized() ) {
 }
 $result          = 'OK' ;
 $companyId       = '' ;
-$isAnAgency      = Tools::param( 'isAnAgency' ) ;
 $agencyCompanyId = Tools::param( 'agencyCompanyId' ) ;
 $companyName     = Tools::param( 'companyName' ) ;
 $companyAddress1 = Tools::param( 'companyAddress1' ) ;
@@ -45,7 +44,6 @@ $rowId           = Tools::param( 'rowId' ) ;
 $newCompanyModel = null ;
 try {
     $companyModel = new CompanyModel() ;
-    $companyModel->setIsAnAgency( $isAnAgency ) ;
     $companyModel->setAgencyCompanyId( $agencyCompanyId ) ;
     $companyModel->setCompanyName( $companyName ) ;
     $companyModel->setCompanyAddress1( $companyAddress1 ) ;

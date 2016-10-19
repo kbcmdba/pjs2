@@ -43,9 +43,8 @@ class CompanyController extends ControllerBase {
 CREATE TABLE IF NOT EXISTS company
      (
        id              INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , isAnAgency      BOOLEAN NOT NULL DEFAULT 0
      , agencyCompanyId INT UNSIGNED NULL DEFAULT NULL
-                       COMMENT 'When isAnAgency is false, point to agency company ID'
+                       COMMENT 'When not null, point to agency company ID'
      , companyName     VARCHAR(100) NOT NULL DEFAULT ''
      , companyAddress1 VARCHAR(255) NOT NULL DEFAULT ''
      , companyAddress2 VARCHAR(255) NOT NULL DEFAULT ''
@@ -97,18 +96,14 @@ BEFORE UPDATE
     ON company
    FOR EACH ROW
  BEGIN
-          IF OLD.id <> NEW.id
-        THEN
-             UPDATE note
-                SET note.appliesToId = NEW.id
-              WHERE note.appliesToId = OLD.id
-                AND note.appliestoTable = 'company'
-                 ;
-                 IF NEW.id IS NULL
-               THEN
-                    SET NEW.isAnAgency = false ;
-             END IF ;
-      END IF ;
+           IF OLD.id <> NEW.id
+         THEN
+              UPDATE note
+                 SET note.appliesToId = NEW.id
+               WHERE note.appliesToId = OLD.id
+                 AND note.appliestoTable = 'company'
+                   ;
+       END IF ;
    END
 SQL;
         $this->_doDDL( $sql ) ;
@@ -117,7 +112,6 @@ SQL;
     public function get( $id ) {
         $sql = <<<SQL
 SELECT id
-     , isAnAgency
      , agencyCompanyId
      , companyName
      , companyAddress1
@@ -140,7 +134,6 @@ SQL;
             throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
         }
         if ( ! $stmt->bind_result( $id
-                                 , $isAnAgency
                                  , $agencyCompanyId
                                  , $companyName
                                  , $companyAddress1
@@ -158,7 +151,6 @@ SQL;
         if ( $stmt->fetch() ) {
             $model = new CompanyModel() ;
             $model->setId( $id ) ;
-            $model->setIsAnAgency( $isAnAgency ) ;
             $model->setAgencyCompanyId( $agencyCompanyId ) ;
             $model->setCompanyName( $companyName ) ;
             $model->setCompanyAddress1( $companyAddress1 ) ;
@@ -180,7 +172,6 @@ SQL;
     public function getSome( $whereClause = '1 = 1') {
         $sql = <<<SQL
 SELECT id
-     , isAnAgency
      , agencyCompanyId
      , companyName
      , companyAddress1
@@ -205,7 +196,6 @@ SQL;
             throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
         }
         if ( ! $stmt->bind_result( $id
-                                 , $isAnAgency
                                  , $agencyCompanyId
                                  , $companyName
                                  , $companyAddress1
@@ -224,7 +214,6 @@ SQL;
         while ( $stmt->fetch() ) {
             $model = new CompanyModel() ;
             $model->setId( $id ) ;
-            $model->setIsAnAgency( $isAnAgency ) ;
             $model->setAgencyCompanyId( $agencyCompanyId ) ;
             $model->setCompanyName( $companyName ) ;
             $model->setCompanyAddress1( $companyAddress1 ) ;
@@ -255,7 +244,6 @@ SQL;
                 $query = <<<SQL
 INSERT company
      ( id
-     , isAnAgency
      , agencyCompanyId
      , companyName
      , companyAddress1
@@ -268,9 +256,8 @@ INSERT company
      , created
      , updated
      )
-VALUES ( NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW() )
+VALUES ( NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW() )
 SQL;
-                $isAnAgency      = $model->getIsAnAgency() ;
                 $agencyCompanyId = $model->getAgencyCompanyId() ;
                 $companyName     = $model->getCompanyName() ;
                 $companyAddress1 = $model->getCompanyAddress1() ;
@@ -282,15 +269,11 @@ SQL;
                 $companyUrl      = $model->getCompanyUrl() ;
                 $created         = $model->getCreated() ;
                 $updated         = $model->getUpdated() ;
-                if ( ! $isAnAgency ) {
-                    $agencyCompanyId = null ;
-                }
                 $stmt            = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'iissssssss'
-                                          , $isAnAgency
+                if ( ! ( $stmt->bind_param( 'issssssss'
                                           , $agencyCompanyId
                                           , $companyName
                                           , $companyAddress1
@@ -334,8 +317,7 @@ SQL;
             try {
                 $query = <<<SQL
 UPDATE company
-   SET isAnAgency = ?
-     , agencyCompanyId = ?
+   SET agencyCompanyId = ?
      , companyName = ?
      , companyAddress1 = ?
      , companyAddress2 = ?
@@ -347,7 +329,6 @@ UPDATE company
  WHERE id = ?
 SQL;
                 $id              = $companyModel->getId() ;
-                $isAnAgency      = $companyModel->getIsAnAgency() ;
                 $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
                 $companyName     = $companyModel->getCompanyName() ;
                 $companyAddress1 = $companyModel->getCompanyAddress1() ;
@@ -357,15 +338,11 @@ SQL;
                 $companyZip      = $companyModel->getCompanyZip() ;
                 $companyPhone    = $companyModel->getCompanyPhone() ;
                 $companyUrl      = $companyModel->getCompanyUrl() ;
-                if ( ! $isAnAgency ) {
-                    $agencyCompanyId = null ;
-                }
                 $stmt       = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'iissssssssi'
-                                          , $isAnAgency
+                if ( ! ( $stmt->bind_param( 'issssssssi'
                                           , $agencyCompanyId
                                           , $companyName
                                           , $companyAddress1
