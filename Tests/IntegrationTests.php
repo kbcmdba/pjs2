@@ -53,7 +53,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     public function setUp() {
         $capabilities = DesiredCapabilities::firefox() ;
         $this->webDriver = RemoteWebDriver::create( 'http://localhost:4444/wd/hub', $capabilities ) ;
-        $this->webDriver->manage()->timeouts()->implicitlyWait = 10 ;
+//        $this->webDriver->manage()->timeouts()->implicitlyWait( 60 ) ;
     }
 
     public function tearDown() {
