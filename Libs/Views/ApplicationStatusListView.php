@@ -39,7 +39,7 @@ class ApplicationStatusListView extends ListViewBase {
      * @param string View Type
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $applicationStatusModels ) {
+    public function __construct( $viewType = 'html', $applicationStatusModels = null ) {
         parent::__construct() ;
         if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
             throw new ViewException( "Unsupported view type\n" ) ;
