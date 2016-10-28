@@ -21,7 +21,6 @@
  *
  */
 
-// @todo 05 Core: Rename company.agencyCompanyId to company.clientOfCompanyId
 // @todo 30 AJAX: View Contacts in ajax-friendly format
 // @todo 30 AJAX: Add Contact
 // @todo 30 AJAX: Edit Contact

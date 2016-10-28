@@ -72,7 +72,7 @@ class CompanyListView extends ListViewBase {
       <th>Created</th>
     </tr>
     <tr class="thead">
-      <th>Agency Of</th>
+      <th>Agency</th>
       <th>Address 2</th>
       <th>Phone</th>
       <th colspan="2">URL</th>
@@ -115,10 +115,10 @@ HTML;
         if ( $agencyCompanyId > 0 ) {
             $agencyCompanyController = new CompanyController() ;
             $agencyCompanyModel      = $agencyCompanyController->get( $agencyCompanyId ) ;
-            $agencyOf                = $agencyCompanyModel->getCompanyName() ;
+            $agency                  = $agencyCompanyModel->getCompanyName() ;
         }
         else {
-            $agencyOf                = 'None' ;
+            $agency                = 'None' ;
         }
         $row1 = $row2 = "" ;
         switch ( $displayMode ) {
@@ -160,7 +160,7 @@ HTML;
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
-      <td>$agencyOf</td>
+      <td>$agency</td>
       <td>$companyAddress2</th>
       <td>$companyPhone</td>
       <td colspan="2"><a href="$encodedUrl">$encodedUrl</a></td>
@@ -182,7 +182,7 @@ HTML;
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
-      <td>$agencyOf</td>
+      <td>$agency</td>
       <td>$companyAddress2</th>
       <td>$companyPhone</td>
       <td colspan="2"><a href="$encodedUrl">$encodedUrl</a></td>

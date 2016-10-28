@@ -408,7 +408,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//th[5]', 'State' ) ;
         $this->checkXpathText( '//th[6]', 'Zip' ) ;
         $this->checkXpathText( '//th[7]', 'Created' ) ;
-        $this->checkXpathText( '//tr[2]/th', 'Agency Of' ) ;
+        $this->checkXpathText( '//tr[2]/th', 'Agency' ) ;
         $this->checkXpathText( '//tr[2]/th[2]', 'Address 2' ) ;
         $this->checkXpathText( '//tr[2]/th[3]', 'Phone' ) ;
         $this->checkXpathText( '//tr[2]/th[4]', 'URL' ) ;

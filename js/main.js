@@ -349,7 +349,7 @@ function deleteCompany( id ) {
  * returned.
  *
  * @param companyName
- * @param agencyOf
+ * @param agency
  * @param addr1
  * @param addr2
  * @param city
@@ -359,7 +359,7 @@ function deleteCompany( id ) {
  * @param url
  * @returns {String}
  */
-function ajaxValidateCompany( companyName, agencyOf, addr1, addr2, city, state, zip, phone, url ) {
+function ajaxValidateCompany( companyName, agency, addr1, addr2, city, state, zip, phone, url ) {
     var message = '' ;
     if ( ( null == companyName ) || ( '' == companyName ) ) {
         message += "Company Name cannot be blank.\n" ;
