@@ -58,52 +58,110 @@ class ContactListView extends ListViewBase {
      */
     private function _getHtmlView() {
         $body = <<<'HTML'
-<a href="addContact.php">Add new contact</a><br />
-<table border="1" cellspacing="0" cellpadding="2">
+<button id="AddButton" onclick="addContact()">Add Contact</button><br />
+<table border="1" cellspacing="0" cellpadding="2" id="contacts">
   <caption>Current Contacts</caption>
-  <tr>
-    <th>Actions</th>
-    <th>Company</th>
-    <th>Name</th>
-    <th>Email</th>
-    <th>Phone</th>
-    <th>Alternate Phone</th>
-    <th>Created</th>
-    <th>Updated</th>
-  </tr>
+  <thead>
+    <tr>
+      <th>Actions</th>
+      <th>Company</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Alternate Phone</th>
+      <th>Created</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    
 HTML;
         foreach ( $this->getContactModels() as $contactModel ) {
             $id = $contactModel->getId() ;
-            $companyId         = $contactModel->getContactCompanyId() ;
-            $companyController = new CompanyController( 'read' ) ;
-            $companyModel      = $companyController->get( $companyId ) ;
-            $companyName       = $companyModel->getCompanyName() ;
-            $name              = $contactModel->getContactName() ;
-            $email             = $contactModel->getContactEmail() ;
-            $aphone            = $contactModel->getContactPhone() ;
-            $bphone            = $contactModel->getContactAlternatePhone() ;
-            $created           = $contactModel->getCreated() ;
-            $updated           = $contactModel->getUpdated() ;
-            $body .= <<<HTML
-  <tr>
-    <td>
-        <a href="editContact.php?id=$id">Edit</a>
-      | <a href="deleteContact.php?id=$id">Delete</a>
-    </td>
-    <td>$companyName</td>
-    <td>$name</td>
-    <td>$email</td>
-    <td>$aphone</td>
-    <td>$bphone</td>
-    <td>$created</td>
-    <td>$updated</td>
-  </tr>
-HTML;
+            $row  = $this->displayContactRow( $contactModel, 'list' ) ;
+            $body .= "    <tr>\n$row\n    </tr>" ;
         }
-
-        $body .= '</table>' ;
-
+    
+        $body .= "  </tbody>\n</table>\n" ;
+    
         return $body ;
+    }
+
+    public function displayContactRow( $contactModel, $displayMode ) {
+        $id                = $contactModel->getId() ;
+        $companyId         = $contactModel->getContactCompanyId() ;
+        $companyController = new CompanyController( 'read' ) ;
+        $companyModel      = $companyController->get( $companyId ) ;
+        $companyName       = $companyModel->getCompanyName() ;
+        $name              = $contactModel->getContactName() ;
+        $email             = $contactModel->getContactEmail() ;
+        $aphone            = $contactModel->getContactPhone() ;
+        $bphone            = $contactModel->getContactAlternatePhone() ;
+        $created           = $contactModel->getCreated() ;
+        $updated           = $contactModel->getUpdated() ;
+        switch ( $displayMode ) {
+            case 'add' :
+                // @todo 00 Compute companyNames
+                return <<<RETVAL
+      <td><button type="button" id="SaveButtonix$id" onclick="saveAddContact( '$id' )">Save</button>
+          <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
+      </td>
+      <td>$companyNames</td>
+      <td><input type="text" id="nameix$id" value="$name"</td>
+      <td><input type="email" id="emailix$id" value="$email"</td>
+      <td><input type="text" id="phoneix$id" value="$aphone"</td>
+      <td><input type="text" id="alternatePhoneix$id" value="$bphone" /></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+
+RETVAL;
+            case 'update' :
+                // @todo 00 Compute companyNames
+                return <<<RETVAL
+      <td><button type="button" id="SaveButtonix$id" onclick="saveAddContact( '$id' )">Save</button>
+          <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
+      </td>
+      <td>$companyNames</td>
+      <td><input type="text" id="nameix$id" value="$name"</td>
+      <td><input type="email" id="emailix$id" value="$email"</td>
+      <td><input type="text" id="phoneix$id" value="$aphone"</td>
+      <td><input type="text" id="alternatePhoneix$id" value="$bphone" /></td>
+      <td>$created</td>
+      <td>$updated</td>
+                
+RETVAL;
+            case 'delete' :
+                return <<<RETVAL
+      <td><button type="button" id="DeleteButton$id" onclick="doDeleteContact( '$id' )">Confirm Delete</button>
+          <button type="button" id="CancelButton$id" onclick="cancelUpdateContactRow( '$id' )">Cancel</button>
+      </td>
+      <td>$companyName</td>
+      <td>$name</td>
+      <td>$email</td>
+      <td>$aphone</td>
+      <td>$bphone</td>
+      <td>$created</td>
+      <td>$updated</td>
+                
+RETVAL;
+                break ;
+            case 'list' :
+                return <<<RETVAL
+      <td><button type="button" id="EditButton$id" onclick="editContact( '$id' )">Edit</button>
+          <button type="button" id="DeleteButton$id" onclick="deleteContact( 'ix$id' )">Delete</button>
+      </td>
+      <td>$companyName</td>
+      <td>$name</td>
+      <td>$email</td>
+      <td>$aphone</td>
+      <td>$bphone</td>
+      <td>$created</td>
+      <td>$updated</td>
+                
+RETVAL;
+            default :
+                throw new ViewException( 'Undefined display mode' ) ;
+        }
     }
 
     /**
