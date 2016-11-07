@@ -73,8 +73,8 @@ class ApplicationStatusListView extends ListViewBase {
 
 HTML;
         foreach ( $this->_applicationStatusModels as $applicationStatus ) {
-            $id       = $applicationStatus->getId() ;
-            $row      = $this->displayApplicationStatusRow( $applicationStatus, 'list' ) ;
+            $id   = $applicationStatus->getId() ;
+            $row  = $this->displayApplicationStatusRow( $applicationStatus, 'list' ) ;
             $body .= <<<HTML
     <tr id="ux$id">
       $row
