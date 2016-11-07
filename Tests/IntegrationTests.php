@@ -597,15 +597,26 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkC2HR() {
-        // FIXME Implement Tests/IntegrationTests/checkC2HR() ;
-
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->checkXpathText( '//button', 'Add Contact' ) ;
+        $this->checkXpathText( '//caption', 'Current Contacts' ) ;
+        $this->checkXpathText( '//th', 'Actions' ) ;
+        $this->checkXpathText( '//th[2]', 'Company' ) ;
+        $this->checkXpathText( '//th[3]', 'Name' ) ;
+        $this->checkXpathText( '//th[4]', 'Email' ) ;
+        $this->checkXpathText( '//th[5]', 'Phone' ) ;
+        $this->checkXpathText( '//th[6]', 'Alternate Phone' ) ;
+        $this->checkXpathText( '//th[7]', 'Created' ) ;
+        $this->checkXpathText( '//th[8]', 'Updated' ) ;
     }
+
     public function doTestContacts() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Contacts' ) ;
         $this->checkHeaderLoads() ;
         $this->checkC2HR() ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
 
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 15 ) ;
