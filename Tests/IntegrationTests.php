@@ -38,6 +38,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
      * @var \RemoteWebDriver
      */
     protected $webDriver ;
+    protected $url       = 'http://127.0.0.1/pjs2/' ;
     private $_headerTags = array( 'Summary'
                                 , "Application Statuses"
                                 , "Companies"
@@ -48,7 +49,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                                 ) ;
     private $_userName   = 'pjs2_test' ;
     private $_password   = 'pjs2_test' ;
-    protected $url = 'http://127.0.0.1/pjs2/' ;
 
     public function setUp() {
         $capabilities = DesiredCapabilities::firefox() ;
@@ -617,6 +617,10 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'nameix1' ), 'John Doe' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'emailix1' ), 'john.doe@example1.com' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'phoneix1' ), '999-555-1212' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'alternatePhoneix1' ), '999-555-1234' ) ;
 
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 15 ) ;

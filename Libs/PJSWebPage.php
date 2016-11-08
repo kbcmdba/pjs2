@@ -54,7 +54,11 @@ class PJSWebPage extends WebPage {
       $( ".datepicker" ).datepicker( { dateFormat: 'yy-mm-dd' } );
     } ) ;
   </script>
-  <script src="js/main.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/ajaxApplicationStatus.js"></script>
+  <script src="js/ajaxCompany.js"></script>
+  <script src="js/ajaxContact.js"></script>
+  <script src="js/oldValidation.js"></script>
 HTML;
         $this->setHead( $header ) ;
         $this->setMeta( array( "Cache-Control: no-cache, must-revalidate"
