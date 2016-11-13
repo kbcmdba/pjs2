@@ -59,6 +59,7 @@ class PJSWebPage extends WebPage {
   <script src="js/ajaxCompany.js"></script>
   <script src="js/ajaxContact.js"></script>
   <script src="js/oldValidation.js"></script>
+
 HTML;
         $this->setHead( $header ) ;
         $this->setMeta( array( "Cache-Control: no-cache, must-revalidate"
