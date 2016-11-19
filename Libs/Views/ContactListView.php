@@ -88,20 +88,34 @@ HTML;
     }
 
     public function displayContactRow( $contactModel, $displayMode ) {
-        $id                = $contactModel->getId() ;
-        $companyId         = $contactModel->getContactCompanyId() ;
-        $companyController = new CompanyController( 'read' ) ;
-        $companyModel      = $companyController->get( $companyId ) ;
-        $companyName       = $companyModel->getCompanyName() ;
-        $name              = $contactModel->getContactName() ;
-        $email             = $contactModel->getContactEmail() ;
-        $aphone            = $contactModel->getContactPhone() ;
-        $bphone            = $contactModel->getContactAlternatePhone() ;
-        $created           = $contactModel->getCreated() ;
-        $updated           = $contactModel->getUpdated() ;
+        $id = $contactModel->getId() ;
+        if ( "add" === $displayMode ) {
+            $companyId = $companyName
+                       = $name
+                       = $email
+                       = $aphone
+                       = $bphone
+                       = $created
+                       = $updated
+                       = '' ;
+        }
+        else {
+            $companyId         = $contactModel->getContactCompanyId() ;
+            $companyController = new CompanyController( 'read' ) ;
+            $companyModel      = $companyController->get( $companyId ) ;
+            $companyName       = $companyModel->getCompanyName() ;
+            $name              = $contactModel->getContactName() ;
+            $email             = $contactModel->getContactEmail() ;
+            $aphone            = $contactModel->getContactPhone() ;
+            $bphone            = $contactModel->getContactAlternatePhone() ;
+            $created           = $contactModel->getCreated() ;
+            $updated           = $contactModel->getUpdated() ;
+        }
         switch ( $displayMode ) {
             case 'add' :
                 // @todo 00 Compute companyNames
+                $companyListView = new CompanyListView( 'html' ) ;
+                $companyNames = $companyListView->getCompanyList( "ix$id", $companyId ) ;
                 return <<<RETVAL
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddContact( '$id' )">Save</button>
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>

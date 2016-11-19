@@ -244,12 +244,26 @@ HTML;
         $this->_companyModels = $companyModels ;
     }
 
+    public function getCompanyList( $id, $value ) {
+        $retVal = "<select id=\"companyId$id\" >\n  <option value=\"\">---</option>" ;
+        $companyController = new CompanyController() ;
+        $companies = $companyController->getAll() ;
+        foreach ( $companies as $company ) {
+            $selected = ( $company->getId() === $value ) ? "selected=\"selected\"" : "" ;
+            $cname = $company->getCompanyName() ;
+            $cid   = $company->getId() ;
+            $retVal .= "  <option value=\"$cid\" $selected>$cname</option>\n" ;
+        }
+        $retVal .= "</select>\n" ;
+        return $retVal ;
+    }
+
     public function getAgencyList( $id, $value ) {
         $retVal = "<select id=\"agencyCompanyId$id\" >\n  <option value=\"\">---</option>" ;
         $companyController = new CompanyController() ;
         $agencies = $companyController->getAll() ;
         foreach ( $agencies as $agency ) {
-            $selected = ( $agency->getId() === $id ) ? "selected=\"selected\"" : "" ;
+            $selected = ( $agency->getId() === $value ) ? "selected=\"selected\"" : "" ;
             $aname = $agency->getCompanyName() ;
             $aid   = $agency->getId() ;
             $retVal .= "  <option value=\"$aid\" $selected>$aname</option>\n" ;
@@ -257,5 +271,5 @@ HTML;
         $retVal .= "</select>\n" ;
         return $retVal ;
     }
-
+    
 }
