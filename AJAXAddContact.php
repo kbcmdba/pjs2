@@ -28,19 +28,21 @@ if ( ! $auth->isAuthorized() ) {
     $auth->forbidden() ;
     exit( 0 ) ; // Should never get here but just in case...
 }
-$statusValue     = Tools::post( 'statusValue' ) ;
-$style           = Tools::post( 'style' ) ;
-$isActive        = Tools::post( 'isActive' ) ;
-$sortKey         = Tools::post( 'sortKey' ) ;
+$companyId       = Tools::param( 'contactCompanyId' ) ;
+$name            = Tools::param( 'contactName' ) ;
+$email           = Tools::param( 'contactemail' ) ;
+$phone           = Tools::param( 'contactphone' ) ;
+$alternatePhone  = Tools::param( 'contactalternatePhone' ) ;
 $result          = 'OK' ;
 $contactId       = '' ;
 $newContactModel = null ;
 try {
     $contactModel = new ContactModel() ;
-    $contactModel->setStatusValue( $statusValue ) ;
-    $contactModel->setStyle( $style ) ;
-    $contactModel->setIsActive( $isActive ) ;
-    $contactModel->setSortKey( $sortKey ) ;
+    $contactModel->setContactCompanyId( $companyId ) ;
+    $contactModel->setContactName( $name ) ;
+    $contactModel->setContactEmail( $email ) ;
+    $contactModel->setContactPhone( $phone ) ;
+    $contactModel->setContactAlternatePhone( $alternatePhone ) ;
 
     $contactController = new ContactController() ;
     $contactId = $contactController->add( $contactModel ) ;
