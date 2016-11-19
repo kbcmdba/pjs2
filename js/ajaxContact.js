@@ -27,7 +27,7 @@
  * @returns {Boolean}
  */
 function addContact() {
-    var table  = document.getElementById( "contact" ) ;
+    var table  = document.getElementById( "contacts" ) ;
     var row    = table.insertRow( 1 ) ;
     row.id     = "ix" + rowNumber ;
     var data   = 'id=' + rowNumber + '&mode=add' ;
