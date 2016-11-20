@@ -30,9 +30,10 @@ if ( ! $auth->isAuthorized() ) {
 }
 $companyId       = Tools::param( 'contactCompanyId' ) ;
 $name            = Tools::param( 'contactName' ) ;
-$email           = Tools::param( 'contactemail' ) ;
-$phone           = Tools::param( 'contactphone' ) ;
-$alternatePhone  = Tools::param( 'contactalternatePhone' ) ;
+$email           = Tools::param( 'contactEmail' ) ;
+$phone           = Tools::param( 'contactPhone' ) ;
+$alternatePhone  = Tools::param( 'contactAlternatePhone' ) ;
+$rowId           = Tools::param( 'rowId' ) ;
 $result          = 'OK' ;
 $contactId       = '' ;
 $newContactModel = null ;
@@ -56,11 +57,12 @@ try {
 }
 catch ( ControllerException $e ) {
     $contactRowView = new ContactListView( 'html', null ) ;
-    $row = $contactRowView->displayContactRow( $newContactModel
-                                           , 'list'
-                                           , 'Add Contact record failed. '
-                                           . $e->getMessage()
-                                           ) ;
+    $contactModel->setId( $rowId ) ;
+    $row = $contactRowView->displayContactRow( $contactModel
+                                             , 'add'
+                                             , 'Add Contact record failed. '
+                                             . $e->getMessage()
+                                             ) ;
 }
 
 $result = array( 'result' => $result, 'row' => $row, 'newId' => $contactId ) ;

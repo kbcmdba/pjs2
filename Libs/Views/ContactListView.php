@@ -102,8 +102,13 @@ HTML;
         else {
             $companyId         = $contactModel->getContactCompanyId() ;
             $companyController = new CompanyController( 'read' ) ;
-            $companyModel      = $companyController->get( $companyId ) ;
-            $companyName       = $companyModel->getCompanyName() ;
+            if ( $companyId > 0 ) {
+                $companyModel      = $companyController->get( $companyId ) ;
+                $companyName       = $companyModel->getCompanyName() ;
+            }
+            else {
+                $companyName       = '---' ;
+            }
             $name              = $contactModel->getContactName() ;
             $email             = $contactModel->getContactEmail() ;
             $aphone            = $contactModel->getContactPhone() ;
