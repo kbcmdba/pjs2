@@ -140,22 +140,23 @@ function cancelUpdateContactRow( id ) {
  */
 function saveAddContact( id ) {
     var rowId     = 'ix' + id ;
-    var companyId = document.getElementById( "companyId" + rowId ).value ;
-    var name      = document.getElementById( "name" + rowId ).value ;
-    var email     = document.getElementById( "email" + rowId ).value ;
-    var phone     = document.getElementById( "phone" + rowId ).value ;
-    var altPhone  = document.getElementById( "alternatePhone" + rowId ).value ;
+    var companyId = document.getElementById( "contactCompanyId" + rowId ).value ;
+    var name      = document.getElementById( "contactName" + rowId ).value ;
+    var email     = document.getElementById( "contactEmail" + rowId ).value ;
+    var phone     = document.getElementById( "contactPhone" + rowId ).value ;
+    var altPhone  = document.getElementById( "contactAlternatePhone" + rowId ).value ;
     var msg       = ajaxValidateContact( companyId, name, email, phone, altPhone ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
         return false ;
     }
     var uri  = "AJAXAddContact.php" ;
-    var data = "companyId=" + encodeURIComponent( companyId )
-             + "&name=" + encodeURIComponent( name )
-             + "&email=" + encodeURIComponent( email )
-             + "&phone=" + encodeURIComponent( phone )
-             + "&alternatePhone=" + encodeURIComponent( altPhone )
+    var data = "contactCompanyId=" + encodeURIComponent( companyId )
+             + "&contactName=" + encodeURIComponent( name )
+             + "&contactEmail=" + encodeURIComponent( email )
+             + "&contactPhone=" + encodeURIComponent( phone )
+             + "&contactAlternatePhone=" + encodeURIComponent( altPhone )
+             + "&rowId=" + encodeURIComponent( rowId )
              + "&rowStyle=add"
              ;
     var isAsync = true ;

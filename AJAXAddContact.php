@@ -34,6 +34,7 @@ $email           = Tools::param( 'contactEmail' ) ;
 $phone           = Tools::param( 'contactPhone' ) ;
 $alternatePhone  = Tools::param( 'contactAlternatePhone' ) ;
 $rowId           = Tools::param( 'rowId' ) ;
+
 $result          = 'OK' ;
 $contactId       = '' ;
 $newContactModel = null ;

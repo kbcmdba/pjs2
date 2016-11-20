@@ -609,6 +609,25 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//th[8]', 'Updated' ) ;
     }
 
+    public function checkC2R( $id
+                            , $prefix
+                            , $contactCompany
+                            , $contactName
+                            , $contactEmail
+                            , $contactPhone
+                            , $contactAlternatePhone
+                            ) {
+        $this->checkIdText( "UpdateButton$id", 'Update' ) ;
+        $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
+        $this->checkXpathText( "/$prefix/td[2]", $contactCompany ) ;
+        $this->checkXpathText( "/$prefix/td[3]", $contactName ) ;
+        $this->checkXpathText( "/$prefix/td[4]", $contactEmail ) ;
+        $this->checkXpathText( "/$prefix/td[5]", $contactPhone ) ;
+        $this->checkXpathText( "/$prefix/td[6]", $contactAlternatePhone ) ;
+        $this->checkXpathPattern( "/$prefix/td[7]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
+        $this->checkXpathPattern( "/$prefix/td[8]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
+    }
+
     public function doTestContacts() {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Contacts' ) ;
@@ -621,6 +640,10 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doTypeAt( WebDriverBy::id( 'emailix1' ), 'john.doe@example1.com' ) ;
         $this->doTypeAt( WebDriverBy::id( 'phoneix1' ), '999-555-1212' ) ;
         $this->doTypeAt( WebDriverBy::id( 'alternatePhoneix1' ), '999-555-1234' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkC2HR() ;
+        $this->checkC2R( 1, '', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
 
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 15 ) ;

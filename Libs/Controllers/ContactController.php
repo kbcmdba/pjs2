@@ -49,7 +49,7 @@ class ContactController extends ControllerBase {
 CREATE TABLE contact
      (
        id                    INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , contactCompanyId      INT UNSIGNED NOT NULL DEFAULT 0
+     , contactCompanyId      INT UNSIGNED NULL DEFAULT NULL
      , contactName           VARCHAR(100) NOT NULL DEFAULT ''
      , contactEmail          VARCHAR(100) NOT NULL DEFAULT ''
      , contactPhone          VARCHAR(25) NOT NULL DEFAULT ''
