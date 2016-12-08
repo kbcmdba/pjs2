@@ -19,6 +19,9 @@
  *
  */
 
+// This is local to this file.
+var rowNumber = 1 ;
+
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -140,11 +143,11 @@ function cancelUpdateContactRow( id ) {
  */
 function saveAddContact( id ) {
     var rowId     = 'ix' + id ;
-    var companyId = document.getElementById( "contactCompanyId" + rowId ).value ;
-    var name      = document.getElementById( "contactName" + rowId ).value ;
-    var email     = document.getElementById( "contactEmail" + rowId ).value ;
-    var phone     = document.getElementById( "contactPhone" + rowId ).value ;
-    var altPhone  = document.getElementById( "contactAlternatePhone" + rowId ).value ;
+    var companyId = document.getElementById( "companyId" + rowId ).value ;
+    var name      = document.getElementById( "name" + rowId ).value ;
+    var email     = document.getElementById( "email" + rowId ).value ;
+    var phone     = document.getElementById( "phone" + rowId ).value ;
+    var altPhone  = document.getElementById( "alternatePhone" + rowId ).value ;
     var msg       = ajaxValidateContact( companyId, name, email, phone, altPhone ) ;
     if ( '' !== msg ) {
         alert( msg ) ;

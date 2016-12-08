@@ -166,7 +166,7 @@ RETVAL;
                 break ;
             case 'list' :
                 return <<<RETVAL
-      <td><button type="button" id="EditButton$id" onclick="editContact( '$id' )">Edit</button>
+      <td><button type="button" id="UpdateButton$id" onclick="updateContact( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteContact( 'ix$id' )">Delete</button>
       </td>
       <td>$companyName</td>

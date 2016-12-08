@@ -19,6 +19,11 @@
  *
  */
 
+// This is local to this file.
+var rowNumber = 1 ;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Add a company row for user input.
  *
