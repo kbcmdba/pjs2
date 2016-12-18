@@ -79,7 +79,7 @@ HTML;
         foreach ( $this->getContactModels() as $contactModel ) {
             $id = $contactModel->getId() ;
             $row  = $this->displayContactRow( $contactModel, 'list' ) ;
-            $body .= "    <tr>\n$row\n    </tr>" ;
+            $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>" ;
         }
     
         $body .= "  </tbody>\n</table>\n" ;
@@ -118,7 +118,6 @@ HTML;
         }
         switch ( $displayMode ) {
             case 'add' :
-                // @todo 00 Compute companyNames
                 $companyListView = new CompanyListView( 'html' ) ;
                 $companyNames = $companyListView->getCompanyList( "ix$id", $companyId ) ;
                 return <<<RETVAL
@@ -135,16 +134,17 @@ HTML;
 
 RETVAL;
             case 'update' :
-                // @todo 00 Compute companyNames
+                $companyListView = new CompanyListView( 'html' ) ;
+                $companyNames = $companyListView->getCompanyList( "$id", $companyId ) ;
                 return <<<RETVAL
-      <td><button type="button" id="SaveButtonix$id" onclick="saveAddContact( '$id' )">Save</button>
-          <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
+      <td><button type="button" id="SaveButton$id" onclick="saveAddContact( '$id' )">Save</button>
+          <button type="button" id="CancelButton$id" onclick="deleteRow( '$id' )">Cancel</button>
       </td>
       <td>$companyNames</td>
-      <td><input type="text" id="nameix$id" value="$name"</td>
-      <td><input type="email" id="emailix$id" value="$email"</td>
-      <td><input type="text" id="phoneix$id" value="$aphone"</td>
-      <td><input type="text" id="alternatePhoneix$id" value="$bphone" /></td>
+      <td><input type="text" id="name$id" value="$name"</td>
+      <td><input type="email" id="email$id" value="$email"</td>
+      <td><input type="text" id="phone$id" value="$aphone"</td>
+      <td><input type="text" id="alternatePhone$id" value="$bphone" /></td>
       <td>$created</td>
       <td>$updated</td>
                 
@@ -167,7 +167,7 @@ RETVAL;
             case 'list' :
                 return <<<RETVAL
       <td><button type="button" id="UpdateButton$id" onclick="updateContact( '$id' )">Update</button>
-          <button type="button" id="DeleteButton$id" onclick="deleteContact( 'ix$id' )">Delete</button>
+          <button type="button" id="DeleteButton$id" onclick="deleteContact( '$id' )">Delete</button>
       </td>
       <td>$companyName</td>
       <td>$name</td>

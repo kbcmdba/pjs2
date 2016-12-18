@@ -49,6 +49,10 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                                 ) ;
     private $_userName   = 'pjs2_test' ;
     private $_password   = 'pjs2_test' ;
+    /**
+     * @var integer -1 = no testing, 0 = minimal testing, 1 = brief testing, 100 = full testing
+     */
+    private $_testMode   = 0 ;
 
     public function setUp() {
         $capabilities = DesiredCapabilities::firefox() ;
@@ -152,6 +156,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doLogOutLogIn() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         $username = null ;
         $password = null ;
         $driver = $this->webDriver ;
@@ -190,6 +197,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doResetDb() {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
         $this->doLoadFromHeader( 'Reset Database' ) ;
         $resetElements = array( 'Dropping Triggers: SearchController'
                               , 'Dropping Triggers: KeywordController'
@@ -245,6 +255,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkASHR() {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
         $this->checkXpathText( '//button', 'Add Application Status' ) ;
         $this->checkXpathText( '//caption', 'Current Application Statuses' ) ;
         $this->checkXpathText( '//th', 'Actions' ) ;
@@ -257,6 +270,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkASR( $id, $prefix, $label, $css, $isActive, $sortKey ) {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
         $this->checkIdText( "UpdateButton$id", 'Update' ) ;
         $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
         $this->checkXpathText( "/$prefix/td[2]", $label ) ;
@@ -268,6 +284,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestApplicationStatuses() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Application Statuses' ) ;
         $this->checkHeaderLoads() ;
@@ -399,6 +418,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkC1HR() {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
         $this->checkXpathText( '//button', 'Add Company' ) ;
         $this->checkXpathText( '//caption', 'Current Companies' ) ;
         $this->checkXpathText( '//th', 'Actions' ) ;
@@ -419,6 +441,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                             , $company, $address1, $city, $state, $zip
                             , $agencyId, $address2, $phone, $url
                             ) {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
         $this->checkIdText( "UpdateButton$id", 'Update' ) ;
         $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
         $this->checkXpathText( "/$prefix1/td[2]", $company ) ;
@@ -435,6 +460,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestCompanies() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Companies' ) ;
         $this->checkHeaderLoads() ;
@@ -597,6 +625,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkC2HR() {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
         $this->checkXpathText( '//button', 'Add Contact' ) ;
         $this->checkXpathText( '//caption', 'Current Contacts' ) ;
         $this->checkXpathText( '//th', 'Actions' ) ;
@@ -617,6 +648,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                             , $contactPhone
                             , $contactAlternatePhone
                             ) {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
         $this->checkIdText( "UpdateButton$id", 'Update' ) ;
         $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
         $this->checkXpathText( "/$prefix/td[2]", $contactCompany ) ;
@@ -629,6 +663,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestContacts() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Contacts' ) ;
         $this->checkHeaderLoads() ;
@@ -644,6 +681,19 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkHeaderLoads() ;
         $this->checkC2HR() ;
         $this->checkC2R( 1, '', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix2' ) ) ;
+        sleep(60) ;
+        $this->doSelectOption( 'companyIdix2', '2' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'nameix2' ), 'Jane Smith' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'emailix2' ), 'janesmith@example2.com' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'phoneix2' ), '999-000-1212' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'alternatePhoneix2' ), '999-000-1234' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix2' ) )->click() ;
+        $this->checkC2HR() ;
+        $this->checkC2R( 1, '/tr[2]', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
+        $this->checkC2R( 2, '', 'Company 2c', 'Jane Smith', 'janesmith@example2.com', '999-000-1212', '999-000-1234' ) ;
 
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 15 ) ;
@@ -651,6 +701,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestJobs() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Jobs' ) ;
         $this->checkHeaderLoads() ;
@@ -662,6 +715,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestKeywords() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Keywords' ) ;
         $this->checkHeaderLoads() ;
@@ -673,6 +729,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestSearches() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Searches' ) ;
         $this->checkHeaderLoads() ;
@@ -684,6 +743,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestSummary2() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Summary' ) ;
         $this->checkHeaderLoads() ;
@@ -692,6 +754,21 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         // @todo Implement IntegrationTests.php:doTestSummary2()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here.' ) ;
+    }
+
+    /**
+     * @group minimal
+     * @group doReset
+     * @group skipReset
+     * @group full
+     */
+    public function testTestMode() {
+        if ( $this->_testMode < 100 ) {
+            $this->markTestIncomplete( '_testMode is less than full value' ) ;
+        }
+        else {
+            $this->assertTrue( true, 'Test mode at full value.' ) ;
+        }
     }
 
     /**
@@ -733,9 +810,11 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $url    = $this->url ;
         $driver->get( $this->url ) ;
         $this->checkHeaderLoads() ;
-        // Check that all the pages in the header load properly
-        foreach ( $this->_headerTags as $headerTag ) {
-            $this->doLoadFromHeader( $headerTag ) ;
+        if ( $this->_testMode >= 0 ) {
+            // Check that all the pages in the header load properly
+            foreach ( $this->_headerTags as $headerTag ) {
+                $this->doLoadFromHeader( $headerTag ) ;
+            }
         }
 
         // FIXME Finish implementation of Tests/IntegrationTests.php:testWebSite sub-routines.

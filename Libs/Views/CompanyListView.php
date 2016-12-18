@@ -244,6 +244,13 @@ HTML;
         $this->_companyModels = $companyModels ;
     }
 
+    /**
+     * Get company SELECT list
+     * 
+     * @param string $id Field ID
+     * @param integer $value The selected value
+     * @return string
+     */
     public function getCompanyList( $id, $value ) {
         $retVal = "<select id=\"companyId$id\" >\n  <option value=\"\">---</option>" ;
         $companyController = new CompanyController() ;
@@ -258,6 +265,13 @@ HTML;
         return $retVal ;
     }
 
+    /**
+     * Get Agency SELECT list
+     * 
+     * @param string $id Field ID
+     * @param integer $value Selected Value
+     * @return string
+     */
     public function getAgencyList( $id, $value ) {
         $retVal = "<select id=\"agencyCompanyId$id\" >\n  <option value=\"\">---</option>" ;
         $companyController = new CompanyController() ;
