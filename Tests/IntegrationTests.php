@@ -180,7 +180,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
             $password = $this->webDriver->findElement( WebDriverBy::name( 'auth_password' ) ) ;
         }
         catch( NoSuchElementException $ex ) {
-            $this->markTestIncomplete( 'This part of the test has not been written.' ) ;
+            $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
             return ;
         }
         $this->assertNotNull( $username ) ;
@@ -247,11 +247,26 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//p[2]', 'Done.' ) ;
     }
 
+    public function checkSuHR() {
+        sleep( 15 ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+    }
+
     /**
      * FIXME Implement Tests/IntegrationTests.php:doTestSummary1()
      */
     public function doTestSummary1() {
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
+        $driver = $this->webDriver ;
+        $this->doLoadFromHeader( 'Summary' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkSuHR() ;
+
+        // @todo Implement IntegrationTests.php:doTestSummary2()
+        sleep( 15 ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
     public function checkASHR() {
@@ -302,6 +317,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkASR( 9, '/tr[9]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 10, '/tr[10]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 11, '/tr[11]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
+        if ( $this->_testMode <= 1 ) {
+            return ;
+        }
         $driver->findElement( WebDriverBy::xpath( '//button' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
@@ -466,6 +484,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Companies' ) ;
         $this->checkHeaderLoads() ;
+        if ( $this->_testMode <= 1 ) {
+            return ;
+        }
         $this->checkC1HR() ;
         $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
@@ -480,6 +501,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doTypeAt( WebDriverBy::id( 'companyAddress2ix1' ), '' ) ;
         $this->doTypeAt( WebDriverBy::id( 'companyPhoneix1' ), '111-111-1111' ) ;
         $this->doTypeAt( WebDriverBy::id( 'companyUrlix1' ), 'http://testme1.com/' ) ;
+        if ( $this->_testMode <= 1 ) {
+            return ;
+        }
         $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
@@ -525,8 +549,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
-                , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
-                , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+                       , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                       , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
         $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
@@ -550,12 +574,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'CancelButtonIx1' ) ) ) ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
-                , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
-                , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+                       , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                       , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
-                , 'Company 2', 'c/o Me', 'City 2', 'S2', '22222-2222'
-                , 'Company 1', '2 Any Street', '222-222-2222', 'http://testme2.com/' ) ;
+                       , 'Company 2', 'c/o Me', 'City 2', 'S2', '22222-2222'
+                       , 'Company 1', '2 Any Street', '222-222-2222', 'http://testme2.com/' ) ;
         $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButton2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
@@ -577,12 +601,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'CancelButtonIx1' ) ) ) ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
-                , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
-                , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+                       , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                       , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
-                , 'Company 2b', 'c/o Me 2', 'City 2b', '22', '22222-222B'
-                , 'None', '2B Any Street', '222-222-222B', 'http://www.testme2.com/' ) ;
+                       , 'Company 2b', 'c/o Me 2', 'City 2b', '22', '22222-222B'
+                       , 'None', '2B Any Street', '222-222-222B', 'http://www.testme2.com/' ) ;
         $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButton2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
@@ -604,12 +628,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'CancelButtonIx1' ) ) ) ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
-                , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
-                , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
+                       , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
+                       , 'None', '', '111-111-1111', 'http://testme1.com/' ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
-                , 'Company 2c', 'c/o Me 3', 'City 2c', '32', '22222-222c'
-                , 'Company 1', '2c Any Street', '222-222-222c', 'http://www3.testme2.com/' ) ;
+                       , 'Company 2c', 'c/o Me 3', 'City 2c', '32', '22222-222c'
+                       , 'Company 1', '2c Any Street', '222-222-222c', 'http://www3.testme2.com/' ) ;
         $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButton1' ) ) ;
@@ -677,6 +701,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doTypeAt( WebDriverBy::id( 'emailix1' ), 'john.doe@example1.com' ) ;
         $this->doTypeAt( WebDriverBy::id( 'phoneix1' ), '999-555-1212' ) ;
         $this->doTypeAt( WebDriverBy::id( 'alternatePhoneix1' ), '999-555-1234' ) ;
+        if ( $this->_testMode <= 1 ) {
+            return ;
+        }
         $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
         $this->checkHeaderLoads() ;
         $this->checkC2HR() ;
@@ -697,7 +724,34 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
 
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+    }
+
+    public function checkJHR() {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
+        $this->checkXpathText( '//button', 'Add Job' ) ;
+        $this->checkXpathText( '//caption', 'Current Jobs' ) ;
+        $this->checkXpathText( '//th', 'Actions' ) ;
+        $this->checkXpathText( '//th[2]', 'Urgency' ) ;
+        $this->checkXpathText( '//th[3]', 'Title' ) ;
+        $this->checkXpathText( '//th[4]', 'Location' ) ;
+        $this->checkXpathText( '//th[5]', 'Company' ) ;
+        $this->checkXpathText( '//th[6]', 'Contact' ) ;
+        $this->checkXpathText( '//th[7]', 'Status' ) ;
+        $this->checkXpathText( '//th[8]', 'Next Action' ) ;
+        $this->checkXpathText( '//th[9]', 'Next Action Due' ) ;
+        $this->checkXpathText( '//th[10]', 'Link' ) ;
+        $this->checkXpathText( '//th[11]', 'Created' ) ;
+        $this->checkXpathText( '//th]12]', 'Updated' ) ;
+    }
+
+    public function checkJR() {
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
     public function doTestJobs() {
@@ -708,10 +762,18 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doLoadFromHeader( 'Jobs' ) ;
         $this->checkHeaderLoads() ;
         $this->checkJHR() ;
+        if ( $this->_testMode <= 1 ) {
+            return ;
+        }
 
         // @todo Implement Tests/IntegrationTests.php:doTestJobs()
         sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+    }
+
+    public function checkKHR() {
+        sleep( 15 ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
     public function doTestKeywords() {
@@ -721,11 +783,19 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Keywords' ) ;
         $this->checkHeaderLoads() ;
-        $this->checkC1HR() ;
+        $this->checkKHR() ;
+        if ( $this->_testMode <= 1 ) {
+            return ;
+        }
 
         // @todo Implement IntegrationTests.php:doTestKeywords()
         sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+    }
+
+    public function checkSeHR() {
+        sleep( 15 ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
     public function doTestSearches() {
@@ -739,7 +809,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
 
         // @todo Implement IntegrationTests.php:doTestSearches()
         sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
     public function doTestSummary2() {
@@ -753,7 +823,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
 
         // @todo Implement IntegrationTests.php:doTestSummary2()
         sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here.' ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
     /**
