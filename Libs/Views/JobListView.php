@@ -57,7 +57,7 @@ class JobListView extends ListViewBase {
      */
     private function _getHtmlView() {
         $body = <<<'HTML'
-<a href="addJob.php">Add a new job</a><br />
+<button id="AddJob" onclick="addJob()">Add Job</button><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Jobs</caption>
   <tr>

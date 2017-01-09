@@ -248,6 +248,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkSuHR() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
@@ -270,7 +273,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkASHR() {
-        if ( $this->_testMode < 1 ) {
+        if ( $this->_testMode < 0 ) {
             return ;
         }
         $this->checkXpathText( '//button', 'Add Application Status' ) ;
@@ -317,9 +320,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkASR( 9, '/tr[9]', 'INVALID', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 10, '/tr[10]', 'DUPLICATE', 'background-color: black; color: white;', 'No', '999' ) ;
         $this->checkASR( 11, '/tr[11]', 'CLOSED', 'background-color: black; color: white;', 'No', '999' ) ;
-        if ( $this->_testMode <= 1 ) {
-            return ;
-        }
         $driver->findElement( WebDriverBy::xpath( '//button' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
@@ -335,6 +335,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doTypeAt( WebDriverBy::id( 'styleix1' ), 'background-color: white; color: black;' ) ;
         $this->doToggleCheckBox( WebDriverBy::id( 'isActiveix1' ) ) ;
         $this->doTypeAt( WebDriverBy::id( 'sortKeyix1' ), '5' ) ;
+        if ( $this->_testMode <= 1 ) {
+            return ;
+        }
         $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
         $this->checkASHR() ;
         $this->checkASR( 12, '', 'FOO', 'background-color: white; color: black;', 'Yes', '5' ) ;
@@ -436,7 +439,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkC1HR() {
-        if ( $this->_testMode < 1 ) {
+        if ( $this->_testMode < 0 ) {
             return ;
         }
         $this->checkXpathText( '//button', 'Add Company' ) ;
@@ -484,9 +487,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver = $this->webDriver ;
         $this->doLoadFromHeader( 'Companies' ) ;
         $this->checkHeaderLoads() ;
-        if ( $this->_testMode <= 1 ) {
-            return ;
-        }
         $this->checkC1HR() ;
         $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
@@ -649,7 +649,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkC2HR() {
-        if ( $this->_testMode < 1 ) {
+        if ( $this->_testMode < 0 ) {
             return ;
         }
         $this->checkXpathText( '//button', 'Add Contact' ) ;
@@ -728,7 +728,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkJHR() {
-        if ( $this->_testMode < 1 ) {
+        if ( $this->_testMode < 0 ) {
             return ;
         }
         $this->checkXpathText( '//button', 'Add Job' ) ;
@@ -744,7 +744,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//th[9]', 'Next Action Due' ) ;
         $this->checkXpathText( '//th[10]', 'Link' ) ;
         $this->checkXpathText( '//th[11]', 'Created' ) ;
-        $this->checkXpathText( '//th]12]', 'Updated' ) ;
+        $this->checkXpathText( '//th[12]', 'Updated' ) ;
     }
 
     public function checkJR() {
@@ -762,6 +762,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doLoadFromHeader( 'Jobs' ) ;
         $this->checkHeaderLoads() ;
         $this->checkJHR() ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
         if ( $this->_testMode <= 1 ) {
             return ;
         }
@@ -772,6 +775,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkKHR() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
@@ -794,6 +800,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkSeHR() {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
