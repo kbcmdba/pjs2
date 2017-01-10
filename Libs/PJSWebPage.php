@@ -58,6 +58,8 @@ class PJSWebPage extends WebPage {
   <script src="js/ajaxApplicationStatus.js"></script>
   <script src="js/ajaxCompany.js"></script>
   <script src="js/ajaxContact.js"></script>
+  <script src="js/ajaxJob.js"></script>
+  <script src="js/ajaxKeyword.js"></script>
   <script src="js/oldValidation.js"></script>
 
 HTML;
