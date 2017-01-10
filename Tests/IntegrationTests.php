@@ -49,10 +49,13 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                                 ) ;
     private $_userName   = 'pjs2_test' ;
     private $_password   = 'pjs2_test' ;
+    private $_lookFor    = '' ;
+    private $_retVal     = 0 ;
+
     /**
      * @var integer -1 = no testing, 0 = minimal testing, 1 = brief testing, 100 = full testing
      */
-    private $_testMode   = 0 ;
+    private $_testMode   = 100 ;
 
     public function setUp() {
         $capabilities = DesiredCapabilities::firefox() ;
@@ -65,12 +68,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doWaitFor( $target, $timeout = 60, $interval = 250 ) {
-        global $lookFor ;
-        global $ret ;
         $lookFor = $target ;
-        $this->webDriver->wait($timeout, $interval)->until( function ( $webDriver ) {
-            global $lookFor ;
-            global $ret ;
+        $ret = 0 ;
+        $this->webDriver->wait($timeout, $interval)->until( function ( $webDriver ) use ( &$lookFor, &$ret ) {
             $ret = ( 1 === count( $this->webDriver->findElements( $lookFor ) ) ) ;
             return( $ret ) ;
         } ) ;
@@ -93,6 +93,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $options  = $select->findElements( WebDriverBy::tagName( 'option' ) ) ;
         $wasFound = 0 ;
         foreach ( $options as $option ) {
+            var_dump( $option->getText() ) ;
             if ( $displayedValue === $option->getText() ) {
                 $option->click() ;
                 $wasFound = 1 ;
@@ -109,10 +110,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkFooterLoads() {
-        global $lookFor ;
         $lookFor = "<!-- EndOfPage --></body>\n</html>" ;
-        $this->webDriver->wait( 30, 300 )->until( function ( $webDriver ) {
-            global $lookFor ;
+        $this->webDriver->wait( 60, 300 )->until( function ( $webDriver ) use ( &$lookFor ) {
             return strpos( $webDriver->getPageSource(), $lookFor ) !== null ;
         }) ;
         $this->assertNotNull( strpos( $this->webDriver->getPageSource(), $lookFor ) ) ;
@@ -711,8 +710,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix2' ) ) ;
-        sleep(60) ;
-        $this->doSelectOption( 'companyIdix2', '2' ) ;
+        $this->doSelectOption( 'companyIdix2', 'Company 2b' ) ;
         $this->doTypeAt( WebDriverBy::id( 'nameix2' ), 'Jane Smith' ) ;
         $this->doTypeAt( WebDriverBy::id( 'emailix2' ), 'janesmith@example2.com' ) ;
         $this->doTypeAt( WebDriverBy::id( 'phoneix2' ), '999-000-1212' ) ;
