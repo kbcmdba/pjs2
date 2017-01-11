@@ -93,7 +93,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $options  = $select->findElements( WebDriverBy::tagName( 'option' ) ) ;
         $wasFound = 0 ;
         foreach ( $options as $option ) {
-            var_dump( $option->getText() ) ;
             if ( $displayedValue === $option->getText() ) {
                 $option->click() ;
                 $wasFound = 1 ;
@@ -710,16 +709,16 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix2' ) ) ;
-        $this->doSelectOption( 'companyIdix2', 'Company 2b' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'companyIdix2' ), 'Company 2c' ) ;
         $this->doTypeAt( WebDriverBy::id( 'nameix2' ), 'Jane Smith' ) ;
         $this->doTypeAt( WebDriverBy::id( 'emailix2' ), 'janesmith@example2.com' ) ;
         $this->doTypeAt( WebDriverBy::id( 'phoneix2' ), '999-000-1212' ) ;
         $this->doTypeAt( WebDriverBy::id( 'alternatePhoneix2' ), '999-000-1234' ) ;
         $driver->findElement( WebDriverBy::id( 'SaveButtonix2' ) )->click() ;
         $this->checkC2HR() ;
-        $this->checkC2R( 1, '/tr[2]', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
         $this->checkC2R( 2, '', 'Company 2c', 'Jane Smith', 'janesmith@example2.com', '999-000-1212', '999-000-1234' ) ;
-
+        $this->checkC2R( 1, '/tr[3]', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
+        
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
