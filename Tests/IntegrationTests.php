@@ -738,6 +738,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkIdText( 'DeleteButton1', 'Confirm Delete' ) ;
         $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
         $driver->findElement( WebDriverBy::id( 'CancelButton1' ) )->click() ;
+        // Update contact 2 and save
+        // Delete contact 2
+        // Verify contact 1 is still there.
 
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 5 ) ;
