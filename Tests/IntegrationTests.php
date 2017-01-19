@@ -729,6 +729,15 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doWaitFor( WebDriverBy::id( 'CancelButton1' ) ) ;
         $this->checkIdText( 'SaveButton1', 'Save' ) ;
         $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton1' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton1' ) ) ;
+        $this->checkIdText( 'DeleteButton1', 'Confirm Delete' ) ;
+        $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton1' ) )->click() ;
 
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
         sleep( 5 ) ;
