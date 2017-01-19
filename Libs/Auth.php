@@ -44,7 +44,7 @@ class Auth {
     public function __construct( $readOnly = false ) {
         session_start() ;
         $config = new Config() ;
-        $this->_config = $config ;
+        self::$_config = $config ;
         // Users are always authorized if the configuration tells us to skip authentication.
         if ( $config->getSkipAuth() ) {
             return ;
@@ -80,7 +80,7 @@ class Auth {
      */
     public function isAuthorized( $readOnly = false ) {
         // Users are always authorized if the configuration tells us to skip authentication.
-        if ( $this->_config->getSkipAuth() ) {
+        if ( self::$_config->getSkipAuth() ) {
             return true ;
         }
         // Has this user already been validated during this transaction?
