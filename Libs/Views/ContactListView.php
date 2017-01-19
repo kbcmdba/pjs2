@@ -138,7 +138,7 @@ RETVAL;
                 $companyNames = $companyListView->getCompanyList( "$id", $companyId ) ;
                 return <<<RETVAL
       <td><button type="button" id="SaveButton$id" onclick="saveAddContact( '$id' )">Save</button>
-          <button type="button" id="CancelButton$id" onclick="deleteRow( '$id' )">Cancel</button>
+          <button type="button" id="CancelButton$id" onclick="cancelUpdateContactRow( '$id' )">Cancel</button>
       </td>
       <td>$companyNames</td>
       <td><input type="text" id="name$id" value="$name"</td>

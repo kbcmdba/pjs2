@@ -705,6 +705,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
         $this->checkHeaderLoads() ;
         $this->checkC2HR() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
         $this->checkC2R( 1, '', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
         $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix2' ) ) ;
@@ -716,11 +718,20 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doTypeAt( WebDriverBy::id( 'alternatePhoneix2' ), '999-000-1234' ) ;
         $driver->findElement( WebDriverBy::id( 'SaveButtonix2' ) )->click() ;
         $this->checkC2HR() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
         $this->checkC2R( 2, '', 'Company 2c', 'Jane Smith', 'janesmith@example2.com', '999-000-1212', '999-000-1234' ) ;
         $this->checkC2R( 1, '/tr[3]', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
-        
+        $driver->findElement( WebDriverBy::id( 'UpdateButton1' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton1' ) ) ;
+        $this->checkIdText( 'SaveButton1', 'Save' ) ;
+        $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
+
         // @todo Implement Tests/IntegrationTests.php:doTestContacts
-        sleep( 15 ) ;
+        sleep( 5 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
