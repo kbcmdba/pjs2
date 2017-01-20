@@ -180,11 +180,11 @@ function saveAddContact( id ) {
  */
 function saveUpdateContact( id ) {
     var rowId        = 'ux' + id ;
-    var companyId = document.getElementById( "companyId" + rowId ).value ;
-    var name      = document.getElementById( "name" + rowId ).value ;
-    var email     = document.getElementById( "email" + rowId ).value ;
-    var phone     = document.getElementById( "phone" + rowId ).value ;
-    var altPhone  = document.getElementById( "alternatePhone" + rowId ).value ;
+    var companyId = document.getElementById( "companyId" + id ).value ;
+    var name      = document.getElementById( "name" + id ).value ;
+    var email     = document.getElementById( "email" + id ).value ;
+    var phone     = document.getElementById( "phone" + id ).value ;
+    var altPhone  = document.getElementById( "alternatePhone" + id ).value ;
     var msg       = ajaxValidateContact( companyId, name, email, phone, altPhone ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
@@ -192,12 +192,12 @@ function saveUpdateContact( id ) {
     }
     var uri  = "AJAXUpdateContact.php" ;
     var data = "id=" + id
-             + "companyId=" + encodeURIComponent( companyId )
-             + "&name=" + encodeURIComponent( name )
-             + "&email=" + encodeURIComponent( email )
-             + "&phone=" + encodeURIComponent( phone )
-             + "&alternatePhone=" + encodeURIComponent( altPhone )
-             + "&rowStyle=add"
+             + "&contactCompanyId=" + encodeURIComponent( companyId )
+             + "&contactName=" + encodeURIComponent( name )
+             + "&contactEmail=" + encodeURIComponent( email )
+             + "&contactPhone=" + encodeURIComponent( phone )
+             + "&contactAlternatePhone=" + encodeURIComponent( altPhone )
+             + "&rowStyle=update"
              ;
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {

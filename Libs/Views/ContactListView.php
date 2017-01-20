@@ -87,7 +87,7 @@ HTML;
         return $body ;
     }
 
-    public function displayContactRow( $contactModel, $displayMode ) {
+    public function displayContactRow( $contactModel, $displayMode, $errorMessage = '' ) {
         $id = $contactModel->getId() ;
         if ( "add" === $displayMode ) {
             $companyId = $companyName
@@ -123,6 +123,7 @@ HTML;
                 return <<<RETVAL
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddContact( '$id' )">Save</button>
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
+          $errorMessage
       </td>
       <td>$companyNames</td>
       <td><input type="text" id="nameix$id" value="$name"</td>
@@ -134,11 +135,12 @@ HTML;
 
 RETVAL;
             case 'update' :
-                $companyListView = new CompanyListView( 'html' ) ;
+                $companyListView = new CompanyListView( 'html', null ) ;
                 $companyNames = $companyListView->getCompanyList( "$id", $companyId ) ;
                 return <<<RETVAL
-      <td><button type="button" id="SaveButton$id" onclick="saveAddContact( '$id' )">Save</button>
+      <td><button type="button" id="SaveButton$id" onclick="saveUpdateContact( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateContactRow( '$id' )">Cancel</button>
+          $errorMessage
       </td>
       <td>$companyNames</td>
       <td><input type="text" id="name$id" value="$name"</td>
@@ -153,6 +155,7 @@ RETVAL;
                 return <<<RETVAL
       <td><button type="button" id="DeleteButton$id" onclick="doDeleteContact( '$id' )">Confirm Delete</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateContactRow( '$id' )">Cancel</button>
+          $errorMessage
       </td>
       <td>$companyName</td>
       <td>$name</td>
@@ -168,6 +171,7 @@ RETVAL;
                 return <<<RETVAL
       <td><button type="button" id="UpdateButton$id" onclick="updateContact( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteContact( '$id' )">Delete</button>
+          $errorMessage
       </td>
       <td>$companyName</td>
       <td>$name</td>

@@ -738,7 +738,24 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkIdText( 'DeleteButton1', 'Confirm Delete' ) ;
         $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
         $driver->findElement( WebDriverBy::id( 'CancelButton1' ) )->click() ;
-        // Update contact 2 and save
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $this->doSelectOption( WebDriverBy::id( 'companyId2' ), '---' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'name2' ), 'Jane Smithy' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'email2' ), 'janesmithy@example2.com' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'phone2' ), '999-000-1313' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'alternatePhone2' ), '999-000-2345' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButton2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->checkC2R( 2, '', '---', 'Jane Smithy', 'janesmithy@example2.com', '999-000-1313', '999-000-2345' ) ;
+        $this->checkC2R( 1, '/tr[3]', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
+        // Update contact 2, save and verify
         // Delete contact 2
         // Verify contact 1 is still there.
 
