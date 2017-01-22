@@ -3,7 +3,7 @@
 /**
  * phpjobseeker
  *
- * Copyright (C) 2009, 2015 Kevin Benton - kbenton at bentonfam dot org
+ * Copyright (C) 2009, 2015, 2017 Kevin Benton - kbenton at bentonfam dot org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -77,7 +77,7 @@ class ContactListView extends ListViewBase {
     
 HTML;
         foreach ( $this->getContactModels() as $contactModel ) {
-            $id = $contactModel->getId() ;
+            $id   = $contactModel->getId() ;
             $row  = $this->displayContactRow( $contactModel, 'list' ) ;
             $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>" ;
         }

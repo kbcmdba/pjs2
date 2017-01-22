@@ -3,7 +3,7 @@
 /**
  * phpjobseeker
  *
- * Copyright (C) 2009, 2015 Kevin Benton - kbenton at bentonfam dot org
+ * Copyright (C) 2009, 2015, 2017 Kevin Benton - kbenton at bentonfam dot org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,12 @@ class JobListView extends ListViewBase {
     private $_supportedViewTypes = array( 'html' => 1 ) ;
     /** @var JobModel[] */
     private $_jobModels ;
+    /** @var string */
+    private $_contactList ;
+    /** @var string */
+    private $_companyNames ;
+    /** @var string */
+    private $_applicationStatusList ;
 
     /**
      * Class constructor
@@ -57,29 +63,100 @@ class JobListView extends ListViewBase {
      */
     private function _getHtmlView() {
         $body = <<<'HTML'
-<button id="AddJob" onclick="addJob()">Add Job</button><br />
+<button id="AddButton" onclick="addJob()">Add Job</button><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Jobs</caption>
-  <tr>
-    <th>Actions</th>
-    <th>Urgency</th>
-    <th>Title</th>
-    <th>Location</th>
-    <th>Company</th>
-    <th>Contact</th>
-    <th>Status</th>
-    <th>Next Action</th>
-    <th>Next Action Due</th>
-    <th>Link</th>
-    <th>Created</th>
-    <th>Updated</th>
-  </tr>
+  <thead>
+    <tr>
+      <th>Actions</th>
+      <th>Urgency</th>
+      <th>Title</th>
+      <th>Location</th>
+      <th>Company</th>
+      <th>Contact</th>
+      <th>Status</th>
+      <th>Next Action</th>
+      <th>Next Action Due</th>
+      <th>URL</th>
+      <th>Last Status Change</th>
+      <th>Created</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+
 HTML;
         foreach ( $this->getJobModels() as $jobModel ) {
-            $id = $jobModel->getId() ;
+            $id   = $jobModel->getId() ;
+            $row  = $this->displayJobRow( $jobModel, 'list' ) ;
+            $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>" ;
+        }
+
+        $body .= "  </tbody>\n</table>\n" ;
+
+        return $body ;
+    }
+
+    private function getListValues( $id, $contactId, $companyId, $applicationStatusId ) {
+        $contactListView              = new ContactListView( 'html' ) ;
+        $this->_contactList           = $contactListView->getContactModels( "$id", $contactId ) ;
+        $companyListView              = new CompanyListView( 'html' ) ;
+        $this->_companyNames          = $companyListView->getCompanyList( "$id", $companyId ) ;
+        $applicationStatusListView    = new ApplicationStatusListView( 'html' ) ;
+        $this->_applicationStatusList = $applicationStatusListView->getApplicationStatusModels( "$id", $applicationStatusId ) ;
+    }
+
+    /**
+     * @param JobModel $jobModel
+     * @param String   $displayMode
+     * @param String   $errorMessage
+     */
+    public function displayJobRow( $jobModel, $displayMode, $errorMessage = '' ) {
+        $id = $jobModel->getId() ;
+        if ( 'add' === $displayMode ) {
+            $primaryContactId = $companyId
+                              = $applicationStatusId
+                              = $lastStatusChange
+                              = $urgency
+                              = $created
+                              = $updated
+                              = $nextActionDue
+                              = $nextAction 
+                              = $positionTitle
+                              = $location
+                              = $url
+                              = '' ;
+        }
+        else {
             $primaryContactId    = $jobModel->getPrimaryContactId() ;
+            $contactController   = new ContactController( 'read' ) ;
+            if ( $primaryContactId >= 1 ) {
+                $contactModel    = $contactController->get( $primaryContactId ) ;
+                $contactName     = $contactModel->getContactName() ;
+            }
+            else {
+                $contactName     = '---' ;
+            }
             $companyId           = $jobModel->getCompanyId() ;
+            $companyController   = new CompanyController( 'read' ) ;
+            if ( $companyId >= 1 ) {
+                $companyModel    = $companyController->get( $companyId ) ;
+                $companyName     = $companyModel->getCompanyName() ;
+            }
+            else {
+                $companyName     = '---' ;
+            }
             $applicationStatusId = $jobModel->getApplicationStatusId() ;
+            $applicationStatusController = new ApplicationStatusController( 'read' ) ;
+            if ( $applicationStatusId >= 1 ) {
+                $applicationStatusModel = $applicationStatusController->get( $applicationStatusId ) ;
+                $applicationStatusValue = $applicationStatusModel->getStatusValue() ;
+                $applicationStatusStyle = $applicationStatusModel->getStyle() ;
+            }
+            else {
+                $applicationStatusValue = '---' ;
+                $applicationStatusStyle = '' ;
+            }
             $lastStatusChange    = $jobModel->getLastStatusChange() ;
             $urgency             = $jobModel->getUrgency() ;
             $created             = $jobModel->getCreated() ;
@@ -89,53 +166,98 @@ HTML;
             $positionTitle       = $jobModel->getPositionTitle() ;
             $location            = $jobModel->getLocation() ;
             $url                 = $jobModel->getUrl() ;
-            if ( $primaryContactId >= 1 ) {
-                $contactController = new ContactController( 'read' ) ;
-                $contactModel      = $contactController->get( $primaryContactId ) ;
-                $contactName       = $contactModel->getContactName() ;
-            }
-            if ( $companyId >= 1 ) {
-                $companyController   = new CompanyController( 'read' ) ;
-                $companyModel        = $companyController->get( $companyId ) ;
-                $companyName         = $companyModel->getCompanyName() ;
-            }
-            else {
-                $companyName         = '' ;
-            }
-            if ( $applicationStatusId >= 1 ) {
-                $applicationStatusController = new ApplicationStatusController( 'read' ) ;
-                $applicationStatusModel      = $applicationStatusController->get( $applicationStatusId ) ;
-                $applicationStatusValue      = $applicationStatusModel->getStatusValue() ;
-                $applicationStatusStyle      = $applicationStatusModel->getStyle() ;
-            }
-            else {
-                $applicationStatusValue      = '' ;
-                $applicationStatusStyle      = '' ;
-            }
-            $body .= <<<HTML
-  <tr>
-    <td>
-        <a href="editJob.php?id=$id">Edit</a>
-      | <a href="deleteJob.php?id=$id">Delete</a>
-    </td>
-    <td>$urgency</td>
-    <td>$positionTitle</td>
-    <td>$location</td>
-    <td>$companyName</td>
-    <td>$contactName</td>
-    <td style="$applicationStatusStyle">$applicationStatusValue</td>
-    <td>$nextAction</td>
-    <td>$nextActionDue</td>
-    <td><a href="$url">$url</a></td>
-    <td>$created</td>
-    <td>$updated</td>
-  </tr>
-HTML;
         }
+        switch ( $displayMode ) {
+            case 'add' :
+                $this->getListValues( "ix$id", $contactId, $companyId, $applicationStatusId ) ;
+                return <<<HTML
+      <td><button type="button" id="SaveButtonix$id" onclick="saveAddJob( '$id' )">Save</button>
+          <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
+          $errorMessage
+      </td>
+      <td><input type="text" id="urgencyix$id" value="$urgency" /></td>
+      <td><input type="text" id="positionTitleix$id" value="$positionTitle" /></td>
+      <td><input type="text" id="locationix$id" value="$location" /></td>
+      <td>{$this->_companyList}</td>
+      <td>{$this->_contactList}</td>
+      <td>{$this->_applicationStatusList}</td>
+      <td><input type="text" id="nextActionix$id" value="$nextAction" /></td>
+      <td><input type="text" id="nextActionDueix$id" value="$nextActionDue" /></td>
+      <td><input type="text" id="urlix$id" value="$url" /></td>
+      <td><input type="text" id="lastStatusChangeix$id" value="$lastStatusChange" /></td>
+      <td>$created</td>
+      <td>$updated</td>
 
-        $body .= '</table>' ;
+HTML;
+                break ;
+            case 'update' :
+                $this->getListValues( $id, $contactId, $companyId, $applicationStatusId ) ;
+                return <<<HTML
+      <td><button type="button" id="SaveButton$id" onclick="saveUpdateJob( '$id' )">Save</button>
+          <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>
+          $errorMessage
+      </td>
+      <td><input type="text" id="urgency$id" value="$urgency" /></td>
+      <td><input type="text" id="positionTitle$id" value="$positionTitle" /></td>
+      <td><input type="text" id="location$id" value="$location" /></td>
+      <td>{$this->_companyList}</td>
+      <td>{$this->_contactList}</td>
+      <td>{$this->_applicationStatusList}</td>
+      <td><input type="text" id="nextAction$id" value="$nextAction" /></td>
+      <td><input type="text" id="nextActionDue$id" value="$nextActionDue" /></td>
+      <td><input type="text" id="url$id" value="$url" /></td>
+      <td><input type="text" id="lastStatusChange$id" value="$lastStatusChange" /></td>
+      <td>$created</td>
+      <td>$updated</td>
+                
+HTML;
+                break ;
+            case 'delete' :
+                return <<<HTML
+      <td><button type="button" id="DeleteButton$id" onclick="doDeleteJob( '$id' )">Confirm Delete</button>
+          <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>
+          $errorMessage
+      </td>
+      <td>$urgency</td>
+      <td>$positionTitle</td>
+      <td>$location</td>
+      <td>$companyName</td>
+      <td>$contactName</td>
+      <td style="$applicationStatusStyle">$applicationStatusValue</td>
+      <td>$nextAction</td>
+      <td>$nextActionDue</td>
+      <td>$url</td>
+      <td>$lastStatusChange</td>
+      <td>$created</td>
+      <td>$updated</td>
 
-        return $body ;
+HTML;
+                break ;
+            case 'list' :
+                return <<<HTML
+      <td><button type="button" id="UpdateButton$id" onclick="updateJob( '$id' )">Update</button>
+          <button type="button" id="DeleteButton$id" onclick="deleteJob( '$id' )">Delete</button>
+          $errorMessage
+      </td>
+      <td>$urgency</td>
+      <td>$positionTitle</td>
+      <td>$location</td>
+      <td>$companyName</td>
+      <td>$contactName</td>
+      <td style="$applicationStatusStyle">$applicationStatusValue</td>
+      <td>$nextAction</td>
+      <td>$nextActionDue</td>
+      <td>$url</td>
+      <td>$lastStatusChange</td>
+      <td>$created</td>
+      <td>$updated</td>
+
+HTML;
+                break ;
+            default :
+                throw new ViewException( 'Undefined display mode' ) ;
+        }
+        // Should never ever get here.
     }
 
     /**

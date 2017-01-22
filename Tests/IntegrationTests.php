@@ -3,7 +3,7 @@
 /**
  * phpjobseeker
  *
- * Copyright (C) 2009, 2015 Kevin Benton - kbenton at bentonfam dot org
+ * Copyright (C) 2009, 2015, 2017 Kevin Benton - kbenton at bentonfam dot org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
        $this->webDriver->quit() ;
     }
 
-    public function doWaitFor( $target, $timeout = 60, $interval = 250 ) {
+    public function doWaitFor( $target, $timeout = 10, $interval = 250 ) {
         $lookFor = $target ;
         $ret = 0 ;
         $this->webDriver->wait($timeout, $interval)->until( function ( $webDriver ) use ( &$lookFor, &$ret ) {
@@ -817,9 +817,10 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//th[7]', 'Status' ) ;
         $this->checkXpathText( '//th[8]', 'Next Action' ) ;
         $this->checkXpathText( '//th[9]', 'Next Action Due' ) ;
-        $this->checkXpathText( '//th[10]', 'Link' ) ;
-        $this->checkXpathText( '//th[11]', 'Created' ) ;
-        $this->checkXpathText( '//th[12]', 'Updated' ) ;
+        $this->checkXpathText( '//th[10]', 'URL' ) ;
+        $this->checkXpathText( '//th[11]', 'Last Status Change' ) ;
+        $this->checkXpathText( '//th[12]', 'Created' ) ;
+        $this->checkXpathText( '//th[13]', 'Updated' ) ;
     }
 
     public function checkJR() {
@@ -843,6 +844,14 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         if ( $this->_testMode <= 1 ) {
             return ;
         }
+        // add-save #1
+        // add-save #2
+        // add-cancel #3
+        // update-cancel #2
+        // delete-cancel #2
+        // update-save #2
+        // delete-confirm #2
+        // verify contents #2
 
         // @todo Implement Tests/IntegrationTests.php:doTestJobs()
         sleep( 15 ) ;
