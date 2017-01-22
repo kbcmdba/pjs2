@@ -36,7 +36,7 @@ class JobListView extends ListViewBase {
     /** @var string */
     private $_contactList ;
     /** @var string */
-    private $_companyNames ;
+    private $_companyList ;
     /** @var string */
     private $_applicationStatusList ;
 
@@ -64,7 +64,7 @@ class JobListView extends ListViewBase {
     private function _getHtmlView() {
         $body = <<<'HTML'
 <button id="AddButton" onclick="addJob()">Add Job</button><br />
-<table border="1" cellspacing="0" cellpadding="2">
+<table border="1" cellspacing="0" cellpadding="2" id="jobs">
   <caption>Current Jobs</caption>
   <thead>
     <tr>
@@ -98,12 +98,12 @@ HTML;
     }
 
     private function getListValues( $id, $contactId, $companyId, $applicationStatusId ) {
-        $contactListView              = new ContactListView( 'html' ) ;
-        $this->_contactList           = $contactListView->getContactModels( "$id", $contactId ) ;
-        $companyListView              = new CompanyListView( 'html' ) ;
-        $this->_companyNames          = $companyListView->getCompanyList( "$id", $companyId ) ;
-        $applicationStatusListView    = new ApplicationStatusListView( 'html' ) ;
-        $this->_applicationStatusList = $applicationStatusListView->getApplicationStatusModels( "$id", $applicationStatusId ) ;
+        $contactListView              = new ContactListView( 'html', null ) ;
+        $this->_contactList           = $contactListView->getContactList( "$id", $contactId ) ;
+        $companyListView              = new CompanyListView( 'html', null ) ;
+        $this->_companyList           = $companyListView->getCompanyList( "$id", $companyId ) ;
+        $applicationStatusListView    = new ApplicationStatusListView( 'html', null ) ;
+        $this->_applicationStatusList = $applicationStatusListView->getApplicationStatusList( "$id", $applicationStatusId ) ;
     }
 
     /**
@@ -169,7 +169,7 @@ HTML;
         }
         switch ( $displayMode ) {
             case 'add' :
-                $this->getListValues( "ix$id", $contactId, $companyId, $applicationStatusId ) ;
+                $this->getListValues( "ix$id", $primaryContactId, $companyId, $applicationStatusId ) ;
                 return <<<HTML
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddJob( '$id' )">Save</button>
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>

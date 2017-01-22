@@ -190,4 +190,26 @@ RETVAL;
         $this->_applicationStatusModels = $applicationStatusModels ;
     }
 
+    /**
+     * Get application status SELECT list
+     *
+     * @param string $id Field ID
+     * @param integer $value The selected value
+     * @return string
+     */
+    public function getApplicationStatusList( $id, $value ) {
+        $retVal = "<select id=\"applicationStatusId$id\" >\n  <option value=\"\">---</option>" ;
+        $applicationStatusController = new ApplicationStatusController() ;
+        $applicationStatuses = $applicationStatusController->getAll() ;
+        foreach ( $applicationStatuses as $applicationStatus ) {
+            $selected = ( $applicationStatus->getId() === $value ) ? "selected=\"selected\"" : "" ;
+            $asValue  = $applicationStatus->getStatusValue() ;
+            $asStyle  = $applicationStatus->getStyle() ;
+            $asId     = $applicationStatus->getId() ;
+            $retVal   .= "  <option value=\"$asId\" style=\"$asStyle\" $selected>$asValue</option>\n" ;
+        }
+        $retVal .= "</select>\n" ;
+        return $retVal ;
+    }
+
 }

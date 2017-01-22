@@ -215,4 +215,25 @@ RETVAL;
         $this->contactModels = $contactModels ;
     }
 
+    /**
+     * Get contact SELECT list
+     *
+     * @param string $id Field ID
+     * @param integer $value The selected value
+     * @return string
+     */
+    public function getContactList( $id, $value ) {
+        $retVal = "<select id=\"contactId$id\" >\n  <option value=\"\">---</option>" ;
+        $contactController = new ContactController() ;
+        $contacts = $contactController->getAll() ;
+        foreach ( $contacts as $contact ) {
+            $selected = ( $contact->getId() === $value ) ? "selected=\"selected\"" : "" ;
+            $cname    = $contact->getContactName() ;
+            $cid      = $contact->getId() ;
+            $retVal   .= "  <option value=\"$cid\" $selected>$cname</option>\n" ;
+        }
+        $retVal .= "</select>\n" ;
+        return $retVal ;
+    }
+
 }
