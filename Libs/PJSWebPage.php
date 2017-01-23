@@ -47,13 +47,6 @@ class PJSWebPage extends WebPage {
         $header = <<<HTML
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
-  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-  <script>
-    $( function() {
-      $( ".datepicker" ).datepicker( { dateFormat: 'yy-mm-dd' } );
-    } ) ;
-  </script>
   <script src="js/common.js"></script>
   <script src="js/ajaxApplicationStatus.js"></script>
   <script src="js/ajaxCompany.js"></script>
@@ -61,6 +54,13 @@ class PJSWebPage extends WebPage {
   <script src="js/ajaxJob.js"></script>
   <script src="js/ajaxKeyword.js"></script>
   <script src="js/oldValidation.js"></script>
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+  <script>
+    $( function() {
+      $( ".datepicker" ).datepicker( { dateFormat: 'yy-mm-dd' } );
+    } ) ;
+  </script>
 
 HTML;
         $this->setHead( $header ) ;
