@@ -63,19 +63,19 @@ try {
     }
     $newJobModel = $jobController->get( $jobId ) ;
     $jobRowView = new JobListView( 'html', null ) ;
-    $rows = $jobRowView->displayJobRow( $newJobModel, 'list', $rowStyle ) ;
+    $row = $jobRowView->displayJobRow( $newJobModel, 'list', $rowStyle ) ;
 }
 catch ( ControllerException $e ) {
     $jobRowView = new JobListView( 'html', null ) ;
     $jobModel->setId( $rowId ) ;
-    $rows = $jobRowView->displayJobRow( $jobModel
-                                      , 'add'
-                                      , $rowStyle
-                                      , 'Add Job record failed. '
-                                      . $e->getMessage()
-                                      ) ;
+    $row = $jobRowView->displayJobRow( $jobModel
+                                     , 'add'
+                                     , $rowStyle
+                                     , 'Add Job record failed. '
+                                     . $e->getMessage()
+                                     ) ;
     $result = 'FAILED' ;
 }
 
-$result = array( 'result' => $result, 'rows' => $rows, 'newId' => $jobId ) ;
+$result = array( 'result' => $result, 'row' => $row, 'newId' => $jobId ) ;
 echo json_encode( $result ) . PHP_EOL ;
