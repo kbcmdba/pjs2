@@ -844,9 +844,22 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         if ( $this->_testMode <= 1 ) {
             return ;
         }
-        // add-save #1
+        $this->doTypeAt( WebDriverBy::id( 'urgencyix1' ), 'Low' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'positionTitleix1' ), 'Janitor' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'locationix1' ), 'Hershey, PA' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'companyIdix1' ), 'Company 2c' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'contactIdix1' ), 'John Doe' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'applicationStatusIdix1' ), 'FOUND' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'nextActionix1' ), 'Do something' ) ;
+        // @todo Compute dates for these records
+        $this->doTypeAt( WebDriverBy::id( 'nextActionDueix1' ), '2017-08-01' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'urlix1' ), 'http://www.testme1.com/' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'lastStatusChangeix1' ), '2017-08-01' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
         // add-save #2
-        // add-cancel #3
+        // add-cancel
         // update-cancel #2
         // delete-cancel #2
         // update-save #2
