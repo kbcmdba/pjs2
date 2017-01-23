@@ -140,28 +140,28 @@ function ajaxValidateJob( primaryContactId
     }
     if  ( ( null !== lastStatusChange )
        && ( '' !== lastStatusChange )
-       // @todo validate lastStatusChange date
+       && ( ! isDateValid( lastStatusChange, true ) )
         ) {
         message += "Last Status Change must be valid.\n" ;
     }
-    if  ( ( null !== urgency )
-       && ( '' !== urgency )
+    if  ( ( null === urgency )
+       || ( '' === urgency )
         ) {
         message += "Urgency is required.\n" ;
     }
-    if  ( ( null !== nextAction )
-       && ( '' !== nextAction )
+    if  ( ( null === nextAction )
+       || ( '' === nextAction )
         ) {
         message += "Next action is required.\n" ;
     }
     if  ( ( null !== nextActionDue )
        && ( '' !== nextActionDue )
-       // @todo Validate nextActionDue date
+       && ( ! isDateValid( nextActionDue, false ) )
         ) {
         message += "nextActionDue must be valid.\n" ;
     }
-    if  ( ( null !== positionTitle )
-       && ( '' !== positionTitle )
+    if  ( ( null === positionTitle )
+       || ( '' === positionTitle )
         ) {
         message += "Position title is required.\n" ;
     }
@@ -198,7 +198,7 @@ function cancelUpdateJobRow( id ) {
  */
 function saveAddJob( id ) {
     var rowId               = 'ix' + id ;
-    var primaryContactId    = document.getElementById( "primaryContactId" + rowId ).value ;
+    var primaryContactId    = document.getElementById( "contactId" + rowId ).value ;
     var companyId           = document.getElementById( "companyId" + rowId ).value ;
     var applicationStatusId = document.getElementById( "applicationStatusId" + rowId ).value ;
     var lastStatusChange    = document.getElementById( "lastStatusChange" + rowId ).value ;
