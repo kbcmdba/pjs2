@@ -182,9 +182,9 @@ HTML;
       <td>{$this->_contactList}</td>
       <td>{$this->_applicationStatusList}</td>
       <td><input type="text" id="nextActionix$id" value="$nextAction" /></td>
-      <td><input type="text" id="nextActionDueix$id" value="$nextActionDue" /></td>
+      <td><input type="text" id="nextActionDueix$id" value="$nextActionDue" class="datepicker" /></td>
       <td><input type="text" id="urlix$id" value="$url" /></td>
-      <td><input type="text" id="lastStatusChangeix$id" value="$lastStatusChange" /></td>
+      <td><input type="text" id="lastStatusChangeix$id" value="$lastStatusChange" class="datepicker" /></td>
       <td>$created</td>
       <td>$updated</td>
 
@@ -204,9 +204,9 @@ HTML;
       <td>{$this->_contactList}</td>
       <td>{$this->_applicationStatusList}</td>
       <td><input type="text" id="nextAction$id" value="$nextAction" /></td>
-      <td><input type="text" id="nextActionDue$id" value="$nextActionDue" /></td>
+      <td><input type="text" id="nextActionDue$id" value="$nextActionDue" class="datepicker" /></td>
       <td><input type="text" id="url$id" value="$url" /></td>
-      <td><input type="text" id="lastStatusChange$id" value="$lastStatusChange" /></td>
+      <td><input type="text" id="lastStatusChange$id" value="$lastStatusChange" class="datepicker" /></td>
       <td>$created</td>
       <td>$updated</td>
                 
