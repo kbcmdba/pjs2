@@ -21,6 +21,95 @@
 
 var rowNumber = 1 ;
 
+/**
+ * Make sure that the passed value is valid for the proposed condition. If
+ * isRequired is true, dateString must not be blank or null as well as being
+ * a valid date string. If isRequired is false, dateString may be blank or null,
+ * but when it's not, it must be a valid date string. A valid date string looks
+ * like YYYY-MM-DD
+ *
+ * @param dateString {String}
+ * @param isRequired {Boolean}
+ * @returns {Boolean}
+ */
+function isDateValid( dateString, isRequired ) {
+    var regex = /^\d\d\d\d-\d\d-\d\d$/ ;
+    var retVal = true ;
+
+    if ( ! isRequired ) {
+        if ( ( null == dateString ) || ( '' == dateString ) ) {
+            return true ;
+        }
+    }
+    else {
+        retVal = ( ( null !== dateString ) && ( '' !== dateString ) ) ;
+    }
+    retVal = ( retVal && ( null !== dateString.match( regex ) ) ) ;
+    if ( retVal ) {
+        var daysInMonths = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ] ;
+        var yr = parseInt( dateString.substring( 0, 4 ) ) ;
+        var mo = parseInt( dateString.substring( 5, 7 ) ) ;
+        var da = parseInt( dateString.substring( 8, 10 ) ) ;
+        if ( ( yr % 4 ) && ( ( yr % 400 ) || ! ( yr % 100 ) ) ) {
+                daysInMonths[ 1 ]++ ; // Leap day!
+        }
+        if  ( ( yr < 2000 ) || ( yr > 2038 )
+           || ( mo < 1 ) || ( mo > 12 )
+           || ( da < 1 ) || ( da > daysInMonths[ mo ] )
+            ) {
+            retVal = false ;
+        }
+    }
+    return ( retVal ) ;
+} 
+
+/**
+ * Make sure that the passed value is valid for the proposed condition. If
+ * isRequired is true, dateTimeString must not be blank or null as well as being
+ * a valid date and time string. If isRequired is false, dateTimeString may be
+ * blank or null, but when it's not, it must be a valid date and time string. A
+ * valid date and time string looks like 'YYYY-MM-DD hh:mm:ss'
+ *
+ * @param dateTimeString {String}
+ * @param isRequired {Boolean}
+ * @returns {Boolean}
+ */
+function isDateTimeValid( dateTimeString, isRequired ) {
+    var regex = /^\d\d\d\d-\d\d-\d\d\s\d\d:\d\d:\d\d$/ ;
+    var retVal = true ;
+    if ( ! isRequired ) {
+        if ( ( null == dateString ) || ( '' == dateString ) ) {
+            return true ;
+        }
+    }
+    else {
+        retVal = ( ( null !== dateString ) && ( '' !== dateString ) ) ;
+    }
+    retVal = ( retVal && ( null !== dateString.match( regex ) ) ) ;
+    if ( retVal ) {
+        var daysInMonths = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ] ;
+        var yr = parseInt( dateString.substring( 0, 4 ) ) ;
+        var mo = parseInt( dateString.substring( 5, 7 ) ) ;
+        var da = parseInt( dateString.substring( 8, 10 ) ) ;
+        var hr = parseInt( dateTimeString.substring( 11, 13 ) ) ;
+        var mi = parseInt( dateTimeString.substring( 14, 16 ) ) ;
+        var se = parseInt( dateTimeString.substring( 17, 19 ) ) ;
+        if ( ( yr % 4 ) && ( ( yr % 400 ) || ! ( yr % 100 ) ) ) {
+            daysInMonths[ 1 ]++ ; // Leap day!
+        }
+        if  ( ( yr < 2000 ) || ( yr > 2038 )
+           || ( mo < 1 ) || ( mo > 12 )
+           || ( da < 1 ) || ( da > daysInMonths[ mo ] )
+           || ( hr < 0 ) || ( hr > 23 )
+           || ( mi < 0 ) || ( mi > 59 )
+           || ( se < 0 ) || ( se > 59 )
+            ) {
+            retVal = false ;
+        }
+    }
+    return ( retVal ) ;
+}
+
 function isNumeric( n ) {
     return ! isNaN( parseFloat( n ) ) && isFinite( n ) ;
 }
