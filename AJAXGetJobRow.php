@@ -37,13 +37,13 @@ $jobListView = new JobListView( 'html', null ) ;
 if ( 'add' == $mode ) {
     $jobModel = new JobModel() ;
     $jobModel->setId( $id ) ;
-    $htmlRows = $jobListView->displayJobRow( $jobModel, $mode, $rowStyle ) ;
+    $htmlRow = $jobListView->displayJobRow( $jobModel, $mode, $rowStyle ) ;
 }
 else {
     $jobController = new JobController() ;
     $jobModel = $jobController->get( $id ) ;
-    $htmlRows = $jobListView->displayJobRow( $jobModel, $mode, $rowStyle ) ;
+    $htmlRow  = $jobListView->displayJobRow( $jobModel, $mode, $rowStyle ) ;
 }
-$result = array( 'result' => $result, 'row' => $htmlRows ) ;
+$result = array( 'result' => $result, 'row' => $htmlRow ) ;
 echo json_encode( $result ) . PHP_EOL ;
 
