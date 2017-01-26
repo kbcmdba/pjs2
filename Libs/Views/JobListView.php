@@ -240,7 +240,7 @@ HTML;
       <td style="$applicationStatusStyle">$applicationStatusValue</td>
       <td>$nextAction</td>
       <td>$nextActionDue</td>
-      <td>$url</td>
+      <td><a href="$url">$url</a></td>
       <td>$lastStatusChange</td>
       <td>$created</td>
       <td>$updated</td>
@@ -261,7 +261,7 @@ HTML;
       <td style="$applicationStatusStyle">$applicationStatusValue</td>
       <td>$nextAction</td>
       <td>$nextActionDue</td>
-      <td>$url</td>
+      <td><a href="$url">$url</a></td>
       <td>$lastStatusChange</td>
       <td>$created</td>
       <td>$updated</td>

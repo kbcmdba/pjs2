@@ -823,11 +823,33 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//th[13]', 'Updated' ) ;
     }
 
-    public function checkJR() {
+    public function checkJR( $id
+                           , $prefix
+                           , $primaryContact
+                           , $company
+                           , $applicationStatus
+                           , $lastStatusChange
+                           , $urgency
+                           , $nextActionDue
+                           , $nextAction
+                           , $positionTitle
+                           , $location
+                           , $url ) {
         if ( $this->_testMode < 1 ) {
             return ;
         }
-        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+        $this->checkIdText( "UpdateButton$id", 'Update' ) ;
+        $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
+        $this->checkXpathText( "/$prefix/td[2]", $urgency ) ;
+        $this->checkXpathText( "/$prefix/td[3]", $positionTitle ) ;
+        $this->checkXpathText( "/$prefix/td[4]", $location ) ;
+        $this->checkXpathText( "/$prefix/td[5]", $company ) ;
+        $this->checkXpathText( "/$prefix/td[6]", $primaryContact ) ;
+        $this->checkXpathText( "/$prefix/td[7]", $applicationStatus ) ;
+        $this->checkXpathText( "/$prefix/td[8]", $nextAction ) ;
+        $this->checkXpathText( "/$prefix/td[9]", $nextActionDue ) ;
+        $this->checkXpathText( "/$prefix/td[10]", $url ) ;
+        $this->checkXpathText( "/$prefix/td[11]", $lastStatusChange ) ;
     }
 
     public function doTestJobs() {
@@ -858,6 +880,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->checkJR( 1, '', 'John Doe', 'Company 2c', 'FOUND', '2017-08-01', 'low', '2017-08-01', 'Do something', 'Janitor', 'Hershey, PA', 'http://www.testme1.com/' ) ;
         // add-save #2
         // add-cancel
         // update-cancel #2
