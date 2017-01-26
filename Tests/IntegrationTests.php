@@ -844,7 +844,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         if ( $this->_testMode <= 1 ) {
             return ;
         }
-        $this->doTypeAt( WebDriverBy::id( 'urgencyix1' ), 'Low' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'urgencyix1' ), 'low' ) ;
         $this->doTypeAt( WebDriverBy::id( 'positionTitleix1' ), 'Janitor' ) ;
         $this->doTypeAt( WebDriverBy::id( 'locationix1' ), 'Hershey, PA' ) ;
         $this->doSelectOption( WebDriverBy::id( 'companyIdix1' ), 'Company 2c' ) ;

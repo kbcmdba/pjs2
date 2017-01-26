@@ -54,7 +54,6 @@ class JobModel extends ModelBase {
      */
     public function validateForAdd() {
         return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'applicationStatusId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'urgency' ) ) )

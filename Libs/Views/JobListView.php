@@ -39,6 +39,8 @@ class JobListView extends ListViewBase {
     private $_companyList ;
     /** @var string */
     private $_applicationStatusList ;
+    /** @var string */
+    private $_urgencyList ;
 
     /**
      * Class constructor
@@ -97,13 +99,25 @@ HTML;
         return $body ;
     }
 
-    private function getListValues( $id, $contactId, $companyId, $applicationStatusId ) {
+    private function getListValues( $id, $contactId, $companyId, $applicationStatusId, $urgency ) {
         $contactListView              = new ContactListView( 'html', null ) ;
         $this->_contactList           = $contactListView->getContactList( "$id", $contactId ) ;
         $companyListView              = new CompanyListView( 'html', null ) ;
         $this->_companyList           = $companyListView->getCompanyList( "$id", $companyId ) ;
         $applicationStatusListView    = new ApplicationStatusListView( 'html', null ) ;
         $this->_applicationStatusList = $applicationStatusListView->getApplicationStatusList( "$id", $applicationStatusId ) ;
+        $this->_urgencyList           = "      <select id=\"urgency$id\">\n" ;
+        foreach ( array( '---', 'high', 'medium', 'low' ) as $urgency_value ) {
+            $selected = '' ;
+            if ( $urgency_value === $urgency ) {
+                $selected = 'selected="selected"' ;
+            }
+            if ( ( '---' === $urgency_value ) && ( ( !isset( $urgency ) ) || ( '' === $urgency ) ) ) {
+                $selected = 'selected="selected"' ;
+            }
+            $this->_urgencyList       .= "       <option value=\"$urgency_value\" $selected>$urgency_value</option>\n" ; 
+        }
+        $this->_urgencyList           .= "     </select>\n" ;
     }
 
     /**
@@ -169,13 +183,13 @@ HTML;
         }
         switch ( $displayMode ) {
             case 'add' :
-                $this->getListValues( "ix$id", $primaryContactId, $companyId, $applicationStatusId ) ;
+                $this->getListValues( "ix$id", $primaryContactId, $companyId, $applicationStatusId, $urgency ) ;
                 return <<<HTML
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddJob( '$id' )">Save</button>
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
           $errorMessage
       </td>
-      <td><input type="text" id="urgencyix$id" value="$urgency" /></td>
+      <td>{$this->_urgencyList}</td>
       <td><input type="text" id="positionTitleix$id" value="$positionTitle" /></td>
       <td><input type="text" id="locationix$id" value="$location" /></td>
       <td>{$this->_companyList}</td>
@@ -191,13 +205,13 @@ HTML;
 HTML;
                 break ;
             case 'update' :
-                $this->getListValues( $id, $contactId, $companyId, $applicationStatusId ) ;
+                $this->getListValues( $id, $contactId, $companyId, $applicationStatusId, $urgency ) ;
                 return <<<HTML
       <td><button type="button" id="SaveButton$id" onclick="saveUpdateJob( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>
           $errorMessage
       </td>
-      <td><input type="text" id="urgency$id" value="$urgency" /></td>
+      <td>{$this->_urgencyList}</td>
       <td><input type="text" id="positionTitle$id" value="$positionTitle" /></td>
       <td><input type="text" id="location$id" value="$location" /></td>
       <td>{$this->_companyList}</td>

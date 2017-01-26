@@ -63,14 +63,13 @@ try {
     }
     $newJobModel = $jobController->get( $jobId ) ;
     $jobRowView = new JobListView( 'html', null ) ;
-    $row = $jobRowView->displayJobRow( $newJobModel, 'list', $rowStyle ) ;
+    $row = $jobRowView->displayJobRow( $newJobModel, 'list' ) ;
 }
 catch ( ControllerException $e ) {
     $jobRowView = new JobListView( 'html', null ) ;
     $jobModel->setId( $rowId ) ;
     $row = $jobRowView->displayJobRow( $jobModel
                                      , 'add'
-                                     , $rowStyle
                                      , 'Add Job record failed. '
                                      . $e->getMessage()
                                      ) ;
