@@ -847,9 +847,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( "/$prefix/td[6]", $primaryContact ) ;
         $this->checkXpathText( "/$prefix/td[7]", $applicationStatus ) ;
         $this->checkXpathText( "/$prefix/td[8]", $nextAction ) ;
-        $this->checkXpathText( "/$prefix/td[9]", $nextActionDue ) ;
+        $this->checkXpathText( "/$prefix/td[9]", $nextActionDue . ' 00:00:00' ) ;
         $this->checkXpathText( "/$prefix/td[10]", $url ) ;
-        $this->checkXpathText( "/$prefix/td[11]", $lastStatusChange ) ;
+        $this->checkXpathText( "/$prefix/td[11]", $lastStatusChange . ' 00:00:00' ) ;
     }
 
     public function doTestJobs() {
@@ -881,8 +881,30 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
         $this->checkJR( 1, '', 'John Doe', 'Company 2c', 'FOUND', '2017-08-01', 'low', '2017-08-01', 'Do something', 'Janitor', 'Hershey, PA', 'http://www.testme1.com/' ) ;
-        // add-save #2
-        // add-cancel
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix2' ) ) ;
+        $this->doSelectOption( WebDriverBy::id( 'urgencyix2' ), 'low' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'positionTitleix2' ), 'Floor Sweeper' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'locationix2' ), 'Hershey, PA' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'companyIdix2' ), 'Company 2c' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'contactIdix2' ), 'John Doe' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'applicationStatusIdix2' ), 'FOUND' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'nextActionix2' ), 'Do something else' ) ;
+        // @todo Compute dates for these records
+        $this->doTypeAt( WebDriverBy::id( 'nextActionDueix2' ), '2017-08-02' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'urlix2' ), 'http://www.testme2.com/' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'lastStatusChangeix2' ), '2017-08-01' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix3' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix3' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButtonix3' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkNotPresent( WebDriverBy::id( 'SaveButtonix3' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButtonix3' ) ) ;
         // update-cancel #2
         // delete-cancel #2
         // update-save #2
