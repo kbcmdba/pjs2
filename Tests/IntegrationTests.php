@@ -60,7 +60,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     public function setUp() {
         $capabilities = DesiredCapabilities::firefox() ;
         $this->webDriver = RemoteWebDriver::create( 'http://localhost:4444/wd/hub', $capabilities ) ;
-//        $this->webDriver->manage()->timeouts()->implicitlyWait( 60 ) ;
     }
 
     public function tearDown() {
@@ -644,6 +643,28 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkC1R( 2, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
                        , 'Company 2c', 'c/o Me 3', 'City 2c', '32', '22222-222c'
                        , 'None', '2c Any Street', '222-222-222c', 'http://www3.testme2.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
+        $this->checkIdText( 'SaveButtonix1', 'Save' ) ;
+        $this->checkIdText( 'CancelButtonix1', 'Cancel' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyNameix1' ), 'Company 3' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress1ix1' ), '3 Any Street' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyCityix1' ), 'City 3' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyStateix1' ), 'S3' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyZipix1' ), '33333-3333' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyAddress2ix1' ), '' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyPhoneix1' ), '333-333-3333' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'companyUrlix1' ), 'http://testme3.com/' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1R( 2, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
+                       , 'Company 2c', 'c/o Me 3', 'City 2c', '32', '22222-222c'
+                       , 'None', '2c Any Street', '222-222-222c', 'http://www3.testme2.com/' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkC1R( 3, "/tr[@id='ux3-1']", "/tr[@id='ux3-2']"
+                       , 'Company 3', '3 Any Street', 'City 3', 'S3', '33333-3333'
+                       , 'None', '', '333-333-3333', 'http://testme3.com/' ) ;
     }
 
     public function checkC2HR() {
@@ -800,7 +821,20 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkC2R( 1, '', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
         $this->checkNotPresent( WebDriverBy::id( 'UpdateButton2' ) ) ;
         $this->checkNotPresent( WebDriverBy::id( 'DeleteButton2' ) ) ;
-    }
+        $this->doLoadFromHeader( 'Contacts' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkC2HR() ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'nameix1' ), 'Jane Smith' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'emailix1' ), 'jane.smith@example3.com' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'phoneix1' ), '333-333-3333' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'alternatePhoneix1' ), '333-333-1234' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
+        $this->checkC2R( 3, '', '---', 'Jane Smith', 'jane.smith@example3.com', '333-333-3333', '333-333-1234' ) ;
+        $this->checkC2R( 1, '/tr[2]', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
+        }
 
     public function checkJHR() {
         if ( $this->_testMode < 0 ) {
@@ -905,8 +939,19 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkHeaderLoads() ;
         $this->checkNotPresent( WebDriverBy::id( 'SaveButtonix3' ) ) ;
         $this->checkNotPresent( WebDriverBy::id( 'CancelButtonix3' ) ) ;
-        // update-cancel #2
-        // delete-cancel #2
+        $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkNotPresent( WebDriverBy::id( 'SaveButton2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton2' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButton2' ) ) ;
         // update-save #2
         // delete-confirm #2
         // verify contents #2

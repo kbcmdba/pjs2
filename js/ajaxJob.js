@@ -255,16 +255,16 @@ function saveAddJob( id ) {
  */
 function saveUpdateJob( id ) {
     var rowId               = 'ux' + id ;
-    var primaryContactId    = document.getElementById( "primaryContactId" + rowId ).value ;
-    var companyId           = document.getElementById( "companyId" + rowId ).value ;
-    var applicationStatusId = document.getElementById( "applicationStatusId" + rowId ).value ;
-    var lastStatusChange    = document.getElementById( "lastStatusChange" + rowId ).value ;
-    var urgency             = document.getElementById( "urgency" + rowId ).value ;
-    var nextActionDue       = document.getElementById( "nextActionDue" + rowId ).value ;
-    var nextAction          = document.getElementById( "nextAction" + rowId ).value ;
-    var positionTitle       = document.getElementById( "positionTitle" + rowId ).value ;
-    var location            = document.getElementById( "location" + rowId ).value ;
-    var url                 = document.getElementById( "url" + rowId ).value ;
+    var primaryContactId    = document.getElementById( "contactId" + id ).value ;
+    var companyId           = document.getElementById( "companyId" + id ).value ;
+    var applicationStatusId = document.getElementById( "applicationStatusId" + id ).value ;
+    var lastStatusChange    = document.getElementById( "lastStatusChange" + id ).value ;
+    var urgency             = document.getElementById( "urgency" + id ).value ;
+    var nextActionDue       = document.getElementById( "nextActionDue" + id ).value ;
+    var nextAction          = document.getElementById( "nextAction" + id ).value ;
+    var positionTitle       = document.getElementById( "positionTitle" + id ).value ;
+    var location            = document.getElementById( "location" + id ).value ;
+    var url                 = document.getElementById( "url" + id ).value ;
     var msg                 = ajaxValidateJob( primaryContactId
                                              , companyId
                                              , applicationStatusId
@@ -282,13 +282,13 @@ function saveUpdateJob( id ) {
     }
     var uri  = "AJAXUpdateJob.php" ;
     var data = "id=" + id
-             + "&primaryContactId=" + encodeURIComponent( primaryContactId )
+             + "&contactId=" + encodeURIComponent( primaryContactId )
              + "&companyId=" + encodeURIComponent( companyId )
              + "&applicationStatusId=" + encodeURIComponent( applicationStatusId )
              + "&lastStatusChange=" + encodeURIComponent( lastStatusChange )
              + "&urgency=" + encodeURIComponent( urgency )
-             + "&nextActionDue" + encodeURIComponent( nextActionDue )
-             + "&nextAction" + encodeURIComponent( nextAction )
+             + "&nextActionDue=" + encodeURIComponent( nextActionDue )
+             + "&nextAction=" + encodeURIComponent( nextAction )
              + "&positionTitle=" + encodeURIComponent( positionTitle )
              + "&location=" + encodeURIComponent( location )
              + "&url=" + encodeURIComponent( url )
