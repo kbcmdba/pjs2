@@ -11,17 +11,17 @@ $id     = Tools::param( 'id' ) ;
 $result = 'OK' ;
 $row    = "" ;
 try {
-    $contactModel = new ContactModel() ;
-    $contactModel->setId( $id ) ;
-    $contactController = new ContactController() ;
-    $contactController->delete( $contactModel ) ;
+    $jobModel = new JobModel() ;
+    $jobModel->setId( $id ) ;
+    $jobController = new JobController() ;
+    $jobController->delete( $jobModel ) ;
 }
 catch ( ControllerException $e ) {
     $result = "Delete failed. " . $e->getMessage() ;
-    $contactController = new ContactController() ;
-    $contactModel = $contactController->get( $id ) ;
-    $contactListView = new ContactListView() ;
-    $row = $contactListView->displayContactRow( $contactModel, 'list', 'add', $result ) ;
+    $jobController = new JobController() ;
+    $jobModel = $jobController->get( $id ) ;
+    $jobListView = new JobListView() ;
+    $row = $jobListView->displayJobRow( $jobModel, 'list', 'add', $result ) ;
 }
 
 echo json_encode( array( 'result' => $result, 'row' => $row ) ) . PHP_EOL ;
