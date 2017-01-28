@@ -64,6 +64,9 @@ class JobListView extends ListViewBase {
      * @return string
      */
     private function _getHtmlView() {
+        // @todo Display jobs in two rows
+        // Urgency Location Title NextAction Url
+        // Status Company Contact NADue LastStatusChange
         $body = <<<'HTML'
 <button id="AddButton" onclick="addJob()">Add Job</button><br />
 <table border="1" cellspacing="0" cellpadding="2" id="jobs">
@@ -99,7 +102,7 @@ HTML;
         return $body ;
     }
 
-    private function getListValues( $id, $contactId, $companyId, $applicationStatusId, $urgency ) {
+    private function _getListValues( $id, $contactId, $companyId, $applicationStatusId, $urgency ) {
         $contactListView              = new ContactListView( 'html', null ) ;
         $this->_contactList           = $contactListView->getContactList( "$id", $contactId ) ;
         $companyListView              = new CompanyListView( 'html', null ) ;
@@ -183,7 +186,7 @@ HTML;
         }
         switch ( $displayMode ) {
             case 'add' :
-                $this->getListValues( "ix$id", $primaryContactId, $companyId, $applicationStatusId, $urgency ) ;
+                $this->_getListValues( "ix$id", $primaryContactId, $companyId, $applicationStatusId, $urgency ) ;
                 return <<<HTML
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddJob( '$id' )">Save</button>
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
@@ -205,7 +208,7 @@ HTML;
 HTML;
                 break ;
             case 'update' :
-                $this->getListValues( $id, $contactId, $companyId, $applicationStatusId, $urgency ) ;
+                $this->_getListValues( $id, $contactId, $companyId, $applicationStatusId, $urgency ) ;
                 return <<<HTML
       <td><button type="button" id="SaveButton$id" onclick="saveUpdateJob( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>
