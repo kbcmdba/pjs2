@@ -974,14 +974,23 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
         $this->doLoadFromHeader( 'Jobs' ) ;
         $this->checkHeaderLoads() ;
+        $this->checkJHR() ;
         $this->checkJR( 2, '', 'Jane Smith', 'Company 3', 'FOUND', '2017-08-02', 'low', '2017-08-03', 'Do something else entirely', 'Floor Sweeper 2', 'Hershey, PX', 'http://www.testme3.com/' ) ;
         $this->checkJR( 1, '/tr[2]', 'John Doe', 'Company 2c', 'FOUND', '2017-08-01', 'low', '2017-08-01', 'Do something', 'Janitor', 'Hershey, PA', 'http://www.testme1.com/' ) ;
-        // delete-confirm #2
-        // verify contents #2
-
-        // @todo Implement Tests/IntegrationTests.php:doTestJobs()
-        sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkNotPresent( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->checkJR( 1, '', 'John Doe', 'Company 2c', 'FOUND', '2017-08-01', 'low', '2017-08-01', 'Do something', 'Janitor', 'Hershey, PA', 'http://www.testme1.com/' ) ;
+        $this->doLoadFromHeader( 'Jobs' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkJHR() ;
+        $this->checkJR( 1, '', 'John Doe', 'Company 2c', 'FOUND', '2017-08-01', 'low', '2017-08-01', 'Do something', 'Janitor', 'Hershey, PA', 'http://www.testme1.com/' ) ;
     }
 
     public function checkKHR() {
