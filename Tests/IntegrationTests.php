@@ -834,7 +834,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
         $this->checkC2R( 3, '', '---', 'Jane Smith', 'jane.smith@example3.com', '333-333-3333', '333-333-1234' ) ;
         $this->checkC2R( 1, '/tr[2]', '---', 'John Doe', 'john.doe@example1.com', '999-555-1212', '999-555-1234' ) ;
-        }
+    }
 
     public function checkJHR() {
         if ( $this->_testMode < 0 ) {
@@ -932,6 +932,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'SaveButtonix2' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->checkJR( 2, '', 'John Doe', 'Company 2c', 'FOUND', '2017-08-01', 'low', '2017-08-02', 'Do something else', 'Floor Sweeper', 'Hershey, PA', 'http://www.testme2.com/' ) ;
+        $this->checkJR( 1, '/tr[3]', 'John Doe', 'Company 2c', 'FOUND', '2017-08-01', 'low', '2017-08-01', 'Do something', 'Janitor', 'Hershey, PA', 'http://www.testme1.com/' ) ;
         $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'SaveButtonix3' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'CancelButtonix3' ) ) ;
@@ -951,8 +953,29 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
         $driver->findElement( WebDriverBy::id( 'CancelButton2' ) )->click() ;
         $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
         $this->checkNotPresent( WebDriverBy::id( 'CancelButton2' ) ) ;
-        // update-save #2
+        $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
+        $this->doSelectOption( WebDriverBy::id( 'urgency2' ), 'low' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'positionTitle2' ), 'Floor Sweeper 2' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'location2' ), 'Hershey, PX' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'companyId2' ), 'Company 3' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'contactId2' ), 'Jane Smith' ) ;
+        $this->doSelectOption( WebDriverBy::id( 'applicationStatusId2' ), 'FOUND' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'nextAction2' ), 'Do something else entirely' ) ;
+        // @todo Compute dates for these records
+        $this->doTypeAt( WebDriverBy::id( 'nextActionDue2' ), '2017-08-03' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'url2' ), 'http://www.testme3.com/' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'lastStatusChange2' ), '2017-08-02' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doLoadFromHeader( 'Jobs' ) ;
+        $this->checkHeaderLoads() ;
+        $this->checkJR( 2, '', 'Jane Smith', 'Company 3', 'FOUND', '2017-08-02', 'low', '2017-08-03', 'Do something else entirely', 'Floor Sweeper 2', 'Hershey, PX', 'http://www.testme3.com/' ) ;
+        $this->checkJR( 1, '/tr[2]', 'John Doe', 'Company 2c', 'FOUND', '2017-08-01', 'low', '2017-08-01', 'Do something', 'Janitor', 'Hershey, PA', 'http://www.testme1.com/' ) ;
         // delete-confirm #2
         // verify contents #2
 
