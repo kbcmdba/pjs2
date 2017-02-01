@@ -65,18 +65,22 @@ class SearchListView extends ListViewBase {
     <th>Engine</th>
     <th>Search Name</th>
     <th>Link</th>
+    <th>Feed</th>
+    <th>Feed Last Checked</th>
     <th>Created</th>
     <th>Updated</th>
   </tr>
 HTML;
         foreach ( $this->getSearchModels() as $search ) {
-            $id          = $search->getId() ;
-            $engineName  = htmlspecialchars( $search->getEngineName() ) ;
-            $searchName  = htmlspecialchars( $search->getSearchName() ) ;
-            $url         = htmlspecialchars( $search->getUrl() ) ;
-            $created     = $search->getCreated() ;
-            $updated     = $search->getUpdated() ;
-            $body       .= <<<HTML
+            $id             = $search->getId() ;
+            $engineName     = htmlspecialchars( $search->getEngineName() ) ;
+            $searchName     = htmlspecialchars( $search->getSearchName() ) ;
+            $url            = htmlspecialchars( $search->getUrl() ) ;
+            $rssFeedUrl     = htmlspecialchars( $search->getRssFeedUrl() ) ;
+            $rssLastChecked = htmlspecialchars( $search->getRssLastChecked() ) ;
+            $created        = $search->getCreated() ;
+            $updated        = $search->getUpdated() ;
+            $body          .= <<<HTML
   <tr>
     <td>
         <a href="editSearch.php?id=$id">Edit</a>
@@ -84,7 +88,9 @@ HTML;
     </td>
     <td>$engineName</td>
     <td>$searchName</td>
-    <td><a href="$url">$url</a></td></td>
+    <td><a href="$url">$url</a></td>
+    <td><a href="$rssFeedUrl">$rssFeedUrl</a></td>
+    <td>$rssLastChecked</td>
     <td>$created</td>
     <td>$updated</td>
   </tr>

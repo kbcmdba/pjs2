@@ -42,13 +42,15 @@ class SearchController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS search
      (
-       id         INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , engineName VARCHAR(255) NOT NULL DEFAULT ''
-     , searchName VARCHAR(255) NOT NULL DEFAULT ''
-     , url        VARCHAR(4096) NOT NULL DEFAULT ''
-     , created    TIMESTAMP NOT NULL DEFAULT 0
-     , updated    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                  ON UPDATE CURRENT_TIMESTAMP
+       id             INT UNSIGNED NOT NULL AUTO_INCREMENT
+     , engineName     VARCHAR(255) NOT NULL DEFAULT ''
+     , searchName     VARCHAR(255) NOT NULL DEFAULT ''
+     , url            VARCHAR(4096) NOT NULL DEFAULT ''
+     , rssFeedUrl     VARCHAR(4096) NOT NULL DEFAULT ''
+     , rssLastChecked TIMESTAMP NULL DEFAULT NULL
+     , created        TIMESTAMP NOT NULL DEFAULT 0
+     , updated        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                      ON UPDATE CURRENT_TIMESTAMP
      , PRIMARY KEY pk_searchId ( id )
      )
 SQL;
@@ -101,6 +103,8 @@ SELECT id
      , engineName
      , searchName
      , url
+     , rssFeedUrl
+     , rssLastChecked
      , created
      , updated
   FROM search
@@ -117,6 +121,8 @@ SQL;
                                  , $engineName
                                  , $searchName
                                  , $url
+                                 , $rssFeedUrl
+                                 , $rssLastChecked
                                  , $created
                                  , $updated
                                  ) ) {
@@ -128,6 +134,8 @@ SQL;
             $model->setEngineName( $engineName ) ;
             $model->setSearchName( $searchName ) ;
             $model->setUrl( $url ) ;
+            $model->setRssFeedUrl( $rssFeedUrl ) ;
+            $model->setRssLastChecked( $rssLastChecked ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
         }
@@ -143,6 +151,8 @@ SELECT id
      , engineName
      , searchName
      , url
+     , rssFeedUrl
+     , rssLastChecked
      , created
      , updated
   FROM search
@@ -162,6 +172,8 @@ SQL;
                           , $engineName
                           , $searchName
                           , $url
+                          , $rssFeedUrl
+                          , $rssLastChecked
                           , $created
                           , $updated
                           ) ;
@@ -172,6 +184,8 @@ SQL;
             $model->setEngineName( $engineName ) ;
             $model->setSearchName( $searchName ) ;
             $model->setUrl( $url ) ;
+            $model->setRssFeedUrl( $rssFeedUrl ) ;
+            $model->setRssLastChecked( $rssLastChecked ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
             $models[] = $model ;
@@ -196,24 +210,30 @@ INSERT search
      , engineName
      , searchName
      , url
+     , rssFeedUrl
+     , rssLastChecked
      , created
      , updated
      )
-VALUES ( ?, ?, ?, ?, NOW(), NOW() )
+VALUES ( ?, ?, ?, ?, ?, ?, NOW(), NOW() )
 SQL;
-                $id         = $model->getId() ;
-                $engineName = $model->getEngineName() ;
-                $searchName = $model->getSearchName() ;
-                $url        = $model->getUrl() ;
-                $stmt = $this->_dbh->prepare( $query ) ;
+                $id             = $model->getId() ;
+                $engineName     = $model->getEngineName() ;
+                $searchName     = $model->getSearchName() ;
+                $url            = $model->getUrl() ;
+                $rssFeedUrl     = $model->getRssFeedUrl() ;
+                $rssLastChecked = $model->getRssLastChecked() ;
+                $stmt           = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'isss'
+                if ( ! ( $stmt->bind_param( 'isssss'
                                           , $id
                                           , $engineName
                                           , $searchName
                                           , $url
+                                          , $rssFeedUrl
+                                          , $rssLastChecked
                                           ) ) ) {
                     throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
                 }
@@ -249,23 +269,29 @@ SQL;
             try {
                 $query = <<<SQL
 UPDATE search
-   SET engineName = ?
-     , searchName = ?
-     , url = ?
- WHERE id = ?
+   SET engineName     = ?
+     , searchName     = ?
+     , url            = ?
+     , rssFeedUrl     = ?
+     , rssLastChecked = ?
+ WHERE id             = ?
 SQL;
-                $id         = $model->getId() ;
-                $engineName = $model->getEngineName() ;
-                $searchName = $model->getSearchName() ;
-                $url        = $model->getUrl() ;
-                $stmt = $this->_dbh->prepare( $query ) ;
+                $id             = $model->getId() ;
+                $engineName     = $model->getEngineName() ;
+                $searchName     = $model->getSearchName() ;
+                $url            = $model->getUrl() ;
+                $rssFeedUrl     = $model->getRssFeedUrl() ;
+                $rssLastChecked = $model->getRssLastChecked() ;
+                $stmt           = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'sssi'
+                if ( ! ( $stmt->bind_param( 'sssssi'
                                           , $engineName
                                           , $searchName
                                           , $url
+                                          , $rssFeedUrl
+                                          , $rssLastChecked
                                           , $id
                                           ) ) ) {
                     throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
@@ -292,8 +318,8 @@ SQL;
         }
     }
 
-    public function delete( $searchModel ) {
-        $this->_deleteModelById( "DELETE FROM search WHERE id = ?", $searchModel ) ;
+    public function delete( $model ) {
+        $this->_deleteModelById( "DELETE FROM search WHERE id = ?", $model ) ;
     }
 
 }

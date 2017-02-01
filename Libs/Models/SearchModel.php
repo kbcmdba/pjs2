@@ -30,6 +30,8 @@ class SearchModel extends ModelBase {
     private $_engineName ;
     private $_searchName ;
     private $_url ;
+    private $_rssFeedUrl ;
+    private $_rssLastChecked ;
     private $_created ;
     private $_updated ;
 
@@ -129,6 +131,34 @@ class SearchModel extends ModelBase {
      */
     public function setUrl( $url ) {
         $this->_url = $url ;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRssFeedUrl() {
+        return $this->_rssFeedUrl ;
+    }
+
+    /**
+     * @param string $rssFeedUrl
+     */
+    public function setRssFeedUrl( $rssFeedUrl ) {
+        $this->_rssFeedUrl = $rssFeedUrl ;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRssLastChecked() {
+        return $this->_rssLastChecked ;
+    }
+
+    /**
+     * @param string $rssLastChecked
+     */
+    public function setRssLastChecked( $rssLastChecked ) {
+        $this->_rssLastChecked = $rssLastChecked ;
     }
 
     /**
