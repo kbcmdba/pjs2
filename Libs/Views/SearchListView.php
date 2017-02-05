@@ -57,46 +57,35 @@ class SearchListView extends ListViewBase {
      */
     private function _getHtmlView() {
         $body = <<<'HTML'
-<a href="addSearch.php">Add new search</a><br />
-<table border="1" cellspacing="0" cellpadding="2">
+<button type="button" id="AddButton" onclick="addSearch()" >Add Search</button>
+<table border="1" cellspacing="0" cellpadding="2" id="search">
   <caption>Current Searches</caption>
-  <tr>
-    <th>Actions</th>
-    <th>Engine</th>
-    <th>Search Name</th>
-    <th>Link</th>
-    <th>Feed</th>
-    <th>Feed Last Checked</th>
-    <th>Created</th>
-    <th>Updated</th>
-  </tr>
+  <thead>
+    <tr>
+      <th>Actions</th>
+      <th>Engine</th>
+      <th>Search Name</th>
+      <th>Link</th>
+      <th>Feed</th>
+      <th>Feed Last Checked</th>
+      <th>Created</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+
 HTML;
         foreach ( $this->getSearchModels() as $search ) {
-            $id             = $search->getId() ;
-            $engineName     = htmlspecialchars( $search->getEngineName() ) ;
-            $searchName     = htmlspecialchars( $search->getSearchName() ) ;
-            $url            = htmlspecialchars( $search->getUrl() ) ;
-            $rssFeedUrl     = htmlspecialchars( $search->getRssFeedUrl() ) ;
-            $rssLastChecked = htmlspecialchars( $search->getRssLastChecked() ) ;
-            $created        = $search->getCreated() ;
-            $updated        = $search->getUpdated() ;
-            $body          .= <<<HTML
-  <tr>
-    <td>
-        <a href="editSearch.php?id=$id">Edit</a>
-      | <a href="deleteSearch.php?id=$id">Delete</a>
-    </td>
-    <td>$engineName</td>
-    <td>$searchName</td>
-    <td><a href="$url">$url</a></td>
-    <td><a href="$rssFeedUrl">$rssFeedUrl</a></td>
-    <td>$rssLastChecked</td>
-    <td>$created</td>
-    <td>$updated</td>
-  </tr>
+            $id    = $search->getId() ;
+            $row   = $this->displaySearchRow( $search, 'list' ) ;
+            $body .= <<<HTML
+    <tr id="ux$id">
+      $row
+    </tr>
+
 HTML;
         }
-        $body .= "</table>\n" ;
+        $body .= "  </tbody>\n</table>\n" ;
         return $body ;
     }
 
@@ -112,6 +101,99 @@ HTML;
             default :
                 throw new ViewException( "Unsupported view type." ) ;
         }
+    }
+
+    /**
+     * Return the display of a search table row
+     *
+     * @param SearchModel $searchModel
+     * @param string $displayMode 'add', 'edit', 'delete', 'list'
+     * @param string $errMessage
+     * @return string
+     */
+    public function displaySearchRow( $searchModel, $displayMode, $errMessage = '' ) {
+        $id             = $searchModel->getId() ;
+        $engineName     = $searchModel->getEngineName() ;
+        $searchName     = $searchModel->getSearchName() ;
+        $url            = $searchModel->getUrl() ;
+        $rssFeedUrl     = $searchModel->getRssFeedUrl() ;
+        $rssLastChecked = $searchModel->getRssLastChecked() ;
+        $created        = $searchModel->getCreated() ;
+        $updated        = $searchModel->getUpdated() ;
+        switch ( $displayMode ) {
+            case 'add' :
+                return <<<HTML
+      <td>
+        <button id="SaveButtonix$id" onclick="doAddSearch( '$id' )">Save</a>
+        <button id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</a>
+        $errMessage
+      </td>
+      <td><input type="text" id="engineNameix$id" value="$engineName" /></td>
+      <td><input type="text" id="searchNameix$id" value="$searchName" /></td>
+      <td><input type="text" id="urlix$id" value="$url" /></td>
+      <td><input type="text" id="rssFeedUrlix$id" value="$rssFeedUrl" /></td>
+      <td><input type="text" id="rssLastCheckedix$id" value="$rssLastChecked" class="datepicker" /></td>
+      <td>$created</td>
+      <td>$updated</td>
+
+HTML;
+                break ;
+            case 'update' :
+                return <<<HTML
+      <td>
+        <button id="SaveButton$id" onclick="doUpdateSearch( '$id' )">Save</a>
+        <button id="CancelButton$id" onclick="cancelUpdateSearch( '$id' )">Cancel</a>
+        $errMessage
+      </td>
+      <td><input type="text" id="engineName$id" value="$engineName" /></td>
+      <td><input type="text" id="searchName$id" value="$searchName" /></td>
+      <td><input type="text" id="url$id" value="$url" /></td>
+      <td><input type="text" id="rssFeedUrl$id" value="$rssFeedUrl" /></td>
+      <td><input type="text" id="rssLastChecked$id" value="$rssLastChecked" class="datepicker" /></td>
+      <td>$created</td>
+      <td>$updated</td>
+
+HTML;
+                break ;
+            case 'delete' :
+                return <<<HTML
+      <td>
+        <button id="DeleteButton$id" onclick="doDeleteSearch( '$id' )">Confirm Delete</a>
+        <button id="CancelButton$id" onclick="cancelUpdateSearch( '$id' )">Cancel</a>
+        $errMessage
+      </td>
+      <td>$engineName</td>
+      <td>$searchName</td>
+      <td><a href="$url">$url</a></td>
+      <td><a href="$rssFeedUrl">$rssFeedUrl</a></td>
+      <td>$rssLastChecked</td>
+      <td>$created</td>
+      <td>$updated</td>
+
+HTML;
+                break ;
+            case 'list' :
+                return <<<HTML
+      <td>
+        <button id="UpdateButton$id" onclick="updateSearch( '$id' )">Update</a>
+        <button id="DeleteButton$id" onclick="deleteSearch( '$id' )">Delete</a>
+        $errMessage
+      </td>
+      <td>$engineName</td>
+      <td>$searchName</td>
+      <td><a href="$url">$url</a></td>
+      <td><a href="$rssFeedUrl">$rssFeedUrl</a></td>
+      <td>$rssLastChecked</td>
+      <td>$created</td>
+      <td>$updated</td>
+                
+HTML;
+                break ;
+            default :
+                throw new ViewException( 'Invalid display mode.' ) ;
+                break ;
+        }
+        // Should never get here.
     }
 
     /**

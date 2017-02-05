@@ -1002,6 +1002,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestKeywords() {
+        return ;
         if ( $this->_testMode < 0 ) {
             return ;
         }
@@ -1022,8 +1023,41 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         if ( $this->_testMode < 0 ) {
             return ;
         }
-        sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+        $this->checkXpathText( '//button', 'Add Search' ) ;
+        $this->checkXpathText( '//caption', 'Current Searches' ) ;
+        $this->checkXpathText( '//th', 'Actions' ) ;
+        $this->checkXpathText( '//th[2]', 'Engine' ) ;
+        $this->checkXpathText( '//th[3]', 'Search Name' ) ;
+        $this->checkXpathText( '//th[4]', 'Link' ) ;
+        $this->checkXpathText( '//th[5]', 'Feed' ) ;
+        $this->checkXpathText( '//th[6]', 'Feed Last Checked' ) ;
+        $this->checkXpathText( '//th[7]', 'Created' ) ;
+        $this->checkXpathText( '//th[8]', 'Updated' ) ;
+    }
+
+    public function checkSeR( $id
+                            , $prefix
+                            , $engineName
+                            , $searchName
+                            , $url
+                            , $rssFeedUrl
+                            , $rssLastChecked
+                            ) {
+        if ( $this->_testMode < 0 ) {
+            return ;
+        }
+        if ( $this->_testMode < 1 ) {
+            return ;
+        }
+        $this->checkIdText( "UpdateButton$id", 'Update' ) ;
+        $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
+        $this->checkXpathText( "/$prefix/td[2]", $engineName ) ;
+        $this->checkXpathText( "/$prefix/td[3]", $searchName ) ;
+        $this->checkXpathText( "/$prefix/td[4]", $url ) ;
+        $this->checkXpathText( "/$prefix/td[5]", $rssFeedUrl ) ;
+        $this->checkXpathText( "/$prefix/td[6]", $rssLastChecked . ' 00:00:00' ) ;
+        $this->checkXpathPattern( "/$prefix/td[7]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
+        $this->checkXpathPattern( "/$prefix/td[8]", '/^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$/' ) ;
     }
 
     public function doTestSearches() {
@@ -1034,6 +1068,54 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doLoadFromHeader( 'Searches' ) ;
         $this->checkHeaderLoads() ;
         $this->checkSeHR() ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix1' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'engineNameix1' ), 'LinkedIn' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'searchNameix1' ), 'LinkedIn General' ) ;
+        $this->doTypeAt( WebDriverBY::id( 'urlix1' ), 'http://www.linkedin.com/' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'rssFeedUrlix1' ), 'http://www.linkedin.com' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'rssLastCheckedix1' ), '2017-01-01' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkSeHR() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->checkSeR( 1, '', 'LinkedIn', 'LinkedIn General'
+                       , 'http://www.linkedin.com/', 'http://www.linkedin.com'
+                       , '2017-01-01' ) ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix2' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'engineNameix2' ), 'Dice' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'searchNameix2' ), 'Dice General' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'urlix2' ), 'http://www.dice.com/' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'rssFeedUrlix2' ), 'http://www.dice.com' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'rssLastCheckedix2' ), '2017-02-02' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButtonix2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkSeHR() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->checkSeR( 2, '',  'Dice', 'Dice General'
+                       , 'http://www.dice.com/', 'http://www.dice.com'
+                       , '2017-02-02'
+                       ) ;
+        $this->checkSeR( 1, '/tr[3]', 'LinkedIn', 'LinkedIn General'
+                       , 'http://www.linkedin.com/', 'http://www.linkedin.com'
+                       , '2017-01-01'
+                       ) ;
+        $driver->findElement( WebDriverBy::id( 'AddButton' ) )->click() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButtonix3' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButtonix3' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButtonix3' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkNotPresent( WebDriverBy::id( 'SaveButtonix3' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButtonix3' ) ) ;
+        // Update-cancel
+        // Delete-cancel
+        // Update-save-verify
+        // Delete-confirm-verify
 
         // @todo Implement IntegrationTests.php:doTestSearches()
         sleep( 15 ) ;

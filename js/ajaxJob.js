@@ -66,6 +66,8 @@ function updateJob( id ) {
                                     , function ( xhttp, targetId ) {
         var jsonObj = JSON.parse( xhttp.responseText ) ;
         row.innerHTML = jsonObj.row ;
+        $( "#lastStatusChange" + id ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
+        $( "#nextActionDue" + id ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
     } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
     return false ;
 }

@@ -84,7 +84,6 @@ HTML;
         }
 
         $body .= "  </tbody>\n</table>\n" ;
-
         return $body ;
     }
 
