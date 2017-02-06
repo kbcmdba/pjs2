@@ -21,15 +21,7 @@
  *
  */
 
-// @todo 30 AJAX: View Contacts in ajax-friendly format
-// @todo 30 AJAX: Add Contact
-// @todo 30 AJAX: Edit Contact
-// @todo 30 AJAX: Delete Contact
-// @todo 40 AJAX: View Jobs in ajax-friendly format
-// @todo 40 AJAX: Add Job
-// @todo 40 AJAX: Edit Job
-// @todo 40 AJAX: Delete Job
-// @todo 45 Write ApplicationStatusListView
+// @todo 10 Implement summary page
 // @todo 50 Jobs: Make it possible to log time and date together with jobs
 // @todo 60 Write KeywordFormView
 // @todo 60 Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )

@@ -252,9 +252,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
-    /**
-     * FIXME Implement Tests/IntegrationTests.php:doTestSummary1()
-     */
     public function doTestSummary1() {
         if ( $this->_testMode < 0 ) {
             return ;
@@ -637,7 +634,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkIdText( 'DeleteButton1', 'Confirm Delete' ) ;
         $this->checkIdText( 'CancelButton1', 'Cancel' ) ;
         $driver->findElement( WebDriverBy::id( 'DeleteButton1' ) )->click() ;
-        // FIXME Tests/IntegrationTests.php:doTestCompanies() - look for "Undefined Result" in output
         $this->doLoadFromHeader( 'Companies' ) ;
         $this->checkHeaderLoads() ;
         $this->checkC1R( 2, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']"
@@ -1002,6 +998,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestKeywords() {
+        return ;
+        // @todo 60 Finish implementation of Tests/IntegrationTests.php:tdoTestKeywords.
         if ( $this->_testMode < 0 ) {
             return ;
         }
@@ -1262,13 +1260,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
             }
         }
 
-        // FIXME Finish implementation of Tests/IntegrationTests.php:testWebSite sub-routines.
         $this->doTestSummary1() ;
         $this->doTestApplicationStatuses() ;
         $this->doTestCompanies() ;
         $this->doTestContacts() ;
         $this->doTestJobs() ;
-//        $this->doTestKeywords() ;
+        $this->doTestKeywords() ;
         $this->doTestSearches() ;
         $this->doTestSummary2() ;
 
