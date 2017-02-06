@@ -1002,7 +1002,6 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doTestKeywords() {
-        return ;
         if ( $this->_testMode < 0 ) {
             return ;
         }
@@ -1112,14 +1111,80 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkHeaderLoads() ;
         $this->checkNotPresent( WebDriverBy::id( 'SaveButtonix3' ) ) ;
         $this->checkNotPresent( WebDriverBy::id( 'CancelButtonix3' ) ) ;
-        // Update-cancel
-        // Delete-cancel
-        // Update-save-verify
-        // Delete-confirm-verify
-
-        // @todo Implement IntegrationTests.php:doTestSearches()
-        sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'SaveButton2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $this->checkSeR( 2, '',  'Dice', 'Dice General'
+                        , 'http://www.dice.com/', 'http://www.dice.com'
+                        , '2017-02-02'
+                        ) ;
+        $this->checkSeR( 1, '/tr[3]', 'LinkedIn', 'LinkedIn General'
+                       , 'http://www.linkedin.com/', 'http://www.linkedin.com'
+                       , '2017-01-01'
+                       ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'CancelButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $this->checkSeR( 2, '',  'Dice', 'Dice General'
+                       , 'http://www.dice.com/', 'http://www.dice.com'
+                       , '2017-02-02'
+                       ) ;
+        $this->checkSeR( 1, '/tr[3]', 'LinkedIn', 'LinkedIn General'
+                       , 'http://www.linkedin.com/', 'http://www.linkedin.com'
+                       , '2017-01-01'
+                       ) ;
+        $driver->findElement( WebDriverBy::id( 'UpdateButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'SaveButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $this->doTypeAt( WebDriverBy::id( 'engineName2' ), 'Dicey' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'searchName2' ), 'Dicey General' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'url2' ), 'http://www.dicey.com/' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'rssFeedUrl2' ), 'http://www.dicey.com' ) ;
+        $this->doTypeAt( WebDriverBy::id( 'rssLastChecked2' ), '2017-02-03' ) ;
+        $driver->findElement( WebDriverBy::id( 'SaveButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doLoadFromHeader( 'Searches' ) ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->checkSeHR() ;
+        $this->checkSeR( 2, '',  'Dicey', 'Dicey General'
+                       , 'http://www.dicey.com/', 'http://www.dicey.com'
+                       , '2017-02-03'
+                       ) ;
+        $this->checkSeR( 1, '/tr[2]', 'LinkedIn', 'LinkedIn General'
+                       , 'http://www.linkedin.com/', 'http://www.linkedin.com'
+                       , '2017-01-01'
+                       ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $driver->findElement( WebDriverBy::id( 'DeleteButton2' ) )->click() ;
+        $this->checkHeaderLoads() ;
+        $this->checkNotPresent( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'UpdateButton2' ) ) ;
+        $this->checkNotPresent( WebDriverBy::id( 'CancelButton2' ) ) ;
+        $this->checkSeR( 1, '', 'LinkedIn', 'LinkedIn General'
+                       , 'http://www.linkedin.com/', 'http://www.linkedin.com'
+                       , '2017-01-01'
+                       ) ;
     }
 
     public function doTestSummary2() {
@@ -1198,12 +1263,12 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         }
 
         // FIXME Finish implementation of Tests/IntegrationTests.php:testWebSite sub-routines.
-//         $this->doTestSummary1() ;
+        $this->doTestSummary1() ;
         $this->doTestApplicationStatuses() ;
         $this->doTestCompanies() ;
         $this->doTestContacts() ;
         $this->doTestJobs() ;
-        $this->doTestKeywords() ;
+//        $this->doTestKeywords() ;
         $this->doTestSearches() ;
         $this->doTestSummary2() ;
 
