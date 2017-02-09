@@ -70,7 +70,7 @@ abstract class ModelBase {
      * @param string
      */
     public function validateTimestamp( $timestamp ) {
-        return ( 1 === preg_match( '/^20[123][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01]) [(0-5][0-9][:]){2}[0-5][0-9]$/', $timestamp ) ) ;
+        return ( 1 === preg_match( '/^20[123][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01]) ([0-5][0-9][:]){2}[0-5][0-9]$/', $timestamp ) ) ;
     }
     /**#@-*/
 
