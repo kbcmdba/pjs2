@@ -39,6 +39,7 @@ $companyState    = Tools::param( 'companyState' ) ;
 $companyZip      = Tools::param( 'companyZip' ) ;
 $companyPhone    = Tools::param( 'companyPhone' ) ;
 $companyUrl      = Tools::param( 'companyUrl' ) ;
+$lastContacted   = Tools::param( 'lastContacted' ) ;
 $rowStyle        = Tools::param( 'rowStyle' ) ;
 $rowId           = Tools::param( 'rowId' ) ;
 $newCompanyModel = null ;
@@ -53,6 +54,7 @@ try {
     $companyModel->setCompanyZip( $companyZip ) ;
     $companyModel->setCompanyPhone( $companyPhone ) ;
     $companyModel->setCompanyUrl( $companyUrl ) ;
+    $companyModel->setLastContacted( $lastContacted ) ;
 
     $companyController = new CompanyController() ;
     $companyId         = $companyController->add( $companyModel ) ;

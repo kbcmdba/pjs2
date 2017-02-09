@@ -52,15 +52,21 @@ class CompanyModel extends ModelBase {
      * @return boolean
      */
     public function validateForAdd() {
-        $agencyCompanyId = $this->getAgencyCompanyId() ;
-        $validAgencyId = ( Tools::isNullOrEmptyString( $agencyCompanyId )
-                        ||  ( ( is_numeric( $agencyCompanyId ) )
-                           && ( $agencyCompanyId > 0 )
-                            )
-                         ) ;
+        $agencyCompanyId    = $this->getAgencyCompanyId() ;
+        $validAgencyId      =  ( Tools::isNullOrEmptyString( $agencyCompanyId )
+                              ||  ( ( is_numeric( $agencyCompanyId ) )
+                                 && ( $agencyCompanyId > 0 )
+                                  )
+                               ) ;
+        $lastContacted      = $this->getLastContacted() ;
+        $validLastContacted =  ( Tools::isNullOrEmptyString( $lastContacted )
+                              || $this->validateDate( $lastContacted )
+                              || $this->validateTimestamp( $lastContacted )
+                               ) ;
         $result =  ( (   Tools::isNullOrEmptyString( $this->getId() ) )
                   && ( ! Tools::isNullOrEmptyString( $this->getCompanyName() ) )
                   && $validAgencyId
+                  && $validLastContacted
                    ) ;
         return $result ;
     }
@@ -71,15 +77,21 @@ class CompanyModel extends ModelBase {
      * @return boolean
      */
     public function validateForUpdate() {
-        $agencyCompanyId = $this->getAgencyCompanyId() ;
-        $validAgencyId = ( Tools::isNullOrEmptyString( $agencyCompanyId )
-                        ||  ( ( is_numeric( $agencyCompanyId ) )
-                           && ( $agencyCompanyId > 0 )
-                            )
-                         ) ;
+        $agencyCompanyId    = $this->getAgencyCompanyId() ;
+        $validAgencyId      =  ( Tools::isNullOrEmptyString( $agencyCompanyId )
+                              ||  ( ( is_numeric( $agencyCompanyId ) )
+                                 && ( $agencyCompanyId > 0 )
+                                  )
+                               ) ;
+        $lastContacted      = $this->getLastContacted() ;
+        $validLastContacted =  ( Tools::isNullOrEmptyString( $lastContacted )
+                              || $this->validateDate( $lastContacted )
+                              || $this->validateTimestamp( $lastContacted )
+                               ) ;
         $result =  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
                   && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
                   && $validAgencyId
+                  && $validLastContacted
                    ) ;
         return $result ;
     }
@@ -97,6 +109,7 @@ class CompanyModel extends ModelBase {
         $this->setCompanyUrl( Tools::param( 'companyUrl' ) ) ;
         $this->setCreated( Tools::param( 'created' ) ) ;
         $this->setUpdated( Tools::param( 'updated' ) ) ;
+        $this->setLastContacted( Tools::param( 'lastContacted' ) ) ;
     }
 
     /**
@@ -270,4 +283,17 @@ class CompanyModel extends ModelBase {
         $this->_updated = $updated ;
     }
 
+    /**
+     * @return string
+     */
+    public function getLastContacted() {
+        return $this->_lastContacted ;
+    }
+
+    /**
+     * @param string $lastContacted
+     */
+    public function setLastContacted( $lastContacted ) {
+        $this->_lastContacted = ( '' === $lastContacted ) ? null : $lastContacted ;
+    }
 }

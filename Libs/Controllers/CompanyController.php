@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS company
      , created         TIMESTAMP NOT NULL DEFAULT 0
      , updated         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                        ON UPDATE CURRENT_TIMESTAMP
+     , lastContacted   TIMESTAMP NULL DEFAULT NULL
      , PRIMARY KEY pk_companyId ( id )
      , FOREIGN KEY agencyCompanyIdFk( agencyCompanyId )
                        REFERENCES company( id )
@@ -123,6 +124,7 @@ SELECT id
      , companyUrl
      , created
      , updated
+     , lastContacted
   FROM company
  WHERE id = ?
 SQL;
@@ -145,6 +147,7 @@ SQL;
                                  , $companyUrl
                                  , $created
                                  , $updated
+                                 , $lastContacted
                                  ) ) {
             throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
         }
@@ -162,6 +165,7 @@ SQL;
             $model->setCompanyUrl( $companyUrl ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
+            $model->setLastContacted( $lastContacted ) ;
         }
         else {
             $model = null ;
@@ -183,6 +187,7 @@ SELECT id
      , companyUrl
      , created
      , updated
+     , lastContacted
   FROM company
  WHERE $whereClause
  ORDER
@@ -207,6 +212,7 @@ SQL;
                                  , $companyUrl
                                  , $created
                                  , $updated
+                                 , $lastContacted
                                  ) ) {
             throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
         }
@@ -225,6 +231,7 @@ SQL;
             $model->setCompanyUrl( $companyUrl ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
+            $model->setLastContacted( $lastContacted ) ;
             $models[] = $model ;
         }
         return( $models ) ;
@@ -255,8 +262,9 @@ INSERT company
      , companyUrl
      , created
      , updated
+     , lastContacted
      )
-VALUES ( NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW() )
+VALUES ( NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ? )
 SQL;
                 $agencyCompanyId = $model->getAgencyCompanyId() ;
                 $companyName     = $model->getCompanyName() ;
@@ -269,11 +277,12 @@ SQL;
                 $companyUrl      = $model->getCompanyUrl() ;
                 $created         = $model->getCreated() ;
                 $updated         = $model->getUpdated() ;
+                $lastContacted   = $model->getLastContacted() ;
                 $stmt            = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'issssssss'
+                if ( ! ( $stmt->bind_param( 'isssssssss'
                                           , $agencyCompanyId
                                           , $companyName
                                           , $companyAddress1
@@ -283,6 +292,7 @@ SQL;
                                           , $companyZip
                                           , $companyPhone
                                           , $companyUrl
+                                          , $lastContacted
                                           ) ) ) {
                     throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
                 }
@@ -326,6 +336,7 @@ UPDATE company
      , companyZip = ?
      , companyPhone = ?
      , companyUrl = ?
+     , lastContacted = ?
  WHERE id = ?
 SQL;
                 $id              = $companyModel->getId() ;
@@ -338,11 +349,12 @@ SQL;
                 $companyZip      = $companyModel->getCompanyZip() ;
                 $companyPhone    = $companyModel->getCompanyPhone() ;
                 $companyUrl      = $companyModel->getCompanyUrl() ;
+                $lastContacted   = $companyModel->getLastContacted() ;
                 $stmt       = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'issssssssi'
+                if ( ! ( $stmt->bind_param( 'isssssssssi'
                                           , $agencyCompanyId
                                           , $companyName
                                           , $companyAddress1
@@ -352,6 +364,7 @@ SQL;
                                           , $companyZip
                                           , $companyPhone
                                           , $companyUrl
+                                          , $lastContacted
                                           , $id
                                           ) ) ) {
                     throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;

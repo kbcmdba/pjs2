@@ -45,6 +45,7 @@ function addCompany() {
         var jsonObj = JSON.parse( xhttp.responseText ) ;
         row1.innerHTML = jsonObj.rows[ 0 ] ;
         row2.innerHTML = jsonObj.rows[ 1 ] ;
+        $( "#lastContactedix" + id ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
     } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
     rowNumber ++ ;
     return false ;
@@ -69,6 +70,7 @@ function updateCompany( id ) {
         var jsonObj = JSON.parse( xhttp.responseText ) ;
         row1.innerHTML = jsonObj.rows[ 0 ] ;
         row2.innerHTML = jsonObj.rows[ 1 ] ;
+        $( "#lastContacted" + id ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
     } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
     return false ;
 }
@@ -112,10 +114,13 @@ function deleteCompany( id ) {
  * @param url
  * @returns {String}
  */
-function ajaxValidateCompany( companyName, agency, addr1, addr2, city, state, zip, phone, url ) {
+function ajaxValidateCompany( companyName, agency, addr1, addr2, city, state, zip, phone, url, lastContacted ) {
     var message = '' ;
     if ( ( null == companyName ) || ( '' == companyName ) ) {
         message += "Company Name cannot be blank.\n" ;
+    }
+    if  ( ! isDateValid( lastContacted, false ) &&  ! isDateTimeValid( lastContacted, false ) ) {
+        message += "Last Contacted must be valid.\n" ;
     }
     return message ;
 }
@@ -157,6 +162,7 @@ function saveAddCompany( id ) {
     var companyZip      = document.getElementById( "companyZipix" + id ).value ;
     var companyPhone    = document.getElementById( "companyPhoneix" + id ).value ;
     var companyUrl      = document.getElementById( "companyUrlix" + id ).value ;
+    var lastContacted   = document.getElementById( "lastContactedix" + id ).value ;
     var msg             = ajaxValidateCompany( companyName
                                              , agencyCompanyId
                                              , companyAddress1
@@ -166,6 +172,7 @@ function saveAddCompany( id ) {
                                              , companyZip
                                              , companyPhone
                                              , companyUrl
+                                             , lastContacted
                                              ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
@@ -181,6 +188,7 @@ function saveAddCompany( id ) {
                 + "&companyZip=" + encodeURIComponent( companyZip )
                 + "&companyPhone=" + encodeURIComponent( companyPhone )
                 + "&companyUrl=" + encodeURIComponent( companyUrl )
+                + "&lastContacted=" + encodeURIComponent( lastContacted )
                 + "&rowStyle=add"
                 ;
     var isAsync = true ;
@@ -213,6 +221,7 @@ function saveUpdateCompany( id ) {
     var companyZip      = document.getElementById( "companyZip" + id ).value ;
     var companyPhone    = document.getElementById( "companyPhone" + id ).value ;
     var companyUrl      = document.getElementById( "companyUrl" + id ).value ;
+    var lastContacted   = document.getElementById( "lastContacted" + id ).value ;
     var msg             = ajaxValidateCompany( companyName
                                              , agencyCompanyId
                                              , companyAddress1
@@ -222,6 +231,7 @@ function saveUpdateCompany( id ) {
                                              , companyZip
                                              , companyPhone
                                              , companyUrl
+                                             , lastContacted
                                              ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
@@ -238,6 +248,7 @@ function saveUpdateCompany( id ) {
                 + "&companyZip=" + encodeURIComponent( companyZip )
                 + "&companyPhone=" + encodeURIComponent( companyPhone )
                 + "&companyUrl=" + encodeURIComponent( companyUrl )
+                + "&lastContacted=" + encodeURIComponent( lastContacted )
                 + "&rowStyle=add"
                 ;
     var isAsync = true ;

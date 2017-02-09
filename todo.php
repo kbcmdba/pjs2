@@ -21,7 +21,10 @@
  *
  */
 
-// @todo 10 Implement summary page
+// @todo 05 Implement last contact date for companies
+// @todo 05 Implement last contact date for contacts
+// @todo 10 Implement data validation tests for all required fields
+// @todo 20 Implement summary page
 // @todo 50 Jobs: Make it possible to log time and date together with jobs
 // @todo 60 Write KeywordFormView
 // @todo 60 Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )
@@ -29,7 +32,7 @@
 // @todo 70 Write note interface for contacts
 // @todo 70 Write note interface for jobs
 // @todo 70 Write note interface for keywords
-// @todo 80 Make the interface multi-user
+// @todo 80 Make the interface multiuser
 // @todo 80 User entitlements
 // @todo 90 Make input fields mobile-friendly
 // @todo 90 Style the site

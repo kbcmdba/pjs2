@@ -23,8 +23,6 @@
 
 require_once 'Libs/autoload.php' ;
 
-// @todo Show application statuses in index page
-
 $config = new Config() ;
 try {
     $dbc = new DBConnection() ;
@@ -36,4 +34,10 @@ catch ( DaoException $ex ) {
 
 $config = new Config() ;
 $page = new PJSWebPage( $config->getTitle() ) ;
+
+// @todo Show application statuses in index page
+// Show Job Statistics
+// Show Jobs
+// Show Searches
+
 $page->displayPage() ;

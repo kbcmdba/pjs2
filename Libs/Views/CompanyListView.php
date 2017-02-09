@@ -69,13 +69,14 @@ class CompanyListView extends ListViewBase {
       <th>City</th>
       <th>State</th>
       <th>Zip</th>
+      <th>Last Contacted</th>
       <th>Created</th>
     </tr>
     <tr class="thead">
       <th>Agency</th>
       <th>Address 2</th>
       <th>Phone</th>
-      <th colspan="2">URL</th>
+      <th colspan="3">URL</th>
       <th>Updated</th>
     </tr>
   </thead>
@@ -111,6 +112,7 @@ HTML;
         $companyUrl      = $companyModel->getCompanyUrl() ;
         $created         = $companyModel->getCreated() ;
         $updated         = $companyModel->getUpdated() ;
+        $lastContacted   = $companyModel->getLastContacted() ;
         $encodedUrl      = htmlspecialchars( $companyUrl ) ;
         if ( $agencyCompanyId > 0 ) {
             $agencyCompanyController = new CompanyController() ;
@@ -135,13 +137,14 @@ HTML;
       <td><input type="text" id="companyCityix$id" value="$companyCity" /></td>
       <td><input type="text" id="companyStateix$id" size="2" value="$companyState" /></td>
       <td><input type="text" id="companyZipix$id" size="10" value="$companyZip" /></td>
+      <td><input type="text" id="lastContactedix$id" size="12" value="$lastContacted" class="datepicker" /></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
       <td>$agencyList</td>
       <td><input type="text" id="companyAddress2ix$id" value="$companyAddress2" /></th>
       <td><input type="text" id="companyPhoneix$id" value="$companyPhone" /></td>
-      <td colspan="2"><input type="text" id="companyUrlix$id" value="$encodedUrl" /></a></td>
+      <td colspan="3"><input type="text" id="companyUrlix$id" value="$encodedUrl" /></a></td>
       <td>$updated</td>
 HTML;
                 break ;
@@ -157,13 +160,14 @@ HTML;
       <td>$companyCity</td>
       <td>$companyState</td>
       <td>$companyZip</td>
+      <td>$lastContacted</td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
       <td>$agency</td>
       <td>$companyAddress2</th>
       <td>$companyPhone</td>
-      <td colspan="2"><a href="$encodedUrl">$encodedUrl</a></td>
+      <td colspan="3"><a href="$encodedUrl">$encodedUrl</a></td>
       <td>$updated</td>
 HTML;
                 break ;
@@ -179,13 +183,14 @@ HTML;
       <td>$companyCity</td>
       <td>$companyState</td>
       <td>$companyZip</td>
+      <td>$lastContacted</td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
       <td>$agency</td>
       <td>$companyAddress2</th>
       <td>$companyPhone</td>
-      <td colspan="2"><a href="$encodedUrl">$encodedUrl</a></td>
+      <td colspan="3"><a href="$encodedUrl">$encodedUrl</a></td>
       <td>$updated</td>
 HTML;
                 break ;
@@ -202,13 +207,14 @@ HTML;
       <td><input type="text" id="companyCity$id" value="$companyCity" /></td>
       <td><input type="text" id="companyState$id" size="2" value="$companyState" /></td>
       <td><input type="text" id="companyZip$id" size="10" value="$companyZip" /></td>
+      <td><input type="text" id="lastContacted$id" size="12" value="$lastContacted" class="datepicker" /></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
       <td>$agencyList</td>
       <td><input type="text" id="companyAddress2$id" value="$companyAddress2" /></th>
       <td><input type="text" id="companyPhone$id" value="$companyPhone" /></td>
-      <td colspan="2"><input type="text" id="companyUrl$id" value="$encodedUrl" /></a></td>
+      <td colspan="3"><input type="text" id="companyUrl$id" value="$encodedUrl" /></a></td>
       <td>$updated</td>
 HTML;
                 break ;

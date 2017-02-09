@@ -40,6 +40,7 @@ $companyState    = Tools::param( 'companyState' ) ;
 $companyZip      = Tools::param( 'companyZip' ) ;
 $companyPhone    = Tools::param( 'companyPhone' ) ;
 $companyUrl      = Tools::param( 'companyUrl' ) ;
+$lastContacted   = Tools::param( 'lastContacted' ) ;
 $rowStyle        = Tools::param( 'rowStyle' ) ;
 $rowId           = Tools::param( 'rowId' ) ;
 $result          = 'OK' ;
@@ -56,6 +57,7 @@ try {
     $companyModel->setCompanyZip( $companyZip ) ;
     $companyModel->setCompanyPhone( $companyPhone ) ;
     $companyModel->setCompanyUrl( $companyUrl ) ;
+    $companyModel->setLastContacted( $lastContacted ) ;
 
     $result = $companyController->update( $companyModel ) ;
 
@@ -68,7 +70,7 @@ try {
 catch ( ControllerException $e ) {
     $result = 'FAILED' ;
     $rows   = $clv->displayCompanyRow( $companyModel
-                                     , 'list'
+                                     , 'update'
                                      , $rowStyle
                                      , 'Update Company record failed. '
                                      . $e->getMessage()

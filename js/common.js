@@ -78,19 +78,19 @@ function isDateTimeValid( dateTimeString, isRequired ) {
     var regex = /^\d\d\d\d-\d\d-\d\d\s\d\d:\d\d:\d\d$/ ;
     var retVal = true ;
     if ( ! isRequired ) {
-        if ( ( null == dateString ) || ( '' == dateString ) ) {
+        if ( ( null == dateTimeString ) || ( '' == dateTimeString ) ) {
             return true ;
         }
     }
     else {
         retVal = ( ( null !== dateString ) && ( '' !== dateString ) ) ;
     }
-    retVal = ( retVal && ( null !== dateString.match( regex ) ) ) ;
+    retVal = ( retVal && ( null !== dateTimeString.match( regex ) ) ) ;
     if ( retVal ) {
         var daysInMonths = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ] ;
-        var yr = parseInt( dateString.substring( 0, 4 ) ) ;
-        var mo = parseInt( dateString.substring( 5, 7 ) ) ;
-        var da = parseInt( dateString.substring( 8, 10 ) ) ;
+        var yr = parseInt( dateTimeString.substring( 0, 4 ) ) ;
+        var mo = parseInt( dateTimeString.substring( 5, 7 ) ) ;
+        var da = parseInt( dateTimeString.substring( 8, 10 ) ) ;
         var hr = parseInt( dateTimeString.substring( 11, 13 ) ) ;
         var mi = parseInt( dateTimeString.substring( 14, 16 ) ) ;
         var se = parseInt( dateTimeString.substring( 17, 19 ) ) ;
