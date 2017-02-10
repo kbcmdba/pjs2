@@ -66,7 +66,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
        $this->webDriver->quit() ;
     }
 
-    public function doWaitFor( $target, $timeout = 20, $interval = 250 ) {
+    public function doWaitFor( $target, $timeout = 10, $interval = 250 ) {
         $lookFor = $target ;
         $ret = 0 ;
         $this->webDriver->wait($timeout, $interval)->until( function ( $webDriver ) use ( &$lookFor, &$ret ) {

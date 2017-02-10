@@ -8,3 +8,10 @@ After verifying the modules, perform the following tasks:
 
 Copy the file config_sample.xml to config.xml
 Update the new config.xml according to your needs
+
+You will need a working copy of Apache's web server or another web server that
+can handle serving PHP properly. That also means that you'll need PHP installed
+on your web server. A working installation of MySQL 5.6 or greater will also be
+required. There are lots of places on the internet that explain how to set these
+up together so I won't go into it here.
+
