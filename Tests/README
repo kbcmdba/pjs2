@@ -1,0 +1,47 @@
+Please note: These tests are not intended for the general public. If you intend
+to run these tests, you'll need to have Selenium Server set up and running
+along with the appropriate modules.
+
+As of this writing, I use a VM running Fedora 25 on my development box to run
+tests and write my code. Why a VM? It's a lot harder to break into a VM inside
+another machine from the outside when that VM is not exposed to the world.
+It's also really easy to take a snapshot of the VM, try new things and then
+revert if needed.
+
+For security reasons, I use sudo for everything that requires root-level
+access. I hope you do the same to reduce vulnerability.
+
+  # Kill existing MySQL if it's running.
+
+  sudo dnf install mariadb mariadb-server httpd -y
+  sudo chown yourLoginName.yourLoginName /var/www/html
+
+  sudo /sbin/chkconfig mariadb on
+  sudo /sbin/service mariadb start
+  sudo mysql_secure_installation
+  # Follow prompts to secure the installation
+
+  sudo /sbin/chkconfig httpd on
+  sudo /sbin/service httpd start
+
+  # Let httpd talk to MySQL
+  # Note that the -P makes the boolean permanent
+  sudo setsebool -P httpd_can_network_connect_db 1
+
+  # Install the rest of the bits
+  sudo dnf install -y composer php-phpunit-PHPUnit php-phpunit-Text-Template \
+                      php-pear-MDB2-Driver-mysqli php-mysqlnd
+  sudo dnf erase -y ksshaskpass
+  unset SSH_ASKPASS
+
+  composer global require phpunit/phpunit
+  composer global require facebook/webdriver
+  hash -r
+
+  touch login.log
+  # Warning: Don't do this on a production system!
+  chmod 666 login.log
+  sudo chcon --type=httpd_sys_rw_content_t login.log
+  cp sample_config.xml config.xml
+  # Edit config.xml accordingly and install permissions in mysql
+
