@@ -698,7 +698,15 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                        , 'None', '', '333-333-3333', 'http://testme3.com/'
                        , ''
                        ) ;
-    }
+        sleep( 1 ) ; // Just to make sure that the contacted date and the last
+                     // updated date are different than the created date.
+        $driver->findElement( WebDriverBy::id( 'ContactButton3' ) )->click() ;
+        $this->checkC1R( 3, "/tr[@id='ux3-1']", "/tr[@id='ux3-2']"
+                       , 'Company 3', '3 Any Street', 'City 3', 'S3', '33333-3333'
+                       , 'None', '', '333-333-3333', 'http://testme3.com/'
+                       , date( 'Y-m-d H:i:s' )
+                       ) ;
+        }
 
     public function checkC2HR() {
         if ( $this->_testMode < 0 ) {
