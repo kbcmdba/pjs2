@@ -88,8 +88,8 @@ class CompanyModel extends ModelBase {
                               || $this->validateDate( $lastContacted )
                               || $this->validateTimestamp( $lastContacted )
                                ) ;
-        $result =  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-                  && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyName' ) ) )
+        $result =  ( ( ! Tools::isNullOrEmptyString( $this->getId() ) )
+                  && ( ! Tools::isNullOrEmptyString( $this->getCompanyName() ) )
                   && $validAgencyId
                   && $validLastContacted
                    ) ;

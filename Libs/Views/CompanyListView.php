@@ -176,6 +176,7 @@ HTML;
       <td rowspan="2">
         <button type="button" id="UpdateButton$id" onclick="updateCompany( '$id' )">Update</button>
         <button type="button" id="DeleteButton$id" onclick="deleteCompany( '$id' )">Delete</button>
+        <button type="button" id="ContactButton$id" onclick="doUpdateLastContacted( '$id' )">Contacted</button>
         $warningMsg
       </td>
       <td><font size="+2">$companyName</font></td>

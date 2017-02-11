@@ -205,6 +205,27 @@ function saveAddCompany( id ) {
 }
 
 /**
+ * Update the lastContacted column to read the current date/timestamp.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function doUpdateLastContacted( id ) {
+    var rowId           = 'ux' + id ;
+    var uri     = "AJAXUpdateCompanyLastContacted.php" ;
+    var data    = "id=" + id + "&rowStyle=add" ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj   = JSON.parse( xhttp.responseText ) ;
+        var row1      = document.getElementById( "ux" + targetId + "-1" ) ;
+        var row2      = document.getElementById( "ux" + targetId + "-2" ) ;
+        row1.innerHTML = jsonObj.rows[ 0 ] ;
+        row2.innerHTML = jsonObj.rows[ 1 ] ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
  * Actually save the changes to the row and redisplay it.
  *
  * @param id

@@ -465,6 +465,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         }
         $this->checkIdText( "UpdateButton$id", 'Update' ) ;
         $this->checkIdText( "DeleteButton$id", 'Delete' ) ;
+        $this->checkIdText( "ContactButton$id", 'Contacted' ) ;
         $this->checkXpathText( "/$prefix1/td[2]", $company ) ;
         $this->checkXpathText( "/$prefix1/td[3]", $address1 ) ;
         $this->checkXpathText( "/$prefix1/td[4]", $city ) ;
@@ -507,6 +508,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'SaveButtonix1' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'ContactButton1' )  ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
                        , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
@@ -523,6 +525,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'CancelButton1' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'ContactButton1' )  ) ;
         $this->checkHeaderLoads() ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
@@ -540,6 +543,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'CancelButton1' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'ContactButton1' )  ) ;
         $this->checkHeaderLoads() ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
@@ -553,6 +557,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkHeaderLoads() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton1' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton1' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'ContactButton1' )  ) ;
         $this->checkC1HR() ;
         $this->checkC1R( 1, "/tr[@id='ux1-1']", "/tr[@id='ux1-2']"
                        , 'Company 1', '1 Any Street', 'City 1', 'S1', '11111-1111'
@@ -578,6 +583,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'SaveButtonix2' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'ContactButton2' )  ) ;
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'SaveButtonIx1' ) ) ) ) ;
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'CancelButtonIx1' ) ) ) ) ;
         $this->checkC1HR() ;
@@ -609,6 +615,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'SaveButton2' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'ContactButton2' )  ) ;
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'SaveButtonIx1' ) ) ) ) ;
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'CancelButtonIx1' ) ) ) ) ;
         $this->checkC1HR() ;
@@ -639,6 +646,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $driver->findElement( WebDriverBy::id( 'SaveButton2' ) )->click() ;
         $this->doWaitFor( WebDriverBy::id( 'UpdateButton2' ) ) ;
         $this->doWaitFor( WebDriverBy::id( 'DeleteButton2' ) ) ;
+        $this->doWaitFor( WebDriverBy::id( 'ContactButton2' )  ) ;
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'SaveButtonIx1' ) ) ) ) ;
         $this->assertEquals( 0, count( $driver->findElements( WebDriverBy::id( 'CancelButtonIx1' ) ) ) ) ;
         $this->checkC1HR() ;
