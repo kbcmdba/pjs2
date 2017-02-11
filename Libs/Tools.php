@@ -86,4 +86,17 @@ class Tools {
         return ( isset( $x ) && preg_match( '/^(-|)[0-9]+$/', $x ) ) ;
     }
 
+    /**
+     * Return the MySQL format timestamp value for the given time()
+     * value. If epochTime is null, return the current date and time.
+     *
+     * @param int $epochTime Seconds since January 1, 1970 at midnight
+     * @return string
+     */
+    public static function currentTimestamp( $epochTime = null ) {
+        if ( null === $epochTime ) {
+            $epochTime = time() ;
+        }
+        return date( 'Y-m-d H:i:s', $epochTime ) ;
+    }
 }
