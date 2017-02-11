@@ -64,6 +64,8 @@ try {
     if ( ! ( $result > 0 ) ) {
         throw new ControllerException( "Update failed." ) ;
     }
+    // Get it again because the updated column has changed.
+    $companyModel = $companyController->get( $id ) ;
     $rows   = $clv->displayCompanyRow( $companyModel, 'list', $rowStyle ) ;
     $result = 'OK' ;
 }
