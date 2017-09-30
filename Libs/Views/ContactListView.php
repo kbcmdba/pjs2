@@ -42,7 +42,7 @@ class ContactListView extends ListViewBase {
      * @param ContactModel[] $contactModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $contactModels ) {
+    public function __construct( $viewType = 'html', $contactModels = null ) {
         parent::__construct() ;
         if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
             throw new ViewException( "Unsupported view type\n" ) ;
@@ -118,7 +118,7 @@ HTML;
         }
         switch ( $displayMode ) {
             case 'add' :
-                $companyListView = new CompanyListView( 'html' ) ;
+                $companyListView = new CompanyListView( 'html', null ) ;
                 $companyNames = $companyListView->getCompanyList( "ix$id", $companyId ) ;
                 return <<<RETVAL
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddContact( '$id' )">Save</button>
