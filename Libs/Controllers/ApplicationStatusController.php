@@ -42,15 +42,16 @@ class ApplicationStatusController extends ControllerBase {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS applicationStatus
      (
-       id          INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , statusValue VARCHAR(50) NOT NULL
-     , isActive    BOOLEAN NOT NULL DEFAULT 1
-     , sortKey     SMALLINT(3) UNSIGNED NOT NULL DEFAULT 100
-     , style       VARCHAR(4096) NOT NULL DEFAULT ''
-     , created     TIMESTAMP NOT NULL DEFAULT 0
-     , updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-                   ON UPDATE CURRENT_TIMESTAMP
-     , PRIMARY KEY pk_applicationStatusId ( id )
+       id           INT UNSIGNED NOT NULL AUTO_INCREMENT
+     , statusValue  VARCHAR(50) NOT NULL
+     , isActive     BOOLEAN NOT NULL DEFAULT 1
+     , sortKey      SMALLINT(3) UNSIGNED NOT NULL DEFAULT 100
+     , style        VARCHAR(4096) NOT NULL DEFAULT ''
+     , summaryCount INT UNSIGNED NOT NULL DEFAULT 0
+     , created      TIMESTAMP NOT NULL DEFAULT 0
+     , updated      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+                    ON UPDATE CURRENT_TIMESTAMP
+     , PRIMARY KEY  pk_applicationStatusId ( id )
      )
 SQL;
         $this->_doDDL( $sql ) ;
@@ -93,20 +94,21 @@ INSERT applicationStatus
      , statusValue
      , sortKey
      , style
+     , summaryCount
      , created
      , updated
      )
-VALUES (  1, 1, 'FOUND'       , 10  , 'background-color: lightgreen; color: blue;', NOW(), NOW() )
-     , (  2, 1, 'CONTACTED'   , 20  , 'background-color: orange; color: blue;'    , NOW(), NOW() )
-     , (  3, 1, 'APPLIED'     , 30  , 'background-color: yellow; color: blue;'    , NOW(), NOW() )
-     , (  4, 1, 'INTERVIEWING', 40  , 'background-color: white; color: red;'      , NOW(), NOW() )
-     , (  5, 1, 'FOLLOWUP'    , 50  , 'background-color: yellow; color: black;'   , NOW(), NOW() )
-     , (  6, 1, 'CHASING'     , 60  , 'background-color: red; color: black;'      , NOW(), NOW() )
-     , (  7, 1, 'NETWORKING'  , 70  , 'background-color: cyan; color: black;'     , NOW(), NOW() )
-     , (  8, 0, 'UNAVAILABLE' , 999 , 'background-color: black; color: white;'    , NOW(), NOW() )
-     , (  9, 0, 'INVALID'     , 999 , 'background-color: black; color: white;'    , NOW(), NOW() )
-     , ( 10, 0, 'DUPLICATE'   , 999 , 'background-color: black; color: white;'    , NOW(), NOW() )
-     , ( 11, 0, 'CLOSED'      , 999 , 'background-color: black; color: white;'    , NOW(), NOW() )
+VALUES (  1, 1, 'FOUND'       , 10  , 'background-color: lightgreen; color: blue;', 0, NOW(), NOW() )
+     , (  2, 1, 'CONTACTED'   , 20  , 'background-color: orange; color: blue;'    , 0, NOW(), NOW() )
+     , (  3, 1, 'APPLIED'     , 30  , 'background-color: yellow; color: blue;'    , 0, NOW(), NOW() )
+     , (  4, 1, 'INTERVIEWING', 40  , 'background-color: white; color: red;'      , 0, NOW(), NOW() )
+     , (  5, 1, 'FOLLOWUP'    , 50  , 'background-color: yellow; color: black;'   , 0, NOW(), NOW() )
+     , (  6, 1, 'CHASING'     , 60  , 'background-color: red; color: black;'      , 0, NOW(), NOW() )
+     , (  7, 1, 'NETWORKING'  , 70  , 'background-color: cyan; color: black;'     , 0, NOW(), NOW() )
+     , (  8, 0, 'UNAVAILABLE' , 999 , 'background-color: black; color: white;'    , 0, NOW(), NOW() )
+     , (  9, 0, 'INVALID'     , 999 , 'background-color: black; color: white;'    , 0, NOW(), NOW() )
+     , ( 10, 0, 'DUPLICATE'   , 999 , 'background-color: black; color: white;'    , 0, NOW(), NOW() )
+     , ( 11, 0, 'CLOSED'      , 999 , 'background-color: black; color: white;'    , 0, NOW(), NOW() )
 SQL;
         $this->_doDDL( $sql ) ;
     }
@@ -118,6 +120,7 @@ SELECT id
      , isActive
      , sortKey
      , style
+     , summaryCount
      , created
      , updated
   FROM applicationStatus
@@ -138,6 +141,7 @@ SQL;
                                  , $isActive
                                  , $sortKey
                                  , $style
+                                 , $summaryCount
                                  , $created
                                  , $updated
                                  ) ) {
@@ -150,6 +154,7 @@ SQL;
             $model->setIsActive( $isActive ) ;
             $model->setSortKey( $sortKey ) ;
             $model->setStyle( $style ) ;
+            $model->setSummaryCount( $summaryCount ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
             return( $model ) ;
@@ -166,6 +171,7 @@ SELECT id
      , isActive
      , sortKey
      , style
+     , summaryCount
      , created
      , updated
   FROM applicationStatus
@@ -185,6 +191,7 @@ SQL;
                           , $isActive
                           , $sortKey
                           , $style
+                          , $summaryCount
                           , $created
                           , $updated
                           ) ;
@@ -196,6 +203,7 @@ SQL;
             $model->setIsActive( $isActive ) ;
             $model->setSortKey( $sortKey ) ;
             $model->setStyle( $style ) ;
+            $model->setSummaryCount( $summaryCount ) ;
             $model->setCreated( $created ) ;
             $model->setUpdated( $updated ) ;
             $models[] = $model ;
@@ -223,26 +231,29 @@ INSERT applicationStatus
      , isActive
      , sortKey
      , style
+     , summaryCount
      , created
      , updated
      )
-VALUES ( ?, ?, ?, ?, ?, NOW(), NOW() )
+VALUES ( ?, ?, ?, ?, ?, 0, NOW(), NOW() )
 SQL;
-                $id          = $model->getId() ;
-                $statusValue = $model->getStatusValue() ;
-                $isActive    = $model->getIsActive() ;
-                $sortKey     = $model->getSortKey() ;
-                $style       = $model->getStyle() ;
+                $id           = $model->getId() ;
+                $statusValue  = $model->getStatusValue() ;
+                $isActive     = $model->getIsActive() ;
+                $sortKey      = $model->getSortKey() ;
+                $style        = $model->getStyle() ;
+                $summaryCount = $model->getSummaryCount() ;
                 $stmt = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'isiis'
+                if ( ! ( $stmt->bind_param( 'isiisi'
                                           , $id
                                           , $statusValue
                                           , $isActive
                                           , $sortKey
                                           , $style
+                                          , $summaryCount
                                           ) ) ) {
                     throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
                 }
@@ -284,22 +295,25 @@ UPDATE applicationStatus
      , isActive = ?
      , sortKey = ?
      , style = ?
+     , summaryCount = ?
  WHERE id = ?
 SQL;
-                $id          = $model->getId() ;
-                $statusValue = $model->getStatusValue() ;
-                $isActive    = $model->getIsActive() ;
-                $sortKey     = $model->getSortKey() ;
-                $style       = $model->getStyle() ;
+                $id           = $model->getId() ;
+                $statusValue  = $model->getStatusValue() ;
+                $isActive     = $model->getIsActive() ;
+                $sortKey      = $model->getSortKey() ;
+                $style        = $model->getStyle() ;
+                $summaryCount = $model->getSummaryCount() ;
                 $stmt = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
                 }
-                if ( ! ( $stmt->bind_param( 'siisi'
+                if ( ! ( $stmt->bind_param( 'siisii'
                                           , $statusValue
                                           , $isActive
                                           , $sortKey
                                           , $style
+                                          , $summaryCount
                                           , $id
                                           ) ) ) {
                     throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;

@@ -248,13 +248,31 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         if ( $this->_testMode < 0 ) {
             return ;
         }
+        $this->checkXpathText( '//caption', 'Current Application Statuses' ) ;
+        $this->checkXpathText( '//th', 'Status' ) ;
+        $this->checkXpathText( '//th[2]', 'Count' ) ;
+        $this->checkXpathText( '//th[3]', 'Is Active?' ) ;
+    }
+
+    public function checkJobStatsHR() {
+        // @todo Implement IntegrationTests.php:checkJobStatsHR()
+        sleep( 15 ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+    }
+    
+    public function checkJobsHR() {
+        // @todo Implement IntegrationTests.php:checkJobStatsHR()
+        sleep( 15 ) ;
+        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+    }
+    
+    public function checkSearchesHR() {
+        // @todo Implement IntegrationTests.php:checkJobStatsHR()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
 
     public function doTestSummary1() {
-        // FIXME Turn doTestSummary1 back on.
-        return ;
         if ( $this->_testMode < 0 ) {
             return ;
         }
@@ -262,10 +280,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doLoadFromHeader( 'Summary' ) ;
         $this->checkHeaderLoads() ;
         $this->checkSuHR() ;
-
-        // @todo Implement IntegrationTests.php:doTestSummary2()
-        sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+        $this->checkJobStatsHR() ;
+        $this->checkJobsHR() ;
+        $this->checkSearchesHR() ;
     }
 
     public function checkASHR() {

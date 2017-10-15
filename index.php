@@ -28,16 +28,24 @@ try {
     $dbc = new DBConnection() ;
 }
 catch ( DaoException $ex ) {
-    echo "Has this system been set up yet? Have you used resetDb.php?\n" ;
-    exit() ;
+    echo "Database connection failed. Has this system been set up yet? Have you used resetDb.php?\n" ;
+    exit( 255 ) ;
 }
 
 $config = new Config() ;
 $page = new PJSWebPage( $config->getTitle() ) ;
+$applicationStatusController = new ApplicationStatusController( 'read' ) ;
+$applicationStatusList = $applicationStatusController->getAll() ;
+$appStatusBody = new ApplicationStatusSummaryView( 'html', $applicationStatusList ) ;
 
 // @todo Show application statuses in index page
 // Show Job Statistics
 // Show Jobs
 // Show Searches
 
+$asmList = $applicationStatusController->getAll() ;
+$asv = new ApplicationStatusSummaryView( 'html', $asmList ) ;
+$body .= $asv->getView() ;
+
+$page->setBody( $body ) ;
 $page->displayPage() ;

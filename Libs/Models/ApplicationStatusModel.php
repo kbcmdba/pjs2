@@ -31,6 +31,7 @@ class ApplicationStatusModel extends ModelBase {
     private $_isActive ;
     private $_sortKey ;
     private $_style ;
+    private $_summaryCount ;
     private $_created ;
     private $_updated ;
 
@@ -50,6 +51,7 @@ class ApplicationStatusModel extends ModelBase {
         return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'statusValue' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'sortKey' ) ) )
+               && (   Tools::isNullOrEmptyString( Tools::param( 'summaryCount' ) ) )
                 ) ;
     }
 
@@ -62,7 +64,8 @@ class ApplicationStatusModel extends ModelBase {
         return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'statusValue' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'sortKey' ) ) )
-                ) ;
+               && (   Tools::isNullOrEmptyString( Tools::param( 'summaryCount' ) ) )
+            ) ;
     }
 
     public function populateFromForm() {
@@ -71,6 +74,7 @@ class ApplicationStatusModel extends ModelBase {
         $this->setIsActive( Tools::param( 'isActive' ) ) ;
         $this->setSortKey( Tools::param( 'sortKey' ) ) ;
         $this->setStyle( Tools::param( 'style' ) ) ;
+        $this->setSummaryCount( Tools::param( 'summaryCount' ) ) ;
         $this->setCreated( Tools::param( 'created' ) ) ;
         $this->setUpdated( Tools::param( 'updated' ) ) ;
     }
@@ -143,6 +147,20 @@ class ApplicationStatusModel extends ModelBase {
      */
     public function setStyle( $style ) {
         $this->_style = $style ;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSummaryCount() {
+        return $this->_summaryCount ;
+    }
+
+    /**
+     * @param int $summaryCount
+     */
+    public function setSummaryCount( $summaryCount ) {
+        $this->_summaryCount = $summaryCount ;
     }
 
     /**
