@@ -95,4 +95,18 @@ abstract class ControllerBase {
         }
     }
 
+    /**
+     * @return string Equivalent to MySQL NOW() function
+     */
+    public static function now() {
+        return date( "Y-m-d H:i:s" ) ;
+    }
+
+    /**
+     * @return string Equivalent to MySQL TODAY() function
+     */
+    public static function today() {
+        return date( "Y-m-d" ) ;
+    }
+
 }
