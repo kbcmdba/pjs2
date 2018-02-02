@@ -96,17 +96,59 @@ abstract class ControllerBase {
     }
 
     /**
+     * @param mixed $ts Unix seconds since epoch or null for "now"
+     * @return string
+     */
+    public static function timestamp( $ts = null ) {
+        if ( $ts === null ) {
+            $ts = time() ;
+        }
+        elseif ( ! Tools::isNumeric( $ts ) ) {
+            throw new ControllerException( 'Invalid timestamp: ' . $ts ) ;
+        }
+        return( date( "Y-m-d H:i:s", $ts ) ) ;
+    }
+
+    /**
+     * @param mixed $ts Unix seconds since epoch or null for "now"
+     * @return string
+     */
+    public static function datestamp( $ts = null ) {
+        if ( $ts === null ) {
+            $ts = time() ;
+        }
+        elseif ( ! Tools::isNumeric( $ts ) ) {
+            throw new ControllerException( 'Invalid timestamp: ' . $ts ) ;
+        }
+        return( date( "Y-m-d", $ts ) ) ;
+    }
+
+    /**
      * @return string Equivalent to MySQL NOW() function
      */
     public static function now() {
-        return date( "Y-m-d H:i:s" ) ;
+        return self::timestamp( time() ) ;
     }
 
     /**
      * @return string Equivalent to MySQL TODAY() function
      */
     public static function today() {
-        return date( "Y-m-d" ) ;
+        return self::datestamp() ;
+    }
+
+    /**
+     * @return string Equivalent to MySQL TOMORROW() function
+     */
+    public static function tomorrow() {
+        return self::datestamp( time() + 86400 ) ;
+    }
+
+    /**
+     * @return string Equivalent to MySQL YESTERDAY() function
+     */
+    public static function yesterday() {
+        return self::datestamp( time() - 86400 ) ;
     }
 
 }

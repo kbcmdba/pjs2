@@ -37,15 +37,38 @@ $page = new PJSWebPage( $config->getTitle() ) ;
 $applicationStatusController = new ApplicationStatusController( 'read' ) ;
 $applicationStatusList = $applicationStatusController->getAll() ;
 $appStatusBody = new ApplicationStatusSummaryView( 'html', $applicationStatusList ) ;
-
-// @todo Show application statuses in index page
-// Show Job Statistics
-// Show Jobs
-// Show Searches
-
 $asmList = $applicationStatusController->getAll() ;
 $asv = new ApplicationStatusSummaryView( 'html', $asmList ) ;
 $body .= $asv->getView() ;
+
+$jobController = new JobController( 'read' ) ;
+$now      = $jobController->now() ;
+$today    = $jobController->today() ;
+$tomorrow = $jobController->tomorrow() ;
+$active   = "isActiveSummary = true" ;
+
+$jobsOverdue   =  $jobController->countSome( "$active AND nextActionDue < '$now'" ) ;
+$jobsDueToday  = $jobController->countSome( "$active AND nextActionDue BETWEEN '$today' AND '$tomorrow'" ) ;
+$jobsDue7Days  = $jobController->countSome( "$active AND nextActionDue BETWEEN '$today' AND '$nextWeek'" ) ;
+// @todo # of jobs by urgency
+$highUrgency   = $jobController->countSome( "$active AND urgency = 'high'" ) ;
+$mediumUrgency = $jobController->countSome( "$active AND urgency = 'medium'" ) ;
+$lowUrgency    = $jobController->countSome( "$active AND urgency = 'low'" ) ;
+
+$searchController = new SearchController( 'read' ) ;
+$searches      = $searchController->countSome() ;
+
+$body         .= "<div id=\"overdue\">Active Overdue Jobs: $jobsOverdue</div>\n" ;
+$body         .= "<div id=\"today\">Active Jobs Due Today: $jobsDueToday</div>\n" ;
+$body         .= "<div id=\"7days\">Active Jobs Due In 7 Days: $jobsDue7Days</div>\n" ;
+$body         .= "<div id=\"high\">Active High Urgency Jobs: $highUrgency</div>\n" ;
+$body         .= "<div id=\"medium\">Active Medium Urgency Jobs: $mediumUrgency</div>\n" ;
+$body         .= "<div id=\"low\">Active Low Urgency Jobs: $lowUrgency</div>\n" ;
+
+$body         .= "<div id=\"searches\">Active Job Search URLs: $searches</div>\n" ;
+// @todo Show Jobs
+
+// @todo Show Searches
 
 $page->setBody( $body ) ;
 $page->displayPage() ;

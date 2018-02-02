@@ -30,6 +30,7 @@ class JobModel extends ModelBase {
     private $_primaryContactId ;
     private $_companyId ;
     private $_applicationStatusId ;
+    private $_isActiveSummary ;
     private $_lastStatusChange ;
     private $_urgency ;
     private $_created ;
@@ -152,6 +153,23 @@ class JobModel extends ModelBase {
      */
     public function setApplicationStatusId( $applicationStatusId ) {
         $this->_applicationStatusId = $applicationStatusId ;
+        $applicationStatusController = new ApplicationStatusController( 'read' ) ;
+        $applicationStatusModel = $applicationStatusController->get( $applicationStatusId ) ;
+        $this->_setIsActiveSummary( $applicationStatusModel->getIsActive() ) ;
+    }
+
+    /**
+     * @param boolean $isActive
+     */
+    private function _setIsActiveSummary( $isActive ) {
+        $this->_isActiveSummary = $isActive ;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getIsActiveSummary() {
+        return $this->_isActiveSummary ;
     }
 
     /**

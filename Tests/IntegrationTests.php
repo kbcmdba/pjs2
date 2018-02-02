@@ -83,11 +83,11 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->webDriver->getKeyboard()->sendKeys( $value ) ;
     }
 
-    function doToggleCheckBox( $locator ) {
+    public function doToggleCheckBox( $locator ) {
         $this->webDriver->findElement( $locator )->click() ;
     }
 
-    function doSelectOption( $location, $displayedValue ) {
+    public function doSelectOption( $location, $displayedValue ) {
         $select   = $this->webDriver->findElement( $location ) ;
         $options  = $select->findElements( WebDriverBy::tagName( 'option' ) ) ;
         $wasFound = 0 ;
@@ -197,7 +197,11 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         if ( $this->_testMode < 1 ) {
             return ;
         }
-        $this->doLoadFromHeader( 'Reset Database' ) ;
+        $this->webDriver->get( $this->url . "resetDb.php" ) ;
+        // Could $this->doLoadFromHeader( 'Reset Database' ) ; but then that
+        // would require the index to load properly. If the database isn't
+        // set up yet or the last run had an error in the SQL, this will
+        // always run the reset code.
         $resetElements = array( 'Dropping Triggers: SearchController'
                               , 'Dropping Triggers: KeywordController'
                               , 'Dropping Triggers: JobController'
@@ -254,20 +258,36 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( '//th[3]', 'Is Active?' ) ;
     }
 
-    public function checkJobStatsHR() {
-        // @todo Implement IntegrationTests.php:checkJobStatsHR()
+    /**
+     * @param number $overdue
+     * @param number $dueToday
+     * @param number $due7day
+     * @param number $highUrgency
+     * @param number $mediumUrgency
+     * @param number $lowUrgency
+     */
+    public function checkJobStats( $overdue = 0
+                                 , $dueToday = 0
+                                 , $due7day = 0
+                                 , $highUrgency = 0
+                                 , $mediumUrgency = 0
+                                 , $lowUrgency = 0
+                                 ) {
+        // # of jobs overdue, due today, due 7day
+        // # of jobs by urgency
+        // @todo Implement IntegrationTests.php:checkJobStats()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
     
     public function checkJobsHR() {
-        // @todo Implement IntegrationTests.php:checkJobStatsHR()
+        // @todo Implement IntegrationTests.php:checkJobsHR()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
     
     public function checkSearchesHR() {
-        // @todo Implement IntegrationTests.php:checkJobStatsHR()
+        // @todo Implement IntegrationTests.php:checkJobSearchesHR()
         sleep( 15 ) ;
         $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
     }
@@ -280,7 +300,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doLoadFromHeader( 'Summary' ) ;
         $this->checkHeaderLoads() ;
         $this->checkSuHR() ;
-        $this->checkJobStatsHR() ;
+        $this->checkJobStats( 0, 0, 0, 0, 0, 0 ) ;
         $this->checkJobsHR() ;
         $this->checkSearchesHR() ;
     }

@@ -198,6 +198,41 @@ SQL;
     }
 
     /**
+     * Count the number of matching searches
+     *
+     * @param string $whereClause
+     * @throws ControllerException
+     * @return int
+     */
+    public function countSome( $whereClause = '1 = 1') {
+        $sql = <<<SQL
+SELECT COUNT( id )
+  FROM search
+ WHERE $whereClause
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $count ) ;
+        $stmt->fetch() ;
+        return( $count ) ;
+    }
+
+    /**
+     * Count the number rows in the table
+     *
+     * @throws ControllerException
+     * @return int
+     */
+    public function countAll() {
+        return $this->countSome() ;
+    }
+
+    /**
      * @param SearchModel $model
      * @see ControllerBase::add()
      */

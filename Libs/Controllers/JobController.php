@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS job
      , primaryContactId      INT UNSIGNED NULL DEFAULT NULL
      , companyId             INT UNSIGNED NULL DEFAULT NULL
      , applicationStatusId   INT UNSIGNED NULL DEFAULT NULL
+     , isActiveSummary       BOOLEAN NOT NULL DEFAULT false
      , lastStatusChange      TIMESTAMP NOT NULL DEFAULT 0
      , urgency               ENUM( 'high', 'medium', 'low' ) NOT NULL DEFAULT 'low'
      , created               TIMESTAMP NOT NULL DEFAULT 0
@@ -149,6 +150,13 @@ SQL;
         $this->_doDDL( $sql ) ;
     }
 
+    /**
+     * Get up to one matching model
+     *
+     * @param int $id
+     * @throws ControllerException
+     * @return NULL|JobModel
+     */
     public function get( $id ) {
         $sql = <<<SQL
 SELECT id
@@ -212,6 +220,13 @@ SQL;
         return( $model ) ;
     }
 
+    /**
+     * Get models matching the where clause
+     *
+     * @param string $whereClause
+     * @throws ControllerException
+     * @return JobModel[]
+     */
     public function getSome( $whereClause = '1 = 1') {
         $sql = <<<SQL
 SELECT id
@@ -274,8 +289,49 @@ SQL;
         return( $models ) ;
     }
 
+    /**
+     * Get all models from the table
+     *
+     * @throws ControllerException
+     * @return JobModel[]
+     */
     public function getAll() {
         return $this->getSome() ;
+    }
+
+    /**
+     * Count the number of rows matching the where clause in this table.
+     * 
+     * @param string $whereClause
+     * @throws ControllerException
+     * @return int
+     */
+    public function countSome( $whereClause = '1 = 1') {
+        $sql = <<<SQL
+SELECT COUNT( id )
+  FROM job
+ WHERE $whereClause
+SQL;
+        $stmt = $this->_dbh->prepare( $sql ) ;
+        if ( ! $stmt ) {
+            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ') ' . $sql ) ;
+        }
+        if ( ! $stmt->execute() ) {
+            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        }
+        $stmt->bind_result( $count ) ;
+        $stmt->fetch() ;
+        return $count ;
+    }
+
+    /**
+     * Count the number of rows in the table.
+     *
+     * @throws ControllerException
+     * @return int
+     */
+    public function countAll() {
+        return $this->countSome() ;
     }
 
     /**
