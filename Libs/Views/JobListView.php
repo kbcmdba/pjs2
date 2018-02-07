@@ -264,7 +264,7 @@ HTML;
       <td style="$applicationStatusStyle">$applicationStatusValue</td>
       <td>$nextAction</td>
       <td>$nextActionDue</td>
-      <td><a href="$url">$url</a></td>
+      <td><a href="$url" target="_blank">Link</a></td>
       <td>$lastStatusChange</td>
       <td>$created</td>
       <td>$updated</td>

@@ -38,10 +38,10 @@ $controllerNames = array ( 'VersionController'
                          ) ;
 $controllers = array () ;
 
+$config = new Config() ;
+$page = new PJSWebPage( $config->getTitle() . " - Reset DB", true ) ;
+$body = "<ul>\n" ;
 try {
-    $config = new Config() ;
-    $page = new PJSWebPage( $config->getTitle() . " - Reset DB", true ) ;
-    $body = "<ul>\n" ;
 
     $dbc = new DBConnection( "admin", null, null, null, null, null, 'mysqli', true ) ;
     if ( ! $dbc->getCreatedDb() ) {
