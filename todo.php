@@ -21,10 +21,11 @@
  *
  */
 
+// @todo 01 Make it possible to set job.nextActionDue to be a datetime not just a date.
+// @todo 01 Make it possible to set job.lastStatusChange to be a datetime, not just a date.
 // @todo 06 Implement last contact date for contacts
 // @todo 06 Implement and test last contact date update button for contacts
 // @todo 10 Implement data validation tests for all required fields
-// @todo 20 Implement summary page
 // @todo 40 Jobs: Make it possible to log time and date together with jobs
 // @todo 50 Write note interface for contacts
 // @todo 50 Write note interface for jobs
