@@ -151,17 +151,6 @@ function ajaxValidateJob( primaryContactId
         ) {
         message += "Urgency is required.\n" ;
     }
-    if  ( ( null === nextAction )
-       || ( '' === nextAction )
-        ) {
-        message += "Next action is required.\n" ;
-    }
-    if  ( ( null !== nextActionDue )
-       && ( '' !== nextActionDue )
-       && ( ! isDateValid( nextActionDue, false ) )
-        ) {
-        message += "nextActionDue must be valid.\n" ;
-    }
     if  ( ( null === positionTitle )
        || ( '' === positionTitle )
         ) {

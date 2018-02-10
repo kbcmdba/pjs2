@@ -47,13 +47,13 @@ CREATE TABLE IF NOT EXISTS job
      , companyId             INT UNSIGNED NULL DEFAULT NULL
      , applicationStatusId   INT UNSIGNED NULL DEFAULT NULL
      , isActiveSummary       BOOLEAN NOT NULL DEFAULT false
-     , lastStatusChange      TIMESTAMP NOT NULL DEFAULT 0
+     , lastStatusChange      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
      , urgency               ENUM( 'high', 'medium', 'low' ) NOT NULL DEFAULT 'low'
-     , created               TIMESTAMP NOT NULL DEFAULT 0
+     , created               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP
-     , nextActionDue         TIMESTAMP NOT NULL DEFAULT 0
-     , nextAction            VARCHAR(255) NOT NULL DEFAULT ''
+     , nextActionDue         TIMESTAMP NULL DEFAULT NULL
+     , nextAction            VARCHAR(255) NULL DEFAULT ''
      , positionTitle         VARCHAR(255) NOT NULL DEFAULT ''
      , location              VARCHAR(255) NOT NULL DEFAULT ''
      , url                   VARCHAR(4096) NOT NULL DEFAULT ''

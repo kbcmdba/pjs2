@@ -58,8 +58,6 @@ class JobModel extends ModelBase {
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'applicationStatusId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'urgency' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'nextActionDue' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'nextAction' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'positionTitle' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'location' ) ) )
                 ) ;
@@ -76,8 +74,6 @@ class JobModel extends ModelBase {
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'companyId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'applicationStatusId' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'urgency' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'nextActionDue' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'nextAction' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'positionTitle' ) ) )
                && ( ! Tools::isNullOrEmptyString( Tools::param( 'location' ) ) )
                 ) ;
@@ -238,6 +234,11 @@ class JobModel extends ModelBase {
      * @return string
      */
     public function getNextActionDue() {
+        if  ( ( ! isset( $this->_nextActionDue ) )
+           || ( $this->_nextActionDue === '0000-00-00 00:00:00' )
+            ) {
+            return '' ;
+        }
         return $this->_nextActionDue ;
     }
 
@@ -245,6 +246,9 @@ class JobModel extends ModelBase {
      * @param string $nextActionDue
      */
     public function setNextActionDue( $nextActionDue ) {
+        if ( $nextActionDue === '' ) {
+            $nextActionDue = null ;
+        }
         $this->_nextActionDue = $nextActionDue ;
     }
 
@@ -252,6 +256,9 @@ class JobModel extends ModelBase {
      * @return string
      */
     public function getNextAction() {
+        if ( ! isset( $this->_nextAction ) ) {
+            return '' ;
+        }
         return $this->_nextAction ;
     }
 
@@ -259,6 +266,9 @@ class JobModel extends ModelBase {
      * @param string $nextAction
      */
     public function setNextAction( $nextAction ) {
+        if ( ! isset( $nextAction ) ) {
+            $nextAction = '' ;
+        }
         $this->_nextAction = $nextAction ;
     }
 
