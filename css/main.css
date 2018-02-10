@@ -22,41 +22,41 @@
  */
 
 body {
-	background-color: white;
+	background-color: white ;
 }
 
 ul#navBar {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-    overflow: hidden;
-    background-color: #8080c0;
+	list-style-type: none ;
+	margin: 0 ;
+	padding: 0 ;
+    overflow: hidden ;
+    background-color: #8080c0 ;
 }
 
 ul#navBar li {
 	float: left;
-	border-right: 1px solid #dddddd;
-	border-left: 1px solid #dddddd;
+	border-right: 1px solid #dddddd ;
+	border-left: 1px solid #dddddd ;
 }
 
 ul#navBar li:last-child {
-    border-left: none;
+    border-left: none ;
 }
 
 ul#navBar li:last-child {
-	border-right: none;
+	border-right: none ;
 }
 
 ul#navBar li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 10px 12px;
-    text-decoration: none;
+    display: block ;
+    color: white ;
+    text-align: center ;
+    padding: 10px 12px ;
+    text-decoration: none ;
 }
 
 ul#navBar li a:hover {
-	background-color: #111;
+	background-color: #111 ;
 }
 
 .thead th {
@@ -64,9 +64,13 @@ ul#navBar li a:hover {
 }
 
 .treven td {
-    background-color: #F8F8FF;
+    background-color: #F8F8FF ;
 }
 
 .trodd td {
-	background-color: #FFFFF0;
+	background-color: #FFFFF0 ;
+}
+
+.overdue {
+	background-color: yellow ;
 }

@@ -135,21 +135,20 @@ HTML;
      */
     public function displayJobRow( $jobModel, $displayMode, $errorMessage = '' ) {
         $id = $jobModel->getId() ;
-        if ( 'add' === $displayMode ) {
-            $primaryContactId = $companyId
-                              = $applicationStatusId
-                              = $lastStatusChange
-                              = $urgency
-                              = $created
-                              = $updated
-                              = $nextActionDue
-                              = $nextAction 
-                              = $positionTitle
-                              = $location
-                              = $url
-                              = '' ;
-        }
-        else {
+        $primaryContactId = $companyId
+                          = $applicationStatusId
+                          = $lastStatusChange
+                          = $urgency
+                          = $created
+                          = $updated
+                          = $nextActionDue
+                          = $nextAction
+                          = $positionTitle
+                          = $location
+                          = $url
+                          = $dueClass
+                          = '' ;
+        if ( 'add' !== $displayMode ) {
             $primaryContactId    = $jobModel->getPrimaryContactId() ;
             $contactController   = new ContactController( 'read' ) ;
             if ( $primaryContactId >= 1 ) {
@@ -179,15 +178,17 @@ HTML;
                 $applicationStatusValue = '---' ;
                 $applicationStatusStyle = '' ;
             }
-            $lastStatusChange    = $jobModel->getLastStatusChange() ;
-            $urgency             = $jobModel->getUrgency() ;
-            $created             = $jobModel->getCreated() ;
-            $updated             = $jobModel->getUpdated() ;
-            $nextActionDue       = $jobModel->getNextActionDue() ;
-            $nextAction          = $jobModel->getNextAction() ;
-            $positionTitle       = $jobModel->getPositionTitle() ;
-            $location            = $jobModel->getLocation() ;
-            $url                 = $jobModel->getUrl() ;
+            $lastStatusChange = $jobModel->getLastStatusChange() ;
+            $urgency          = $jobModel->getUrgency() ;
+            $created          = $jobModel->getCreated() ;
+            $updated          = $jobModel->getUpdated() ;
+            $nextActionDue    = $jobModel->getNextActionDue() ;
+            $nextAction       = $jobModel->getNextAction() ;
+            $positionTitle    = $jobModel->getPositionTitle() ;
+            $location         = $jobModel->getLocation() ;
+            $url              = $jobModel->getUrl() ;
+            $now              = Tools::currentTimestamp() ;
+            $dueClass         = ( isset( $nextActionDue ) && ( $nextActionDue !== '' ) && ( $nextActionDue < $now ) ) ? "class=\"overdue\"" : "" ;
         }
         switch ( $displayMode ) {
             case 'add' :
@@ -204,7 +205,7 @@ HTML;
       <td>{$this->_contactList}</td>
       <td>{$this->_applicationStatusList}</td>
       <td><input type="text" id="nextActionix$id" value="$nextAction" /></td>
-      <td><input type="text" id="nextActionDueix$id" value="$nextActionDue" class="datepicker" /></td>
+      <td $dueClass><input type="text" id="nextActionDueix$id" value="$nextActionDue" class="datepicker" /></td>
       <td><input type="text" id="urlix$id" value="$url" /></td>
       <td><input type="text" id="lastStatusChangeix$id" value="$lastStatusChange" class="datepicker" /></td>
       <td>$created</td>
@@ -226,12 +227,12 @@ HTML;
       <td>{$this->_contactList}</td>
       <td>{$this->_applicationStatusList}</td>
       <td><input type="text" id="nextAction$id" value="$nextAction" /></td>
-      <td><input type="text" id="nextActionDue$id" value="$nextActionDue" class="datepicker" /></td>
+      <td $dueClass><input type="text" id="nextActionDue$id" value="$nextActionDue" class="datepicker" /></td>
       <td><input type="text" id="url$id" value="$url" /></td>
       <td><input type="text" id="lastStatusChange$id" value="$lastStatusChange" class="datepicker" /></td>
       <td>$created</td>
       <td>$updated</td>
-                
+
 HTML;
                 break ;
             case 'delete' :
@@ -247,7 +248,7 @@ HTML;
       <td>$contactName</td>
       <td style="$applicationStatusStyle">$applicationStatusValue</td>
       <td>$nextAction</td>
-      <td>$nextActionDue</td>
+      <td $dueClass>$nextActionDue</td>
       <td><a href="$url">$url</a></td>
       <td>$lastStatusChange</td>
       <td>$created</td>
@@ -268,7 +269,7 @@ HTML;
       <td>$contactName</td>
       <td style="$applicationStatusStyle">$applicationStatusValue</td>
       <td>$nextAction</td>
-      <td>$nextActionDue</td>
+      <td $dueClass>$nextActionDue</td>
       <td><a href="$url" target="_blank">Link</a></td>
       <td>$lastStatusChange</td>
       <td>$created</td>
