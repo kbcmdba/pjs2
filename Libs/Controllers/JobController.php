@@ -77,7 +77,7 @@ SQL;
     }
 
     public function dropTriggers() {
-        $sql = "DROP TRIGGER IF EXISTS jobAfterInsertTrigger" ;
+        $sql = "DROP TRIGGER IF EXISTS jobBeforeInsertTrigger" ;
         $this->_doDDL( $sql ) ;
         $sql = "DROP TRIGGER IF EXISTS jobAfterUpdateTrigger" ;
         $this->_doDDL( $sql ) ;
@@ -87,7 +87,7 @@ SQL;
 
     public function createTriggers() {
         $sql = <<<SQL
-CREATE TRIGGER jobAfterInsertTrigger
+CREATE TRIGGER jobBeforeInsertTrigger
 BEFORE INSERT
     ON job
    FOR EACH ROW
