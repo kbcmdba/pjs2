@@ -102,7 +102,12 @@ HTML;
         return $body ;
     }
 
-    private function _getListValues( $id, $contactId, $companyId, $applicationStatusId, $urgency ) {
+    private function _getListValues( $id
+                                   , $contactId
+                                   , $companyId
+                                   , $applicationStatusId
+                                   , $urgency
+                                   ) {
         $contactListView              = new ContactListView( 'html', null ) ;
         $this->_contactList           = $contactListView->getContactList( "$id", $contactId ) ;
         $companyListView              = new CompanyListView( 'html', null ) ;
@@ -208,7 +213,7 @@ HTML;
 HTML;
                 break ;
             case 'update' :
-                $this->_getListValues( $id, $contactId, $companyId, $applicationStatusId, $urgency ) ;
+                $this->_getListValues( $id, $primaryContactId, $companyId, $applicationStatusId, $urgency ) ;
                 return <<<HTML
       <td><button type="button" id="SaveButton$id" onclick="saveUpdateJob( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>

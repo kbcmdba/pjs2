@@ -227,9 +227,9 @@ RETVAL;
         $contactController = new ContactController() ;
         $contacts = $contactController->getAll() ;
         foreach ( $contacts as $contact ) {
-            $selected = ( $contact->getId() === $value ) ? "selected=\"selected\"" : "" ;
-            $cname    = $contact->getContactName() ;
             $cid      = $contact->getId() ;
+            $cname    = $contact->getContactName() ;
+            $selected = ( $cid === $value ) ? "selected=\"selected\"" : "" ;
             $retVal   .= "  <option value=\"$cid\" $selected>$cname</option>\n" ;
         }
         $retVal .= "</select>\n" ;

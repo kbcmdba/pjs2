@@ -263,9 +263,9 @@ HTML;
         $companyController = new CompanyController() ;
         $companies = $companyController->getAll() ;
         foreach ( $companies as $company ) {
-            $selected = ( $company->getId() === $value ) ? "selected=\"selected\"" : "" ;
-            $cname = $company->getCompanyName() ;
             $cid   = $company->getId() ;
+            $cname = $company->getCompanyName() ;
+            $selected = ( $cid === $value ) ? "selected=\"selected\"" : "" ;
             $retVal .= "  <option value=\"$cid\" $selected>$cname</option>\n" ;
         }
         $retVal .= "</select>\n" ;
