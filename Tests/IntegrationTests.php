@@ -29,6 +29,8 @@ set_include_path( get_include_path()
 use Facebook\WebDriver\Remote\DesiredCapabilities ;
 use Facebook\WebDriver\Remote\RemoteWebDriver ;
 use Facebook\WebDriver\WebDriverBy ;
+use Facebook\WebDriver\Firefox\FirefoxPreferences;
+use Facebook\WebDriver\Firefox\FirefoxProfile;
 
 require_once('vendor/autoload.php');
 
@@ -58,7 +60,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     private $_testMode   = 100 ;
 
     public function setUp() {
-        $capabilities = DesiredCapabilities::firefox() ;
+        $capabilities = DesiredCapabilities::chrome() ;
         $this->webDriver = RemoteWebDriver::create( 'http://localhost:4444/wd/hub', $capabilities ) ;
     }
 
@@ -88,7 +90,13 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function doSelectOption( $location, $displayedValue ) {
-        $select   = $this->webDriver->findElement( $location ) ;
+        try {
+            $select   = $this->webDriver->findElement( $location ) ;
+        }
+        catch ( Exception $e ) {
+            sleep( 1 ) ;
+            $select   = $this->webDriver->findElement( $location ) ;
+        }
         $options  = $select->findElements( WebDriverBy::tagName( 'option' ) ) ;
         $wasFound = 0 ;
         foreach ( $options as $option ) {
@@ -124,18 +132,37 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     public function checkIdText( $locator, $text ) {
-        $element = $this->webDriver->findElement( WebDriverBy::id( $locator ) ) ;
+        $element = null ;
+        try {
+            $element = $this->webDriver->findElement( WebDriverBy::id( $locator ) ) ;
+        }
+        catch ( Exception $ex ) {
+            sleep( 1 ) ;
+            $element = $this->webDriver->findElement( WebDriverBy::id( $locator ) ) ;
+        }
         $this->assertEquals( $text, $element->getText() ) ;
     }
 
     public function checkIdValue( $locator, $value ) {
-        $element = $this->webDriver->findElement( WebDriverBy::id( $locator ) ) ;
+        $element = null ;
+        try {
+            $element = $this->webDriver->findElement( WebDriverBy::id( $locator ) ) ;
+        }
+        catch ( Exception $ex ) {
+            sleep( 1 ) ;
+            $element = $this->webDriver->findElement( WebDriverBy::id( $locator ) ) ;
+        }
         $this->assertEquals( $value, $element->getAttribute( "value" ) ) ;
     }
 
     public function checkXpathText( $locator, $text ) {
         $element = $this->webDriver->findElement( WebDriverBy::xpath( $locator ) ) ;
         $this->assertEquals( $text, $element->getText() ) ;
+    }
+
+    public function checkXpathLinkUrl( $locator, $text ) {
+        $element = $this->webDriver->findElement( WebDriverBy::xpath( $locator ) ) ;
+        $this->assertEquals( $text, $element->getAttribute( 'href' ) ) ;
     }
 
     public function checkXpathPattern( $locator, $pattern ) {
@@ -259,39 +286,31 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @param number $overdue
-     * @param number $dueToday
-     * @param number $due7day
-     * @param number $highUrgency
-     * @param number $mediumUrgency
-     * @param number $lowUrgency
+     * @param String $overdue
+     * @param String $dueToday
+     * @param String $due7day
+     * @param String $highUrgency
+     * @param String $mediumUrgency
+     * @param String $lowUrgency
+     * @param String $searches
      */
-    public function checkJobStats( $overdue = 0
-                                 , $dueToday = 0
-                                 , $due7day = 0
-                                 , $highUrgency = 0
-                                 , $mediumUrgency = 0
-                                 , $lowUrgency = 0
+    public function checkJobStats( $overdue = "0"
+                                 , $dueToday = "0"
+                                 , $due7day = "0"
+                                 , $highUrgency = "0"
+                                 , $mediumUrgency = "0"
+                                 , $lowUrgency = "0"
+                                 , $searches = "0"
                                  ) {
-        // # of jobs overdue, due today, due 7day
-        // # of jobs by urgency
-        // @todo Implement IntegrationTests.php:checkJobStats()
-        sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
+        $this->checkIdText( 'overdue_count', $overdue ) ;
+        $this->checkIdText( 'today_count', $dueToday ) ;
+        $this->checkIdText( '7day_count', $due7day ) ;
+        $this->checkIdText( 'high_count', $highUrgency ) ;
+        $this->checkIdText( 'med_count', $mediumUrgency ) ;
+        $this->checkIdText( 'low_count', $lowUrgency ) ;
+        $this->checkIdText( 'search_count', $searches ) ;
     }
     
-    public function checkJobsHR() {
-        // @todo Implement IntegrationTests.php:checkJobsHR()
-        sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
-    }
-    
-    public function checkSearchesHR() {
-        // @todo Implement IntegrationTests.php:checkJobSearchesHR()
-        sleep( 15 ) ;
-        $this->markTestIncomplete( 'Left off here. ' . __FILE__ . ':' . __LINE__ ) ;
-    }
-
     public function doTestSummary1() {
         if ( $this->_testMode < 0 ) {
             return ;
@@ -300,9 +319,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doLoadFromHeader( 'Summary' ) ;
         $this->checkHeaderLoads() ;
         $this->checkSuHR() ;
-        $this->checkJobStats( 0, 0, 0, 0, 0, 0 ) ;
-        $this->checkJobsHR() ;
-        $this->checkSearchesHR() ;
+        $this->checkJobStats() ;
     }
 
     public function checkASHR() {
@@ -743,7 +760,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
                        , 'None', '', '333-333-3333', 'http://testme3.com/'
                        , date( 'Y-m-d H:i:s' )
                        ) ;
-        }
+    }
 
     public function checkC2HR() {
         if ( $this->_testMode < 0 ) {
@@ -960,7 +977,8 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->checkXpathText( "/$prefix/td[7]", $applicationStatus ) ;
         $this->checkXpathText( "/$prefix/td[8]", $nextAction ) ;
         $this->checkXpathText( "/$prefix/td[9]", $nextActionDue . ' 00:00:00' ) ;
-        $this->checkXpathText( "/$prefix/td[10]", $url ) ;
+        $this->checkXpathText( "/$prefix/td[10]", "Link" ) ;
+        $this->checkXpathLinkUrl( "/$prefix/td[10]/a", $url ) ;
         $this->checkXpathText( "/$prefix/td[11]", $lastStatusChange . ' 00:00:00' ) ;
     }
 
@@ -1275,6 +1293,7 @@ class IntegrationTests extends PHPUnit_Framework_TestCase {
         $this->doLoadFromHeader( 'Summary' ) ;
         $this->checkHeaderLoads() ;
         $this->checkSuHR() ;
+        $this->checkJobStats( "1", "0", "0", "0", "0", "1", "1" ) ;
 
         // @todo Implement IntegrationTests.php:doTestSummary2()
         sleep( 15 ) ;

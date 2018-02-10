@@ -162,6 +162,8 @@ function saveAddApplicationStatus( id ) {
                 + "&style=" + encodeURIComponent( style )
                 + "&isActive=" + ( isActive ? '1' : '0' )
                 + "&sortKey=" + encodeURIComponent( sortKey )
+                + "&rowId=" + encodeURIComponent( rowId )
+                + "&rowStyle=add"
                 ;
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {

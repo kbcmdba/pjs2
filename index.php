@@ -58,17 +58,18 @@ $lowUrgency    = $jobController->countSome( "$active AND urgency = 'low'" ) ;
 $searchController = new SearchController( 'read' ) ;
 $searches      = $searchController->countSome() ;
 
-$body         .= "<div id=\"overdue\">Active Overdue Jobs: $jobsOverdue</div>\n" ;
-$body         .= "<div id=\"today\">Active Jobs Due Today: $jobsDueToday</div>\n" ;
-$body         .= "<div id=\"7days\">Active Jobs Due In 7 Days: $jobsDue7Days</div>\n" ;
-$body         .= "<div id=\"high\">Active High Urgency Jobs: $highUrgency</div>\n" ;
-$body         .= "<div id=\"medium\">Active Medium Urgency Jobs: $mediumUrgency</div>\n" ;
-$body         .= "<div id=\"low\">Active Low Urgency Jobs: $lowUrgency</div>\n" ;
+$body .= <<<HTML
 
-$body         .= "<div id=\"searches\">Active Job Search URLs: $searches</div>\n" ;
-// @todo Show Jobs
+<div id="overdue">Active Overdue Jobs: <span id="overdue_count">$jobsOverdue</span></div>
+<div id="today">Active Jobs Due Today: <span id="today_count">$jobsDueToday</span></div>
+<div id="7days">Active Jobs Due In 7 Days: <span id="7day_count">$jobsDue7Days</span></div>
+<div id="high">Active High Urgency Jobs: <span id="high_count">$highUrgency</span></div>
+<div id="med">Active Medium Urgency Jobs: <span id="med_count">$mediumUrgency</span></div>
+<div id="low">Active Low Urgency Jobs: <span id="low_count">$lowUrgency</span></div>
 
-// @todo Show Searches
+<div id="searches">Active Job Search URLs: <span id="search_count">$searches</span></div>
+
+HTML;
 
 $page->setBody( $body ) ;
 $page->displayPage() ;

@@ -222,7 +222,7 @@ SQL;
      * @see ControllerBase::update()
      */
     public function add( $model ) {
-            if ( $model->validateForAdd() ) {
+        if ( $model->validateForAdd() ) {
             try {
                 $query = <<<SQL
 INSERT applicationStatus
@@ -235,7 +235,7 @@ INSERT applicationStatus
      , created
      , updated
      )
-VALUES ( ?, ?, ?, ?, ?, 0, NOW(), NOW() )
+VALUES ( ?, ?, ?, ?, ?, ?, NOW(), NOW() )
 SQL;
                 $id           = $model->getId() ;
                 $statusValue  = $model->getStatusValue() ;
@@ -243,6 +243,7 @@ SQL;
                 $sortKey      = $model->getSortKey() ;
                 $style        = $model->getStyle() ;
                 $summaryCount = $model->getSummaryCount() ;
+                $summaryCount = ( isset( $summaryCount ) ) ? $summaryCount : 0 ;
                 $stmt = $this->_dbh->prepare( $query ) ;
                 if ( ! $stmt ) {
                     throw new ControllerException( 'Prepared statement failed for ' . $query ) ;

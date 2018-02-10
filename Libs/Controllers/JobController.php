@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS job
                 ON DELETE CASCADE
                 ON UPDATE CASCADE
      )
+
 SQL;
         $this->_doDDL( $sql ) ;
     }
@@ -87,15 +88,26 @@ SQL;
     public function createTriggers() {
         $sql = <<<SQL
 CREATE TRIGGER jobAfterInsertTrigger
- AFTER INSERT
+BEFORE INSERT
     ON job
    FOR EACH ROW
  BEGIN
+       DECLARE newIsActive BOOLEAN ;
+       DECLARE newApplicationStatusId INT UNSIGNED DEFAULT NEW.applicationStatusId ;
+
+       SELECT isActive INTO newIsActive
+         FROM applicationStatus
+        WHERE id = newApplicationStatusId
+            ;
+          SET NEW.isActiveSummary = newIsActive
+            ;
        UPDATE applicationStatusSummary
            AS jss
           SET jss.statusCount = jss.statusCount + 1
-        WHERE jss.id = NEW.applicationStatusId ;
+        WHERE jss.id = NEW.applicationStatusId
+            ;
    END
+
 SQL;
         $this->_doDDL( $sql ) ;
         $sql = <<<SQL
@@ -109,15 +121,18 @@ BEFORE UPDATE
               IF 0 = NEW.lastStatusChange
             THEN
                  SET NEW.lastStatusChange = NOW() ;
-             END IF ;
+             END IF
+               ;
             UPDATE applicationStatusSummary
                 AS jss
                SET jss.statusCount = jss.statusCount + 1
-             WHERE jss.id = NEW.applicationStatusId ;
+             WHERE jss.id = NEW.applicationStatusId
+                 ;
             UPDATE applicationStatusSummary
                 AS jss
-               SET jss.statusCount = jss.statusCount + 1
-             WHERE jss.id = OLD.applicationStatusId ;
+               SET jss.statusCount = jss.statusCount - 1
+             WHERE jss.id = OLD.applicationStatusId
+                 ;
         END IF ;
          IF OLD.id <> NEW.id
        THEN
@@ -128,6 +143,7 @@ BEFORE UPDATE
                  ;
       END IF ;
    END
+
 SQL;
         $this->_doDDL( $sql ) ;
         $sql = <<<SQL
@@ -146,6 +162,7 @@ CREATE TRIGGER jobAfterDeleteTrigger
         WHERE note.appliesToTable = 'job'
           AND note.appliesToId = OLD.id ;
    END
+
 SQL;
         $this->_doDDL( $sql ) ;
     }
@@ -174,6 +191,7 @@ SELECT id
      , url
   FROM job
  WHERE id = ?
+
 SQL;
         $stmt = $this->_dbh->prepare( $sql ) ;
         if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
@@ -246,6 +264,7 @@ SELECT id
  WHERE $whereClause
  ORDER
     BY nextActionDue DESC
+
 SQL;
         $stmt = $this->_dbh->prepare( $sql ) ;
         if ( ! $stmt ) {
@@ -307,11 +326,7 @@ SQL;
      * @return int
      */
     public function countSome( $whereClause = '1 = 1') {
-        $sql = <<<SQL
-SELECT COUNT( id )
-  FROM job
- WHERE $whereClause
-SQL;
+        $sql = "SELECT COUNT( id ) FROM job WHERE $whereClause" ;
         $stmt = $this->_dbh->prepare( $sql ) ;
         if ( ! $stmt ) {
             throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ') ' . $sql ) ;
@@ -357,6 +372,7 @@ INSERT job
      , url
      )
 VALUES ( NULL, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ? )
+
 SQL;
                 $primaryContactId    = $model->getPrimaryContactId() ;
                 $companyId           = $model->getCompanyId() ;
@@ -429,6 +445,7 @@ UPDATE job
      , location = ?
      , url = ?
  WHERE id = ?
+
 SQL;
                 $id                  = $model->getId() ;
                 $primaryContactId    = $model->getPrimaryContactId() ;

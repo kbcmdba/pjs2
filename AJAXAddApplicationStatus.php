@@ -32,6 +32,8 @@ $statusValue               = Tools::post( 'statusValue' ) ;
 $style                     = Tools::post( 'style' ) ;
 $isActive                  = Tools::post( 'isActive' ) ;
 $sortKey                   = Tools::post( 'sortKey' ) ;
+$rowId                     = Tools::post( 'rowId' ) ;
+$rowStyle                  = Tools::post( 'rowStyle' ) ;
 $result                    = 'OK' ;
 $applicationStatusId       = '' ;
 $newApplicationStatusModel = null ;
@@ -54,7 +56,8 @@ try {
 }
 catch ( ControllerException $e ) {
     $applicationStatusRowView = new ApplicationStatusListView( 'html', null ) ;
-    $row = $applicationStatusRowView->displayApplicationStatusRow( $newApplicationStatusModel
+    $applicationStatusModel->setId( $rowId ) ;
+    $row = $applicationStatusRowView->displayApplicationStatusRow( $applicationStatusModel
                                            , 'list'
                                            , 'Add Application Status record failed. '
                                            . $e->getMessage()
