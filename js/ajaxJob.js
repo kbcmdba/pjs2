@@ -140,9 +140,15 @@ function ajaxValidateJob( primaryContactId
         ) {
         message += "Application Status must be valid.\n" ;
     }
-    if  ( ( null !== lastStatusChange )
-       && ( '' !== lastStatusChange )
-       && ( ! isDateValid( lastStatusChange, true ) )
+    if  ( !  ( isDateTimeValid( nextActionDue, false )
+            || isDateValid( nextActionDue, false )
+             )
+        ) {
+        message += "Next Action Due must be valid.\n" ;
+    }
+    if  ( !  ( isDateValid( lastStatusChange, true )
+            || isDateTimeValid( lastStatusChange, true )
+             )
         ) {
         message += "Last Status Change must be valid.\n" ;
     }

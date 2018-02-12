@@ -83,7 +83,7 @@ function isDateTimeValid( dateTimeString, isRequired ) {
         }
     }
     else {
-        retVal = ( ( null !== dateString ) && ( '' !== dateString ) ) ;
+        retVal = ( ( null !== dateTimeString ) && ( '' !== dateTimeString ) ) ;
     }
     retVal = ( retVal && ( null !== dateTimeString.match( regex ) ) ) ;
     if ( retVal ) {
