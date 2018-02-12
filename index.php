@@ -50,7 +50,6 @@ $active   = "isActiveSummary = true" ;
 $jobsOverdue   =  $jobController->countSome( "$active AND nextActionDue < '$now'" ) ;
 $jobsDueToday  = $jobController->countSome( "$active AND nextActionDue BETWEEN '$today' AND '$tomorrow'" ) ;
 $jobsDue7Days  = $jobController->countSome( "$active AND nextActionDue BETWEEN '$today' AND '$nextWeek'" ) ;
-// @todo # of jobs by urgency
 $highUrgency   = $jobController->countSome( "$active AND urgency = 'high'" ) ;
 $mediumUrgency = $jobController->countSome( "$active AND urgency = 'medium'" ) ;
 $lowUrgency    = $jobController->countSome( "$active AND urgency = 'low'" ) ;
