@@ -21,10 +21,11 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Search List View
  */
-
 class SearchListView extends ListViewBase
 {
 

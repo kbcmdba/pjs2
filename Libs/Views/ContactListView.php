@@ -21,11 +21,11 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Contact List View
- *
  */
-
 class ContactListView extends ListViewBase
 {
 

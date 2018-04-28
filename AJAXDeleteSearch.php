@@ -20,6 +20,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;

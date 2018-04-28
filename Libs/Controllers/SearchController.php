@@ -21,6 +21,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 class SearchController extends ControllerBase
 {
 
@@ -299,7 +301,7 @@ SQL;
                     throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $newId ;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new ControllerException($e->getMessage()) ;
             }
         } else {
@@ -357,7 +359,7 @@ SQL;
                     throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $id ;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new ControllerException($e->getMessage()) ;
             }
         } else {

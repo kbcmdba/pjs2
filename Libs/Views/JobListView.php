@@ -21,10 +21,11 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Job List View
  */
-
 class JobListView extends ListViewBase
 {
 

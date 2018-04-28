@@ -21,6 +21,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Application Status Summary View
  */

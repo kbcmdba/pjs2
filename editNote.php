@@ -21,6 +21,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once "Libs/autoload.php" ;
 
 $config = new Config() ;

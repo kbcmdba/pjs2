@@ -21,10 +21,11 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Note List View
  */
-
 class NoteListView extends ListViewBase
 {
 

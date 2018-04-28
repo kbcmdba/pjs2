@@ -21,6 +21,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Auto-load magic method
  *
@@ -28,6 +30,7 @@
  */
 function __autoload($className)
 {
+    $className = str_replace('com\\kbcmdba\\pjs2\\', '', $className);
     switch (true) {
         case (preg_match('/^ControllerBase$/', $className)
             || preg_match('/Controller(|Interface)$/', $className)
@@ -64,7 +67,7 @@ function __autoload($className)
     }
     try {
         require_once $reqFile ;
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
         echo 'class_file was ' . $className . ', req_file=' . $reqFile . "\n" ;
         echo $e->getMessage() . "\n" ;
         exit(1) ;

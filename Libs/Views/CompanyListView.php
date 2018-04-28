@@ -21,10 +21,11 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Company List View
  */
-
 class CompanyListView extends ListViewBase
 {
 

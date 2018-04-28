@@ -21,6 +21,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * DBConnection
  */
@@ -47,7 +49,7 @@ class DBConnection
      * @param Integer $dbPort
      * @param String  $connClass Must be 'mysql', 'mysqli', or 'PDO' for now.
      * @return void
-     * @throws Exception
+     * @throws \Exception
      * @SuppressWarnings indentation
      * @SuppressWarnings cyclomaticComplexity
      */
@@ -80,12 +82,12 @@ class DBConnection
                     $oConfig->getDbPass()
                                            ) ;
                 if (! $this->_dbh) {
-                    throw new Exception('Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . mysql_error()) ;
+                    throw new \Exception('Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . mysql_error()) ;
                 }
                 $dbName = Tools::coalesce([ $oConfig->getDbName(), '' ]) ;
                 if ($dbName !== '') {
                     if (! mysql_select_db($dbName, $this->_dbh)) {
-                        throw new Exception('Database does not exist: ', $dbName) ;
+                        throw new \Exception('Database does not exist: ', $dbName) ;
                     }
                 }
                 break ;
@@ -126,7 +128,7 @@ class DBConnection
                 break ;
             case 'PDO':
                 // May throw PDOException by itself.
-                $this->_dbh = new PDO(
+                $this->_dbh = new \PDO(
                     $oConfig->get_dsn(),
                     $oConfig->getDbPass()
                                      ) ;
@@ -158,12 +160,12 @@ class DBConnection
      * Give back the database handle
      *
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function getConnection()
     {
         if ((! isset($this->_dbh)) || (! ($this->_dbh))) {
-            throw new Exception('Invalid connection!') ;
+            throw new \Exception('Invalid connection!') ;
         } else {
             return $this->_dbh ;
         }

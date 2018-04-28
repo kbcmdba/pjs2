@@ -21,13 +21,15 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Controller Base
  */
 abstract class ControllerBase
 {
 
-    /** @var mysqli */
+    /** @var \mysqli */
     protected $_dbh ;
 
     /**
@@ -42,7 +44,7 @@ abstract class ControllerBase
             $dbc = new DBConnection($readWriteMode) ;
             $this->_dbh = $dbc->getConnection() ;
             $this->_dbh->autocommit(true) ;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new ControllerException('Problem connecting to database: ' . $this->_dbh->error) ;
         }
     }
@@ -59,7 +61,7 @@ abstract class ControllerBase
             if (! $this->_dbh->query($sql)) {
                 throw new ControllerException($sql) ;
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new ControllerException("Failed to execute DDL: " . $this->_dbh->error) ;
         }
     }

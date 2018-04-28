@@ -21,6 +21,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Web Page
  */
@@ -158,7 +160,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getPageTitle()
     {
@@ -178,7 +180,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getMimeType()
     {
@@ -198,7 +200,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getHead()
     {
@@ -239,7 +241,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getMeta()
     {
@@ -259,7 +261,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getStyles()
     {
@@ -279,7 +281,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getTop()
     {
@@ -299,7 +301,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getBody()
     {
@@ -319,7 +321,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getBottom()
     {
@@ -339,7 +341,7 @@ class WebPage
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
     public function getData()
     {

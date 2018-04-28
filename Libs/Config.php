@@ -21,6 +21,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Configuration for this tool set
  */
@@ -72,17 +74,17 @@ class Config
     /**
      * Class Constructor
      *
-     * @throws Exception
+     * @throws \Exception
      * @SuppressWarnings indentation
      */
     public function __construct()
     {
         if (! is_readable('config.xml')) {
-            throw new Exception("Unable to load configuration from config.xml!") ;
+            throw new \Exception("Unable to load configuration from config.xml!") ;
         }
         $xml = simplexml_load_file('config.xml') ;
         if (! $xml) {
-            throw new Exception("Invalid syntax in config.xml!") ;
+            throw new \Exception("Invalid syntax in config.xml!") ;
         }
         $errors = "" ;
         $cfgValues = [ 'resetOk'            => 0
@@ -119,7 +121,7 @@ class Config
             }
         }
         if ($errors !== '') {
-            throw new Exception("\nConfiguration problem!\n\n" . $errors . "\n") ;
+            throw new \Exception("\nConfiguration problem!\n\n" . $errors . "\n") ;
         }
         $this->_authTimeoutSeconds = $cfgValues[ 'authTimeoutSeconds' ] ;
         $this->_dbHost             = $cfgValues[ 'dbHost'       ] ;

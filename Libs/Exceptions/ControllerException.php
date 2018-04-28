@@ -21,6 +21,8 @@
  *
  */
 
-class ControllerException extends Exception
+namespace com\kbcmdba\pjs2 ;
+
+class ControllerException extends \Exception
 {
 }

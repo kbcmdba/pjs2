@@ -21,6 +21,8 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * A series of static methods for re-use.
 */
@@ -30,11 +32,11 @@ class Tools
     /**
      * Class Constructor - never intended to be used.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct()
     {
-        throw new Exception("Improper use of Tools class") ;
+        throw new \Exception("Improper use of Tools class") ;
     }
 
     /**

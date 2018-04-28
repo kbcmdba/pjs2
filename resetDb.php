@@ -20,6 +20,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+
+namespace com\kbcmdba\pjs2 ;
+
 require_once 'Libs/autoload.php' ;
 
 // Be sure to specify these in apply order. The reset script will automatically

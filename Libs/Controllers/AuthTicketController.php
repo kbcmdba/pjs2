@@ -21,7 +21,7 @@
  *
  */
 
-require_once('Libs/autoload.php') ;
+namespace com\kbcmdba\pjs2 ;
 
 /**
  * AuthTicket Controller
@@ -202,7 +202,7 @@ SQL;
                     throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $authTicket ;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new ControllerException($e->getMessage()) ;
             }
         } else {
@@ -248,7 +248,7 @@ SQL;
                     throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $authTicket ;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new ControllerException("Update failed." . $e->getMessage()) ;
             }
         } else {
