@@ -21,27 +21,28 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
 $result = "OK" ;
-$id   = Tools::param( 'id' ) ;
-$mode = Tools::param( 'mode' ) ;
+$id   = Tools::param('id') ;
+$mode = Tools::param('mode') ;
 $html = '' ;
-$contactListView = new ContactListView( 'html', null ) ;
-if ( 'add' == $mode ) {
+$contactListView = new ContactListView('html', null) ;
+if ('add' == $mode) {
     $contactModel = new ContactModel() ;
-    $contactModel->setId( $id ) ;
-    $html = $contactListView->displayContactRow( $contactModel, $mode ) ;
-}
-else {
+    $contactModel->setId($id) ;
+    $html = $contactListView->displayContactRow($contactModel, $mode) ;
+} else {
     $contactController = new ContactController() ;
-    $contactModel = $contactController->get( $id ) ;
-    $html = $contactListView->displayContactRow( $contactModel, $mode ) ;
+    $contactModel = $contactController->get($id) ;
+    $html = $contactListView->displayContactRow($contactModel, $mode) ;
 }
-$result = array( 'result' => $result, 'row' => $html ) ;
-echo json_encode( $result ) . PHP_EOL ;
+$result = [ 'result' => $result, 'row' => $html ] ;
+echo json_encode($result) . PHP_EOL ;

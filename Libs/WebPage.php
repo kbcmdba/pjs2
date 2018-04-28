@@ -21,10 +21,13 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Web Page
  */
-class WebPage {
+class WebPage
+{
 
     /**
      * #@+ @var string
@@ -83,20 +86,22 @@ class WebPage {
      *
      * @param string Title
      */
-    public function __construct( $title = '' ) {
-        $this->setPageTitle( $title ) ;
-        $this->setMimeType( 'text/html' ) ;
+    public function __construct($title = '')
+    {
+        $this->setPageTitle($title) ;
+        $this->setMimeType('text/html') ;
         $this->setMeta(
-                        array (
+                        [
                             "Cache-Control: no-cache, must-revalidate",
                             "Expires: Sun, 21 Jul 2013 00:00:00 GMT"
-                        ) ) ;
-        $this->setHead( '' ) ;
-        $this->setStyles( '' ) ;
-        $this->setTop( '' ) ;
-        $this->setBody( '' ) ;
-        $this->setBottom( '' ) ;
-        $this->setData( '' ) ;
+                        ]
+        ) ;
+        $this->setHead('') ;
+        $this->setStyles('') ;
+        $this->setTop('') ;
+        $this->setBody('') ;
+        $this->setBottom('') ;
+        $this->setData('') ;
     }
 
     /**
@@ -104,10 +109,11 @@ class WebPage {
      *
      * @return string
      */
-    public function __toString() {
-        if ( 'text/html' === $this->getMimeType() ) {
+    public function __toString()
+    {
+        if ('text/html' === $this->getMimeType()) {
             //@formatter:off
-            return ( "<html>\n"
+            return ("<html>\n"
                    . "<head>\n"
                    . '  <title>' . $this->getPageTitle() . "</title>\n"
                    . $this->getHead()
@@ -120,10 +126,9 @@ class WebPage {
                    . "</body>\n"
                    . "</html>\n"
                    ) ;
-            // @formatter:on
-        }
-        else {
-            return ( $this->getData() ) ;
+        // @formatter:on
+        } else {
+            return ($this->getData()) ;
         }
     }
 
@@ -133,10 +138,11 @@ class WebPage {
      *
      * @return void @SuppressWarnings indentation
      */
-    public function displayPage() {
-        header( 'Content-type: ' . $this->getMimeType() ) ;
-        foreach ( $this->getMeta() as $meta ) {
-            header( $meta ) ;
+    public function displayPage()
+    {
+        header('Content-type: ' . $this->getMimeType()) ;
+        foreach ($this->getMeta() as $meta) {
+            header($meta) ;
         }
         echo $this->__toString() ;
     }
@@ -146,16 +152,18 @@ class WebPage {
      *
      * @param string
      */
-    public function setPageTitle( $pageTitle ) {
+    public function setPageTitle($pageTitle)
+    {
         $this->_pageTitle = $pageTitle ;
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getPageTitle() {
+    public function getPageTitle()
+    {
         return $this->_pageTitle ;
     }
 
@@ -164,16 +172,18 @@ class WebPage {
      *
      * @param string
      */
-    public function setMimeType( $mimeType ) {
+    public function setMimeType($mimeType)
+    {
         $this->_mimeType = $mimeType ;
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getMimeType() {
+    public function getMimeType()
+    {
         return $this->_mimeType ;
     }
 
@@ -182,16 +192,18 @@ class WebPage {
      *
      * @param string
      */
-    public function setHead( $head ) {
+    public function setHead($head)
+    {
         $this->_head = $head ;
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getHead() {
+    public function getHead()
+    {
         return $this->_head ;
     }
 
@@ -202,12 +214,12 @@ class WebPage {
      * @param String $metaString
      * @throws WebPageException
      */
-    public function appendMeta( $metaString ) {
-        if ( is_string( $metaString ) ) {
-            array_push( $this->_meta, $metaString ) ;
-        }
-        else {
-            throw ( new WebPageException( "Improper usage of appendMeta" ) ) ;
+    public function appendMeta($metaString)
+    {
+        if (is_string($metaString)) {
+            array_push($this->_meta, $metaString) ;
+        } else {
+            throw ( new WebPageException("Improper usage of appendMeta") ) ;
         }
     }
 
@@ -217,21 +229,22 @@ class WebPage {
      * @param mixed $meta Array of values to pass to header()
      * @throws WebPageException
      */
-    public function setMeta( $meta ) {
-        if ( is_array( $meta ) ) {
+    public function setMeta($meta)
+    {
+        if (is_array($meta)) {
             $this->_meta = $meta ;
-        }
-        else {
-            throw ( new WebPageException( "setMeta requires an array" ) ) ;
+        } else {
+            throw ( new WebPageException("setMeta requires an array") ) ;
         }
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getMeta() {
+    public function getMeta()
+    {
         return $this->_meta ;
     }
 
@@ -240,16 +253,18 @@ class WebPage {
      *
      * @param string
      */
-    public function setStyles( $styles ) {
+    public function setStyles($styles)
+    {
         $this->_styles = $styles ;
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getStyles() {
+    public function getStyles()
+    {
         return $this->_styles ;
     }
 
@@ -258,16 +273,18 @@ class WebPage {
      *
      * @param string
      */
-    public function setTop( $top ) {
+    public function setTop($top)
+    {
         $this->_top = $top ;
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getTop() {
+    public function getTop()
+    {
         return $this->_top ;
     }
 
@@ -276,16 +293,18 @@ class WebPage {
      *
      * @param string
      */
-    public function setBody( $body ) {
+    public function setBody($body)
+    {
         $this->_body = $body ;
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getBody() {
+    public function getBody()
+    {
         return $this->_body ;
     }
 
@@ -294,16 +313,18 @@ class WebPage {
      *
      * @param string
      */
-    public function setBottom( $bottom ) {
+    public function setBottom($bottom)
+    {
         $this->_bottom = $bottom ;
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getBottom() {
+    public function getBottom()
+    {
         return $this->_bottom ;
     }
 
@@ -312,18 +333,18 @@ class WebPage {
      *
      * @param string
      */
-    public function setData( $data ) {
+    public function setData($data)
+    {
         $this->_data = $data ;
     }
 
     /**
      * Getter
      *
-     * @return s string
+     * @return string
      */
-    public function getData() {
+    public function getData()
+    {
         return $this->_data ;
     }
-
 }
-

@@ -20,28 +20,29 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
-$id     = Tools::param( 'id' ) ;
+$id     = Tools::param('id') ;
 $result = 'OK' ;
 $row    = "" ;
 try {
     $searchModel = new SearchModel() ;
-    $searchModel->setId( $id ) ;
+    $searchModel->setId($id) ;
     $searchController = new SearchController() ;
-    $searchController->delete( $searchModel ) ;
-}
-catch ( ControllerException $e ) {
+    $searchController->delete($searchModel) ;
+} catch (ControllerException $e) {
     $result = "Delete failed. " . $e->getMessage() ;
     $searchController = new SearchController() ;
-    $searchModel = $searchController->get( $id ) ;
+    $searchModel = $searchController->get($id) ;
     $searchListView = new SearchListView() ;
-    $row = $searchListView->displaySearchRow( $searchModel, 'list', $result ) ;
+    $row = $searchListView->displaySearchRow($searchModel, 'list', $result) ;
 }
 
-echo json_encode( array( 'result' => $result, 'row' => $row ) ) . PHP_EOL ;
+echo json_encode([ 'result' => $result, 'row' => $row ]) . PHP_EOL ;

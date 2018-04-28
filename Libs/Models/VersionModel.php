@@ -21,18 +21,21 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Version Model
  */
-class VersionModel extends ModelBase {
-
+class VersionModel extends ModelBase
+{
     private $_versionValue ;
     private $_updated ;
 
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct() ;
     }
 
@@ -42,7 +45,8 @@ class VersionModel extends ModelBase {
      * @return boolean
      * @todo Implement VersionModel::validateForAdd()
      */
-    public function validateForAdd() {
+    public function validateForAdd()
+    {
         return 0 ;
     }
 
@@ -52,41 +56,46 @@ class VersionModel extends ModelBase {
      * @return boolean
      * @todo Implement VersionModel::validateForUpdate()
      */
-    public function validateForUpdate() {
+    public function validateForUpdate()
+    {
         return 0 ;
     }
 
-    public function populateFromForm() {
-        $this->setVersionValue( Tools::param( 'versionValue' ) ) ;
-        $this->setUpdated( Tools::param( 'updated' ) ) ;
+    public function populateFromForm()
+    {
+        $this->setVersionValue(Tools::param('versionValue')) ;
+        $this->setUpdated(Tools::param('updated')) ;
     }
 
     /**
      * @return string
      */
-    public function getVersionValue() {
+    public function getVersionValue()
+    {
         return $this->_versionValue ;
     }
 
     /**
      * @param string $versionValue
      */
-    public function setVersionValue( $versionValue ) {
+    public function setVersionValue($versionValue)
+    {
         $this->_versionValue = $versionValue ;
     }
 
     /**
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
     /**
      * @param string $updated
      */
-    public function setUpdated( $updated ) {
+    public function setUpdated($updated)
+    {
         $this->_updated = $updated ;
     }
-
 }

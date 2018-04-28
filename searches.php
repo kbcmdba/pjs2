@@ -21,14 +21,16 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once 'Libs/autoload.php' ;
 
 $config = new Config() ;
-$page = new PJSWebPage( $config->getTitle() . " - Searches" ) ;
+$page = new PJSWebPage($config->getTitle() . " - Searches") ;
 $body = "<h2>Searches</h2>\n" ;
-$searchController = new SearchController( 'read' ) ;
+$searchController = new SearchController('read') ;
 $searchModelList = $searchController->getAll() ;
-$searchListView = new SearchListView( 'html', $searchModelList ) ;
+$searchListView = new SearchListView('html', $searchModelList) ;
 $body .= $searchListView->getView() ;
-$page->setBody( $body ) ;
+$page->setBody($body) ;
 $page->displayPage() ;

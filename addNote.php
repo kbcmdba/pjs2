@@ -21,34 +21,34 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once "Libs/autoload.php" ;
 
 $config = new Config() ;
-$webPage = new PJSWebPage( $config->getTitle() . "Notes - Add Note" ) ;
+$webPage = new PJSWebPage($config->getTitle() . "Notes - Add Note") ;
 $body = '' ;
-$act = Tools::Param( 'act' ) ;
-if ( "Add Note" === $act ) {
+$act = Tools::Param('act') ;
+if ("Add Note" === $act) {
     $model = new NoteModel() ;
     $model->populateFromForm() ;
-    if ( ! $model->validateForAdd() ) {
-        $view = new NoteFormView( 'Add Note', $model ) ;
+    if (! $model->validateForAdd()) {
+        $view = new NoteFormView('Add Note', $model) ;
         $body = "<h2>Invalid data</h2>\n" . $view->getForm() ;
-    }
-    else {
+    } else {
         $noteController = new NoteController() ;
-        $newId = $noteController->add( $model ) ;
-        if ( $newId > 0 ) {
+        $newId = $noteController->add($model) ;
+        if ($newId > 0) {
             $body = "Added note # " . $newId . "<br />\n";
         }
     }
-}
-else {
+} else {
     $body = "" ;
     $noteModel = new NoteModel() ;
-    $noteModel->setAppliesToTable( Tools::param( 'appliesToTable' ) ) ;
-    $noteModel->setAppliesToId( Tools::param( 'appliesToId' ) ) ;
-    $view = new NoteFormView( "Add Note", $noteModel ) ;
+    $noteModel->setAppliesToTable(Tools::param('appliesToTable')) ;
+    $noteModel->setAppliesToId(Tools::param('appliesToId')) ;
+    $view = new NoteFormView("Add Note", $noteModel) ;
     $body = $view->getForm() ;
 }
-$webPage->setBody( $body ) ;
+$webPage->setBody($body) ;
 $webPage->displayPage() ;

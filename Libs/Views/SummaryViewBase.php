@@ -21,16 +21,20 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * SummaryView Base
  */
-abstract class SummaryViewBase {
+abstract class SummaryViewBase
+{
 
     /**
      * Class constructor
      */
-    public function __construct() {
-       // Placeholder for now.
+    public function __construct()
+    {
+        // Placeholder for now.
     }
 
     /**
@@ -38,6 +42,5 @@ abstract class SummaryViewBase {
      *
      * @return string
      */
-    abstract function getView() ;
+    abstract public function getView() ;
 }
-

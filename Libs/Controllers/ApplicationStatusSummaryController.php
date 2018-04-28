@@ -21,7 +21,10 @@
  *
  */
 
-class ApplicationStatusSummaryController extends ControllerBase {
+namespace com\kbcmdba\pjs2 ;
+
+class ApplicationStatusSummaryController extends ControllerBase
+{
 
     /**
      * Class constructor
@@ -29,16 +32,19 @@ class ApplicationStatusSummaryController extends ControllerBase {
      * @param string $readWriteMode "read", "write", or "admin"
      * @throws ControllerException
      */
-    public function __construct( $readWriteMode = 'write' ) {
-        parent::__construct( $readWriteMode ) ;
+    public function __construct($readWriteMode = 'write')
+    {
+        parent::__construct($readWriteMode) ;
     }
     
-    public function dropTable() {
+    public function dropTable()
+    {
         $sql = "DROP TABLE IF EXISTS applicationStatusSummary" ;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
     
-    public function createTable() {
+    public function createTable()
+    {
         $sql = <<<SQL
 CREATE TABLE applicationStatusSummary
      (
@@ -54,36 +60,41 @@ CREATE TABLE applicationStatusSummary
                 ON UPDATE CASCADE
      )
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
     // @todo Implement ApplicationStatusSummaryController::get( $id ) ;
-    public function get( $id ) {
-        throw new ControllerException( "Not implemented." ) ;
+    public function get($id)
+    {
+        throw new ControllerException("Not implemented.") ;
     }
 
     // @todo Implement ApplicationStatusSummaryController::getSome( $whereClause ) ;
-    public function getSome( $whereClause = '1 = 1') {
-        throw new ControllerException( "Not implemented." ) ;
+    public function getSome($whereClause = '1 = 1')
+    {
+        throw new ControllerException("Not implemented.") ;
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         return $this->getSome() ;
     }
 
     // @todo Implement ApplicationStatusSummaryController::add( $model ) ;
-    public function add( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+    public function add($model)
+    {
+        throw new ControllerException("Not implemented.") ;
     }
 
     // @todo Implement ApplicationStatusSummaryController::update( $model ) ;
-    public function update( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+    public function update($model)
+    {
+        throw new ControllerException("Not implemented.") ;
     }
 
     // @todo Implement ApplicationStatusSummaryController::delete( $model ) ;
-    public function delete( $model ) {
-        throw new ControllerException( "Not implemented." ) ;
+    public function delete($model)
+    {
+        throw new ControllerException("Not implemented.") ;
     }
-
 }

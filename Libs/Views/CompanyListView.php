@@ -21,16 +21,18 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Company List View
  */
-
-class CompanyListView extends ListViewBase {
+class CompanyListView extends ListViewBase
+{
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
-    private $_supportedViewTypes = array( 'html' => 1 ) ;
+    private $_supportedViewTypes = [ 'html' => 1 ] ;
     /** @var CompanyModel[] */
     private $_companyModels ;
 
@@ -41,13 +43,14 @@ class CompanyListView extends ListViewBase {
      * @param CompanyModel[] $companyModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $companyModels ) {
+    public function __construct($viewType = 'html', $companyModels)
+    {
         parent::__construct() ;
-        if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
-            throw new ViewException( "Unsupported view type\n" ) ;
+        if (! isset($this->_supportedViewTypes[ $viewType ])) {
+            throw new ViewException("Unsupported view type\n") ;
         }
         $this->_viewType = $viewType ;
-        $this->setCompanyModels( $companyModels ) ;
+        $this->setCompanyModels($companyModels) ;
     }
 
     /**
@@ -55,7 +58,8 @@ class CompanyListView extends ListViewBase {
      *
      * @return string
      */
-    private function _getHtmlView() {
+    private function _getHtmlView()
+    {
         $rowStyle = "even" ;
         $body = <<<'HTML'
 <button id="AddButton" onclick="addCompany()">Add Company</button><br />
@@ -82,10 +86,10 @@ class CompanyListView extends ListViewBase {
   </thead>
   <tbody>
 HTML;
-        foreach ( $this->getCompanyModels() as $companyModel ) {
+        foreach ($this->getCompanyModels() as $companyModel) {
             $id       = $companyModel->getId() ;
-            $rowStyle = ( "even" === $rowStyle ) ? 'odd' : 'even' ;
-            $rows     = $this->displayCompanyRow( $companyModel, 'list', $rowStyle ) ;
+            $rowStyle = ("even" === $rowStyle) ? 'odd' : 'even' ;
+            $rows     = $this->displayCompanyRow($companyModel, 'list', $rowStyle) ;
             $body    .= "    <tr id='ux$id-1'>\n      {$rows[0]}\n    </tr>\n" ;
             $body    .= "    <tr id='ux$id-2'>\n      {$rows[1]}\n    </tr>\n" ;
         }
@@ -93,11 +97,11 @@ HTML;
         return $body ;
     }
 
-    public function displayCompanyRow( $companyModel, $displayMode, $rowStyle, $warningMsg = null ) {
-        if ( null === $warningMsg ) {
+    public function displayCompanyRow($companyModel, $displayMode, $rowStyle, $warningMsg = null)
+    {
+        if (null === $warningMsg) {
             $warningMsg = '' ;
-        }
-        else {
+        } else {
             $warningMsg = "<br /><span style=\"color: red;\">$warningMsg</span>" ;
         }
         $id              = $companyModel->getId() ;
@@ -113,19 +117,18 @@ HTML;
         $created         = $companyModel->getCreated() ;
         $updated         = $companyModel->getUpdated() ;
         $lastContacted   = $companyModel->getLastContacted() ;
-        $encodedUrl      = htmlspecialchars( $companyUrl ) ;
-        if ( $agencyCompanyId > 0 ) {
+        $encodedUrl      = htmlspecialchars($companyUrl) ;
+        if ($agencyCompanyId > 0) {
             $agencyCompanyController = new CompanyController() ;
-            $agencyCompanyModel      = $agencyCompanyController->get( $agencyCompanyId ) ;
+            $agencyCompanyModel      = $agencyCompanyController->get($agencyCompanyId) ;
             $agency                  = $agencyCompanyModel->getCompanyName() ;
-        }
-        else {
+        } else {
             $agency                = 'None' ;
         }
         $row1 = $row2 = "" ;
-        switch ( $displayMode ) {
-            case 'add'    :
-                $agencyList = $this->getAgencyList( "ix$id", null ) ;
+        switch ($displayMode) {
+            case 'add':
+                $agencyList = $this->getAgencyList("ix$id", null) ;
                 $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="SaveButtonix$id" onclick="saveAddCompany( '$id' )">Save</button>
@@ -148,7 +151,7 @@ HTML;
       <td>$updated</td>
 HTML;
                 break ;
-            case 'delete' :
+            case 'delete':
                 $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="DeleteButton$id" onclick="doDeleteCompany( '$id' )">Confirm Delete</button>
@@ -171,7 +174,7 @@ HTML;
       <td>$updated</td>
 HTML;
                 break ;
-            case 'list'   :
+            case 'list':
                 $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="UpdateButton$id" onclick="updateCompany( '$id' )">Update</button>
@@ -195,8 +198,8 @@ HTML;
       <td>$updated</td>
 HTML;
                 break ;
-            case 'update' :
-                $agencyList = $this->getAgencyList( $id, $id ) ;
+            case 'update':
+                $agencyList = $this->getAgencyList($id, $id) ;
                 $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="SaveButton$id" onclick="saveUpdateCompany( '$id' )">Save</button>
@@ -220,7 +223,7 @@ HTML;
 HTML;
                 break ;
         }
-        return array( $row1, $row2 ) ;
+        return [ $row1, $row2 ] ;
     }
 
     /**
@@ -228,44 +231,48 @@ HTML;
      * @return string
      * @throws ViewException
      */
-    public function getView() {
-        switch ( $this->_viewType ) {
-            case 'html' :
+    public function getView()
+    {
+        switch ($this->_viewType) {
+            case 'html':
                 return $this->_getHtmlView() ;
-            default :
-                throw new ViewException( "Unsupported view type." ) ;
+            default:
+                throw new ViewException("Unsupported view type.") ;
         }
     }
 
     /**
      * @return CompanyModel[]
      */
-    public function getCompanyModels() {
+    public function getCompanyModels()
+    {
         return $this->_companyModels ;
     }
 
     /**
      * @param CompanyModel[] $companyModels
      */
-    public function setCompanyModels( $companyModels ) {
+    public function setCompanyModels($companyModels)
+    {
         $this->_companyModels = $companyModels ;
     }
 
     /**
      * Get company SELECT list
-     * 
+     *
      * @param string $id Field ID
      * @param integer $value The selected value
      * @return string
      */
-    public function getCompanyList( $id, $value ) {
+    public function getCompanyList($id, $value)
+    {
         $retVal = "<select id=\"companyId$id\" >\n  <option value=\"\">---</option>" ;
         $companyController = new CompanyController() ;
         $companies = $companyController->getAll() ;
-        foreach ( $companies as $company ) {
+        foreach ($companies as $company) {
             $cid   = $company->getId() ;
             $cname = $company->getCompanyName() ;
-            $selected = ( $cid === $value ) ? "selected=\"selected\"" : "" ;
+            $selected = ($cid === $value) ? "selected=\"selected\"" : "" ;
             $retVal .= "  <option value=\"$cid\" $selected>$cname</option>\n" ;
         }
         $retVal .= "</select>\n" ;
@@ -274,17 +281,18 @@ HTML;
 
     /**
      * Get Agency SELECT list
-     * 
+     *
      * @param string $id Field ID
      * @param integer $value Selected Value
      * @return string
      */
-    public function getAgencyList( $id, $value ) {
+    public function getAgencyList($id, $value)
+    {
         $retVal = "<select id=\"agencyCompanyId$id\" >\n  <option value=\"\">---</option>" ;
         $companyController = new CompanyController() ;
         $agencies = $companyController->getAll() ;
-        foreach ( $agencies as $agency ) {
-            $selected = ( $agency->getId() === $value ) ? "selected=\"selected\"" : "" ;
+        foreach ($agencies as $agency) {
+            $selected = ($agency->getId() === $value) ? "selected=\"selected\"" : "" ;
             $aname = $agency->getCompanyName() ;
             $aid   = $agency->getId() ;
             $retVal .= "  <option value=\"$aid\" $selected>$aname</option>\n" ;
@@ -292,5 +300,4 @@ HTML;
         $retVal .= "</select>\n" ;
         return $retVal ;
     }
-    
 }

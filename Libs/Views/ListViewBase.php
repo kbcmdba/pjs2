@@ -21,16 +21,20 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * ListView Base
  */
-abstract class ListViewBase {
+abstract class ListViewBase
+{
 
     /**
      * Class constructor
      */
-    public function __construct() {
-       // Placeholder for now.
+    public function __construct()
+    {
+        // Placeholder for now.
     }
 
     /**
@@ -38,6 +42,5 @@ abstract class ListViewBase {
      *
      * @return string
      */
-    abstract function getView() ;
+    abstract public function getView() ;
 }
-

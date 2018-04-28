@@ -21,5 +21,8 @@
  *
  */
 
-class DaoException extends Exception {
+namespace com\kbcmdba\pjs2 ;
+
+class DaoException extends \Exception
+{
 }

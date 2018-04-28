@@ -21,11 +21,13 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Contact Model
  */
-class ContactModel extends ModelBase {
-
+class ContactModel extends ModelBase
+{
     private $_id ;
     private $_contactCompanyId ;
     private $_contactName ;
@@ -38,7 +40,8 @@ class ContactModel extends ModelBase {
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct() ;
     }
 
@@ -47,11 +50,12 @@ class ContactModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForAdd() {
-        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactName' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactEmail' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactPhone' ) ) )
+    public function validateForAdd()
+    {
+        return  ((Tools::isNullOrEmptyString(Tools::param('id')))
+               && (! Tools::isNullOrEmptyString(Tools::param('contactName')))
+               && (! Tools::isNullOrEmptyString(Tools::param('contactEmail')))
+               && (! Tools::isNullOrEmptyString(Tools::param('contactPhone')))
                 ) ;
     }
 
@@ -60,51 +64,57 @@ class ContactModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForUpdate() {
-        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactName' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactEmail' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'contactPhone' ) ) )
+    public function validateForUpdate()
+    {
+        return  ((! Tools::isNullOrEmptyString(Tools::param('id')))
+               && (! Tools::isNullOrEmptyString(Tools::param('contactName')))
+               && (! Tools::isNullOrEmptyString(Tools::param('contactEmail')))
+               && (! Tools::isNullOrEmptyString(Tools::param('contactPhone')))
                 ) ;
     }
 
-    public function populateFromForm() {
-        $this->setId( Tools::param( 'id' ) ) ;
-        $this->setContactCompanyId( Tools::param( 'companyId' ) ) ;
-        $this->setContactName( Tools::param( 'contactName' ) ) ;
-        $this->setContactEmail( Tools::param( 'contactEmail' ) ) ;
-        $this->setContactPhone( Tools::param( 'contactPhone' ) ) ;
-        $this->setContactAlternatePhone( Tools::param( 'contactAlternatePhone' ) ) ;
-        $this->setCreated( Tools::param( 'created' ) ) ;
-        $this->setUpdated( Tools::param( 'updated' ) ) ;
+    public function populateFromForm()
+    {
+        $this->setId(Tools::param('id')) ;
+        $this->setContactCompanyId(Tools::param('companyId')) ;
+        $this->setContactName(Tools::param('contactName')) ;
+        $this->setContactEmail(Tools::param('contactEmail')) ;
+        $this->setContactPhone(Tools::param('contactPhone')) ;
+        $this->setContactAlternatePhone(Tools::param('contactAlternatePhone')) ;
+        $this->setCreated(Tools::param('created')) ;
+        $this->setUpdated(Tools::param('updated')) ;
     }
 
     /**
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->_id ;
     }
 
     /**
      * @param integer $id
      */
-    public function setId( $id ) {
+    public function setId($id)
+    {
         $this->_id = $id ;
     }
 
     /**
      * @return integer
      */
-    public function getContactCompanyId() {
+    public function getContactCompanyId()
+    {
         return $this->_contactCompanyId ;
     }
 
     /**
      * @param integer $contactCompanyId
      */
-    public function setContactCompanyId( $contactCompanyId ) {
-        if ( '' === $contactCompanyId ) {
+    public function setContactCompanyId($contactCompanyId)
+    {
+        if ('' === $contactCompanyId) {
             $contactCompanyId = null ;
         }
         $this->_contactCompanyId = $contactCompanyId ;
@@ -113,85 +123,96 @@ class ContactModel extends ModelBase {
     /**
      * @return string
      */
-    public function getContactName() {
+    public function getContactName()
+    {
         return $this->_contactName ;
     }
 
     /**
      * @param string $contactName
      */
-    public function setContactName( $contactName ) {
+    public function setContactName($contactName)
+    {
         $this->_contactName = $contactName ;
     }
 
     /**
      * @return string
      */
-    public function getContactEmail() {
+    public function getContactEmail()
+    {
         return $this->_contactEmail ;
     }
 
     /**
      * @param string $contactEmail
      */
-    public function setContactEmail( $contactEmail ) {
+    public function setContactEmail($contactEmail)
+    {
         $this->_contactEmail = $contactEmail ;
     }
 
     /**
      * @return string
      */
-    public function getContactPhone() {
+    public function getContactPhone()
+    {
         return $this->_contactPhone ;
     }
 
     /**
      * @param string $contactPhone
      */
-    public function setContactPhone( $contactPhone ) {
+    public function setContactPhone($contactPhone)
+    {
         $this->_contactPhone = $contactPhone ;
     }
 
     /**
      * @return string
      */
-    public function getContactAlternatePhone() {
+    public function getContactAlternatePhone()
+    {
         return $this->_contactAlternatePhone ;
     }
 
     /**
      * @param string $contactAlternatePhone
      */
-    public function setContactAlternatePhone( $contactAlternatePhone ) {
+    public function setContactAlternatePhone($contactAlternatePhone)
+    {
         $this->_contactAlternatePhone = $contactAlternatePhone ;
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->_created ;
     }
 
     /**
      * @param string $created
      */
-    public function setCreated( $created ) {
+    public function setCreated($created)
+    {
         $this->_created = $created ;
     }
 
     /**
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
     /**
      * @param string $updated
      */
-    public function setUpdated( $updated ) {
+    public function setUpdated($updated)
+    {
         $this->_updated = $updated ;
     }
-
 }

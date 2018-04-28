@@ -21,14 +21,16 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once 'Libs/autoload.php' ;
 
 $config = new Config() ;
-$page = new PJSWebPage( $config->getTitle() . " - Contacts" ) ;
+$page = new PJSWebPage($config->getTitle() . " - Contacts") ;
 $body = "<h2>Contacts</h2>\n" ;
-$contactController = new ContactController( 'read' ) ;
+$contactController = new ContactController('read') ;
 $contactModelList = $contactController->getAll() ;
-$contactListView = new ContactListView( 'html', $contactModelList ) ;
+$contactListView = new ContactListView('html', $contactModelList) ;
 $body .= $contactListView->getView() ;
-$page->setBody( $body ) ;
+$page->setBody($body) ;
 $page->displayPage() ;

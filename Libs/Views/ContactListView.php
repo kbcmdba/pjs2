@@ -21,17 +21,18 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Contact List View
- *
  */
-
-class ContactListView extends ListViewBase {
+class ContactListView extends ListViewBase
+{
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
-    private $_supportedViewTypes = array( 'html' => 1 ) ;
+    private $_supportedViewTypes = [ 'html' => 1 ] ;
     /** @var ContactModel[] */
     private $contactModels ;
 
@@ -42,13 +43,14 @@ class ContactListView extends ListViewBase {
      * @param ContactModel[] $contactModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $contactModels = null ) {
+    public function __construct($viewType = 'html', $contactModels = null)
+    {
         parent::__construct() ;
-        if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
-            throw new ViewException( "Unsupported view type\n" ) ;
+        if (! isset($this->_supportedViewTypes[ $viewType ])) {
+            throw new ViewException("Unsupported view type\n") ;
         }
         $this->_viewType = $viewType ;
-        $this->setContactModels( $contactModels ) ;
+        $this->setContactModels($contactModels) ;
     }
 
     /**
@@ -56,7 +58,8 @@ class ContactListView extends ListViewBase {
      *
      * @return string
      */
-    private function _getHtmlView() {
+    private function _getHtmlView()
+    {
         $body = <<<'HTML'
 <button id="AddButton" onclick="addContact()">Add Contact</button><br />
 <table border="1" cellspacing="0" cellpadding="2" id="contacts">
@@ -76,9 +79,9 @@ class ContactListView extends ListViewBase {
   <tbody>
     
 HTML;
-        foreach ( $this->getContactModels() as $contactModel ) {
+        foreach ($this->getContactModels() as $contactModel) {
             $id   = $contactModel->getId() ;
-            $row  = $this->displayContactRow( $contactModel, 'list' ) ;
+            $row  = $this->displayContactRow($contactModel, 'list') ;
             $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>" ;
         }
     
@@ -87,9 +90,10 @@ HTML;
         return $body ;
     }
 
-    public function displayContactRow( $contactModel, $displayMode, $errorMessage = '' ) {
+    public function displayContactRow($contactModel, $displayMode, $errorMessage = '')
+    {
         $id = $contactModel->getId() ;
-        if ( "add" === $displayMode ) {
+        if ("add" === $displayMode) {
             $companyId = $companyName
                        = $name
                        = $email
@@ -98,15 +102,13 @@ HTML;
                        = $created
                        = $updated
                        = '' ;
-        }
-        else {
+        } else {
             $companyId         = $contactModel->getContactCompanyId() ;
-            $companyController = new CompanyController( 'read' ) ;
-            if ( $companyId > 0 ) {
-                $companyModel      = $companyController->get( $companyId ) ;
+            $companyController = new CompanyController('read') ;
+            if ($companyId > 0) {
+                $companyModel      = $companyController->get($companyId) ;
                 $companyName       = $companyModel->getCompanyName() ;
-            }
-            else {
+            } else {
                 $companyName       = '---' ;
             }
             $name              = $contactModel->getContactName() ;
@@ -116,10 +118,10 @@ HTML;
             $created           = $contactModel->getCreated() ;
             $updated           = $contactModel->getUpdated() ;
         }
-        switch ( $displayMode ) {
-            case 'add' :
-                $companyListView = new CompanyListView( 'html', null ) ;
-                $companyNames = $companyListView->getCompanyList( "ix$id", $companyId ) ;
+        switch ($displayMode) {
+            case 'add':
+                $companyListView = new CompanyListView('html', null) ;
+                $companyNames = $companyListView->getCompanyList("ix$id", $companyId) ;
                 return <<<RETVAL
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddContact( '$id' )">Save</button>
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
@@ -134,9 +136,9 @@ HTML;
       <td>&nbsp;</td>
 
 RETVAL;
-            case 'update' :
-                $companyListView = new CompanyListView( 'html', null ) ;
-                $companyNames = $companyListView->getCompanyList( "$id", $companyId ) ;
+            case 'update':
+                $companyListView = new CompanyListView('html', null) ;
+                $companyNames = $companyListView->getCompanyList("$id", $companyId) ;
                 return <<<RETVAL
       <td><button type="button" id="SaveButton$id" onclick="saveUpdateContact( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateContactRow( '$id' )">Cancel</button>
@@ -151,7 +153,7 @@ RETVAL;
       <td>$updated</td>
                 
 RETVAL;
-            case 'delete' :
+            case 'delete':
                 return <<<RETVAL
       <td><button type="button" id="DeleteButton$id" onclick="doDeleteContact( '$id' )">Confirm Delete</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateContactRow( '$id' )">Cancel</button>
@@ -167,7 +169,7 @@ RETVAL;
                 
 RETVAL;
                 break ;
-            case 'list' :
+            case 'list':
                 return <<<RETVAL
       <td><button type="button" id="UpdateButton$id" onclick="updateContact( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteContact( '$id' )">Delete</button>
@@ -182,8 +184,8 @@ RETVAL;
       <td>$updated</td>
                 
 RETVAL;
-            default :
-                throw new ViewException( 'Undefined display mode' ) ;
+            default:
+                throw new ViewException('Undefined display mode') ;
         }
     }
 
@@ -192,26 +194,29 @@ RETVAL;
      * @return string
      * @throws ViewException
      */
-    public function getView() {
-        switch ( $this->_viewType ) {
-            case 'html' :
+    public function getView()
+    {
+        switch ($this->_viewType) {
+            case 'html':
                 return $this->_getHtmlView() ;
-            default :
-                throw new ViewException( "Unsupported view type." ) ;
+            default:
+                throw new ViewException("Unsupported view type.") ;
         }
     }
 
     /**
      * @return ContactModel[]
      */
-    public function getContactModels() {
+    public function getContactModels()
+    {
         return $this->contactModels ;
     }
 
     /**
      * @param ContactModel[] $contactModels
      */
-    public function setContactModels( $contactModels ) {
+    public function setContactModels($contactModels)
+    {
         $this->contactModels = $contactModels ;
     }
 
@@ -222,18 +227,18 @@ RETVAL;
      * @param integer $value The selected value
      * @return string
      */
-    public function getContactList( $id, $value ) {
+    public function getContactList($id, $value)
+    {
         $retVal = "<select id=\"contactId$id\" >\n  <option value=\"\">---</option>" ;
         $contactController = new ContactController() ;
         $contacts = $contactController->getAll() ;
-        foreach ( $contacts as $contact ) {
+        foreach ($contacts as $contact) {
             $cid      = $contact->getId() ;
             $cname    = $contact->getContactName() ;
-            $selected = ( $cid === $value ) ? "selected=\"selected\"" : "" ;
+            $selected = ($cid === $value) ? "selected=\"selected\"" : "" ;
             $retVal   .= "  <option value=\"$cid\" $selected>$cname</option>\n" ;
         }
         $retVal .= "</select>\n" ;
         return $retVal ;
     }
-
 }

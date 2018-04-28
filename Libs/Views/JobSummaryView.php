@@ -21,16 +21,18 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Job Summary View
  */
-
-class JobSummaryView extends ListViewBase {
+class JobSummaryView extends ListViewBase
+{
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
-    private $_supportedViewTypes = array( 'html' => 1 ) ;
+    private $_supportedViewTypes = [ 'html' => 1 ] ;
     /** @var JobModel[] */
     private $_jobModels ;
     /** @var string */
@@ -43,22 +45,24 @@ class JobSummaryView extends ListViewBase {
      * @param JobModel[] $jobModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $jobModels ) {
+    public function __construct($viewType = 'html', $jobModels)
+    {
         parent::__construct() ;
-        if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
-            throw new ViewException( "Unsupported view type\n" ) ;
+        if (! isset($this->_supportedViewTypes[ $viewType ])) {
+            throw new ViewException("Unsupported view type\n") ;
         }
         $this->_viewType = $viewType ;
-        $this->setJobModels( $jobModels ) ;
+        $this->setJobModels($jobModels) ;
     }
 
     /**
      * @return string
      */
-    private function _getHtmlView() {
+    private function _getHtmlView()
+    {
         $jobModels = $this->getJobModels() ;
         $label     = $this->getLabel() ;
-        $count     = count( $jobModels ) ;
+        $count     = count($jobModels) ;
         $output    = "<table>\n"
                    . "  <caption>$label ($count)</caption>\n"
                    . "  <tr>\n"
@@ -69,19 +73,19 @@ class JobSummaryView extends ListViewBase {
                    . "    <th>URL</th>\n"
                    . "    <th>Next Action / Due</th>\n"
                    . "  </tr>\n" ;
-        $appStatusController = new ApplicationStatusController( 'read' ) ;
-        foreach ( $jobModels as $jobModel ) {
+        $appStatusController = new ApplicationStatusController('read') ;
+        foreach ($jobModels as $jobModel) {
             $id             = $jobModel->getId() ;
             $cid            = $jobModel->getCompanyId() ;
             $companyController = new CompanyController() ;
-            $companyModel   = $companyController->get( $cid ) ;
+            $companyModel   = $companyController->get($cid) ;
             $cName          = $companyModel->getCompanyName() ;
             $cCity          = $companyModel->getCompanyCity() ;
             $cState         = $companyModel->getCompanyState() ;
             $cUrl           = $companyModel->getCompanyUrl() ;
             $jobTitle       = $jobModel->getPositionTitle() ;
             $jobAppId       = $jobModel->getApplicationStatusId() ;
-            $jobStatus      = $appStatusController->get( $jobAppId )->getStatusValue() ;
+            $jobStatus      = $appStatusController->get($jobAppId)->getStatusValue() ;
             $jobNextAction  = $jobModel->getNextAction() ;
             $jobNextActDue  = $jobModel->getNextActionDue() ;
             $jobUrgency     = $jobModel->getUrgency() ;
@@ -103,41 +107,45 @@ class JobSummaryView extends ListViewBase {
      * @return string
      * @throws ViewException
      */
-    public function getView() {
-        switch ( $this->_viewType ) {
-            case 'html' :
+    public function getView()
+    {
+        switch ($this->_viewType) {
+            case 'html':
                 return $this->_getHtmlView() ;
-            default :
-                throw new ViewException( "Unsupported view type." ) ;
+            default:
+                throw new ViewException("Unsupported view type.") ;
         }
     }
 
     /**
      * @return JobModel[]
      */
-    public function getJobModels() {
+    public function getJobModels()
+    {
         return $this->_jobModels ;
     }
 
     /**
      * @param JobModel[] $jobModels
      */
-    public function setJobModels( $jobModels ) {
+    public function setJobModels($jobModels)
+    {
         $this->_jobModels = $jobModels ;
     }
 
     /**
      * @param string $label
      */
-    public function setLabel( $label ) {
+    public function setLabel($label)
+    {
         $this->_label = $label ;
     }
 
     /**
      * @return string
      */
-    public function getLabel() {
+    public function getLabel()
+    {
         return $this->_label ;
     }
-
 }
