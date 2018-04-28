@@ -1,5 +1,6 @@
+# PHP Job Seeker 2
 
-Note:
+_Note:_
 
 Installation instructions can be found in the INSTALL file.  Licensing of this
 software is covered under GPLv2 and documented in the file LICENSE.  If you do
@@ -12,4 +13,3 @@ In order to use PHP Job Seeker, you will need the following:
 Apache or a similar web server
 PHP 5.6 or later
 MySQL 5.6 or later
-
