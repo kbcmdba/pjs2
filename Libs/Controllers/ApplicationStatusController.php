@@ -21,7 +21,8 @@
  *
  */
 
-class ApplicationStatusController extends ControllerBase {
+class ApplicationStatusController extends ControllerBase
+{
 
     /**
      * Class constructor
@@ -29,16 +30,19 @@ class ApplicationStatusController extends ControllerBase {
      * @param string $readWriteMode "read", "write", or "admin"
      * @throws ControllerException
      */
-    public function __construct( $readWriteMode = 'write' ) {
-        parent::__construct( $readWriteMode ) ;
+    public function __construct($readWriteMode = 'write')
+    {
+        parent::__construct($readWriteMode) ;
     }
 
-    public function dropTable() {
+    public function dropTable()
+    {
         $sql = "DROP TABLE IF EXISTS applicationStatus" ;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
-    public function createTable() {
+    public function createTable()
+    {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS applicationStatus
      (
@@ -54,15 +58,17 @@ CREATE TABLE IF NOT EXISTS applicationStatus
      , PRIMARY KEY  pk_applicationStatusId ( id )
      )
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
-    public function dropTriggers() {
+    public function dropTriggers()
+    {
         $sql = "DROP TRIGGER IF EXISTS applicationStatusAfterInsertTrigger" ;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
-    public function createTriggers() {
+    public function createTriggers()
+    {
         $sql = <<<SQL
 CREATE TRIGGER applicationStatusAfterInsertTrigger
  AFTER INSERT
@@ -83,10 +89,11 @@ CREATE TRIGGER applicationStatusAfterInsertTrigger
             ) ;
    END
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
-    public function preLoadData() {
+    public function preLoadData()
+    {
         $sql = <<<SQL
 INSERT applicationStatus
      ( id
@@ -110,10 +117,11 @@ VALUES (  1, 1, 'FOUND'       , 10  , 'background-color: lightgreen; color: blue
      , ( 10, 0, 'DUPLICATE'   , 999 , 'background-color: black; color: white;'    , 0, NOW(), NOW() )
      , ( 11, 0, 'CLOSED'      , 999 , 'background-color: black; color: white;'    , 0, NOW(), NOW() )
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
-    public function get( $id ) {
+    public function get($id)
+    {
         $sql = <<<SQL
 SELECT id
      , statusValue
@@ -128,43 +136,44 @@ SELECT id
  ORDER
     BY sortKey
 SQL;
-        $stmt = $this->_dbh->prepare( $sql ) ;
-        if ( ! $stmt ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        $stmt = $this->_dbh->prepare($sql) ;
+        if (! $stmt) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        $stmt->bind_param( 'i', $id ) ;
-        if ( ! $stmt->execute() ) {
-            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        $stmt->bind_param('i', $id) ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        if ( ! $stmt->bind_result( $id
-                                 , $statusValue
-                                 , $isActive
-                                 , $sortKey
-                                 , $style
-                                 , $summaryCount
-                                 , $created
-                                 , $updated
-                                 ) ) {
-            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->bind_result(
+            $id,
+            $statusValue,
+            $isActive,
+            $sortKey,
+            $style,
+            $summaryCount,
+            $created,
+            $updated
+                                 )) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
         }
         $model = new ApplicationStatusModel() ;
-        if ( $stmt->fetch() ) {
-            $model->setId( $id ) ;
-            $model->setStatusValue( $statusValue ) ;
-            $model->setIsActive( $isActive ) ;
-            $model->setSortKey( $sortKey ) ;
-            $model->setStyle( $style ) ;
-            $model->setSummaryCount( $summaryCount ) ;
-            $model->setCreated( $created ) ;
-            $model->setUpdated( $updated ) ;
-            return( $model ) ;
-        }
-        else {
-            return( null ) ;
+        if ($stmt->fetch()) {
+            $model->setId($id) ;
+            $model->setStatusValue($statusValue) ;
+            $model->setIsActive($isActive) ;
+            $model->setSortKey($sortKey) ;
+            $model->setStyle($style) ;
+            $model->setSummaryCount($summaryCount) ;
+            $model->setCreated($created) ;
+            $model->setUpdated($updated) ;
+            return($model) ;
+        } else {
+            return(null) ;
         }
     }
 
-    public function getSome( $whereClause = '1 = 1' ) {
+    public function getSome($whereClause = '1 = 1')
+    {
         $sql = <<<SQL
 SELECT id
      , statusValue
@@ -179,39 +188,41 @@ SELECT id
  ORDER
     BY sortKey
 SQL;
-        $stmt = $this->_dbh->prepare( $sql ) ;
-        if ( ! $stmt ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        $stmt = $this->_dbh->prepare($sql) ;
+        if (! $stmt) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        if ( ! $stmt->execute() ) {
-            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        $stmt->bind_result( $id
-                          , $statusValue
-                          , $isActive
-                          , $sortKey
-                          , $style
-                          , $summaryCount
-                          , $created
-                          , $updated
+        $stmt->bind_result(
+            $id,
+            $statusValue,
+            $isActive,
+            $sortKey,
+            $style,
+            $summaryCount,
+            $created,
+            $updated
                           ) ;
-        $models = array() ;
-        while ( $stmt->fetch() ) {
+        $models = [] ;
+        while ($stmt->fetch()) {
             $model = new ApplicationStatusModel() ;
-            $model->setId( $id ) ;
-            $model->setStatusValue( $statusValue ) ;
-            $model->setIsActive( $isActive ) ;
-            $model->setSortKey( $sortKey ) ;
-            $model->setStyle( $style ) ;
-            $model->setSummaryCount( $summaryCount ) ;
-            $model->setCreated( $created ) ;
-            $model->setUpdated( $updated ) ;
+            $model->setId($id) ;
+            $model->setStatusValue($statusValue) ;
+            $model->setIsActive($isActive) ;
+            $model->setSortKey($sortKey) ;
+            $model->setStyle($style) ;
+            $model->setSummaryCount($summaryCount) ;
+            $model->setCreated($created) ;
+            $model->setUpdated($updated) ;
             $models[] = $model ;
         }
-        return( $models ) ;
+        return($models) ;
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         return $this->getSome() ;
     }
 
@@ -221,8 +232,9 @@ SQL;
      * @param ApplicationStatusModel $model
      * @see ControllerBase::update()
      */
-    public function add( $model ) {
-        if ( $model->validateForAdd() ) {
+    public function add($model)
+    {
+        if ($model->validateForAdd()) {
             try {
                 $query = <<<SQL
 INSERT applicationStatus
@@ -243,41 +255,40 @@ SQL;
                 $sortKey      = $model->getSortKey() ;
                 $style        = $model->getStyle() ;
                 $summaryCount = $model->getSummaryCount() ;
-                $summaryCount = ( isset( $summaryCount ) ) ? $summaryCount : 0 ;
-                $stmt = $this->_dbh->prepare( $query ) ;
-                if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                $summaryCount = (isset($summaryCount)) ? $summaryCount : 0 ;
+                $stmt = $this->_dbh->prepare($query) ;
+                if (! $stmt) {
+                    throw new ControllerException('Prepared statement failed for ' . $query) ;
                 }
-                if ( ! ( $stmt->bind_param( 'isiisi'
-                                          , $id
-                                          , $statusValue
-                                          , $isActive
-                                          , $sortKey
-                                          , $style
-                                          , $summaryCount
-                                          ) ) ) {
-                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                if (! ($stmt->bind_param(
+                    'isiisi',
+                    $id,
+                    $statusValue,
+                    $isActive,
+                    $sortKey,
+                    $style,
+                    $summaryCount
+                                          ))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
                 }
-                if ( ! $stmt->execute() ) {
-                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute INSERT statement. ('
                                                  . $this->_dbh->error .
-                                                 ')' ) ;
+                                                 ')') ;
                 }
                 $newId = $stmt->insert_id ;
                 /**
                  * @SuppressWarnings checkAliases
                  */
-                if ( ! $stmt->close() ) {
-                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                if (! $stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $newId ;
+            } catch (Exception $e) {
+                throw new ControllerException($e->getMessage()) ;
             }
-            catch ( Exception $e ) {
-                throw new ControllerException( $e->getMessage() ) ;
-            }
-        }
-        else {
-            throw new ControllerException( "Invalid data." ) ;
+        } else {
+            throw new ControllerException("Invalid data.") ;
         }
     }
     
@@ -287,8 +298,9 @@ SQL;
      * @param ApplicationStatusModel $model
      * @see ControllerBase::update()
      */
-    public function update( $model ) {
-            if ( $model->validateForUpdate() ) {
+    public function update($model)
+    {
+        if ($model->validateForUpdate()) {
             try {
                 $query = <<<SQL
 UPDATE applicationStatus
@@ -305,39 +317,38 @@ SQL;
                 $sortKey      = $model->getSortKey() ;
                 $style        = $model->getStyle() ;
                 $summaryCount = $model->getSummaryCount() ;
-                $stmt = $this->_dbh->prepare( $query ) ;
-                if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                $stmt = $this->_dbh->prepare($query) ;
+                if (! $stmt) {
+                    throw new ControllerException('Prepared statement failed for ' . $query) ;
                 }
-                if ( ! ( $stmt->bind_param( 'siisii'
-                                          , $statusValue
-                                          , $isActive
-                                          , $sortKey
-                                          , $style
-                                          , $summaryCount
-                                          , $id
-                                          ) ) ) {
-                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                if (! ($stmt->bind_param(
+                    'siisii',
+                    $statusValue,
+                    $isActive,
+                    $sortKey,
+                    $style,
+                    $summaryCount,
+                    $id
+                                          ))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
                 }
-                if ( !$stmt->execute() ) {
-                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                if (!$stmt->execute()) {
+                    throw new ControllerException('Failed to execute UPDATE statement. ('
                                                  . $this->_dbh->error .
-                                                 ')' ) ;
+                                                 ')') ;
                 }
                 /**
                  * @SuppressWarnings checkAliases
                  */
-                if ( !$stmt->close() ) {
-                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                if (!$stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $id ;
+            } catch (Exception $e) {
+                throw new ControllerException($e->getMessage()) ;
             }
-            catch ( Exception $e ) {
-                throw new ControllerException( $e->getMessage() ) ;
-            }
-        }
-        else {
-            throw new ControllerException( "Invalid data." ) ;
+        } else {
+            throw new ControllerException("Invalid data.") ;
         }
     }
 
@@ -347,8 +358,8 @@ SQL;
      * @param ExpenseModel $applicationStatusModel
      * @throws ControllerException
      */
-    public function delete( $applicationStatusModel ) {
-        $this->_deleteModelById( "DELETE FROM applicationStatus WHERE id = ?", $applicationStatusModel ) ;
+    public function delete($applicationStatusModel)
+    {
+        $this->_deleteModelById("DELETE FROM applicationStatus WHERE id = ?", $applicationStatusModel) ;
     }
-    
 }

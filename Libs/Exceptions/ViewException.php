@@ -21,5 +21,6 @@
  *
  */
 
-class ViewException extends Exception {
+class ViewException extends Exception
+{
 }

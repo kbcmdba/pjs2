@@ -24,59 +24,59 @@
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
 $result          = 'OK' ;
 $companyId       = '' ;
-$agencyCompanyId = Tools::param( 'agencyCompanyId' ) ;
-$companyName     = Tools::param( 'companyName' ) ;
-$companyAddress1 = Tools::param( 'companyAddress1' ) ;
-$companyAddress2 = Tools::param( 'companyAddress2' ) ;
-$companyCity     = Tools::param( 'companyCity' ) ;
-$companyState    = Tools::param( 'companyState' ) ;
-$companyZip      = Tools::param( 'companyZip' ) ;
-$companyPhone    = Tools::param( 'companyPhone' ) ;
-$companyUrl      = Tools::param( 'companyUrl' ) ;
-$lastContacted   = Tools::param( 'lastContacted' ) ;
-$rowStyle        = Tools::param( 'rowStyle' ) ;
-$rowId           = Tools::param( 'rowId' ) ;
+$agencyCompanyId = Tools::param('agencyCompanyId') ;
+$companyName     = Tools::param('companyName') ;
+$companyAddress1 = Tools::param('companyAddress1') ;
+$companyAddress2 = Tools::param('companyAddress2') ;
+$companyCity     = Tools::param('companyCity') ;
+$companyState    = Tools::param('companyState') ;
+$companyZip      = Tools::param('companyZip') ;
+$companyPhone    = Tools::param('companyPhone') ;
+$companyUrl      = Tools::param('companyUrl') ;
+$lastContacted   = Tools::param('lastContacted') ;
+$rowStyle        = Tools::param('rowStyle') ;
+$rowId           = Tools::param('rowId') ;
 $newCompanyModel = null ;
 try {
     $companyModel = new CompanyModel() ;
-    $companyModel->setAgencyCompanyId( $agencyCompanyId ) ;
-    $companyModel->setCompanyName( $companyName ) ;
-    $companyModel->setCompanyAddress1( $companyAddress1 ) ;
-    $companyModel->setCompanyAddress2( $companyAddress2 ) ;
-    $companyModel->setCompanyCity( $companyCity ) ;
-    $companyModel->setCompanyState( $companyState ) ;
-    $companyModel->setCompanyZip( $companyZip ) ;
-    $companyModel->setCompanyPhone( $companyPhone ) ;
-    $companyModel->setCompanyUrl( $companyUrl ) ;
-    $companyModel->setLastContacted( $lastContacted ) ;
+    $companyModel->setAgencyCompanyId($agencyCompanyId) ;
+    $companyModel->setCompanyName($companyName) ;
+    $companyModel->setCompanyAddress1($companyAddress1) ;
+    $companyModel->setCompanyAddress2($companyAddress2) ;
+    $companyModel->setCompanyCity($companyCity) ;
+    $companyModel->setCompanyState($companyState) ;
+    $companyModel->setCompanyZip($companyZip) ;
+    $companyModel->setCompanyPhone($companyPhone) ;
+    $companyModel->setCompanyUrl($companyUrl) ;
+    $companyModel->setLastContacted($lastContacted) ;
 
     $companyController = new CompanyController() ;
-    $companyId         = $companyController->add( $companyModel ) ;
+    $companyId         = $companyController->add($companyModel) ;
 
-    if ( ! ( $companyId > 0 ) ) {
-        throw new ControllerException( "Add failed." ) ;
+    if (! ($companyId > 0)) {
+        throw new ControllerException("Add failed.") ;
     }
-    $newCompanyModel = $companyController->get( $companyId ) ;
-    $companyRowView = new CompanyListView( 'html', null ) ;
-    $rows = $companyRowView->displayCompanyRow( $newCompanyModel, 'list', $rowStyle ) ;
-}
-catch ( ControllerException $e ) {
-    $companyRowView = new CompanyListView( 'html', null ) ;
-    $companyModel->setId( $rowId ) ;
-    $rows = $companyRowView->displayCompanyRow( $companyModel
-                                              , 'add'
-                                              , $rowStyle
-                                              , 'Add Company record failed. '
+    $newCompanyModel = $companyController->get($companyId) ;
+    $companyRowView = new CompanyListView('html', null) ;
+    $rows = $companyRowView->displayCompanyRow($newCompanyModel, 'list', $rowStyle) ;
+} catch (ControllerException $e) {
+    $companyRowView = new CompanyListView('html', null) ;
+    $companyModel->setId($rowId) ;
+    $rows = $companyRowView->displayCompanyRow(
+        $companyModel,
+        'add',
+        $rowStyle,
+        'Add Company record failed. '
                                               . $e->getMessage()
                                               ) ;
     $result = 'FAILED' ;
 }
 
-$result = array( 'result' => $result, 'rows' => $rows, 'newId' => $companyId ) ;
-echo json_encode( $result ) . PHP_EOL ;
+$result = [ 'result' => $result, 'rows' => $rows, 'newId' => $companyId ] ;
+echo json_encode($result) . PHP_EOL ;

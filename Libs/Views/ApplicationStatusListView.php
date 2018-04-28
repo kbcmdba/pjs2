@@ -24,12 +24,13 @@
 /**
  * Application Status List View
  */
-class ApplicationStatusListView extends ListViewBase {
+class ApplicationStatusListView extends ListViewBase
+{
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
-    private $_supportedViewTypes = array( 'html' => 1 ) ;
+    private $_supportedViewTypes = [ 'html' => 1 ] ;
     /** @var ApplicationStatusModel[] */
     private $_applicationStatusModels ;
 
@@ -39,10 +40,11 @@ class ApplicationStatusListView extends ListViewBase {
      * @param string View Type
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $applicationStatusModels = null ) {
+    public function __construct($viewType = 'html', $applicationStatusModels = null)
+    {
         parent::__construct() ;
-        if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
-            throw new ViewException( "Unsupported view type\n" ) ;
+        if (! isset($this->_supportedViewTypes[ $viewType ])) {
+            throw new ViewException("Unsupported view type\n") ;
         }
         $this->_viewType = $viewType ;
         $this->_applicationStatusModels = $applicationStatusModels ;
@@ -53,7 +55,8 @@ class ApplicationStatusListView extends ListViewBase {
      *
      * @return string
      */
-    private function _getHtmlView() {
+    private function _getHtmlView()
+    {
         $body = <<<'HTML'
 <button type="button" onclick="addApplicationStatus()" >Add Application Status</button>
 <table border="1" cellspacing="0" cellpadding="2" id="applicationStatus" >
@@ -72,9 +75,9 @@ class ApplicationStatusListView extends ListViewBase {
   <tbody>
 
 HTML;
-        foreach ( $this->_applicationStatusModels as $applicationStatus ) {
+        foreach ($this->_applicationStatusModels as $applicationStatus) {
             $id   = $applicationStatus->getId() ;
-            $row  = $this->displayApplicationStatusRow( $applicationStatus, 'list' ) ;
+            $row  = $this->displayApplicationStatusRow($applicationStatus, 'list') ;
             $body .= <<<HTML
     <tr id="ux$id">
       $row
@@ -92,12 +95,13 @@ HTML;
      * @return string
      * @throws ViewException
      */
-    public function getView() {
-        switch ( $this->_viewType ) {
-            case 'html' :
+    public function getView()
+    {
+        switch ($this->_viewType) {
+            case 'html':
                 return $this->_getHtmlView() ;
-            default :
-                throw new ViewException( "Unsupported view type." ) ;
+            default:
+                throw new ViewException("Unsupported view type.") ;
         }
     }
 
@@ -108,18 +112,19 @@ HTML;
      * @param string $displayMode 'add', 'edit', 'delete', 'list'
      * @return string
      */
-    public function displayApplicationStatusRow( $applicationStatusModel, $displayMode ) {
+    public function displayApplicationStatusRow($applicationStatusModel, $displayMode)
+    {
         $id              = $applicationStatusModel->getId() ;
         $statusValue     = $applicationStatusModel->getStatusValue() ;
         $style           = $applicationStatusModel->getStyle() ;
         $isActive        = $applicationStatusModel->getIsActive() ;
-        $isActiveChecked = ( $isActive ) ? "checked=\"checked\"" : "" ;
-        $isActiveDisplay = ( $isActive ) ? "Yes" : "No" ;
+        $isActiveChecked = ($isActive) ? "checked=\"checked\"" : "" ;
+        $isActiveDisplay = ($isActive) ? "Yes" : "No" ;
         $sortKey         = $applicationStatusModel->getSortKey() ;
         $created         = $applicationStatusModel->getCreated() ;
         $updated         = $applicationStatusModel->getUpdated() ;
-        switch ( $displayMode ) {
-            case 'add'    :
+        switch ($displayMode) {
+            case 'add':
                 return <<<RETVAL
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddApplicationStatus( '$id' )">Save</button>
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
@@ -132,7 +137,7 @@ HTML;
       <td>&nbsp;</td>
 
 RETVAL;
-            case 'update' :
+            case 'update':
                 return <<<RETVAL
       <td><button type="button" id="SaveButton$id" onclick="saveUpdateApplicationStatus( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateApplicationStatusRow( '$id' )">Cancel</button>
@@ -145,7 +150,7 @@ RETVAL;
       <td>$updated</td>
 
 RETVAL;
-            case 'delete' :
+            case 'delete':
                 return <<<RETVAL
       <td><button type="button" id="DeleteButton$id" onclick="doDeleteApplicationStatus( '$id' )">Confirm Delete</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateApplicationStatusRow( '$id' )">Cancel</button>
@@ -158,7 +163,7 @@ RETVAL;
       <td>$updated</td>
 
 RETVAL;
-            case 'list'   :
+            case 'list':
                 return <<<RETVAL
       <td><button type="button" id="UpdateButton$id" onclick="updateApplicationStatus( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteApplicationStatus( '$id' )">Delete</button>
@@ -178,14 +183,16 @@ RETVAL;
     /**
      * @return ApplicationStatusModel[]
      */
-    public function getApplicationStatusModels() {
+    public function getApplicationStatusModels()
+    {
         return $this->_applicationStatusModels ;
     }
 
     /**
      * @param ApplicationStatusModel[] $applicationStatusModels
      */
-    public function setApplicationStatusModels( $applicationStatusModels ) {
+    public function setApplicationStatusModels($applicationStatusModels)
+    {
         $this->_applicationStatusModels = $applicationStatusModels ;
     }
 
@@ -196,12 +203,13 @@ RETVAL;
      * @param integer $value The selected value
      * @return string
      */
-    public function getApplicationStatusList( $id, $value ) {
+    public function getApplicationStatusList($id, $value)
+    {
         $retVal = "<select id=\"applicationStatusId$id\" >\n  <option value=\"\">---</option>" ;
         $applicationStatusController = new ApplicationStatusController() ;
         $applicationStatuses = $applicationStatusController->getAll() ;
-        foreach ( $applicationStatuses as $applicationStatus ) {
-            $selected = ( $applicationStatus->getId() === $value ) ? "selected=\"selected\"" : "" ;
+        foreach ($applicationStatuses as $applicationStatus) {
+            $selected = ($applicationStatus->getId() === $value) ? "selected=\"selected\"" : "" ;
             $asValue  = $applicationStatus->getStatusValue() ;
             $asStyle  = $applicationStatus->getStyle() ;
             $asId     = $applicationStatus->getId() ;
@@ -210,5 +218,4 @@ RETVAL;
         $retVal .= "</select>\n" ;
         return $retVal ;
     }
-
 }

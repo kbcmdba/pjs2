@@ -21,5 +21,6 @@
  *
  */
 
-class ControllerException extends Exception {
+class ControllerException extends Exception
+{
 }

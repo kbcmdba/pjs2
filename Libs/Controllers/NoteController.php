@@ -21,7 +21,8 @@
  *
  */
 
-class NoteController extends ControllerBase {
+class NoteController extends ControllerBase
+{
 
     /**
      * Class constructor
@@ -29,16 +30,19 @@ class NoteController extends ControllerBase {
      * @param string $readWriteMode "read", "write", or "admin"
      * @throws ControllerException
      */
-    public function __construct( $readWriteMode = 'write' ) {
-        parent::__construct( $readWriteMode ) ;
+    public function __construct($readWriteMode = 'write')
+    {
+        parent::__construct($readWriteMode) ;
     }
     
-    public function dropTable() {
+    public function dropTable()
+    {
         $sql = "DROP TABLE IF EXISTS note" ;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
     
-    public function createTable() {
+    public function createTable()
+    {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS note
      (
@@ -53,14 +57,15 @@ CREATE TABLE IF NOT EXISTS note
      , INDEX appliesTo ( appliesToTable, appliesToId, created )
      )
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
     /**
      * @param integer $id
      * @see ControllerBase::get()
      */
-    public function get( $id ) {
+    public function get($id)
+    {
         $sql = <<<SQL
 SELECT id
      , appliesToTable
@@ -71,42 +76,43 @@ SELECT id
   FROM note
  WHERE id = ?
 SQL;
-        $stmt = $this->_dbh->prepare( $sql ) ;
-        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        $stmt = $this->_dbh->prepare($sql) ;
+        if ((! $stmt) || (! $stmt->bind_param('i', $id))) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        if ( ! $stmt->execute() ) {
-            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        if ( ! $stmt->bind_result( $id
-                                 , $appliesToTable
-                                 , $appliesToId
-                                 , $created
-                                 , $updated
-                                 , $noteText
-                                 ) ) {
-            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->bind_result(
+            $id,
+            $appliesToTable,
+            $appliesToId,
+            $created,
+            $updated,
+            $noteText
+                                 )) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
         }
-        if ( $stmt->fetch() ) {
+        if ($stmt->fetch()) {
             $model = new NoteModel() ;
-            $model->setId( $id ) ;
-            $model->setAppliesToTable( $appliesToTable ) ;
-            $model->setAppliesToId( $appliesToId ) ;
-            $model->setCreated( $created ) ;
-            $model->setUpdated( $updated ) ;
-            $model->setNoteText( $noteText ) ;
-        }
-        else {
+            $model->setId($id) ;
+            $model->setAppliesToTable($appliesToTable) ;
+            $model->setAppliesToId($appliesToId) ;
+            $model->setCreated($created) ;
+            $model->setUpdated($updated) ;
+            $model->setNoteText($noteText) ;
+        } else {
             $model = null ;
         }
-        return( $model ) ;
+        return($model) ;
     }
 
     /**
      * @param string $whereClause
      * @see ControllerBase::getSome()
      */
-    public function getSome( $whereClause = '1 = 1') {
+    public function getSome($whereClause = '1 = 1')
+    {
         $sql = <<<SQL
 SELECT id
      , appliesToTable
@@ -119,35 +125,37 @@ SELECT id
  ORDER
     BY updated
 SQL;
-        $stmt = $this->_dbh->prepare( $sql ) ;
-        if ( ! $stmt ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ') from this SQL: ' . $sql ) ;
+        $stmt = $this->_dbh->prepare($sql) ;
+        if (! $stmt) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ') from this SQL: ' . $sql) ;
         }
-        if ( ! $stmt->execute() ) {
-            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        $stmt->bind_result( $id
-                          , $appliesToTable
-                          , $appliesToId
-                          , $created
-                          , $updated
-                          , $noteText
+        $stmt->bind_result(
+            $id,
+            $appliesToTable,
+            $appliesToId,
+            $created,
+            $updated,
+            $noteText
                           ) ;
-        $models = array() ;
-        while ( $stmt->fetch() ) {
+        $models = [] ;
+        while ($stmt->fetch()) {
             $model = new NoteModel() ;
-            $model->setId( $id ) ;
-            $model->setAppliesToTable( $appliesToTable ) ;
-            $model->setAppliesToId( $appliesToId ) ;
-            $model->setCreated( $created ) ;
-            $model->setUpdated( $updated ) ;
-            $model->setNoteText( $noteText ) ;
+            $model->setId($id) ;
+            $model->setAppliesToTable($appliesToTable) ;
+            $model->setAppliesToId($appliesToId) ;
+            $model->setCreated($created) ;
+            $model->setUpdated($updated) ;
+            $model->setNoteText($noteText) ;
             $models[] = $model ;
         }
-        return( $models ) ;
+        return($models) ;
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         return $this->getSome() ;
     }
 
@@ -155,8 +163,9 @@ SQL;
      * @param NoteModel $model
      * @see ControllerBase::add()
      */
-    public function add( $model ) {
-        if ( $model->validateForAdd() ) {
+    public function add($model)
+    {
+        if ($model->validateForAdd()) {
             try {
                 $query = <<<SQL
 INSERT note
@@ -173,37 +182,36 @@ SQL;
                 $appliesToTable = $model->getAppliesToTable() ;
                 $appliesToId    = $model->getAppliesToId() ;
                 $noteText       = $model->getNoteText() ;
-                $stmt           = $this->_dbh->prepare( $query ) ;
-                if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                $stmt           = $this->_dbh->prepare($query) ;
+                if (! $stmt) {
+                    throw new ControllerException('Prepared statement failed for ' . $query) ;
                 }
-                if ( ! ( $stmt->bind_param( 'sis'
-                                          , $appliesToTable
-                                          , $appliesToId
-                                          , $noteText
-                                          ) ) ) {
-                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                if (! ($stmt->bind_param(
+                    'sis',
+                    $appliesToTable,
+                    $appliesToId,
+                    $noteText
+                                          ))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
                 }
-                if ( ! $stmt->execute() ) {
-                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute INSERT statement. ('
                                                  . $this->_dbh->error .
-                                                 ')' ) ;
+                                                 ')') ;
                 }
                 $newId = $stmt->insert_id ;
                 /**
                  * @SuppressWarnings checkAliases
                  */
-                if ( ! $stmt->close() ) {
-                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                if (! $stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $newId ;
+            } catch (Exception $e) {
+                throw new ControllerException($e->getMessage()) ;
             }
-            catch ( Exception $e ) {
-                throw new ControllerException( $e->getMessage() ) ;
-            }
-        }
-        else {
-            throw new ControllerException( "Invalid data." ) ;
+        } else {
+            throw new ControllerException("Invalid data.") ;
         }
     }
 
@@ -211,8 +219,9 @@ SQL;
      * @param NoteModel $model
      * @see ControllerBase::update()
      */
-    public function update( $model ) {
-        if ( $model->validateForUpdate() ) {
+    public function update($model)
+    {
+        if ($model->validateForUpdate()) {
             try {
                 $query = <<<SQL
 UPDATE note
@@ -224,38 +233,37 @@ SQL;
                 $id             = $model->getId() ;
                 $appliesToTable = $model->getAppliesToTable() ;
                 $appliesToId    = $model->getAppliesToId() ;
-                $noteText       = htmlspecialchars( $model->getNoteText() ) ;
-                $stmt           = $this->_dbh->prepare( $query ) ;
-                if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                $noteText       = htmlspecialchars($model->getNoteText()) ;
+                $stmt           = $this->_dbh->prepare($query) ;
+                if (! $stmt) {
+                    throw new ControllerException('Prepared statement failed for ' . $query) ;
                 }
-                if ( ! ( $stmt->bind_param( 'sisi'
-                                          , $appliesToTable
-                                          , $appliesToId
-                                          , $noteText
-                                          , $id
-                                          ) ) ) {
-                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                if (! ($stmt->bind_param(
+                    'sisi',
+                    $appliesToTable,
+                    $appliesToId,
+                    $noteText,
+                    $id
+                                          ))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
                 }
-                if ( ! $stmt->execute() ) {
-                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute UPDATE statement. ('
                                                  . $this->_dbh->error .
-                                                 ')' ) ;
+                                                 ')') ;
                 }
                 /**
                  * @SuppressWarnings checkAliases
                  */
-                if ( !$stmt->close() ) {
-                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                if (!$stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $id ;
+            } catch (Exception $e) {
+                throw new ControllerException($e->getMessage()) ;
             }
-            catch ( Exception $e ) {
-                throw new ControllerException( $e->getMessage() ) ;
-            }
-        }
-        else {
-            throw new ControllerException( "Invalid data." ) ;
+        } else {
+            throw new ControllerException("Invalid data.") ;
         }
     }
 
@@ -263,8 +271,8 @@ SQL;
      * @param NoteModel $model
      * @see ControllerBase::delete()
      */
-    public function delete( $model ) {
-        $this->_deleteModelById( "DELETE FROM note WHERE id = ?", $model ) ;
+    public function delete($model)
+    {
+        $this->_deleteModelById("DELETE FROM note WHERE id = ?", $model) ;
     }
-
 }

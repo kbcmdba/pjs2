@@ -21,7 +21,8 @@
  *
  */
 
-class ContactController extends ControllerBase {
+class ContactController extends ControllerBase
+{
 
     /**
      * Class constructor
@@ -29,22 +30,25 @@ class ContactController extends ControllerBase {
      * @param string $readWriteMode "read", "write", or "admin"
      * @throws ControllerException
      */
-    public function __construct( $readWriteMode = 'write' ) {
-        parent::__construct( $readWriteMode ) ;
+    public function __construct($readWriteMode = 'write')
+    {
+        parent::__construct($readWriteMode) ;
     }
 
     /**
      * @see ControllerBase::dropTable()
      */
-    public function dropTable() {
+    public function dropTable()
+    {
         $sql = "DROP TABLE IF EXISTS contact" ;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
     /**
      * @see ControllerBase::createTable()
      */
-    public function createTable() {
+    public function createTable()
+    {
         $sql = <<<SQL
 CREATE TABLE contact
      (
@@ -64,17 +68,19 @@ CREATE TABLE contact
                 ON UPDATE CASCADE
      )
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
-    public function dropTriggers() {
+    public function dropTriggers()
+    {
         $sql = "DROP TRIGGER IF EXISTS contactAfterDeleteTrigger" ;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
         $sql = "DROP TRIGGER IF EXISTS contactAfterUpdateTrigger" ;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
-    public function createTriggers() {
+    public function createTriggers()
+    {
         $sql = <<<SQL
 CREATE TRIGGER contactAfterDeleteTrigger
  AFTER DELETE
@@ -87,7 +93,7 @@ CREATE TRIGGER contactAfterDeleteTrigger
           AND appliesToId = OLD.id ;
    END
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
         $sql = <<<SQL
 CREATE TRIGGER contactAfterUpdateTrigger
  AFTER UPDATE
@@ -104,14 +110,15 @@ CREATE TRIGGER contactAfterUpdateTrigger
         END IF ;
    END
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
     /**
      * @param integer $id
      * @see ControllerBase::get()
      */
-    public function get( $id ) {
+    public function get($id)
+    {
         $sql = <<<SQL
 SELECT id
      , contactCompanyId
@@ -124,45 +131,46 @@ SELECT id
   FROM contact
  WHERE id = ?
 SQL;
-        $stmt = $this->_dbh->prepare( $sql ) ;
-        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        $stmt = $this->_dbh->prepare($sql) ;
+        if ((! $stmt) || (! $stmt->bind_param('i', $id))) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        if ( ! $stmt->execute() ) {
-            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        if ( ! $stmt->bind_result( $id
-                                 , $contactCompanyId
-                                 , $contactName
-                                 , $contactEmail
-                                 , $contactPhone
-                                 , $contactAlternatePhone
-                                 , $created
-                                 , $updated
-                                 ) ) {
-            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->bind_result(
+            $id,
+            $contactCompanyId,
+            $contactName,
+            $contactEmail,
+            $contactPhone,
+            $contactAlternatePhone,
+            $created,
+            $updated
+                                 )) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
         }
-        if ( $stmt->fetch() ) {
+        if ($stmt->fetch()) {
             $model = new ContactModel() ;
-            $model->setId( $id ) ;
-            $model->setContactCompanyId( $contactCompanyId ) ;
-            $model->setContactName( $contactName ) ;
-            $model->setContactEmail( $contactEmail ) ;
-            $model->setContactPhone( $contactPhone ) ;
-            $model->setContactAlternatePhone( $contactAlternatePhone ) ;
-            $model->setCreated( $created ) ;
-            $model->setUpdated( $updated ) ;
-        }
-        else {
+            $model->setId($id) ;
+            $model->setContactCompanyId($contactCompanyId) ;
+            $model->setContactName($contactName) ;
+            $model->setContactEmail($contactEmail) ;
+            $model->setContactPhone($contactPhone) ;
+            $model->setContactAlternatePhone($contactAlternatePhone) ;
+            $model->setCreated($created) ;
+            $model->setUpdated($updated) ;
+        } else {
             $model = null ;
         }
-        return( $model ) ;
+        return($model) ;
     }
 
     /**
      * @see ControllerBase::getSome()
      */
-    public function getSome( $whereClause = '1 = 1') {
+    public function getSome($whereClause = '1 = 1')
+    {
         $sql = <<<SQL
 SELECT id
      , contactCompanyId
@@ -177,39 +185,41 @@ SELECT id
  ORDER
     BY contactName
 SQL;
-        $stmt = $this->_dbh->prepare( $sql ) ;
-        if ( ! $stmt ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        $stmt = $this->_dbh->prepare($sql) ;
+        if (! $stmt) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        if ( ! $stmt->execute() ) {
-            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        $stmt->bind_result( $id
-                          , $contactCompanyId
-                          , $contactName
-                          , $contactEmail
-                          , $contactPhone
-                          , $contactAlternatePhone
-                          , $created
-                          , $updated
+        $stmt->bind_result(
+            $id,
+            $contactCompanyId,
+            $contactName,
+            $contactEmail,
+            $contactPhone,
+            $contactAlternatePhone,
+            $created,
+            $updated
                           ) ;
-        $models = array() ;
-        while ( $stmt->fetch() ) {
+        $models = [] ;
+        while ($stmt->fetch()) {
             $model = new ContactModel() ;
-            $model->setId( $id ) ;
-            $model->setContactCompanyId( $contactCompanyId ) ;
-            $model->setContactName( $contactName ) ;
-            $model->setContactEmail( $contactEmail ) ;
-            $model->setContactPhone( $contactPhone ) ;
-            $model->setContactAlternatePhone( $contactAlternatePhone ) ;
-            $model->setCreated( $created ) ;
-            $model->setUpdated( $updated ) ;
+            $model->setId($id) ;
+            $model->setContactCompanyId($contactCompanyId) ;
+            $model->setContactName($contactName) ;
+            $model->setContactEmail($contactEmail) ;
+            $model->setContactPhone($contactPhone) ;
+            $model->setContactAlternatePhone($contactAlternatePhone) ;
+            $model->setCreated($created) ;
+            $model->setUpdated($updated) ;
             $models[] = $model ;
         }
-        return( $models ) ;
+        return($models) ;
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         return $this->getSome() ;
     }
 
@@ -217,8 +227,9 @@ SQL;
      * @param ContactModel $model
      * @see ControllerBase::add()
      */
-    public function add( $model ) {
-        if ( $model->validateForAdd() ) {
+    public function add($model)
+    {
+        if ($model->validateForAdd()) {
             try {
                 $query = <<<SQL
 INSERT contact
@@ -239,39 +250,38 @@ SQL;
                 $contactEmail          = $model->getContactEmail() ;
                 $contactPhone          = $model->getContactPhone() ;
                 $contactAlternatePhone = $model->getContactAlternatePhone() ;
-                $stmt                  = $this->_dbh->prepare( $query ) ;
-                if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                $stmt                  = $this->_dbh->prepare($query) ;
+                if (! $stmt) {
+                    throw new ControllerException('Prepared statement failed for ' . $query) ;
                 }
-                if ( ! ( $stmt->bind_param( 'issss'
-                                          , $contactCompanyId
-                                          , $contactName
-                                          , $contactEmail
-                                          , $contactPhone
-                                          , $contactAlternatePhone
-                                          ) ) ) {
-                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                if (! ($stmt->bind_param(
+                    'issss',
+                    $contactCompanyId,
+                    $contactName,
+                    $contactEmail,
+                    $contactPhone,
+                    $contactAlternatePhone
+                                          ))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
                 }
-                if ( ! $stmt->execute() ) {
-                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute INSERT statement. ('
                                                  . $this->_dbh->error .
-                                                 ')' ) ;
+                                                 ')') ;
                 }
                 $newId = $stmt->insert_id ;
                 /**
                  * @SuppressWarnings checkAliases
                  */
-                if ( ! $stmt->close() ) {
-                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                if (! $stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $newId ;
+            } catch (Exception $e) {
+                throw new ControllerException($e->getMessage()) ;
             }
-            catch ( Exception $e ) {
-                throw new ControllerException( $e->getMessage() ) ;
-            }
-        }
-        else {
-            throw new ControllerException( "Invalid data." ) ;
+        } else {
+            throw new ControllerException("Invalid data.") ;
         }
     }
 
@@ -279,8 +289,9 @@ SQL;
      * @param ContactModel $model
      * @see ControllerBase::update()
      */
-    public function update( $model ) {
-        if ( $model->validateForUpdate() ) {
+    public function update($model)
+    {
+        if ($model->validateForUpdate()) {
             try {
                 $query = <<<SQL
 UPDATE contact
@@ -297,39 +308,38 @@ SQL;
                 $contactEmail          = $model->getContactEmail() ;
                 $contactPhone          = $model->getContactPhone() ;
                 $contactAlternatePhone = $model->getContactAlternatePhone() ;
-                $stmt                = $this->_dbh->prepare( $query ) ;
-                if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                $stmt                = $this->_dbh->prepare($query) ;
+                if (! $stmt) {
+                    throw new ControllerException('Prepared statement failed for ' . $query) ;
                 }
-                if ( ! ( $stmt->bind_param( 'issssi'
-                                          , $contactCompanyId
-                                          , $contactName
-                                          , $contactEmail
-                                          , $contactPhone
-                                          , $contactAlternatePhone
-                                          , $id
-                                          ) ) ) {
-                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                if (! ($stmt->bind_param(
+                    'issssi',
+                    $contactCompanyId,
+                    $contactName,
+                    $contactEmail,
+                    $contactPhone,
+                    $contactAlternatePhone,
+                    $id
+                                          ))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
                 }
-                if ( !$stmt->execute() ) {
-                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                if (!$stmt->execute()) {
+                    throw new ControllerException('Failed to execute UPDATE statement. ('
                             . $this->_dbh->error .
-                            ')' ) ;
+                            ')') ;
                 }
                 /**
                  * @SuppressWarnings checkAliases
                  */
-                if ( !$stmt->close() ) {
-                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                if (!$stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $id ;
+            } catch (Exception $e) {
+                throw new ControllerException($e->getMessage()) ;
             }
-            catch ( Exception $e ) {
-                throw new ControllerException( $e->getMessage() ) ;
-            }
-        }
-        else {
-            throw new ControllerException( "Invalid data." ) ;
+        } else {
+            throw new ControllerException("Invalid data.") ;
         }
     }
 
@@ -337,8 +347,8 @@ SQL;
      * @param ContactModel $model
      * @see ControllerBase::delete()
      */
-    public function delete( $model ) {
-        $this->_deleteModelById( "DELETE FROM contact WHERE id = ?", $model ) ;
+    public function delete($model)
+    {
+        $this->_deleteModelById("DELETE FROM contact WHERE id = ?", $model) ;
     }
-
 }

@@ -24,13 +24,13 @@
 require_once "Libs/autoload.php" ;
 
 $config = new Config() ;
-$page = new PJSWebPage( $config->getTitle() . ' - Application Statuses' ) ;
+$page = new PJSWebPage($config->getTitle() . ' - Application Statuses') ;
 
 $body = "<h2>Application Statuses</h2>" ;
-$asc = new ApplicationStatusController( 'read' ) ;
+$asc = new ApplicationStatusController('read') ;
 $asmList = $asc->getAll() ;
-$asv = new ApplicationStatusListView( 'html', $asmList ) ;
+$asv = new ApplicationStatusListView('html', $asmList) ;
 $body .= $asv->getView() ;
 
-$page->setBody( $body ) ;
+$page->setBody($body) ;
 $page->displayPage() ;

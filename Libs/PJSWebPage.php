@@ -24,8 +24,8 @@
 /**
  * Customized web page class
  */
-class PJSWebPage extends WebPage {
-
+class PJSWebPage extends WebPage
+{
     private $_auth ;
     private $_resetOk ;
 
@@ -34,16 +34,17 @@ class PJSWebPage extends WebPage {
      *
      * @param string
      */
-    public function __construct( $title = '', $skipAuth = false ) {
-        parent::__construct( $title ) ;
+    public function __construct($title = '', $skipAuth = false)
+    {
+        parent::__construct($title) ;
         $config = new Config() ;
         $this->_skipAuth = $skipAuth ;
-        if ( ! $skipAuth ) {
+        if (! $skipAuth) {
             $auth = new Auth() ;
             $this->_auth = $auth ;
         }
         // Only allow reset to authenticated users and only if the config allows it.
-        $this->_resetOk = $config->getResetOk() && ( $skipAuth || $auth->isAuthorized() ) ;
+        $this->_resetOk = $config->getResetOk() && ($skipAuth || $auth->isAuthorized()) ;
         $header = <<<HTML
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
@@ -64,17 +65,17 @@ class PJSWebPage extends WebPage {
   </script>
 
 HTML;
-        $this->setHead( $header ) ;
-        $this->setMeta( array( "Cache-Control: no-cache, must-revalidate"
+        $this->setHead($header) ;
+        $this->setMeta([ "Cache-Control: no-cache, must-revalidate"
                              , "Expires: Sat, 26 Oct 2013 05:00:00 GMT"
-                             , 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT'
-                             ) ) ;
-        $this->setStyles( '' ) ;
-        $this->setTop( $this->_getTop() ) ;
-        $this->setBottom( '<!-- EndOfPage -->' ) ;
+                             , 'Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'
+                             ]) ;
+        $this->setStyles('') ;
+        $this->setTop($this->_getTop()) ;
+        $this->setBottom('<!-- EndOfPage -->') ;
 
-        if ( ( ! $skipAuth ) && ( ! $auth->isAuthorized() ) ) {
-            $this->setBody( $auth->getLoginPage() ) ;
+        if ((! $skipAuth) && (! $auth->isAuthorized())) {
+            $this->setBody($auth->getLoginPage()) ;
             $this->displayPage() ;
             exit ;
         }
@@ -85,13 +86,13 @@ HTML;
      *
      * @return string
      */
-    private function _getTop() {
+    private function _getTop()
+    {
         $logout = '' ;
-        if ( ( ! $this->_skipAuth ) && ( $this->_auth->isAuthorized() ) ) {
+        if ((! $this->_skipAuth) && ($this->_auth->isAuthorized())) {
             $logout  = '  <li><a href="logout.php">Log Out</a></li>' ;
-            $reset = ( $this->_resetOk ) ? "  <li><a href=\"resetDb.php\">Reset Database</a></li>" : "" ;
-        }
-        else {
+            $reset = ($this->_resetOk) ? "  <li><a href=\"resetDb.php\">Reset Database</a></li>" : "" ;
+        } else {
             $logout = $reset = '' ;
         }
         $html = <<<HTML
@@ -113,5 +114,4 @@ HTML;
         return $html ;
         // | <a href=""></a>
     }
-
 }

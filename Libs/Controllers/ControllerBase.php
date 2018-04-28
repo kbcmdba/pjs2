@@ -24,7 +24,8 @@
 /**
  * Controller Base
  */
-abstract class ControllerBase {
+abstract class ControllerBase
+{
 
     /** @var mysqli */
     protected $_dbh ;
@@ -35,14 +36,14 @@ abstract class ControllerBase {
      * @param string $readWriteMode "read", "write" or "admin"
      * @throws ControllerException
      */
-    public function __construct( $readWriteMode = 'write' ) {
+    public function __construct($readWriteMode = 'write')
+    {
         try {
-            $dbc = new DBConnection( $readWriteMode ) ;
+            $dbc = new DBConnection($readWriteMode) ;
             $this->_dbh = $dbc->getConnection() ;
-            $this->_dbh->autocommit( TRUE ) ;
-        }
-        catch ( Exception $e ) {
-            throw new ControllerException( 'Problem connecting to database: ' . $this->_dbh->error ) ;
+            $this->_dbh->autocommit(true) ;
+        } catch (Exception $e) {
+            throw new ControllerException('Problem connecting to database: ' . $this->_dbh->error) ;
         }
     }
 
@@ -52,14 +53,14 @@ abstract class ControllerBase {
      * @param string $sql
      * @throws ControllerException
      */
-    protected function _doDDL( $sql ) {
+    protected function _doDDL($sql)
+    {
         try {
-            if ( ! $this->_dbh->query( $sql ) ) {
-                throw new ControllerException( $sql ) ;
+            if (! $this->_dbh->query($sql)) {
+                throw new ControllerException($sql) ;
             }
-        }
-        catch ( Exception $e ) {
-            throw new ControllerException( "Failed to execute DDL: " . $this->_dbh->error ) ;
+        } catch (Exception $e) {
+            throw new ControllerException("Failed to execute DDL: " . $this->_dbh->error) ;
         }
     }
 
@@ -69,29 +70,29 @@ abstract class ControllerBase {
      * @param ModelBase $model
      * @throws ControllerException
      */
-    protected function _deleteModelById( $sql, $model ) {
-        if ( $model->validateForDelete() ) {
-            $stmt = $this->_dbh->prepare( $sql ) ;
-            if ( !$stmt ) {
-                throw new ControllerException( 'Prepared statement failed for ' . $sql ) ;
+    protected function _deleteModelById($sql, $model)
+    {
+        if ($model->validateForDelete()) {
+            $stmt = $this->_dbh->prepare($sql) ;
+            if (!$stmt) {
+                throw new ControllerException('Prepared statement failed for ' . $sql) ;
             }
             $id = $model->getId() ;
-            if ( ! $stmt->bind_param( 'i', $id ) ) {
-                throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+            if (! $stmt->bind_param('i', $id)) {
+                throw new ControllerException('Binding parameters for prepared statement failed.') ;
             }
-            if ( !$stmt->execute() ) {
-                throw new ControllerException( 'Failed to execute DELETE statement. (' . $this->_dbh->error . ')' ) ;
+            if (!$stmt->execute()) {
+                throw new ControllerException('Failed to execute DELETE statement. (' . $this->_dbh->error . ')') ;
             }
             /**
              * @SuppressWarnings checkAliases
              */
-            if ( !$stmt->close() ) {
-                throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+            if (!$stmt->close()) {
+                throw new ControllerException('Something broke while trying to close the prepared statement.') ;
             }
             return ;
-        }
-        else {
-            throw new ControllerException( 'Invalid data' ) ;
+        } else {
+            throw new ControllerException('Invalid data') ;
         }
     }
 
@@ -99,56 +100,59 @@ abstract class ControllerBase {
      * @param mixed $ts Unix seconds since epoch or null for "now"
      * @return string
      */
-    public static function timestamp( $ts = null ) {
-        if ( $ts === null ) {
+    public static function timestamp($ts = null)
+    {
+        if ($ts === null) {
             $ts = time() ;
+        } elseif (! Tools::isNumeric($ts)) {
+            throw new ControllerException('Invalid timestamp: ' . $ts) ;
         }
-        elseif ( ! Tools::isNumeric( $ts ) ) {
-            throw new ControllerException( 'Invalid timestamp: ' . $ts ) ;
-        }
-        return( date( "Y-m-d H:i:s", $ts ) ) ;
+        return(date("Y-m-d H:i:s", $ts)) ;
     }
 
     /**
      * @param mixed $ts Unix seconds since epoch or null for "now"
      * @return string
      */
-    public static function datestamp( $ts = null ) {
-        if ( $ts === null ) {
+    public static function datestamp($ts = null)
+    {
+        if ($ts === null) {
             $ts = time() ;
+        } elseif (! Tools::isNumeric($ts)) {
+            throw new ControllerException('Invalid timestamp: ' . $ts) ;
         }
-        elseif ( ! Tools::isNumeric( $ts ) ) {
-            throw new ControllerException( 'Invalid timestamp: ' . $ts ) ;
-        }
-        return( date( "Y-m-d", $ts ) ) ;
+        return(date("Y-m-d", $ts)) ;
     }
 
     /**
      * @return string Equivalent to MySQL NOW() function
      */
-    public static function now() {
-        return self::timestamp( time() ) ;
+    public static function now()
+    {
+        return self::timestamp(time()) ;
     }
 
     /**
      * @return string Equivalent to MySQL TODAY() function
      */
-    public static function today() {
+    public static function today()
+    {
         return self::datestamp() ;
     }
 
     /**
      * @return string Equivalent to MySQL TOMORROW() function
      */
-    public static function tomorrow() {
-        return self::datestamp( time() + 86400 ) ;
+    public static function tomorrow()
+    {
+        return self::datestamp(time() + 86400) ;
     }
 
     /**
      * @return string Equivalent to MySQL YESTERDAY() function
      */
-    public static function yesterday() {
-        return self::datestamp( time() - 86400 ) ;
+    public static function yesterday()
+    {
+        return self::datestamp(time() - 86400) ;
     }
-
 }

@@ -24,12 +24,13 @@
 /**
  * Application Status Summary View
  */
-class ApplicationStatusSummaryView extends SummaryViewBase {
+class ApplicationStatusSummaryView extends SummaryViewBase
+{
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
-    private $_supportedViewTypes = array( 'html' => 1 ) ;
+    private $_supportedViewTypes = [ 'html' => 1 ] ;
     /** @var ApplicationStatusModel[] */
     private $_applicationStatusModels ;
 
@@ -39,10 +40,11 @@ class ApplicationStatusSummaryView extends SummaryViewBase {
      * @param string View Type
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $applicationStatusModels = null ) {
+    public function __construct($viewType = 'html', $applicationStatusModels = null)
+    {
         parent::__construct() ;
-        if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
-            throw new ViewException( "Unsupported view type\n" ) ;
+        if (! isset($this->_supportedViewTypes[ $viewType ])) {
+            throw new ViewException("Unsupported view type\n") ;
         }
         $this->_viewType = $viewType ;
         $this->_applicationStatusModels = $applicationStatusModels ;
@@ -53,7 +55,8 @@ class ApplicationStatusSummaryView extends SummaryViewBase {
      *
      * @return string
      */
-    private function _getHtmlView() {
+    private function _getHtmlView()
+    {
         $body = <<<'HTML'
 <table border="1" cellspacing="0" cellpadding="2" id="applicationStatus" >
   <caption>Current Application Statuses</caption>
@@ -67,7 +70,7 @@ class ApplicationStatusSummaryView extends SummaryViewBase {
   <tbody>
 
 HTML;
-        foreach ( $this->_applicationStatusModels as $applicationStatus ) {
+        foreach ($this->_applicationStatusModels as $applicationStatus) {
             $id   = $applicationStatus->getId() ;
             $label = $applicationStatus->getStatusValue() ;
             $style = $applicationStatus->getStyle() ;
@@ -92,27 +95,29 @@ HTML;
      * @return string
      * @throws ViewException
      */
-    public function getView() {
-        switch ( $this->_viewType ) {
-            case 'html' :
+    public function getView()
+    {
+        switch ($this->_viewType) {
+            case 'html':
                 return $this->_getHtmlView() ;
-            default :
-                throw new ViewException( "Unsupported view type." ) ;
+            default:
+                throw new ViewException("Unsupported view type.") ;
         }
     }
 
     /**
      * @return ApplicationStatusModel[]
      */
-    public function getApplicationStatusModels() {
+    public function getApplicationStatusModels()
+    {
         return $this->_applicationStatusModels ;
     }
 
     /**
      * @param ApplicationStatusModel[] $applicationStatusModels
      */
-    public function setApplicationStatusModels( $applicationStatusModels ) {
+    public function setApplicationStatusModels($applicationStatusModels)
+    {
         $this->_applicationStatusModels = $applicationStatusModels ;
     }
-
 }

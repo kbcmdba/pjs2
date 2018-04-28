@@ -21,5 +21,6 @@
  *
  */
 
-class DaoException extends Exception {
+class DaoException extends Exception
+{
 }

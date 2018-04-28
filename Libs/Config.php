@@ -24,7 +24,8 @@
 /**
  * Configuration for this tool set
  */
-class Config {
+class Config
+{
 
     /**
      * Configuration Class
@@ -53,15 +54,15 @@ class Config {
     /**#@+
      * @var string
      */
-    private $_dbHost       = NULL ;
-    private $_dbPort       = NULL ;
-    private $_dbUser       = NULL ;
-    private $_dbPass       = NULL ;
-    private $_dbName       = NULL ;
-    private $_title        = NULL ;
-    private $_timeZone     = NULL ;
-    private $_userId       = NULL ;
-    private $_userPassword = NULL ;
+    private $_dbHost       = null ;
+    private $_dbPort       = null ;
+    private $_dbUser       = null ;
+    private $_dbPass       = null ;
+    private $_dbName       = null ;
+    private $_title        = null ;
+    private $_timeZone     = null ;
+    private $_userId       = null ;
+    private $_userPassword = null ;
     /**#@-*/
 
     /** @var boolean */
@@ -74,51 +75,51 @@ class Config {
      * @throws Exception
      * @SuppressWarnings indentation
      */
-    public function __construct() {
-        if ( ! is_readable( 'config.xml' ) ) {
-            throw new Exception( "Unable to load configuration from config.xml!" ) ;
+    public function __construct()
+    {
+        if (! is_readable('config.xml')) {
+            throw new Exception("Unable to load configuration from config.xml!") ;
         }
-        $xml = simplexml_load_file( 'config.xml' ) ;
-        if ( ! $xml ) {
-            throw new Exception( "Invalid syntax in config.xml!" ) ;
+        $xml = simplexml_load_file('config.xml') ;
+        if (! $xml) {
+            throw new Exception("Invalid syntax in config.xml!") ;
         }
         $errors = "" ;
-        $cfgValues = array( 'resetOk'            => 0
+        $cfgValues = [ 'resetOk'            => 0
                           , 'authTimeoutSeconds' => 3600
                           , 'skipAuth'           => 0
-                          ) ;
-        $paramList = array( 'authTimeoutSeconds' => array( 'isRequired' => 0, 'value' => 0 )
-                          , 'dbHost'             => array( 'isRequired' => 1, 'value' => 0 )
-                          , 'dbPass'             => array( 'isRequired' => 1, 'value' => 0 )
-                          , 'dbName'             => array( 'isRequired' => 1, 'value' => 0 )
-                          , 'dbPort'             => array( 'isRequired' => 1, 'value' => 0 )
-                          , 'dbUser'             => array( 'isRequired' => 1, 'value' => 0 )
-                          , 'resetOk'            => array( 'isRequired' => 0, 'value' => 0 )
-                          , 'skipAuth'           => array( 'isRequired' => 0, 'value' => 0 )
-                          , 'timeZone'           => array( 'isRequired' => 1, 'value' => 0 )
-                          , 'title'              => array( 'isRequired' => 1, 'value' => 0 )
-                          , 'userId'             => array( 'isRequired' => 1, 'value' => 0 )
-                          , 'userPassword'       => array( 'isRequired' => 1, 'value' => 0 )
-                          ) ;
+                          ] ;
+        $paramList = [ 'authTimeoutSeconds' => [ 'isRequired' => 0, 'value' => 0 ]
+                          , 'dbHost'             => [ 'isRequired' => 1, 'value' => 0 ]
+                          , 'dbPass'             => [ 'isRequired' => 1, 'value' => 0 ]
+                          , 'dbName'             => [ 'isRequired' => 1, 'value' => 0 ]
+                          , 'dbPort'             => [ 'isRequired' => 1, 'value' => 0 ]
+                          , 'dbUser'             => [ 'isRequired' => 1, 'value' => 0 ]
+                          , 'resetOk'            => [ 'isRequired' => 0, 'value' => 0 ]
+                          , 'skipAuth'           => [ 'isRequired' => 0, 'value' => 0 ]
+                          , 'timeZone'           => [ 'isRequired' => 1, 'value' => 0 ]
+                          , 'title'              => [ 'isRequired' => 1, 'value' => 0 ]
+                          , 'userId'             => [ 'isRequired' => 1, 'value' => 0 ]
+                          , 'userPassword'       => [ 'isRequired' => 1, 'value' => 0 ]
+                          ] ;
         // verify that all the parameters are present and just once.
-        foreach ( $xml as $v ) {
+        foreach ($xml as $v) {
             $key = ( string ) $v[ 'name' ] ;
-            if  ( ( ! isset( $paramList[ $key ] ) )
-               || ( $paramList[ $key ][ 'value' ] != 0 ) ) {
+            if ((! isset($paramList[ $key ]))
+               || ($paramList[ $key ][ 'value' ] != 0)) {
                 $errors .= "Unset or multiply set name: " . $key . "\n" ;
-            }
-            else {
+            } else {
                 $paramList[ $key ][ 'value' ] ++ ;
                 $cfgValues[ $key ] = ( string ) $v ;
             }
         }
-        foreach ( $paramList as $key => $x ) {
-            if ( ( 1 === $x[ 'isRequired' ] ) && ( 0 === $x[ 'value' ] ) ) {
+        foreach ($paramList as $key => $x) {
+            if ((1 === $x[ 'isRequired' ]) && (0 === $x[ 'value' ])) {
                 $errors .= "Missing parameter: " . $key . "\n" ;
             }
         }
-        if ( $errors !== '' ) {
-            throw new Exception( "\nConfiguration problem!\n\n" . $errors . "\n" ) ;
+        if ($errors !== '') {
+            throw new Exception("\nConfiguration problem!\n\n" . $errors . "\n") ;
         }
         $this->_authTimeoutSeconds = $cfgValues[ 'authTimeoutSeconds' ] ;
         $this->_dbHost             = $cfgValues[ 'dbHost'       ] ;
@@ -132,7 +133,7 @@ class Config {
         $this->_skipAuth           = $cfgValues[ 'skipAuth'           ] ;
         $this->_userId             = $cfgValues[ 'userId'       ] ;
         $this->_userPassword       = $cfgValues[ 'userPassword' ] ;
-        ini_set( 'date.timezone', $this->_timeZone ) ;
+        ini_set('date.timezone', $this->_timeZone) ;
     }
 
     /**
@@ -140,7 +141,8 @@ class Config {
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return "Config::__toString not implemented" ;
     }
 
@@ -149,7 +151,8 @@ class Config {
      *
      * @return integer
      */
-    public function getAuthTimeoutSeconds() {
+    public function getAuthTimeoutSeconds()
+    {
         return $this->_authTimeoutSeconds ;
     }
 
@@ -158,7 +161,8 @@ class Config {
      *
      * @return string
      */
-    public function getDbHost() {
+    public function getDbHost()
+    {
         return $this->_dbHost ;
     }
 
@@ -167,7 +171,8 @@ class Config {
      *
      * @return string
      */
-    public function getDbPort() {
+    public function getDbPort()
+    {
         return $this->_dbPort ;
     }
 
@@ -176,7 +181,8 @@ class Config {
      *
      * @return string
      */
-    public function getDbUser() {
+    public function getDbUser()
+    {
         return $this->_dbUser ;
     }
 
@@ -185,7 +191,8 @@ class Config {
      *
      * @return string
      */
-    public function getDbPass() {
+    public function getDbPass()
+    {
         return $this->_dbPass ;
     }
 
@@ -194,7 +201,8 @@ class Config {
      *
      * @return string
      */
-    public function getDbName() {
+    public function getDbName()
+    {
         return $this->_dbName ;
     }
 
@@ -203,7 +211,8 @@ class Config {
      *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->_title ;
     }
 
@@ -212,7 +221,8 @@ class Config {
      *
      * @return string
      */
-    public function getTimeZone() {
+    public function getTimeZone()
+    {
         return $this->_timeZone ;
     }
 
@@ -221,7 +231,8 @@ class Config {
      *
      * @return boolean
      */
-    public function getResetOk() {
+    public function getResetOk()
+    {
         return $this->_resetOk ;
     }
 
@@ -230,7 +241,8 @@ class Config {
      *
      * @return boolean
      */
-    public function getSkipAuth() {
+    public function getSkipAuth()
+    {
         return $this->_skipAuth ;
     }
 
@@ -241,7 +253,8 @@ class Config {
      * @return string
      * @SuppressWarnings indentation
      */
-    public function getDsn( $dbType = 'mysql' ) {
+    public function getDsn($dbType = 'mysql')
+    {
         return $this->_dsn = $dbType
                            . ':host='
                            . $oConfig->getDbHost()
@@ -252,12 +265,13 @@ class Config {
                            ;
     }
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->_userId ;
     }
 
-    public function getUserPassword() {
+    public function getUserPassword()
+    {
         return $this->_userPassword ;
     }
-
 }

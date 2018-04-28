@@ -24,21 +24,20 @@
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
-$id     = Tools::post( 'id' ) ;
+$id     = Tools::post('id') ;
 $result = 'OK' ;
 $row = "" ;
 try {
     $applicationStatusModel = new ApplicationStatusModel() ;
-    $applicationStatusModel->setId( $id ) ;
+    $applicationStatusModel->setId($id) ;
     $applicationStatusController = new ApplicationStatusController() ;
-    $applicationStatusController->delete( $applicationStatusModel ) ;
-}
-catch ( ControllerException $e ) {
+    $applicationStatusController->delete($applicationStatusModel) ;
+} catch (ControllerException $e) {
     $result = "Delete failed. " . $e->getMessage() ;
 }
 
-echo json_encode( array( 'result' => $result, 'row' => $row ) ) . PHP_EOL ;
+echo json_encode([ 'result' => $result, 'row' => $row ]) . PHP_EOL ;

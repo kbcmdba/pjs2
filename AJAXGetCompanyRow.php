@@ -24,25 +24,24 @@
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
 $result   = "OK" ;
-$id       = Tools::param( 'id' ) ;
-$mode     = Tools::param( 'mode' ) ;
-$rowStyle = Tools::param( 'rowStyle' ) ;
+$id       = Tools::param('id') ;
+$mode     = Tools::param('mode') ;
+$rowStyle = Tools::param('rowStyle') ;
 $html     = '' ;
-$companyListView = new CompanyListView( 'html', null ) ;
-if ( 'add' == $mode ) {
+$companyListView = new CompanyListView('html', null) ;
+if ('add' == $mode) {
     $companyModel = new CompanyModel() ;
-    $companyModel->setId( $id ) ;
-    $htmlRows = $companyListView->displayCompanyRow( $companyModel, $mode, $rowStyle ) ;
-}
-else {
+    $companyModel->setId($id) ;
+    $htmlRows = $companyListView->displayCompanyRow($companyModel, $mode, $rowStyle) ;
+} else {
     $companyController = new CompanyController() ;
-    $companyModel = $companyController->get( $id ) ;
-    $htmlRows = $companyListView->displayCompanyRow( $companyModel, $mode, $rowStyle ) ;
+    $companyModel = $companyController->get($id) ;
+    $htmlRows = $companyListView->displayCompanyRow($companyModel, $mode, $rowStyle) ;
 }
-$result = array( 'result' => $result, 'rows' => $htmlRows ) ;
-echo json_encode( $result ) . PHP_EOL ;
+$result = [ 'result' => $result, 'rows' => $htmlRows ] ;
+echo json_encode($result) . PHP_EOL ;

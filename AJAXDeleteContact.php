@@ -3,25 +3,24 @@
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
-$id     = Tools::param( 'id' ) ;
+$id     = Tools::param('id') ;
 $result = 'OK' ;
 $row    = "" ;
 try {
     $contactModel = new ContactModel() ;
-    $contactModel->setId( $id ) ;
+    $contactModel->setId($id) ;
     $contactController = new ContactController() ;
-    $contactController->delete( $contactModel ) ;
-}
-catch ( ControllerException $e ) {
+    $contactController->delete($contactModel) ;
+} catch (ControllerException $e) {
     $result = "Delete failed. " . $e->getMessage() ;
     $contactController = new ContactController() ;
-    $contactModel = $contactController->get( $id ) ;
+    $contactModel = $contactController->get($id) ;
     $contactListView = new ContactListView() ;
-    $row = $contactListView->displayContactRow( $contactModel, 'list', 'add', $result ) ;
+    $row = $contactListView->displayContactRow($contactModel, 'list', 'add', $result) ;
 }
 
-echo json_encode( array( 'result' => $result, 'row' => $row ) ) . PHP_EOL ;
+echo json_encode([ 'result' => $result, 'row' => $row ]) . PHP_EOL ;

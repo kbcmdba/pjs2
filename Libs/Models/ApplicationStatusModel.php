@@ -24,8 +24,8 @@
 /**
  * ApplicationStatus Model
  */
-class ApplicationStatusModel extends ModelBase {
-
+class ApplicationStatusModel extends ModelBase
+{
     private $_id ;
     private $_statusValue ;
     private $_isActive ;
@@ -38,7 +38,8 @@ class ApplicationStatusModel extends ModelBase {
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct() ;
     }
 
@@ -47,11 +48,12 @@ class ApplicationStatusModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForAdd() {
-        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'statusValue' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'sortKey' ) ) )
-               && (   Tools::isNullOrEmptyString( Tools::param( 'summaryCount' ) ) )
+    public function validateForAdd()
+    {
+        return  ((Tools::isNullOrEmptyString(Tools::param('id')))
+               && (! Tools::isNullOrEmptyString(Tools::param('statusValue')))
+               && (! Tools::isNullOrEmptyString(Tools::param('sortKey')))
+               && (Tools::isNullOrEmptyString(Tools::param('summaryCount')))
                 ) ;
     }
 
@@ -60,135 +62,152 @@ class ApplicationStatusModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForUpdate() {
-        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'statusValue' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'sortKey' ) ) )
-               && (   Tools::isNullOrEmptyString( Tools::param( 'summaryCount' ) ) )
+    public function validateForUpdate()
+    {
+        return  ((! Tools::isNullOrEmptyString(Tools::param('id')))
+               && (! Tools::isNullOrEmptyString(Tools::param('statusValue')))
+               && (! Tools::isNullOrEmptyString(Tools::param('sortKey')))
+               && (Tools::isNullOrEmptyString(Tools::param('summaryCount')))
             ) ;
     }
 
-    public function populateFromForm() {
-        $this->setId( Tools::param( 'id' ) ) ;
-        $this->setStatusValue( Tools::param( 'statusValue' ) ) ;
-        $this->setIsActive( Tools::param( 'isActive' ) ) ;
-        $this->setSortKey( Tools::param( 'sortKey' ) ) ;
-        $this->setStyle( Tools::param( 'style' ) ) ;
-        $this->setSummaryCount( Tools::param( 'summaryCount' ) ) ;
-        $this->setCreated( Tools::param( 'created' ) ) ;
-        $this->setUpdated( Tools::param( 'updated' ) ) ;
+    public function populateFromForm()
+    {
+        $this->setId(Tools::param('id')) ;
+        $this->setStatusValue(Tools::param('statusValue')) ;
+        $this->setIsActive(Tools::param('isActive')) ;
+        $this->setSortKey(Tools::param('sortKey')) ;
+        $this->setStyle(Tools::param('style')) ;
+        $this->setSummaryCount(Tools::param('summaryCount')) ;
+        $this->setCreated(Tools::param('created')) ;
+        $this->setUpdated(Tools::param('updated')) ;
     }
 
     /**
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->_id;
     }
 
     /**
      * @param integer $id
      */
-    public function setId( $id ) {
+    public function setId($id)
+    {
         $this->_id = $id ;
     }
 
     /**
      * @return string
      */
-    public function getStatusValue() {
+    public function getStatusValue()
+    {
         return $this->_statusValue ;
     }
 
     /**
      * @param string $statusValue
      */
-    public function setStatusValue( $statusValue ) {
+    public function setStatusValue($statusValue)
+    {
         $this->_statusValue = $statusValue ;
     }
 
     /**
      * @return boolean
      */
-    public function getIsActive() {
+    public function getIsActive()
+    {
         return $this->_isActive ;
     }
 
     /**
      * @param boolean $isActive
      */
-    public function setIsActive( $isActive ) {
+    public function setIsActive($isActive)
+    {
         $this->_isActive = $isActive ;
     }
 
     /**
      * @return integer
      */
-    public function getSortKey() {
+    public function getSortKey()
+    {
         return $this->_sortKey ;
     }
 
     /**
      * @param integer $sortKey
      */
-    public function setSortKey( $sortKey ) {
+    public function setSortKey($sortKey)
+    {
         $this->_sortKey = $sortKey ;
     }
 
     /**
      * @return string
      */
-    public function getStyle() {
+    public function getStyle()
+    {
         return $this->_style ;
     }
 
     /**
      * @param string $style
      */
-    public function setStyle( $style ) {
+    public function setStyle($style)
+    {
         $this->_style = $style ;
     }
 
     /**
      * @return int
      */
-    public function getSummaryCount() {
+    public function getSummaryCount()
+    {
         return $this->_summaryCount ;
     }
 
     /**
      * @param int $summaryCount
      */
-    public function setSummaryCount( $summaryCount ) {
+    public function setSummaryCount($summaryCount)
+    {
         $this->_summaryCount = $summaryCount ;
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->_created ;
     }
 
     /**
      * @param string $created
      */
-    public function setCreated( $created ) {
+    public function setCreated($created)
+    {
         $this->_created = $created ;
     }
 
     /**
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
     /**
      * @param string $updated
      */
-    public function setUpdated( $updated ) {
+    public function setUpdated($updated)
+    {
         $this->_updated = $updated ;
     }
-
 }

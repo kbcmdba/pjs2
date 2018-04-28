@@ -26,47 +26,47 @@
  *
  * @param string
  */
-function __autoload( $className ) {
-    switch ( true ) {
-        case ( preg_match( '/^ControllerBase$/', $className )
-            || preg_match( '/Controller(|Interface)$/', $className )
-             ) :
+function __autoload($className)
+{
+    switch (true) {
+        case (preg_match('/^ControllerBase$/', $className)
+            || preg_match('/Controller(|Interface)$/', $className)
+             ):
             $reqFile = 'Libs/Controllers/' . $className . '.php' ;
             break ;
-        case ( preg_match( '/Exception$/', $className ) ) :
+        case (preg_match('/Exception$/', $className)):
             $reqFile = 'Libs/Exceptions/' . $className . '.php' ;
             break ;
-        case ( preg_match( '/^ModelBase$/', $className )
-            || preg_match( '/Model(|Interface)$/', $className )
-             ) :
+        case (preg_match('/^ModelBase$/', $className)
+            || preg_match('/Model(|Interface)$/', $className)
+             ):
             $reqFile = 'Libs/Models/' . $className . '.php' ;
             break ;
-        case ( preg_match( '/ViewBase$/', $className )
-            || preg_match( '/View(|Interface)$/', $className )
-             ) :
+        case (preg_match('/ViewBase$/', $className)
+            || preg_match('/View(|Interface)$/', $className)
+             ):
             $reqFile = 'Libs/Views/' . $className . '.php' ;
             break ;
-        case ( preg_match( '/^TL(Methods|)_/', $className ) ) :
+        case (preg_match('/^TL(Methods|)_/', $className)):
             $reqFile = 'Tests/TestLibs/' . $className . '.php' ;
             break ;
-        case ( preg_match( '/^Framework(Methods|)/', $className ) ) :
-            $className = str_replace( '_', '/', $className ) ;
+        case (preg_match('/^Framework(Methods|)/', $className)):
+            $className = str_replace('_', '/', $className) ;
             $reqFile = 'Tests/' . $className . '.php' ;
             break ;
-        default :
+        default:
             $reqFile = 'Libs/' . $className . '.php' ;
             break ;
     } // END OF switch ( true )
-    if ( ! is_file( $reqFile ) ) {
+    if (! is_file($reqFile)) {
         echo 'Class file ' . $reqFile . ' does not exist.' ;
         exit(1) ;
     }
     try {
         require_once $reqFile ;
-    }
-    catch ( Exception $e ) {
+    } catch (Exception $e) {
         echo 'class_file was ' . $className . ', req_file=' . $reqFile . "\n" ;
         echo $e->getMessage() . "\n" ;
-        exit( 1 ) ;
+        exit(1) ;
     }
 } // END OF function __autoload

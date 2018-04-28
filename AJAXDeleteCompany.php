@@ -3,25 +3,24 @@
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
-$id     = Tools::param( 'id' ) ;
+$id     = Tools::param('id') ;
 $result = 'OK' ;
-$rows = array( "", "" ) ;
+$rows = [ "", "" ] ;
 try {
     $companyModel = new CompanyModel() ;
-    $companyModel->setId( $id ) ;
+    $companyModel->setId($id) ;
     $companyController = new CompanyController() ;
-    $companyController->delete( $companyModel ) ;
-}
-catch ( ControllerException $e ) {
+    $companyController->delete($companyModel) ;
+} catch (ControllerException $e) {
     $result = "Delete failed. " . $e->getMessage() ;
     $companyController = new CompanyController() ;
-    $companyModel = $companyController->get( $id ) ;
+    $companyModel = $companyController->get($id) ;
     $companyListView = new CompanyListView() ;
-    $rows = $companyListView->displayCompanyRow( $companyModel, 'list', 'add', $result ) ;
+    $rows = $companyListView->displayCompanyRow($companyModel, 'list', 'add', $result) ;
 }
 
-echo json_encode( array( 'result' => $result, 'rows' => $rows ) ) . PHP_EOL ;
+echo json_encode([ 'result' => $result, 'rows' => $rows ]) . PHP_EOL ;

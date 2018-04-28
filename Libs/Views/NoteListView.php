@@ -25,7 +25,8 @@
  * Note List View
  */
 
-class NoteListView extends ListViewBase {
+class NoteListView extends ListViewBase
+{
 
     /** @var string */
     private $_noteAppliesToTable ;
@@ -34,7 +35,7 @@ class NoteListView extends ListViewBase {
     /** @var string */
     private $_viewType ;
     /** @var mixed */
-    private $_supportedViewTypes = array( 'html' => 1 ) ;
+    private $_supportedViewTypes = [ 'html' => 1 ] ;
     /** @var NoteModel[] */
     private $_noteModels ;
 
@@ -45,13 +46,14 @@ class NoteListView extends ListViewBase {
      * @param NoteModel[] $noteModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $noteModels ) {
+    public function __construct($viewType = 'html', $noteModels)
+    {
         parent::__construct() ;
-        if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
-            throw new ViewException( "Unsupported view type\n" ) ;
+        if (! isset($this->_supportedViewTypes[ $viewType ])) {
+            throw new ViewException("Unsupported view type\n") ;
         }
         $this->_viewType = $viewType ;
-        $this->setNoteModels( $noteModels ) ;
+        $this->setNoteModels($noteModels) ;
     }
 
     /**
@@ -59,7 +61,8 @@ class NoteListView extends ListViewBase {
      *
      * @return string
      */
-    private function _getHtmlView() {
+    private function _getHtmlView()
+    {
         $noteAppliesToTable = $this->getNoteAppliesToTable() ;
         $noteAppliesToId    = $this->getNoteAppliesToId() ;
         $body               = <<<HTML
@@ -74,11 +77,11 @@ class NoteListView extends ListViewBase {
     <th>Updated</th>
   </tr>
 HTML;
-        foreach ( $this->getNoteModels() as $noteModel ) {
+        foreach ($this->getNoteModels() as $noteModel) {
             $id       = $noteModel->getId() ;
             $created  = $noteModel->getCreated() ;
             $updated  = $noteModel->getUpdated() ;
-            $noteText = htmlspecialchars( $noteModel->getNoteText() ) ;
+            $noteText = htmlspecialchars($noteModel->getNoteText()) ;
             $body     .= <<<HTML
   <tr>
     <td>
@@ -101,55 +104,61 @@ HTML;
      * @return string
      * @throws ViewException
      */
-    public function getView() {
-        switch ( $this->_viewType ) {
-            case 'html' :
+    public function getView()
+    {
+        switch ($this->_viewType) {
+            case 'html':
                 return $this->_getHtmlView() ;
-            default :
-                throw new ViewException( "Unsupported view type." ) ;
+            default:
+                throw new ViewException("Unsupported view type.") ;
         }
     }
 
     /**
      * @return string
      */
-    public function getNoteAppliesToTable() {
+    public function getNoteAppliesToTable()
+    {
         return $this->_noteAppliesToTable ;
     }
 
     /**
      * @param string $noteAppliesToTable
      */
-    public function setAppliesToTable( $noteAppliesToTable ) {
+    public function setAppliesToTable($noteAppliesToTable)
+    {
         $this->_noteAppliesToTable = $noteAppliesToTable ;
     }
 
     /**
      * @return integer
      */
-    public function getNoteAppliesToId() {
+    public function getNoteAppliesToId()
+    {
         return $this->_noteAppliesToId ;
     }
 
     /**
      * @param string $noteAppliesToId
      */
-    public function setAppliesToId( $noteAppliesToId ) {
+    public function setAppliesToId($noteAppliesToId)
+    {
         $this->_noteAppliesToId = $noteAppliesToId ;
     }
 
     /**
      * @return NoteModel[]
      */
-    public function getNoteModels() {
+    public function getNoteModels()
+    {
         return $this->_noteModels ;
     }
 
     /**
      * @param NoteModel[] $noteModels
      */
-    public function setNoteModels( $noteModels ) {
+    public function setNoteModels($noteModels)
+    {
         $this->_noteModels = $noteModels ;
     }
-
 }

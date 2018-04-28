@@ -24,24 +24,23 @@
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
 $result = "OK" ;
-$id   = Tools::post( 'id' ) ;
-$mode = Tools::post( 'mode' ) ;
+$id   = Tools::post('id') ;
+$mode = Tools::post('mode') ;
 $html = '' ;
-$applicationStatusListView = new ApplicationStatusListView( 'html', null ) ;
-if ( 'add' == $mode ) {
+$applicationStatusListView = new ApplicationStatusListView('html', null) ;
+if ('add' == $mode) {
     $applicationStatusModel = new ApplicationStatusModel() ;
-    $applicationStatusModel->setId( $id ) ;
-    $html = $applicationStatusListView->displayApplicationStatusRow( $applicationStatusModel, $mode ) ;
-}
-else {
+    $applicationStatusModel->setId($id) ;
+    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode) ;
+} else {
     $applicationStatusController = new ApplicationStatusController() ;
-    $applicationStatusModel = $applicationStatusController->get( $id ) ;
-    $html = $applicationStatusListView->displayApplicationStatusRow( $applicationStatusModel, $mode ) ;
+    $applicationStatusModel = $applicationStatusController->get($id) ;
+    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode) ;
 }
-$result = array( 'result' => $result, 'row' => $html ) ;
-echo json_encode( $result ) . PHP_EOL ;
+$result = [ 'result' => $result, 'row' => $html ] ;
+echo json_encode($result) . PHP_EOL ;

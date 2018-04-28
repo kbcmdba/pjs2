@@ -26,35 +26,34 @@ require_once 'Libs/autoload.php' ;
 $config = new Config() ;
 try {
     $dbc = new DBConnection() ;
-}
-catch ( DaoException $ex ) {
+} catch (DaoException $ex) {
     echo "Database connection failed. Has this system been set up yet? Have you used resetDb.php?\n" ;
-    exit( 255 ) ;
+    exit(255) ;
 }
 
 $config = new Config() ;
-$page = new PJSWebPage( $config->getTitle() ) ;
-$applicationStatusController = new ApplicationStatusController( 'read' ) ;
+$page = new PJSWebPage($config->getTitle()) ;
+$applicationStatusController = new ApplicationStatusController('read') ;
 $applicationStatusList = $applicationStatusController->getAll() ;
-$appStatusBody = new ApplicationStatusSummaryView( 'html', $applicationStatusList ) ;
+$appStatusBody = new ApplicationStatusSummaryView('html', $applicationStatusList) ;
 $asmList = $applicationStatusController->getAll() ;
-$asv = new ApplicationStatusSummaryView( 'html', $asmList ) ;
+$asv = new ApplicationStatusSummaryView('html', $asmList) ;
 $body .= $asv->getView() ;
 
-$jobController = new JobController( 'read' ) ;
+$jobController = new JobController('read') ;
 $now      = $jobController->now() ;
 $today    = $jobController->today() ;
 $tomorrow = $jobController->tomorrow() ;
 $active   = "isActiveSummary = true" ;
 
-$jobsOverdue   =  $jobController->countSome( "$active AND nextActionDue < '$now'" ) ;
-$jobsDueToday  = $jobController->countSome( "$active AND nextActionDue BETWEEN '$today' AND '$tomorrow'" ) ;
-$jobsDue7Days  = $jobController->countSome( "$active AND nextActionDue BETWEEN '$today' AND '$nextWeek'" ) ;
-$highUrgency   = $jobController->countSome( "$active AND urgency = 'high'" ) ;
-$mediumUrgency = $jobController->countSome( "$active AND urgency = 'medium'" ) ;
-$lowUrgency    = $jobController->countSome( "$active AND urgency = 'low'" ) ;
+$jobsOverdue   =  $jobController->countSome("$active AND nextActionDue < '$now'") ;
+$jobsDueToday  = $jobController->countSome("$active AND nextActionDue BETWEEN '$today' AND '$tomorrow'") ;
+$jobsDue7Days  = $jobController->countSome("$active AND nextActionDue BETWEEN '$today' AND '$nextWeek'") ;
+$highUrgency   = $jobController->countSome("$active AND urgency = 'high'") ;
+$mediumUrgency = $jobController->countSome("$active AND urgency = 'medium'") ;
+$lowUrgency    = $jobController->countSome("$active AND urgency = 'low'") ;
 
-$searchController = new SearchController( 'read' ) ;
+$searchController = new SearchController('read') ;
 $searches      = $searchController->countSome() ;
 
 $body .= <<<HTML
@@ -70,5 +69,5 @@ $body .= <<<HTML
 
 HTML;
 
-$page->setBody( $body ) ;
+$page->setBody($body) ;
 $page->displayPage() ;

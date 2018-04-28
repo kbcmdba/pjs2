@@ -30,12 +30,13 @@
  * Verify all template values for labels
  */
 
-class _TemplateListView extends ListViewBase {
+class _TemplateListView extends ListViewBase
+{
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
-    private $_supportedViewTypes = array( 'html' => 1 ) ;
+    private $_supportedViewTypes = [ 'html' => 1 ] ;
     /** @var _TemplateModel[] */
     private $_templateModels ;
 
@@ -46,13 +47,14 @@ class _TemplateListView extends ListViewBase {
      * @param _TemplateModel[] $templateModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $templateModels ) {
+    public function __construct($viewType = 'html', $templateModels)
+    {
         parent::__construct() ;
-        if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
-            throw new ViewException( "Unsupported view type\n" ) ;
+        if (! isset($this->_supportedViewTypes[ $viewType ])) {
+            throw new ViewException("Unsupported view type\n") ;
         }
         $this->_viewType = $viewType ;
-        $this->set_TemplateModels( $templateModels ) ;
+        $this->set_TemplateModels($templateModels) ;
     }
 
     /**
@@ -60,14 +62,15 @@ class _TemplateListView extends ListViewBase {
      *
      * @return string
      */
-    private function _getHtmlView() {
+    private function _getHtmlView()
+    {
         $body = <<<'HTML'
 <a href="add_Template.php">Add new template</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Templates</caption>
   <tr><th>Actions</th><th>Blah</th><th>Blah</th><th>Blah</th></tr>
 HTML;
-        foreach ( $this->get_TemplateModels() as $templateModel ) {
+        foreach ($this->get_TemplateModels() as $templateModel) {
             $id = $templateModel->getId() ;
             $body .= <<<HTML
   <tr>
@@ -92,27 +95,29 @@ HTML;
      * @return string
      * @throws ViewException
      */
-    public function getView() {
-        switch ( $this->_viewType ) {
-            case 'html' :
+    public function getView()
+    {
+        switch ($this->_viewType) {
+            case 'html':
                 return $this->_getHtmlView() ;
-            default :
-                throw new ViewException( "Unsupported view type." ) ;
+            default:
+                throw new ViewException("Unsupported view type.") ;
         }
     }
 
     /**
      * @return _TemplateModel[]
      */
-    public function get_TemplateModels() {
+    public function get_TemplateModels()
+    {
         return $this->_templateModels ;
     }
 
     /**
      * @param _TemplateModel[] $templateModels
      */
-    public function set_TemplateModels( $templateModels ) {
+    public function set_TemplateModels($templateModels)
+    {
         $this->_templateModels = $templateModels ;
     }
-
 }

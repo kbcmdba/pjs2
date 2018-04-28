@@ -24,24 +24,23 @@
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
 $result   = "OK" ;
-$id       = Tools::param( 'id' ) ;
-$mode     = Tools::param( 'mode' ) ;
+$id       = Tools::param('id') ;
+$mode     = Tools::param('mode') ;
 $html     = '' ;
-$searchListView = new SearchListView( 'html', null ) ;
-if ( 'add' == $mode ) {
+$searchListView = new SearchListView('html', null) ;
+if ('add' == $mode) {
     $searchModel = new SearchModel() ;
-    $searchModel->setId( $id ) ;
-    $htmlRow     = $searchListView->displaySearchRow( $searchModel, $mode ) ;
-}
-else {
+    $searchModel->setId($id) ;
+    $htmlRow     = $searchListView->displaySearchRow($searchModel, $mode) ;
+} else {
     $searchController = new SearchController() ;
-    $searchModel      = $searchController->get( $id ) ;
-    $htmlRow          = $searchListView->displaySearchRow( $searchModel, $mode ) ;
+    $searchModel      = $searchController->get($id) ;
+    $htmlRow          = $searchListView->displaySearchRow($searchModel, $mode) ;
 }
-$result = array( 'result' => $result, 'row' => $htmlRow ) ;
-echo json_encode( $result ) . PHP_EOL ;
+$result = [ 'result' => $result, 'row' => $htmlRow ] ;
+echo json_encode($result) . PHP_EOL ;

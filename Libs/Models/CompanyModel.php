@@ -24,8 +24,8 @@
 /**
  * Company Model
  */
-class CompanyModel extends ModelBase {
-
+class CompanyModel extends ModelBase
+{
     private $_id ;
     private $_agencyCompanyId ;
     private $_companyName ;
@@ -42,7 +42,8 @@ class CompanyModel extends ModelBase {
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct() ;
     }
 
@@ -51,20 +52,25 @@ class CompanyModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForAdd() {
+    public function validateForAdd()
+    {
         $agencyCompanyId    = $this->getAgencyCompanyId() ;
-        $validAgencyId      =  ( Tools::isNullOrEmptyString( $agencyCompanyId )
-                              ||  ( ( is_numeric( $agencyCompanyId ) )
-                                 && ( $agencyCompanyId > 0 )
+        $validAgencyId      =  (
+            Tools::isNullOrEmptyString($agencyCompanyId)
+                              ||  (
+                                  (is_numeric($agencyCompanyId))
+                                 && ($agencyCompanyId > 0)
                                   )
                                ) ;
         $lastContacted      = $this->getLastContacted() ;
-        $validLastContacted =  ( Tools::isNullOrEmptyString( $lastContacted )
-                              || $this->validateDate( $lastContacted )
-                              || $this->validateTimestamp( $lastContacted )
+        $validLastContacted =  (
+            Tools::isNullOrEmptyString($lastContacted)
+                              || $this->validateDate($lastContacted)
+                              || $this->validateTimestamp($lastContacted)
                                ) ;
-        $result =  ( (   Tools::isNullOrEmptyString( $this->getId() ) )
-                  && ( ! Tools::isNullOrEmptyString( $this->getCompanyName() ) )
+        $result =  (
+            (Tools::isNullOrEmptyString($this->getId()))
+                  && (! Tools::isNullOrEmptyString($this->getCompanyName()))
                   && $validAgencyId
                   && $validLastContacted
                    ) ;
@@ -76,68 +82,78 @@ class CompanyModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForUpdate() {
+    public function validateForUpdate()
+    {
         $agencyCompanyId    = $this->getAgencyCompanyId() ;
-        $validAgencyId      =  ( Tools::isNullOrEmptyString( $agencyCompanyId )
-                              ||  ( ( is_numeric( $agencyCompanyId ) )
-                                 && ( $agencyCompanyId > 0 )
+        $validAgencyId      =  (
+            Tools::isNullOrEmptyString($agencyCompanyId)
+                              ||  (
+                                  (is_numeric($agencyCompanyId))
+                                 && ($agencyCompanyId > 0)
                                   )
                                ) ;
         $lastContacted      = $this->getLastContacted() ;
-        $validLastContacted =  ( Tools::isNullOrEmptyString( $lastContacted )
-                              || $this->validateDate( $lastContacted )
-                              || $this->validateTimestamp( $lastContacted )
+        $validLastContacted =  (
+            Tools::isNullOrEmptyString($lastContacted)
+                              || $this->validateDate($lastContacted)
+                              || $this->validateTimestamp($lastContacted)
                                ) ;
-        $result =  ( ( ! Tools::isNullOrEmptyString( $this->getId() ) )
-                  && ( ! Tools::isNullOrEmptyString( $this->getCompanyName() ) )
+        $result =  (
+            (! Tools::isNullOrEmptyString($this->getId()))
+                  && (! Tools::isNullOrEmptyString($this->getCompanyName()))
                   && $validAgencyId
                   && $validLastContacted
                    ) ;
         return $result ;
     }
 
-    public function populateFromForm() {
-        $this->setId( Tools::param( 'id' ) ) ;
-        $this->setAgencyCompanyId( Tools::param( 'agencyCompanyId' ) ) ;
-        $this->setCompanyName( Tools::param( 'companyName' ) ) ;
-        $this->setCompanyAddress1( Tools::param( 'companyAddress1' ) ) ;
-        $this->setCompanyAddress2( Tools::param( 'companyAddress2' ) ) ;
-        $this->setCompanyCity( Tools::param( 'companyCity' ) ) ;
-        $this->setCompanyState( Tools::param( 'companyState' ) ) ;
-        $this->setCompanyZip( Tools::param( 'companyZip' ) ) ;
-        $this->setCompanyPhone( Tools::param( 'companyPhone' ) ) ;
-        $this->setCompanyUrl( Tools::param( 'companyUrl' ) ) ;
-        $this->setCreated( Tools::param( 'created' ) ) ;
-        $this->setUpdated( Tools::param( 'updated' ) ) ;
-        $this->setLastContacted( Tools::param( 'lastContacted' ) ) ;
+    public function populateFromForm()
+    {
+        $this->setId(Tools::param('id')) ;
+        $this->setAgencyCompanyId(Tools::param('agencyCompanyId')) ;
+        $this->setCompanyName(Tools::param('companyName')) ;
+        $this->setCompanyAddress1(Tools::param('companyAddress1')) ;
+        $this->setCompanyAddress2(Tools::param('companyAddress2')) ;
+        $this->setCompanyCity(Tools::param('companyCity')) ;
+        $this->setCompanyState(Tools::param('companyState')) ;
+        $this->setCompanyZip(Tools::param('companyZip')) ;
+        $this->setCompanyPhone(Tools::param('companyPhone')) ;
+        $this->setCompanyUrl(Tools::param('companyUrl')) ;
+        $this->setCreated(Tools::param('created')) ;
+        $this->setUpdated(Tools::param('updated')) ;
+        $this->setLastContacted(Tools::param('lastContacted')) ;
     }
 
     /**
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->_id ;
     }
 
     /**
      * @param integer $id
      */
-    public function setId( $id ) {
+    public function setId($id)
+    {
         $this->_id = $id ;
     }
 
     /**
      * @return integer
      */
-    public function getAgencyCompanyId() {
+    public function getAgencyCompanyId()
+    {
         return $this->_agencyCompanyId ;
     }
 
     /**
      * @param integer $agencyCompanyId
      */
-    public function setAgencyCompanyId( $agencyCompanyId ) {
-        if ( ( '' === $agencyCompanyId ) || ( 0 === $agencyCompanyId ) ) {
+    public function setAgencyCompanyId($agencyCompanyId)
+    {
+        if (('' === $agencyCompanyId) || (0 === $agencyCompanyId)) {
             $agencyCompanyId = null ;
         }
         $this->_agencyCompanyId = $agencyCompanyId ;
@@ -146,154 +162,176 @@ class CompanyModel extends ModelBase {
     /**
      * @return string
      */
-    public function getCompanyName() {
+    public function getCompanyName()
+    {
         return $this->_companyName ;
     }
 
     /**
      * @param string $companyName
      */
-    public function setCompanyName( $companyName ) {
+    public function setCompanyName($companyName)
+    {
         $this->_companyName = $companyName ;
     }
 
     /**
      * @return string
      */
-    public function getCompanyAddress1() {
+    public function getCompanyAddress1()
+    {
         return $this->_companyAddress1 ;
     }
 
     /**
      * @param string $companyAddress1
      */
-    public function setCompanyAddress1( $companyAddress1 ) {
+    public function setCompanyAddress1($companyAddress1)
+    {
         $this->_companyAddress1 = $companyAddress1 ;
     }
 
     /**
      * @return string
      */
-    public function getCompanyAddress2() {
+    public function getCompanyAddress2()
+    {
         return $this->_companyAddress2 ;
     }
 
     /**
      * @param string $companyAddress2
      */
-    public function setCompanyAddress2( $companyAddress2 ) {
+    public function setCompanyAddress2($companyAddress2)
+    {
         $this->_companyAddress2 = $companyAddress2 ;
     }
 
     /**
      * @return string
      */
-    public function getCompanyCity() {
+    public function getCompanyCity()
+    {
         return $this->_companyCity ;
     }
 
     /**
      * @param string $companyCity
      */
-    public function setCompanyCity( $companyCity ) {
+    public function setCompanyCity($companyCity)
+    {
         $this->_companyCity = $companyCity ;
     }
 
     /**
      * @return string
      */
-    public function getCompanyState() {
+    public function getCompanyState()
+    {
         return $this->_companyState ;
     }
 
     /**
      * @param string $companyState
      */
-    public function setCompanyState( $companyState ) {
+    public function setCompanyState($companyState)
+    {
         $this->_companyState = $companyState ;
     }
 
     /**
      * @return integer
      */
-    public function getCompanyZip() {
+    public function getCompanyZip()
+    {
         return $this->_companyZip ;
     }
 
     /**
      * @param integer $companyZip
      */
-    public function setCompanyZip( $companyZip ) {
+    public function setCompanyZip($companyZip)
+    {
         $this->_companyZip = $companyZip ;
     }
 
     /**
      * @return integer
      */
-    public function getCompanyPhone() {
+    public function getCompanyPhone()
+    {
         return $this->_companyPhone ;
     }
 
     /**
      * @param integer $companyPhone
      */
-    public function setCompanyPhone( $companyPhone ) {
+    public function setCompanyPhone($companyPhone)
+    {
         $this->_companyPhone = $companyPhone ;
     }
 
     /**
      * @return string
      */
-    public function getCompanyUrl() {
+    public function getCompanyUrl()
+    {
         return $this->_companyUrl ;
     }
 
     /**
      * @param string $companyUrl
      */
-    public function setCompanyUrl( $companyUrl ) {
+    public function setCompanyUrl($companyUrl)
+    {
         $this->_companyUrl = $companyUrl ;
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->_created ;
     }
 
     /**
      * @param string $created
      */
-    public function setCreated( $created ) {
+    public function setCreated($created)
+    {
         $this->_created = $created ;
     }
 
     /**
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
     /**
      * @param string $updated
      */
-    public function setUpdated( $updated ) {
+    public function setUpdated($updated)
+    {
         $this->_updated = $updated ;
     }
 
     /**
      * @return string
      */
-    public function getLastContacted() {
+    public function getLastContacted()
+    {
         return $this->_lastContacted ;
     }
 
     /**
      * @param string $lastContacted
      */
-    public function setLastContacted( $lastContacted ) {
-        $this->_lastContacted = ( '' === $lastContacted ) ? null : $lastContacted ;
+    public function setLastContacted($lastContacted)
+    {
+        $this->_lastContacted = ('' === $lastContacted) ? null : $lastContacted ;
     }
 }

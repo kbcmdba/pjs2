@@ -24,8 +24,8 @@
 /**
  * _User Model
  */
-class UserModel extends ModelBase {
-
+class UserModel extends ModelBase
+{
     private $_userName ;
     private $_password ;
     private $_pSalt ;
@@ -35,7 +35,8 @@ class UserModel extends ModelBase {
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct() ;
     }
 
@@ -44,11 +45,12 @@ class UserModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForAdd() {
-        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'userName' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'password' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'pSalt' ) ) )
+    public function validateForAdd()
+    {
+        return  ((Tools::isNullOrEmptyString(Tools::param('id')))
+               && (! Tools::isNullOrEmptyString(Tools::param('userName')))
+               && (! Tools::isNullOrEmptyString(Tools::param('password')))
+               && (! Tools::isNullOrEmptyString(Tools::param('pSalt')))
                 ) ;
     }
 
@@ -57,91 +59,102 @@ class UserModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForUpdate() {
-        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && (   Tools::isNumeric( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'userName' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'password' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'pSalt' ) ) )
+    public function validateForUpdate()
+    {
+        return  ((! Tools::isNullOrEmptyString(Tools::param('id')))
+               && (Tools::isNumeric(Tools::param('id')))
+               && (! Tools::isNullOrEmptyString(Tools::param('userName')))
+               && (! Tools::isNullOrEmptyString(Tools::param('password')))
+               && (! Tools::isNullOrEmptyString(Tools::param('pSalt')))
                 ) ;
     }
 
-    public function populateFromForm() {
-        $this->setUserName( Tools::param( 'userName' ) ) ;
-        $this->setPassword( Tools::param( 'password' ) ) ;
-        $this->setPSalt( Tools::param( 'pSalt' ) ) ;
-        $this->setCreated( Tools::param( 'created' ) ) ;
-        $this->setUpdated( Tools::param( 'updated' ) ) ;
+    public function populateFromForm()
+    {
+        $this->setUserName(Tools::param('userName')) ;
+        $this->setPassword(Tools::param('password')) ;
+        $this->setPSalt(Tools::param('pSalt')) ;
+        $this->setCreated(Tools::param('created')) ;
+        $this->setUpdated(Tools::param('updated')) ;
     }
 
     /**
      * @return string
      */
-    public function getUserName() {
+    public function getUserName()
+    {
         return $this->_userName ;
     }
 
     /**
      * @param string $userName
      */
-    public function setUserName( $userName ) {
+    public function setUserName($userName)
+    {
         $this->_userName = $userName ;
     }
 
     /**
      * @return string
      */
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->_password ;
     }
 
     /**
      * @param string $password
      */
-    public function setPassword( $password ) {
+    public function setPassword($password)
+    {
         $this->_password = $password ;
     }
 
     /**
      * @return string
      */
-    public function getPSalt() {
+    public function getPSalt()
+    {
         return $this->_pSalt ;
     }
 
     /**
      * @param string $pSalt
      */
-    public function setPSalt( $pSalt ) {
+    public function setPSalt($pSalt)
+    {
         $this->_pSalt = $pSalt ;
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->_created ;
     }
 
     /**
      * @param string $created
      */
-    public function setCreated( $created ) {
+    public function setCreated($created)
+    {
         $this->_created = $created ;
     }
 
     /**
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
     /**
      * @param string $updated
      */
-    public function setUpdated( $updated ) {
+    public function setUpdated($updated)
+    {
         $this->_updated = $updated ;
     }
-
 }

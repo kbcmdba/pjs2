@@ -24,8 +24,8 @@
 /**
  * Keyword Model
  */
-class KeywordModel extends ModelBase {
-
+class KeywordModel extends ModelBase
+{
     private $_id ;
     private $_keywordValue ;
     private $_sortKey ;
@@ -35,7 +35,8 @@ class KeywordModel extends ModelBase {
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct() ;
     }
 
@@ -44,10 +45,11 @@ class KeywordModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForAdd() {
-        return  ( (   Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'value' ) ) )
-               && (   Tools::isNumeric( Tools::param( 'sortKey' ) ) )
+    public function validateForAdd()
+    {
+        return  ((Tools::isNullOrEmptyString(Tools::param('id')))
+               && (! Tools::isNullOrEmptyString(Tools::param('value')))
+               && (Tools::isNumeric(Tools::param('sortKey')))
                 ) ;
     }
 
@@ -56,89 +58,100 @@ class KeywordModel extends ModelBase {
      *
      * @return boolean
      */
-    public function validateForUpdate() {
-        return  ( ( ! Tools::isNullOrEmptyString( Tools::param( 'id' ) ) )
-               && ( ! Tools::isNullOrEmptyString( Tools::param( 'value' ) ) )
-               && (   Tools::isNumeric( Tools::param( 'sortKey' ) ) )
+    public function validateForUpdate()
+    {
+        return  ((! Tools::isNullOrEmptyString(Tools::param('id')))
+               && (! Tools::isNullOrEmptyString(Tools::param('value')))
+               && (Tools::isNumeric(Tools::param('sortKey')))
                 ) ;
     }
 
-    public function populateFromForm() {
-        $this->setId( Tools::param( 'id' ) ) ;
-        $this->setKeywordValue( Tools::param( 'keywordValue' ) ) ;
-        $this->setSortKey( Tools::param( 'sortKey' ) ) ;
-        $this->setCreated( Tools::param( 'created' ) ) ;
-        $this->setUpdated( Tools::param( 'updated' ) ) ;
+    public function populateFromForm()
+    {
+        $this->setId(Tools::param('id')) ;
+        $this->setKeywordValue(Tools::param('keywordValue')) ;
+        $this->setSortKey(Tools::param('sortKey')) ;
+        $this->setCreated(Tools::param('created')) ;
+        $this->setUpdated(Tools::param('updated')) ;
     }
 
     /**
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->_id ;
     }
 
     /**
      * @param integer $id
      */
-    public function setId( $id ) {
+    public function setId($id)
+    {
         $this->_id = $id ;
     }
 
     /**
      * @return string
      */
-    public function getKeywordValue() {
+    public function getKeywordValue()
+    {
         return $this->_keywordValue ;
     }
 
     /**
      * @param string $keywordValue
      */
-    public function setKeywordValue( $keywordValue ) {
+    public function setKeywordValue($keywordValue)
+    {
         $this->_keywordValue = $keywordValue ;
     }
 
     /**
      * @return integer
      */
-    public function getSortKey() {
+    public function getSortKey()
+    {
         return $this->_sortKey ;
     }
 
     /**
      * @param integer $sortKey
      */
-    public function setSortKey( $sortKey ) {
+    public function setSortKey($sortKey)
+    {
         $this->_sortKey = $sortKey ;
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->_created ;
     }
 
     /**
      * @param string $created
      */
-    public function setCreated( $created ) {
+    public function setCreated($created)
+    {
         $this->_created = $created ;
     }
 
     /**
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
     /**
      * @param string $updated
      */
-    public function setUpdated( $updated ) {
+    public function setUpdated($updated)
+    {
         $this->_updated = $updated ;
     }
-
 }

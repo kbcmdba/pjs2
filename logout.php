@@ -26,4 +26,4 @@ require_once "Libs/autoload.php" ;
 $auth = new Auth() ;
 $auth->doLogOut() ;
 
-header( "Location: index.php" ) ;
+header("Location: index.php") ;

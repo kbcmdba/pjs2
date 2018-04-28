@@ -24,7 +24,7 @@ require_once 'Libs/autoload.php' ;
 
 // Be sure to specify these in apply order. The reset script will automatically
 // reverse the order for safe removal.
-$controllerNames = array ( 'VersionController'
+$controllerNames = [ 'VersionController'
                          , 'AuthTicketController'
                          , 'ApplicationStatusController'
                          , 'ApplicationStatusSummaryController'
@@ -35,62 +35,60 @@ $controllerNames = array ( 'VersionController'
                          , 'NoteController'
                          , 'SearchController'
                          , 'JobKeywordMapController'
-                         ) ;
-$controllers = array () ;
+                         ] ;
+$controllers = [] ;
 
 $config = new Config() ;
-$page = new PJSWebPage( $config->getTitle() . " - Reset DB", true ) ;
+$page = new PJSWebPage($config->getTitle() . " - Reset DB", true) ;
 $body = "<ul>\n" ;
 try {
-
-    $dbc = new DBConnection( "admin", null, null, null, null, null, 'mysqli', true ) ;
-    if ( ! $dbc->getCreatedDb() ) {
+    $dbc = new DBConnection("admin", null, null, null, null, null, 'mysqli', true) ;
+    if (! $dbc->getCreatedDb()) {
         // Database exists. Don't allow reset if the user is not logged in.
         $auth = new Auth() ;
-        if ( ! $auth->isAuthorized() ) {
-            throw new Exception( "User must be logged in to reset the database!" ) ;
+        if (! $auth->isAuthorized()) {
+            throw new Exception("User must be logged in to reset the database!") ;
         }
-        if ( "1" !== $config->getResetOk() ) {
-            throw new Exception( "Reset capability is turned off! See config.xml" ) ;
+        if ("1" !== $config->getResetOk()) {
+            throw new Exception("Reset capability is turned off! See config.xml") ;
         }
     }
     $dbh = $dbc->getConnection() ;
-    foreach ( array_reverse( $controllerNames ) as $controllerName ) {
-        $controller = new $controllerName( 'write' ) ;
+    foreach (array_reverse($controllerNames) as $controllerName) {
+        $controller = new $controllerName('write') ;
         $controllers[ $controllerName ] = $controller ;
-        if ( method_exists( $controller, 'dropTriggers' ) ) {
+        if (method_exists($controller, 'dropTriggers')) {
             $body .= "<li>Dropping Triggers: $controllerName</li>\n" ;
             $controller->dropTriggers() ;
         }
     }
 
-    foreach ( $controllers as $controllerName => $controller ) {
+    foreach ($controllers as $controllerName => $controller) {
         $body .= "<li>Dropping Tables: $controllerName</li>\n" ;
         $controller->dropTable() ;
     }
 
-    foreach ( array_reverse( $controllers ) as $controllerName => $controller ) {
+    foreach (array_reverse($controllers) as $controllerName => $controller) {
         $body .= "<li>Creating Tables: $controllerName</li>\n" ;
         $controller->createTable() ;
     }
 
-    foreach ( array_reverse( $controllers ) as $controllerName => $controller ) {
-        if ( method_exists( $controller, 'createTriggers' ) ) {
+    foreach (array_reverse($controllers) as $controllerName => $controller) {
+        if (method_exists($controller, 'createTriggers')) {
             $body .= "<li>Creating Triggers: $controllerName</li>\n" ;
             $controller->createTriggers() ;
         }
     }
 
-    foreach ( array_reverse( $controllers ) as $controllerName => $controller ) {
-        if ( method_exists( $controller, 'preLoadData' ) ) {
+    foreach (array_reverse($controllers) as $controllerName => $controller) {
+        if (method_exists($controller, 'preLoadData')) {
             $body .= "<li>Pre-populating tables: $controllerName</li>\n" ;
             $controller->preLoadData() ;
         }
     }
     $body .= "</ul>\n<p>Done.</p>" ;
-}
-catch ( Exception $e ) {
+} catch (Exception $e) {
     $body .= "</ul>\n<p />Uncaught exception: " . $e->getMessage() . "\n" ;
 }
-$page->setBody( $body ) ;
+$page->setBody($body) ;
 $page->displayPage() ;
