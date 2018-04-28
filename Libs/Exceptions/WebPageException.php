@@ -21,6 +21,8 @@
  *
  */
 
-class WebPageException extends Exception {
-}
+namespace com\kbcmdba\pjs2 ;
 
+class WebPageException extends \Exception
+{
+}

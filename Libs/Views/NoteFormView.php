@@ -21,10 +21,13 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Note Form View
  */
-class NoteFormView extends FormViewBase {
+class NoteFormView extends FormViewBase
+{
     /** @var NoteModel */
     private $_noteModel ;
 
@@ -34,12 +37,12 @@ class NoteFormView extends FormViewBase {
      * @param string Page title and action button
      * @param NoteModel The populated model or null
      */
-    public function __construct( $title = "Add Note", $noteModel = null ) {
-        parent::__construct( $title ) ;
-        if ( NULL !== $noteModel ) {
+    public function __construct($title = "Add Note", $noteModel = null)
+    {
+        parent::__construct($title) ;
+        if (null !== $noteModel) {
             $this->_noteModel = $noteModel ;
-        }
-        else {
+        } else {
             $this->_noteModel = new NoteModel ;
         }
     }
@@ -48,7 +51,8 @@ class NoteFormView extends FormViewBase {
      * magic method
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getForm() ;
     }
 
@@ -56,14 +60,15 @@ class NoteFormView extends FormViewBase {
      *
      * @return string
      */
-    public function getForm( $readOnly = 'readwrite' ) {
-        $RO              = ( 'readonly' === $readOnly ) ? 'READONLY="READONLY" ' : '' ;
+    public function getForm($readOnly = 'readwrite')
+    {
+        $RO              = ('readonly' === $readOnly) ? 'READONLY="READONLY" ' : '' ;
         $noteModel       = $this->_noteModel ;
         $title           = $this->getTitle() ;
         $id              = $noteModel->getId() ;
         $appliesToTable  = $noteModel->getAppliesToTable() ;
         $appliesToId     = $noteModel->getAppliesToId() ;
-        $noteText        = htmlspecialchars( $noteModel->getNoteText() ) ;
+        $noteText        = htmlspecialchars($noteModel->getNoteText()) ;
         $buttonLabel     = $this->getButtonLabel() ;
         $returnValue     = <<<HTML
     <h2>$title</h2>
@@ -97,5 +102,4 @@ class NoteFormView extends FormViewBase {
 HTML;
         return $returnValue ;
     }
-
 }

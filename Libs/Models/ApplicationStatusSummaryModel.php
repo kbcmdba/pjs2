@@ -21,11 +21,13 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * ApplicationStatusSummary Model
  */
-class ApplicationStatusSummaryModel extends ModelBase {
-
+class ApplicationStatusSummaryModel extends ModelBase
+{
     private $_id ;
     private $_statusCount ;
     private $_created ;
@@ -34,7 +36,8 @@ class ApplicationStatusSummaryModel extends ModelBase {
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct() ;
     }
 
@@ -44,7 +47,8 @@ class ApplicationStatusSummaryModel extends ModelBase {
      * @return boolean
      * @todo Implement ApplicationStatusSummaryModel::validateForAdd()
      */
-    public function validateForAdd() {
+    public function validateForAdd()
+    {
         return 0 ;
     }
 
@@ -54,71 +58,80 @@ class ApplicationStatusSummaryModel extends ModelBase {
      * @return boolean
      * @todo Implement ApplicationStatusSummaryModel::validateForUpdate()
      */
-    public function validateForUpdate() {
+    public function validateForUpdate()
+    {
         return 0 ;
     }
 
-    public function populateFromForm() {
-        $this->setId( Tools::param( 'id' ) ) ;
-        $this->setStatusCount( Tools::param( 'statusCount' ) ) ;
-        $this->setCreated( Tools::param( 'created' ) ) ;
-        $this->setUpdated( Tools::param( 'updated' ) ) ;
+    public function populateFromForm()
+    {
+        $this->setId(Tools::param('id')) ;
+        $this->setStatusCount(Tools::param('statusCount')) ;
+        $this->setCreated(Tools::param('created')) ;
+        $this->setUpdated(Tools::param('updated')) ;
     }
 
     /**
      * @return integer
      */
-    public function getId() {
+    public function getId()
+    {
         return $this->_id ;
     }
 
     /**
      * @param integer $id
      */
-    public function setId( $id ) {
+    public function setId($id)
+    {
         $this->_id = $id ;
     }
 
     /**
      * @return integer
      */
-    public function getStatusCount() {
+    public function getStatusCount()
+    {
         return $this->_statusCount ;
     }
 
     /**
      * @param integer $statusCount
      */
-    public function setStatusCount( $statusCount ) {
+    public function setStatusCount($statusCount)
+    {
         $this->_statusCount = $statusCount ;
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->_created ;
     }
 
     /**
      * @param string $created
      */
-    public function setCreated( $created ) {
+    public function setCreated($created)
+    {
         $this->_created = $created ;
     }
 
     /**
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
     /**
      * @param string $updated
      */
-    public function setUpdated( $updated ) {
+    public function setUpdated($updated)
+    {
         $this->_updated = $updated ;
     }
-
 }

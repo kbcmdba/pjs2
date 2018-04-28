@@ -21,18 +21,22 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * A series of static methods for re-use.
 */
-class Tools {
+class Tools
+{
 
     /**
      * Class Constructor - never intended to be used.
      *
-     * @throws Exception
+     * @throws \Exception
      */
-    public function __construct() {
-        throw new Exception( "Improper use of Tools class" ) ;
+    public function __construct()
+    {
+        throw new \Exception("Improper use of Tools class") ;
     }
 
     /**
@@ -41,8 +45,9 @@ class Tools {
      * @param String $key
      * @return String
      */
-    public static function param( $key ) {
-        return ( isset( $key ) && ( isset( $_REQUEST[ $key ] ) ) ) ? trim( $_REQUEST[ $key ] ) : '' ;
+    public static function param($key)
+    {
+        return (isset($key) && (isset($_REQUEST[ $key ]))) ? trim($_REQUEST[ $key ]) : '' ;
     }
 
     /**
@@ -51,8 +56,9 @@ class Tools {
      * @param String $key
      * @return String
      */
-    public static function post( $key ) {
-        return ( isset( $key ) && ( isset( $_POST[ $key ] ) ) ) ? $_POST[ $key ] : '' ;
+    public static function post($key)
+    {
+        return (isset($key) && (isset($_POST[ $key ]))) ? $_POST[ $key ] : '' ;
     }
 
     /**
@@ -63,8 +69,9 @@ class Tools {
      * @param string $x
      * @return boolean
      */
-    public static function nonBlankCell( $x ) {
-        return ( ! isset( $x ) || ( $x === '') ) ? "&nbsp;" : $x ;
+    public static function nonBlankCell($x)
+    {
+        return (! isset($x) || ($x === '')) ? "&nbsp;" : $x ;
     }
 
     /**
@@ -73,8 +80,9 @@ class Tools {
      * @param mixed $x
      * @return boolean
      */
-    public static function isNullOrEmptyString( $x ) {
-        return ( ( NULL === $x ) || ( '' === $x ) ) ;
+    public static function isNullOrEmptyString($x)
+    {
+        return ((null === $x) || ('' === $x)) ;
     }
 
     /**
@@ -82,8 +90,9 @@ class Tools {
      *
      * @param boolean $x
      */
-    public static function isNumeric( $x ) {
-        return ( isset( $x ) && preg_match( '/^(-|)[0-9]+$/', $x ) ) ;
+    public static function isNumeric($x)
+    {
+        return (isset($x) && preg_match('/^(-|)[0-9]+$/', $x)) ;
     }
 
     /**
@@ -93,10 +102,11 @@ class Tools {
      * @param int $epochTime Seconds since January 1, 1970 at midnight
      * @return string
      */
-    public static function currentTimestamp( $epochTime = null ) {
-        if ( null === $epochTime ) {
+    public static function currentTimestamp($epochTime = null)
+    {
+        if (null === $epochTime) {
             $epochTime = time() ;
         }
-        return date( 'Y-m-d H:i:s', $epochTime ) ;
+        return date('Y-m-d H:i:s', $epochTime) ;
     }
 }

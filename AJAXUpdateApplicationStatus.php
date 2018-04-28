@@ -21,43 +21,45 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once "Libs/autoload.php" ;
 
 $auth = new Auth() ;
-if ( ! $auth->isAuthorized() ) {
+if (! $auth->isAuthorized()) {
     $auth->forbidden() ;
-    exit( 0 ) ; // Should never get here but just in case...
+    exit(0) ; // Should never get here but just in case...
 }
-$id          = Tools::post( 'id' ) ;
-$statusValue = Tools::post( 'statusValue' ) ;
-$style       = Tools::post( 'style' ) ;
-$isActive    = Tools::post( 'isActive' ) ;
-$sortKey     = Tools::post( 'sortKey' ) ;
+$id          = Tools::post('id') ;
+$statusValue = Tools::post('statusValue') ;
+$style       = Tools::post('style') ;
+$isActive    = Tools::post('isActive') ;
+$sortKey     = Tools::post('sortKey') ;
 $result      = 'OK' ;
-$asrv        = new ApplicationStatusListView( 'html', null ) ;
+$asrv        = new ApplicationStatusListView('html', null) ;
 try {
     $applicationStatusController = new ApplicationStatusController() ;
-    $applicationStatusModel = $applicationStatusController->get( $id ) ;
+    $applicationStatusModel = $applicationStatusController->get($id) ;
 
-    $applicationStatusModel->setStatusValue( $statusValue ) ;
-    $applicationStatusModel->setStyle( $style ) ;
-    $applicationStatusModel->setIsActive( $isActive ) ;
-    $applicationStatusModel->setSortKey( $sortKey ) ;
+    $applicationStatusModel->setStatusValue($statusValue) ;
+    $applicationStatusModel->setStyle($style) ;
+    $applicationStatusModel->setIsActive($isActive) ;
+    $applicationStatusModel->setSortKey($sortKey) ;
 
-    $result = $applicationStatusController->update( $applicationStatusModel ) ;
+    $result = $applicationStatusController->update($applicationStatusModel) ;
 
-    if ( ! ( $result > 0 ) ) {
-        throw new ControllerException( "Update failed." ) ;
+    if (! ($result > 0)) {
+        throw new ControllerException("Update failed.") ;
     }
-    $row = $asrv->displayApplicationStatusRow( $applicationStatusModel, 'list' ) ;
-}
-catch ( ControllerException $e ) {
-    $row = $asrv->displayApplicationStatusRow( $newApplicationStatusModel
-                                             , 'list'
-                                             , 'Update Application Status record failed. '
+    $row = $asrv->displayApplicationStatusRow($applicationStatusModel, 'list') ;
+} catch (ControllerException $e) {
+    $row = $asrv->displayApplicationStatusRow(
+        $newApplicationStatusModel,
+        'list',
+        'Update Application Status record failed. '
                                              . $e->getMessage()
                                              ) ;
 }
 
-$result = array( 'result' => $result, 'row' => $row ) ;
-echo json_encode( $result ) . PHP_EOL ;
+$result = [ 'result' => $result, 'row' => $row ] ;
+echo json_encode($result) . PHP_EOL ;

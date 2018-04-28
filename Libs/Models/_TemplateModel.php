@@ -21,10 +21,13 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * _Template Model
  */
-class _TemplateModel extends ModelBase {
+class _TemplateModel extends ModelBase
+{
 
     // @todo Add _TemplateModel specific properties, getters and setters
     private $_created ;
@@ -33,7 +36,8 @@ class _TemplateModel extends ModelBase {
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct() ;
     }
 
@@ -43,7 +47,8 @@ class _TemplateModel extends ModelBase {
      * @return boolean
      * @todo Implement _TemplateModel::validateForAdd()
      */
-    public function validateForAdd() {
+    public function validateForAdd()
+    {
         return 0 ;
     }
 
@@ -53,42 +58,47 @@ class _TemplateModel extends ModelBase {
      * @return boolean
      * @todo Implement _TemplateModel::validateForUpdate()
      */
-    public function validateForUpdate() {
+    public function validateForUpdate()
+    {
         return 0 ;
     }
 
     // @todo Implement _TemplateModel::populateFromForm()
-    public function populateFromForm() {
-        $this->setCreated( Tools::param( 'created' ) ) ;
-        $this->setUpdated( Tools::param( 'updated' ) ) ;
+    public function populateFromForm()
+    {
+        $this->setCreated(Tools::param('created')) ;
+        $this->setUpdated(Tools::param('updated')) ;
     }
 
     /**
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->_created ;
     }
 
     /**
      * @param string $created
      */
-    public function setCreated( $created ) {
+    public function setCreated($created)
+    {
         $this->_created = $created ;
     }
 
     /**
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
     /**
      * @param string $updated
      */
-    public function setUpdated( $updated ) {
+    public function setUpdated($updated)
+    {
         $this->_updated = $updated ;
     }
-
 }

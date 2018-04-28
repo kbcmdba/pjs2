@@ -21,10 +21,13 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * AuthTicket Model
  */
-class AuthTicketModel extends ModelBase {
+class AuthTicketModel extends ModelBase
+{
     /** @var string */
     private $_authTicket ;
     /** @var string */
@@ -37,28 +40,32 @@ class AuthTicketModel extends ModelBase {
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         // Stub for now
     }
 
     /**
      * @return boolean
      */
-    public function validateForAdd() {
+    public function validateForAdd()
+    {
         return 1 ;
     }
 
     /**
      * @return boolean
      */
-    public function validateForUpdate() {
+    public function validateForUpdate()
+    {
         return 1 ;
     }
 
     /**
      * Populate from form data
      */
-    public function populateFromForm() {
+    public function populateFromForm()
+    {
         // Do nothing for now.
     }
 
@@ -67,7 +74,8 @@ class AuthTicketModel extends ModelBase {
      *
      * @return string
      */
-    public function getAuthTicket() {
+    public function getAuthTicket()
+    {
         return $this->_authTicket ;
     }
 
@@ -76,7 +84,8 @@ class AuthTicketModel extends ModelBase {
      *
      * @param string $value
      */
-    public function setAuthTicket( $value ) {
+    public function setAuthTicket($value)
+    {
         $this->_authTicket = $value ;
     }
 
@@ -85,7 +94,8 @@ class AuthTicketModel extends ModelBase {
      *
      * @return string
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->_created ;
     }
 
@@ -94,7 +104,8 @@ class AuthTicketModel extends ModelBase {
      *
      * @param string $value
      */
-    public function setCreated( $value ) {
+    public function setCreated($value)
+    {
         $this->_created = $value ;
     }
 
@@ -103,7 +114,8 @@ class AuthTicketModel extends ModelBase {
      *
      * @return string
      */
-    public function getUpdated() {
+    public function getUpdated()
+    {
         return $this->_updated ;
     }
 
@@ -112,7 +124,8 @@ class AuthTicketModel extends ModelBase {
      *
      * @param string $value
      */
-    public function setUpdated( $value ) {
+    public function setUpdated($value)
+    {
         $this->_updated = $value ;
     }
 
@@ -121,7 +134,8 @@ class AuthTicketModel extends ModelBase {
      *
      * @return string
      */
-    public function getExpires() {
+    public function getExpires()
+    {
         return $this->_expires ;
     }
 
@@ -130,8 +144,8 @@ class AuthTicketModel extends ModelBase {
      *
      * @param string $value
      */
-    public function setExpires( $value ) {
+    public function setExpires($value)
+    {
         $this->_expires = $value ;
     }
-
 }

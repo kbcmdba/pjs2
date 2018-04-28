@@ -21,7 +21,10 @@
  *
  */
 
-class UserController extends ControllerBase {
+namespace com\kbcmdba\pjs2 ;
+
+class UserController extends ControllerBase
+{
 
     /**
      * Class constructor
@@ -29,16 +32,19 @@ class UserController extends ControllerBase {
      * @param string $readWriteMode "read", "write", or "admin"
      * @throws ControllerException
      */
-    public function __construct( $readWriteMode = 'write' ) {
-        parent::__construct( $readWriteMode ) ;
+    public function __construct($readWriteMode = 'write')
+    {
+        parent::__construct($readWriteMode) ;
     }
     
-    public function dropTable() {
+    public function dropTable()
+    {
         $sql = "DROP TABLE IF EXISTS user" ;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
     
-    public function createTable() {
+    public function createTable()
+    {
         $sql = <<<SQL
 CREATE TABLE IF NOT EXISTS user
      (
@@ -53,14 +59,15 @@ CREATE TABLE IF NOT EXISTS user
      , INDEX appliesTo ( appliesToTable, appliesToId, created )
      )
 SQL;
-        $this->_doDDL( $sql ) ;
+        $this->_doDDL($sql) ;
     }
 
     /**
      * @param integer $id
      * @see ControllerBase::get()
      */
-    public function get( $id ) {
+    public function get($id)
+    {
         $sql = <<<SQL
 SELECT id
      , username
@@ -71,12 +78,12 @@ SELECT id
   FROM user
  WHERE id = ?
 SQL;
-        $stmt = $this->_dbh->prepare( $sql ) ;
-        if ( ( ! $stmt ) || ( ! $stmt->bind_param( 'i', $id ) ) ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        $stmt = $this->_dbh->prepare($sql) ;
+        if ((! $stmt) || (! $stmt->bind_param('i', $id))) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
         }
-        if ( ! $stmt->execute() ) {
-            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
         $newId = $userName
                = $password
@@ -84,33 +91,35 @@ SQL;
                = $created
                = $updated
                = null ;
-        if ( ! $stmt->bind_result( $newId
-                                 , $userName
-                                 , $password
-                                 , $pSalt
-                                 , $created
-                                 , $updated
-                                 ) ) {
-            throw new ControllerException( 'Failed to bind to result: (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->bind_result(
+            $newId,
+            $userName,
+            $password,
+            $pSalt,
+            $created,
+            $updated
+                                 )) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
         }
         $model = null ;
-        if ( $stmt->fetch() ) {
+        if ($stmt->fetch()) {
             $model = new UserModel() ;
-            $model->setId( $newId ) ;
-            $model->setUserName( $userName ) ;
-            $model->setPassword( $password ) ;
-            $model->setPSalt( $pSalt ) ;
-            $model->setCreated( $created ) ;
-            $model->setUpdated( $updated ) ;
+            $model->setId($newId) ;
+            $model->setUserName($userName) ;
+            $model->setPassword($password) ;
+            $model->setPSalt($pSalt) ;
+            $model->setCreated($created) ;
+            $model->setUpdated($updated) ;
         }
-        return( $model ) ;
+        return($model) ;
     }
 
     /**
      * @param string $whereClause
      * @see ControllerBase::getSome()
      */
-    public function getSome( $whereClause = '1 = 1') {
+    public function getSome($whereClause = '1 = 1')
+    {
         $sql = <<<SQL
 SELECT id
      , username
@@ -123,12 +132,12 @@ SELECT id
  ORDER
     BY updated
 SQL;
-        $stmt = $this->_dbh->prepare( $sql ) ;
-        if ( ! $stmt ) {
-            throw new ControllerException( 'Failed to prepare SELECT statement. (' . $this->_dbh->error . ') from this SQL: ' . $sql ) ;
+        $stmt = $this->_dbh->prepare($sql) ;
+        if (! $stmt) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ') from this SQL: ' . $sql) ;
         }
-        if ( ! $stmt->execute() ) {
-            throw new ControllerException( 'Failed to execute SELECT statement. (' . $this->_dbh->error . ')' ) ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
         $id = $userName
             = $password
@@ -136,28 +145,30 @@ SQL;
             = $created
             = $updated
             = null ;
-        $stmt->bind_result( $id
-                          , $userName
-                          , $password
-                          , $psalt
-                          , $created
-                          , $updated
+        $stmt->bind_result(
+            $id,
+            $userName,
+            $password,
+            $psalt,
+            $created,
+            $updated
                           ) ;
-        $models = array() ;
-        while ( $stmt->fetch() ) {
+        $models = [] ;
+        while ($stmt->fetch()) {
             $model = new UserModel() ;
-            $model->setId( $id ) ;
-            $model->setUserName( $userName ) ;
-            $model->setPassword( $password ) ;
-            $model->setPSalt( $psalt ) ;
-            $model->setCreated( $created ) ;
-            $model->setUpdated( $updated ) ;
+            $model->setId($id) ;
+            $model->setUserName($userName) ;
+            $model->setPassword($password) ;
+            $model->setPSalt($psalt) ;
+            $model->setCreated($created) ;
+            $model->setUpdated($updated) ;
             $models[] = $model ;
         }
-        return( $models ) ;
+        return($models) ;
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         return $this->getSome() ;
     }
 
@@ -165,8 +176,9 @@ SQL;
      * @param UserModel $model
      * @see ControllerBase::add()
      */
-    public function add( $model ) {
-        if ( $model->validateForAdd() ) {
+    public function add($model)
+    {
+        if ($model->validateForAdd()) {
             try {
                 $query = <<<SQL
 INSERT user
@@ -182,37 +194,36 @@ SQL;
                 $userName = $model->getUserName() ;
                 $password = $model->getPassword() ;
                 $pSalt    = $model->getPSalt() ;
-                $stmt     = $this->_dbh->prepare( $query ) ;
-                if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                $stmt     = $this->_dbh->prepare($query) ;
+                if (! $stmt) {
+                    throw new ControllerException('Prepared statement failed for ' . $query) ;
                 }
-                if ( ! ( $stmt->bind_param( 'sss'
-                                          , $userName
-                                          , $password
-                                          , $pSalt
-                                          ) ) ) {
-                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                if (! ($stmt->bind_param(
+                    'sss',
+                    $userName,
+                    $password,
+                    $pSalt
+                                          ))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
                 }
-                if ( ! $stmt->execute() ) {
-                    throw new ControllerException( 'Failed to execute INSERT statement. ('
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute INSERT statement. ('
                                                  . $this->_dbh->error .
-                                                 ')' ) ;
+                                                 ')') ;
                 }
                 $newId = $stmt->insert_id ;
                 /**
                  * @SuppressWarnings checkAliases
                  */
-                if ( ! $stmt->close() ) {
-                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                if (! $stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $newId ;
+            } catch (\Exception $e) {
+                throw new ControllerException($e->getMessage()) ;
             }
-            catch ( Exception $e ) {
-                throw new ControllerException( $e->getMessage() ) ;
-            }
-        }
-        else {
-            throw new ControllerException( "Invalid data." ) ;
+        } else {
+            throw new ControllerException("Invalid data.") ;
         }
     }
 
@@ -220,8 +231,9 @@ SQL;
      * @param UserModel $model
      * @see ControllerBase::update()
      */
-    public function update( $model ) {
-        if ( $model->validateForUpdate() ) {
+    public function update($model)
+    {
+        if ($model->validateForUpdate()) {
             try {
                 $query = <<<SQL
 UPDATE user
@@ -234,37 +246,36 @@ SQL;
                 $userName = $model->getuUserName() ;
                 $password = $model->getPassword() ;
                 $pSalt    = $model->getPSalt() ;
-                $stmt     = $this->_dbh->prepare( $query ) ;
-                if ( ! $stmt ) {
-                    throw new ControllerException( 'Prepared statement failed for ' . $query ) ;
+                $stmt     = $this->_dbh->prepare($query) ;
+                if (! $stmt) {
+                    throw new ControllerException('Prepared statement failed for ' . $query) ;
                 }
-                if ( ! ( $stmt->bind_param( 'sssi'
-                                          , $userName
-                                          , $password
-                                          , $pSalt
-                                          , $id
-                                          ) ) ) {
-                    throw new ControllerException( 'Binding parameters for prepared statement failed.' ) ;
+                if (! ($stmt->bind_param(
+                    'sssi',
+                    $userName,
+                    $password,
+                    $pSalt,
+                    $id
+                                          ))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
                 }
-                if ( ! $stmt->execute() ) {
-                    throw new ControllerException( 'Failed to execute UPDATE statement. ('
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute UPDATE statement. ('
                                                  . $this->_dbh->error .
-                                                 ')' ) ;
+                                                 ')') ;
                 }
                 /**
                  * @SuppressWarnings checkAliases
                  */
-                if ( !$stmt->close() ) {
-                    throw new ControllerException( 'Something broke while trying to close the prepared statement.' ) ;
+                if (!$stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
                 }
                 return $id ;
+            } catch (\Exception $e) {
+                throw new ControllerException($e->getMessage()) ;
             }
-            catch ( Exception $e ) {
-                throw new ControllerException( $e->getMessage() ) ;
-            }
-        }
-        else {
-            throw new ControllerException( "Invalid data." ) ;
+        } else {
+            throw new ControllerException("Invalid data.") ;
         }
     }
 
@@ -272,8 +283,8 @@ SQL;
      * @param UserModel $model
      * @see ControllerBase::delete()
      */
-    public function delete( $model ) {
-        $this->_deleteModelById( "DELETE FROM user WHERE id = ?", $model ) ;
+    public function delete($model)
+    {
+        $this->_deleteModelById("DELETE FROM user WHERE id = ?", $model) ;
     }
-
 }

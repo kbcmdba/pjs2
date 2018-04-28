@@ -21,5 +21,8 @@
  *
  */
 
-class ModelException extends Exception {
+namespace com\kbcmdba\pjs2 ;
+
+class ModelException extends \Exception
+{
 }

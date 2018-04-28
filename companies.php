@@ -21,14 +21,16 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once 'Libs/autoload.php' ;
 
 $config = new Config() ;
-$page = new PJSWebPage( $config->getTitle() . " - Companies" ) ;
+$page = new PJSWebPage($config->getTitle() . " - Companies") ;
 $body = "<h2>Companies</h2>\n" ;
-$companyController = new CompanyController( 'read' ) ;
+$companyController = new CompanyController('read') ;
 $companyModelList = $companyController->getAll() ;
-$companyListView = new CompanyListView( 'html', $companyModelList ) ;
+$companyListView = new CompanyListView('html', $companyModelList) ;
 $body .= $companyListView->getView() ;
-$page->setBody( $body ) ;
+$page->setBody($body) ;
 $page->displayPage() ;

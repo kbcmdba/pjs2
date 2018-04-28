@@ -21,16 +21,18 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 /**
  * Search List View
  */
-
-class SearchListView extends ListViewBase {
+class SearchListView extends ListViewBase
+{
 
     /** @var string */
     private $_viewType ;
     /** @var mixed */
-    private $_supportedViewTypes = array( 'html' => 1 ) ;
+    private $_supportedViewTypes = [ 'html' => 1 ] ;
     /** @var SearchModel[] */
     private $searchModels ;
 
@@ -41,13 +43,14 @@ class SearchListView extends ListViewBase {
      * @param SearchModel[] $searchModels
      * @throws ViewException
      */
-    public function __construct( $viewType = 'html', $searchModels ) {
+    public function __construct($viewType = 'html', $searchModels)
+    {
         parent::__construct() ;
-        if ( ! isset( $this->_supportedViewTypes[ $viewType ] ) ) {
-            throw new ViewException( "Unsupported view type\n" ) ;
+        if (! isset($this->_supportedViewTypes[ $viewType ])) {
+            throw new ViewException("Unsupported view type\n") ;
         }
         $this->_viewType = $viewType ;
-        $this->setSearchModels( $searchModels ) ;
+        $this->setSearchModels($searchModels) ;
     }
 
     /**
@@ -55,7 +58,8 @@ class SearchListView extends ListViewBase {
      *
      * @return string
      */
-    private function _getHtmlView() {
+    private function _getHtmlView()
+    {
         $body = <<<'HTML'
 <button type="button" id="AddButton" onclick="addSearch()" >Add Search</button>
 <table border="1" cellspacing="0" cellpadding="2" id="search">
@@ -75,9 +79,9 @@ class SearchListView extends ListViewBase {
   <tbody>
 
 HTML;
-        foreach ( $this->getSearchModels() as $search ) {
+        foreach ($this->getSearchModels() as $search) {
             $id    = $search->getId() ;
-            $row   = $this->displaySearchRow( $search, 'list' ) ;
+            $row   = $this->displaySearchRow($search, 'list') ;
             $body .= <<<HTML
     <tr id="ux$id">
       $row
@@ -94,12 +98,13 @@ HTML;
      * @return string
      * @throws ViewException
      */
-    public function getView() {
-        switch ( $this->_viewType ) {
-            case 'html' :
+    public function getView()
+    {
+        switch ($this->_viewType) {
+            case 'html':
                 return $this->_getHtmlView() ;
-            default :
-                throw new ViewException( "Unsupported view type." ) ;
+            default:
+                throw new ViewException("Unsupported view type.") ;
         }
     }
 
@@ -111,7 +116,8 @@ HTML;
      * @param string $errMessage
      * @return string
      */
-    public function displaySearchRow( $searchModel, $displayMode, $errMessage = '' ) {
+    public function displaySearchRow($searchModel, $displayMode, $errMessage = '')
+    {
         $id             = $searchModel->getId() ;
         $engineName     = $searchModel->getEngineName() ;
         $searchName     = $searchModel->getSearchName() ;
@@ -120,8 +126,8 @@ HTML;
         $rssLastChecked = $searchModel->getRssLastChecked() ;
         $created        = $searchModel->getCreated() ;
         $updated        = $searchModel->getUpdated() ;
-        switch ( $displayMode ) {
-            case 'add' :
+        switch ($displayMode) {
+            case 'add':
                 return <<<HTML
       <td>
         <button id="SaveButtonix$id" onclick="doAddSearch( '$id' )">Save</a>
@@ -138,7 +144,7 @@ HTML;
 
 HTML;
                 break ;
-            case 'update' :
+            case 'update':
                 return <<<HTML
       <td>
         <button id="SaveButton$id" onclick="doUpdateSearch( '$id' )">Save</a>
@@ -155,7 +161,7 @@ HTML;
 
 HTML;
                 break ;
-            case 'delete' :
+            case 'delete':
                 return <<<HTML
       <td>
         <button id="DeleteButton$id" onclick="doDeleteSearch( '$id' )">Confirm Delete</a>
@@ -172,7 +178,7 @@ HTML;
 
 HTML;
                 break ;
-            case 'list' :
+            case 'list':
                 return <<<HTML
       <td>
         <button id="UpdateButton$id" onclick="updateSearch( '$id' )">Update</a>
@@ -189,8 +195,8 @@ HTML;
                 
 HTML;
                 break ;
-            default :
-                throw new ViewException( 'Invalid display mode.' ) ;
+            default:
+                throw new ViewException('Invalid display mode.') ;
                 break ;
         }
         // Should never get here.
@@ -199,15 +205,16 @@ HTML;
     /**
      * @return SearchModel[]
      */
-    public function getSearchModels() {
+    public function getSearchModels()
+    {
         return $this->_searchModels ;
     }
 
     /**
      * @param SearchModel[] $searchModels
      */
-    public function setSearchModels( $searchModels ) {
+    public function setSearchModels($searchModels)
+    {
         $this->_searchModels = $searchModels ;
     }
-
 }

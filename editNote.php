@@ -21,32 +21,31 @@
  *
  */
 
+namespace com\kbcmdba\pjs2 ;
+
 require_once "Libs/autoload.php" ;
 
 $config = new Config() ;
-$webPage = new PJSWebPage( $config->getTitle() . ' - Edit Note') ;
-$act = Tools::Param( 'act' ) ;
-if ( "Edit Note" === $act ) {
+$webPage = new PJSWebPage($config->getTitle() . ' - Edit Note') ;
+$act = Tools::Param('act') ;
+if ("Edit Note" === $act) {
     $noteModel = new NoteModel() ;
     $noteModel->populateFromForm() ;
-    if ( ! $noteModel->validateForUpdate() ) {
-        $view = new NoteFormView( 'Edit Note', $noteModel ) ;
+    if (! $noteModel->validateForUpdate()) {
+        $view = new NoteFormView('Edit Note', $noteModel) ;
         $body = "<h2>Invalid data</h2>\n" . $view->getForm() ;
-    }
-    else {
+    } else {
         $noteController = new NoteController() ;
-        $newId = $noteController->update( $noteModel ) ;
-        if ( $newId > 0 ) {
+        $newId = $noteController->update($noteModel) ;
+        if ($newId > 0) {
             $body = "Edited note # " . $newId . "<br />\n";
         }
     }
-}
-else {
+} else {
     $noteController = new NoteController() ;
-    $noteModel = $noteController->get( Tools::param( 'id' ) ) ;
-    $view = new NoteFormView( 'Edit Note', $noteModel ) ;
+    $noteModel = $noteController->get(Tools::param('id')) ;
+    $view = new NoteFormView('Edit Note', $noteModel) ;
     $body = $view->getForm() ;
 }
-$webPage->setBody( $body ) ;
+$webPage->setBody($body) ;
 $webPage->displayPage() ;
-

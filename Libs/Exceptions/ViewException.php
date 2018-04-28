@@ -21,5 +21,8 @@
  *
  */
 
-class ViewException extends Exception {
+namespace com\kbcmdba\pjs2 ;
+
+class ViewException extends \Exception
+{
 }
