@@ -50,10 +50,10 @@ try {
         // Database exists. Don't allow reset if the user is not logged in.
         $auth = new Auth() ;
         if (! $auth->isAuthorized()) {
-            throw new Exception("User must be logged in to reset the database!") ;
+            throw new \Exception("User must be logged in to reset the database!") ;
         }
         if ("1" !== $config->getResetOk()) {
-            throw new Exception("Reset capability is turned off! See config.xml") ;
+            throw new \Exception("Reset capability is turned off! See config.xml") ;
         }
     }
     $dbh = $dbc->getConnection() ;
@@ -90,7 +90,7 @@ try {
         }
     }
     $body .= "</ul>\n<p>Done.</p>" ;
-} catch (Exception $e) {
+} catch (\Exception $e) {
     $body .= "</ul>\n<p />Uncaught exception: " . $e->getMessage() . "\n" ;
 }
 $page->setBody($body) ;

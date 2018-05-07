@@ -21,8 +21,6 @@
  *
  */
 
-namespace com\kbcmdba\pjs2 ;
-
 /**
  * Auto-load magic method
  *
