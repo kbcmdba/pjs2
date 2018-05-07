@@ -21,12 +21,7 @@
  *
  */
 
-/**
- * Auto-load magic method
- *
- * @param string
- */
-function __autoload($className)
+spl_autoload_register( function ($className)
 {
     $className = str_replace('com\\kbcmdba\\pjs2\\', '', $className);
     switch (true) {
@@ -70,4 +65,4 @@ function __autoload($className)
         echo $e->getMessage() . "\n" ;
         exit(1) ;
     }
-} // END OF function __autoload
+});
