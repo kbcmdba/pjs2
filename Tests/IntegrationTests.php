@@ -28,8 +28,14 @@ use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Firefox\FirefoxPreferences;
 use Facebook\WebDriver\Firefox\FirefoxProfile;
 
+<<<<<<< HEAD
 // require_once('vendor/autoload.php');
 class IntegrationTests extends PHPUnit_Framework_TestCase
+=======
+require_once ('vendor/autoload.php');
+
+class IntegrationTests extends PHPUnit\Framework\TestCase
+>>>>>>> master
 {
 
     /**
@@ -37,9 +43,13 @@ class IntegrationTests extends PHPUnit_Framework_TestCase
      * @var \RemoteWebDriver
      */
     protected $webDriver;
+<<<<<<< HEAD
 
     protected $url = 'http://127.0.0.1/pjs2/';
 
+=======
+    protected $url = 'http://127.0.0.1/pjs2/';
+>>>>>>> master
     private $_headerTags = [
         'Summary',
         "Application Statuses",
@@ -49,13 +59,9 @@ class IntegrationTests extends PHPUnit_Framework_TestCase
         "Keywords",
         "Searches"
     ];
-
     private $_userName = 'pjs2_test';
-
     private $_password = 'pjs2_test';
-
     private $_lookFor = '';
-
     private $_retVal = 0;
 
     /**
@@ -66,6 +72,11 @@ class IntegrationTests extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        require_once ('../Libs/Config.php');
+        chdir('..');
+        $config = new Config();
+        chdir('Tests');
+        date_default_timezone_set($config->getTimeZone());
         $capabilities = DesiredCapabilities::chrome();
         $this->webDriver = RemoteWebDriver::create('http://localhost:4444/wd/hub', $capabilities);
     }
@@ -249,42 +260,42 @@ class IntegrationTests extends PHPUnit_Framework_TestCase
         // set up yet or the last run had an error in the SQL, this will
         // always run the reset code.
         $resetElements = [
-            'Dropping Triggers: SearchController',
-            'Dropping Triggers: KeywordController',
-            'Dropping Triggers: JobController',
-            'Dropping Triggers: ContactController',
-            'Dropping Triggers: CompanyController',
-            'Dropping Triggers: ApplicationStatusController',
-            'Dropping Tables: JobKeywordMapController',
-            'Dropping Tables: SearchController',
-            'Dropping Tables: NoteController',
-            'Dropping Tables: KeywordController',
-            'Dropping Tables: JobController',
-            'Dropping Tables: ContactController',
-            'Dropping Tables: CompanyController',
-            'Dropping Tables: ApplicationStatusSummaryController',
-            'Dropping Tables: ApplicationStatusController',
-            'Dropping Tables: AuthTicketController',
-            'Dropping Tables: VersionController',
-            'Creating Tables: VersionController',
-            'Creating Tables: AuthTicketController',
-            'Creating Tables: ApplicationStatusController',
-            'Creating Tables: ApplicationStatusSummaryController',
-            'Creating Tables: CompanyController',
-            'Creating Tables: ContactController',
-            'Creating Tables: JobController',
-            'Creating Tables: KeywordController',
-            'Creating Tables: NoteController',
-            'Creating Tables: SearchController',
-            'Creating Tables: JobKeywordMapController',
-            'Creating Triggers: ApplicationStatusController',
-            'Creating Triggers: CompanyController',
-            'Creating Triggers: ContactController',
-            'Creating Triggers: JobController',
-            'Creating Triggers: KeywordController',
-            'Creating Triggers: SearchController',
-            'Pre-populating tables: VersionController',
-            'Pre-populating tables: ApplicationStatusController'
+            'Dropping Triggers: \\com\\kbcmdba\\pjs2\\SearchController',
+            'Dropping Triggers: \\com\\kbcmdba\\pjs2\\KeywordController',
+            'Dropping Triggers: \\com\\kbcmdba\\pjs2\\JobController',
+            'Dropping Triggers: \\com\\kbcmdba\\pjs2\\ContactController',
+            'Dropping Triggers: \\com\\kbcmdba\\pjs2\\CompanyController',
+            'Dropping Triggers: \\com\\kbcmdba\\pjs2\\ApplicationStatusController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\JobKeywordMapController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\SearchController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\NoteController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\KeywordController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\JobController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\ContactController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\CompanyController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\ApplicationStatusSummaryController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\ApplicationStatusController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\AuthTicketController',
+            'Dropping Tables: \\com\\kbcmdba\\pjs2\\VersionController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\VersionController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\AuthTicketController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\ApplicationStatusController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\ApplicationStatusSummaryController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\CompanyController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\ContactController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\JobController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\KeywordController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\NoteController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\SearchController',
+            'Creating Tables: \\com\\kbcmdba\\pjs2\\JobKeywordMapController',
+            'Creating Triggers: \\com\\kbcmdba\\pjs2\\ApplicationStatusController',
+            'Creating Triggers: \\com\\kbcmdba\\pjs2\\CompanyController',
+            'Creating Triggers: \\com\\kbcmdba\\pjs2\\ContactController',
+            'Creating Triggers: \\com\\kbcmdba\\pjs2\\JobController',
+            'Creating Triggers: \\com\\kbcmdba\\pjs2\\KeywordController',
+            'Creating Triggers: \\com\\kbcmdba\\pjs2\\SearchController',
+            'Pre-populating tables: \\com\\kbcmdba\\pjs2\\VersionController',
+            'Pre-populating tables: \\com\\kbcmdba\\pjs2\\ApplicationStatusController'
         ];
         
         $cnt = count($resetElements);
@@ -1291,11 +1302,11 @@ class IntegrationTests extends PHPUnit_Framework_TestCase
         
         $this->doTestSummary1();
         $this->doTestApplicationStatuses();
-        $this->doTestCompanies();
-        $this->doTestContacts();
-        $this->doTestJobs();
-        $this->doTestKeywords();
-        $this->doTestSearches();
-        $this->doTestSummary2();
+        $this->doTestCompanies() ;
+        $this->doTestContacts() ;
+        $this->doTestJobs() ;
+        $this->doTestKeywords() ;
+        $this->doTestSearches() ;
+        $this->doTestSummary2() ;
     }
 }
