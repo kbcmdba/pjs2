@@ -20,7 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-set_include_path(get_include_path() . PATH_SEPARATOR . '/home/kbenton/.config/composer');
+set_include_path(get_include_path() . PATH_SEPARATOR . $_SERVER['HOME'] . '/.config/composer');
 
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
@@ -28,14 +28,9 @@ use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Firefox\FirefoxPreferences;
 use Facebook\WebDriver\Firefox\FirefoxProfile;
 
-<<<<<<< HEAD
-// require_once('vendor/autoload.php');
-class IntegrationTests extends PHPUnit_Framework_TestCase
-=======
 require_once ('vendor/autoload.php');
 
 class IntegrationTests extends PHPUnit\Framework\TestCase
->>>>>>> master
 {
 
     /**
@@ -43,13 +38,9 @@ class IntegrationTests extends PHPUnit\Framework\TestCase
      * @var \RemoteWebDriver
      */
     protected $webDriver;
-<<<<<<< HEAD
 
     protected $url = 'http://127.0.0.1/pjs2/';
 
-=======
-    protected $url = 'http://127.0.0.1/pjs2/';
->>>>>>> master
     private $_headerTags = [
         'Summary',
         "Application Statuses",
@@ -59,9 +50,13 @@ class IntegrationTests extends PHPUnit\Framework\TestCase
         "Keywords",
         "Searches"
     ];
+
     private $_userName = 'pjs2_test';
+
     private $_password = 'pjs2_test';
+
     private $_lookFor = '';
+
     private $_retVal = 0;
 
     /**
@@ -72,9 +67,9 @@ class IntegrationTests extends PHPUnit\Framework\TestCase
 
     public function setUp()
     {
-        require_once ('../Libs/Config.php');
         chdir('..');
-        $config = new Config();
+        require_once ('Libs/Config.php');
+        $config = new com\kbcmdba\pjs2\Config();
         chdir('Tests');
         date_default_timezone_set($config->getTimeZone());
         $capabilities = DesiredCapabilities::chrome();
@@ -732,7 +727,7 @@ class IntegrationTests extends PHPUnit\Framework\TestCase
         $this->checkC1R(2, "/tr[@id='ux2-1']", "/tr[@id='ux2-2']", 'Company 2c', 'c/o Me 3', 'City 2c', '32', '22222-222c', 'None', '2c Any Street', '222-222-222c', 'http://www3.testme2.com/', '');
         $this->checkC1R(3, "/tr[@id='ux3-1']", "/tr[@id='ux3-2']", 'Company 3', '3 Any Street', 'City 3', 'S3', '33333-3333', 'None', '', '333-333-3333', 'http://testme3.com/', '');
         sleep(1); // Just to make sure that the contacted date and the last
-                   // updated date are different than the created date.
+                  // updated date are different than the created date.
         $driver->findElement(WebDriverBy::id('ContactButton3'))->click();
         $this->checkC1R(3, "/tr[@id='ux3-1']", "/tr[@id='ux3-2']", 'Company 3', '3 Any Street', 'City 3', 'S3', '33333-3333', 'None', '', '333-333-3333', 'http://testme3.com/', date('Y-m-d H:i:s'));
     }
@@ -1302,11 +1297,11 @@ class IntegrationTests extends PHPUnit\Framework\TestCase
         
         $this->doTestSummary1();
         $this->doTestApplicationStatuses();
-        $this->doTestCompanies() ;
-        $this->doTestContacts() ;
-        $this->doTestJobs() ;
-        $this->doTestKeywords() ;
-        $this->doTestSearches() ;
-        $this->doTestSummary2() ;
+        $this->doTestCompanies();
+        $this->doTestContacts();
+        $this->doTestJobs();
+        $this->doTestKeywords();
+        $this->doTestSearches();
+        $this->doTestSummary2();
     }
 }
