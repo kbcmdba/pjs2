@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class ContactModel extends ModelBase
 {
-
     private $_id;
 
     private $_contactCompanyId;

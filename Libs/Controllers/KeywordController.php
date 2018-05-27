@@ -62,7 +62,8 @@ SQL;
     }
 
     public function dropTriggers()
-    {}
+    {
+    }
 
     public function createTriggers()
     {

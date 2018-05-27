@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class KeywordModel extends ModelBase
 {
-
     private $_id;
 
     private $_keywordValue;

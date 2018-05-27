@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class AuthTicketController extends ControllerBase
 {
-
     private $_expireSeconds = 3600;
 
     /**
@@ -105,7 +104,7 @@ SQL;
         $stmt->bind_result($created, $updated, $expires);
         if (! $stmt->fetch()) {
             // Record is missing.
-            return FALSE;
+            return false;
         }
         $atm = new AuthTicketModel();
         $atm->setAuthTicket($auth_ticket);

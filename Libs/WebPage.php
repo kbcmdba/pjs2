@@ -112,7 +112,7 @@ class WebPage
         if ('text/html' === $this->getMimeType()) {
             // @formatter:off
             return ("<html>\n" . "<head>\n" . '  <title>' . $this->getPageTitle() . "</title>\n" . $this->getHead() . $this->getStyles() . "</head>\n" . "<body>\n" . $this->getTop() . $this->getBody() . $this->getBottom() . "</body>\n" . "</html>\n");
-            // @formatter:on
+        // @formatter:on
         } else {
             return ($this->getData());
         }

@@ -30,7 +30,6 @@ namespace com\kbcmdba\pjs2;
  */
 class Auth
 {
-
     private static $_userId = null;
 
     private static $_password = null;
@@ -100,8 +99,8 @@ class Auth
                 $atc = new AuthTicketController();
                 $atc->cleanExpiredTickets();
                 $atm = $atc->get($_SESSION['auth_ticket']);
-                if (FALSE === $atm) {
-                    return FALSE;
+                if (false === $atm) {
+                    return false;
                 }
             } catch (ControllerException $e) {
                 // No matching record found. User can't be validated through
@@ -155,7 +154,7 @@ Login Page
 HTML;
         return ($body);
     }
- // END OF function loginPage()
+    // END OF function loginPage()
     
     /**
      * Destroy session variables that keep the user logged in.

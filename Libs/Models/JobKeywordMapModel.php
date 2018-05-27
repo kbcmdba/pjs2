@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class JobKeywordMapModel extends ModelBase
 {
-
     private $_id;
 
     private $_jobId;

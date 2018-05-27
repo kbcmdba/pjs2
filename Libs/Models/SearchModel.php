@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class SearchModel extends ModelBase
 {
-
     private $_id;
 
     private $_engineName;

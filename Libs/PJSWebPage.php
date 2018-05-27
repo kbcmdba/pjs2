@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class PJSWebPage extends WebPage
 {
-
     private $_auth;
 
     private $_resetOk;

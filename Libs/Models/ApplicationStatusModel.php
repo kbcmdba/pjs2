@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class ApplicationStatusModel extends ModelBase
 {
-
     private $_id;
 
     private $_statusValue;

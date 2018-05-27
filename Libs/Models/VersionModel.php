@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class VersionModel extends ModelBase
 {
-
     private $_versionValue;
 
     private $_updated;

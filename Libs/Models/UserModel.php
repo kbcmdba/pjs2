@@ -27,7 +27,6 @@ namespace com\kbcmdba\pjs2;
  */
 class UserModel extends ModelBase
 {
-
     private $_userName;
 
     private $_password;
