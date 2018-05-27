@@ -20,46 +20,43 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$auth = new Auth() ;
+$auth = new Auth();
 if (! $auth->isAuthorized()) {
-    $auth->forbidden() ;
-    exit(0) ; // Should never get here but just in case...
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
 }
-$id          = Tools::post('id') ;
-$statusValue = Tools::post('statusValue') ;
-$style       = Tools::post('style') ;
-$isActive    = Tools::post('isActive') ;
-$sortKey     = Tools::post('sortKey') ;
-$result      = 'OK' ;
-$asrv        = new ApplicationStatusListView('html', null) ;
+$id = Tools::post('id');
+$statusValue = Tools::post('statusValue');
+$style = Tools::post('style');
+$isActive = Tools::post('isActive');
+$sortKey = Tools::post('sortKey');
+$result = 'OK';
+$asrv = new ApplicationStatusListView('html', null);
 try {
-    $applicationStatusController = new ApplicationStatusController() ;
-    $applicationStatusModel = $applicationStatusController->get($id) ;
-
-    $applicationStatusModel->setStatusValue($statusValue) ;
-    $applicationStatusModel->setStyle($style) ;
-    $applicationStatusModel->setIsActive($isActive) ;
-    $applicationStatusModel->setSortKey($sortKey) ;
-
-    $result = $applicationStatusController->update($applicationStatusModel) ;
-
+    $applicationStatusController = new ApplicationStatusController();
+    $applicationStatusModel = $applicationStatusController->get($id);
+    
+    $applicationStatusModel->setStatusValue($statusValue);
+    $applicationStatusModel->setStyle($style);
+    $applicationStatusModel->setIsActive($isActive);
+    $applicationStatusModel->setSortKey($sortKey);
+    
+    $result = $applicationStatusController->update($applicationStatusModel);
+    
     if (! ($result > 0)) {
-        throw new ControllerException("Update failed.") ;
+        throw new ControllerException("Update failed.");
     }
-    $row = $asrv->displayApplicationStatusRow($applicationStatusModel, 'list') ;
+    $row = $asrv->displayApplicationStatusRow($applicationStatusModel, 'list');
 } catch (ControllerException $e) {
-    $row = $asrv->displayApplicationStatusRow(
-        $newApplicationStatusModel,
-        'list',
-        'Update Application Status record failed. '
-                                             . $e->getMessage()
-                                             ) ;
+    $row = $asrv->displayApplicationStatusRow($newApplicationStatusModel, 'list', 'Update Application Status record failed. ' . $e->getMessage());
 }
 
-$result = [ 'result' => $result, 'row' => $row ] ;
-echo json_encode($result) . PHP_EOL ;
+$result = [
+    'result' => $result,
+    'row' => $row
+];
+echo json_encode($result) . PHP_EOL;

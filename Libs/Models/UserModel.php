@@ -20,26 +20,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * _User Model
  */
 class UserModel extends ModelBase
 {
-    private $_userName ;
-    private $_password ;
-    private $_pSalt ;
-    private $_created ;
-    private $_updated ;
+
+    private $_userName;
+
+    private $_password;
+
+    private $_pSalt;
+
+    private $_created;
+
+    private $_updated;
 
     /**
      * class constructor
      */
     public function __construct()
     {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     /**
@@ -49,11 +53,7 @@ class UserModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return  ((Tools::isNullOrEmptyString(Tools::param('id')))
-               && (! Tools::isNullOrEmptyString(Tools::param('userName')))
-               && (! Tools::isNullOrEmptyString(Tools::param('password')))
-               && (! Tools::isNullOrEmptyString(Tools::param('pSalt')))
-                ) ;
+        return ((Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('userName'))) && (! Tools::isNullOrEmptyString(Tools::param('password'))) && (! Tools::isNullOrEmptyString(Tools::param('pSalt'))));
     }
 
     /**
@@ -63,100 +63,105 @@ class UserModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return  ((! Tools::isNullOrEmptyString(Tools::param('id')))
-               && (Tools::isNumeric(Tools::param('id')))
-               && (! Tools::isNullOrEmptyString(Tools::param('userName')))
-               && (! Tools::isNullOrEmptyString(Tools::param('password')))
-               && (! Tools::isNullOrEmptyString(Tools::param('pSalt')))
-                ) ;
+        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (Tools::isNumeric(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('userName'))) && (! Tools::isNullOrEmptyString(Tools::param('password'))) && (! Tools::isNullOrEmptyString(Tools::param('pSalt'))));
     }
 
     public function populateFromForm()
     {
-        $this->setUserName(Tools::param('userName')) ;
-        $this->setPassword(Tools::param('password')) ;
-        $this->setPSalt(Tools::param('pSalt')) ;
-        $this->setCreated(Tools::param('created')) ;
-        $this->setUpdated(Tools::param('updated')) ;
+        $this->setUserName(Tools::param('userName'));
+        $this->setPassword(Tools::param('password'));
+        $this->setPSalt(Tools::param('pSalt'));
+        $this->setCreated(Tools::param('created'));
+        $this->setUpdated(Tools::param('updated'));
     }
 
     /**
+     *
      * @return string
      */
     public function getUserName()
     {
-        return $this->_userName ;
+        return $this->_userName;
     }
 
     /**
+     *
      * @param string $userName
      */
     public function setUserName($userName)
     {
-        $this->_userName = $userName ;
+        $this->_userName = $userName;
     }
 
     /**
+     *
      * @return string
      */
     public function getPassword()
     {
-        return $this->_password ;
+        return $this->_password;
     }
 
     /**
+     *
      * @param string $password
      */
     public function setPassword($password)
     {
-        $this->_password = $password ;
+        $this->_password = $password;
     }
 
     /**
+     *
      * @return string
      */
     public function getPSalt()
     {
-        return $this->_pSalt ;
+        return $this->_pSalt;
     }
 
     /**
+     *
      * @param string $pSalt
      */
     public function setPSalt($pSalt)
     {
-        $this->_pSalt = $pSalt ;
+        $this->_pSalt = $pSalt;
     }
 
     /**
+     *
      * @return string
      */
     public function getCreated()
     {
-        return $this->_created ;
+        return $this->_created;
     }
 
     /**
+     *
      * @param string $created
      */
     public function setCreated($created)
     {
-        $this->_created = $created ;
+        $this->_created = $created;
     }
 
     /**
+     *
      * @return string
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
+     *
      * @param string $updated
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated ;
+        $this->_updated = $updated;
     }
 }

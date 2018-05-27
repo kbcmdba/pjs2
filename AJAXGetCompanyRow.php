@@ -20,30 +20,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$auth = new Auth() ;
+$auth = new Auth();
 if (! $auth->isAuthorized()) {
-    $auth->forbidden() ;
-    exit(0) ; // Should never get here but just in case...
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
 }
-$result   = "OK" ;
-$id       = Tools::param('id') ;
-$mode     = Tools::param('mode') ;
-$rowStyle = Tools::param('rowStyle') ;
-$html     = '' ;
-$companyListView = new CompanyListView('html', null) ;
+$result = "OK";
+$id = Tools::param('id');
+$mode = Tools::param('mode');
+$rowStyle = Tools::param('rowStyle');
+$html = '';
+$companyListView = new CompanyListView('html', null);
 if ('add' == $mode) {
-    $companyModel = new CompanyModel() ;
-    $companyModel->setId($id) ;
-    $htmlRows = $companyListView->displayCompanyRow($companyModel, $mode, $rowStyle) ;
+    $companyModel = new CompanyModel();
+    $companyModel->setId($id);
+    $htmlRows = $companyListView->displayCompanyRow($companyModel, $mode, $rowStyle);
 } else {
-    $companyController = new CompanyController() ;
-    $companyModel = $companyController->get($id) ;
-    $htmlRows = $companyListView->displayCompanyRow($companyModel, $mode, $rowStyle) ;
+    $companyController = new CompanyController();
+    $companyModel = $companyController->get($id);
+    $htmlRows = $companyListView->displayCompanyRow($companyModel, $mode, $rowStyle);
 }
-$result = [ 'result' => $result, 'rows' => $htmlRows ] ;
-echo json_encode($result) . PHP_EOL ;
+$result = [
+    'result' => $result,
+    'rows' => $htmlRows
+];
+echo json_encode($result) . PHP_EOL;

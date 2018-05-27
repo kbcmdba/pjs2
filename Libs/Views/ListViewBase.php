@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * ListView Base
@@ -42,5 +41,5 @@ abstract class ListViewBase
      *
      * @return string
      */
-    abstract public function getView() ;
+    abstract public function getView();
 }

@@ -20,23 +20,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * AuthTicket Model
  */
 class AuthTicketModel extends ModelBase
 {
+
     /** @var string */
-    private $_authTicket ;
+    private $_authTicket;
+
     /** @var string */
-    private $_created ;
+    private $_created;
+
     /** @var string */
-    private $_updated ;
+    private $_updated;
+
     /** @var string */
-    private $_expires ;
-    
+    private $_expires;
+
     /**
      * class constructor
      */
@@ -46,19 +49,21 @@ class AuthTicketModel extends ModelBase
     }
 
     /**
+     *
      * @return boolean
      */
     public function validateForAdd()
     {
-        return 1 ;
+        return 1;
     }
 
     /**
+     *
      * @return boolean
      */
     public function validateForUpdate()
     {
-        return 1 ;
+        return 1;
     }
 
     /**
@@ -76,7 +81,7 @@ class AuthTicketModel extends ModelBase
      */
     public function getAuthTicket()
     {
-        return $this->_authTicket ;
+        return $this->_authTicket;
     }
 
     /**
@@ -86,7 +91,7 @@ class AuthTicketModel extends ModelBase
      */
     public function setAuthTicket($value)
     {
-        $this->_authTicket = $value ;
+        $this->_authTicket = $value;
     }
 
     /**
@@ -96,7 +101,7 @@ class AuthTicketModel extends ModelBase
      */
     public function getCreated()
     {
-        return $this->_created ;
+        return $this->_created;
     }
 
     /**
@@ -106,7 +111,7 @@ class AuthTicketModel extends ModelBase
      */
     public function setCreated($value)
     {
-        $this->_created = $value ;
+        $this->_created = $value;
     }
 
     /**
@@ -116,7 +121,7 @@ class AuthTicketModel extends ModelBase
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
@@ -126,7 +131,7 @@ class AuthTicketModel extends ModelBase
      */
     public function setUpdated($value)
     {
-        $this->_updated = $value ;
+        $this->_updated = $value;
     }
 
     /**
@@ -136,7 +141,7 @@ class AuthTicketModel extends ModelBase
      */
     public function getExpires()
     {
-        return $this->_expires ;
+        return $this->_expires;
     }
 
     /**
@@ -146,6 +151,6 @@ class AuthTicketModel extends ModelBase
      */
     public function setExpires($value)
     {
-        $this->_expires = $value ;
+        $this->_expires = $value;
     }
 }

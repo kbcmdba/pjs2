@@ -20,12 +20,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * A series of static methods for re-use.
-*/
+ */
 class Tools
 {
 
@@ -36,7 +35,7 @@ class Tools
      */
     public function __construct()
     {
-        throw new \Exception("Improper use of Tools class") ;
+        throw new \Exception("Improper use of Tools class");
     }
 
     /**
@@ -47,7 +46,7 @@ class Tools
      */
     public static function param($key)
     {
-        return (isset($key) && (isset($_REQUEST[ $key ]))) ? trim($_REQUEST[ $key ]) : '' ;
+        return (isset($key) && (isset($_REQUEST[$key]))) ? trim($_REQUEST[$key]) : '';
     }
 
     /**
@@ -58,12 +57,13 @@ class Tools
      */
     public static function post($key)
     {
-        return (isset($key) && (isset($_POST[ $key ]))) ? $_POST[ $key ] : '' ;
+        return (isset($key) && (isset($_POST[$key]))) ? $_POST[$key] : '';
     }
 
     /**
      * Display a table cell but put a non-blank space in it if it's empty or
-     * null. Typically, this helps get around empty boxes without lines in
+     * null.
+     * Typically, this helps get around empty boxes without lines in
      * browsers that don't properly support styles to make this happen.
      *
      * @param string $x
@@ -71,7 +71,7 @@ class Tools
      */
     public static function nonBlankCell($x)
     {
-        return (! isset($x) || ($x === '')) ? "&nbsp;" : $x ;
+        return (! isset($x) || ($x === '')) ? "&nbsp;" : $x;
     }
 
     /**
@@ -82,7 +82,7 @@ class Tools
      */
     public static function isNullOrEmptyString($x)
     {
-        return ((null === $x) || ('' === $x)) ;
+        return ((null === $x) || ('' === $x));
     }
 
     /**
@@ -92,21 +92,23 @@ class Tools
      */
     public static function isNumeric($x)
     {
-        return (isset($x) && preg_match('/^(-|)[0-9]+$/', $x)) ;
+        return (isset($x) && preg_match('/^(-|)[0-9]+$/', $x));
     }
 
     /**
      * Return the MySQL format timestamp value for the given time()
-     * value. If epochTime is null, return the current date and time.
+     * value.
+     * If epochTime is null, return the current date and time.
      *
-     * @param int $epochTime Seconds since January 1, 1970 at midnight
+     * @param int $epochTime
+     *            Seconds since January 1, 1970 at midnight
      * @return string
      */
     public static function currentTimestamp($epochTime = null)
     {
         if (null === $epochTime) {
-            $epochTime = time() ;
+            $epochTime = time();
         }
-        return date('Y-m-d H:i:s', $epochTime) ;
+        return date('Y-m-d H:i:s', $epochTime);
     }
 }

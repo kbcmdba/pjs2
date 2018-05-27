@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 class SearchController extends ControllerBase
 {
@@ -29,20 +28,21 @@ class SearchController extends ControllerBase
     /**
      * Class constructor
      *
-     * @param string $readWriteMode "read", "write", or "admin"
+     * @param string $readWriteMode
+     *            "read", "write", or "admin"
      * @throws ControllerException
      */
     public function __construct($readWriteMode = 'write')
     {
-        parent::__construct($readWriteMode) ;
+        parent::__construct($readWriteMode);
     }
-    
+
     public function dropTable()
     {
-        $sql = "DROP TABLE IF EXISTS search" ;
-        $this->_doDDL($sql) ;
+        $sql = "DROP TABLE IF EXISTS search";
+        $this->_doDDL($sql);
     }
-    
+
     public function createTable()
     {
         $sql = <<<SQL
@@ -60,15 +60,15 @@ CREATE TABLE IF NOT EXISTS search
      , PRIMARY KEY pk_searchId ( id )
      )
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
     }
 
     public function dropTriggers()
     {
-        $sql = "DROP TRIGGER IF EXISTS searchAfterDeleteTrigger" ;
-        $this->_doDDL($sql) ;
-        $sql = "DROP TRIGGER IF EXISTS searchAfterUpdateTrigger" ;
-        $this->_doDDL($sql) ;
+        $sql = "DROP TRIGGER IF EXISTS searchAfterDeleteTrigger";
+        $this->_doDDL($sql);
+        $sql = "DROP TRIGGER IF EXISTS searchAfterUpdateTrigger";
+        $this->_doDDL($sql);
     }
 
     public function createTriggers()
@@ -85,7 +85,7 @@ CREATE TRIGGER searchAfterDeleteTrigger
           AND appliesToId = OLD.id ;
    END
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
         $sql = <<<SQL
 CREATE TRIGGER searchAfterUpdateTrigger
  AFTER UPDATE
@@ -102,7 +102,7 @@ CREATE TRIGGER searchAfterUpdateTrigger
         END IF ;
    END
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
     }
 
     public function get($id)
@@ -119,39 +119,30 @@ SELECT id
   FROM search
  WHERE id = ?
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if ((! $stmt) || (! $stmt->bind_param('i', $id))) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result(
-            $id,
-            $engineName,
-            $searchName,
-            $url,
-            $rssFeedUrl,
-            $rssLastChecked,
-            $created,
-            $updated
-                                 )) {
-            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
+        if (! $stmt->bind_result($id, $engineName, $searchName, $url, $rssFeedUrl, $rssLastChecked, $created, $updated)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         if ($stmt->fetch()) {
-            $model = new SearchModel() ;
-            $model->setId($id) ;
-            $model->setEngineName($engineName) ;
-            $model->setSearchName($searchName) ;
-            $model->setUrl($url) ;
-            $model->setRssFeedUrl($rssFeedUrl) ;
-            $model->setRssLastChecked($rssLastChecked) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
+            $model = new SearchModel();
+            $model->setId($id);
+            $model->setEngineName($engineName);
+            $model->setSearchName($searchName);
+            $model->setUrl($url);
+            $model->setRssFeedUrl($rssFeedUrl);
+            $model->setRssLastChecked($rssLastChecked);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
         } else {
-            $model = null ;
+            $model = null;
         }
-        return($model) ;
+        return ($model);
     }
 
     public function getSome($whereClause = '1 = 1')
@@ -171,42 +162,33 @@ SELECT id
     BY searchName
      , engineName
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result(
-            $id,
-            $engineName,
-            $searchName,
-            $url,
-            $rssFeedUrl,
-            $rssLastChecked,
-            $created,
-            $updated
-                          ) ;
-        $models = [] ;
+        $stmt->bind_result($id, $engineName, $searchName, $url, $rssFeedUrl, $rssLastChecked, $created, $updated);
+        $models = [];
         while ($stmt->fetch()) {
-            $model = new SearchModel() ;
-            $model->setId($id) ;
-            $model->setEngineName($engineName) ;
-            $model->setSearchName($searchName) ;
-            $model->setUrl($url) ;
-            $model->setRssFeedUrl($rssFeedUrl) ;
-            $model->setRssLastChecked($rssLastChecked) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
-            $models[] = $model ;
+            $model = new SearchModel();
+            $model->setId($id);
+            $model->setEngineName($engineName);
+            $model->setSearchName($searchName);
+            $model->setUrl($url);
+            $model->setRssFeedUrl($rssFeedUrl);
+            $model->setRssLastChecked($rssLastChecked);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $models[] = $model;
         }
-        return($models) ;
+        return ($models);
     }
 
     public function getAll()
     {
-        return $this->getSome() ;
+        return $this->getSome();
     }
 
     /**
@@ -223,16 +205,16 @@ SELECT COUNT( id )
   FROM search
  WHERE $whereClause
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result($count) ;
-        $stmt->fetch() ;
-        return($count) ;
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        return ($count);
     }
 
     /**
@@ -243,10 +225,11 @@ SQL;
      */
     public function countAll()
     {
-        return $this->countSome() ;
+        return $this->countSome();
     }
 
     /**
+     *
      * @param SearchModel $model
      * @see ControllerBase::add()
      */
@@ -267,49 +250,41 @@ INSERT search
      )
 VALUES ( ?, ?, ?, ?, ?, ?, NOW(), NOW() )
 SQL;
-                $id             = $model->getId() ;
-                $engineName     = $model->getEngineName() ;
-                $searchName     = $model->getSearchName() ;
-                $url            = $model->getUrl() ;
-                $rssFeedUrl     = $model->getRssFeedUrl() ;
-                $rssLastChecked = $model->getRssLastChecked() ;
-                $stmt           = $this->_dbh->prepare($query) ;
+                $id = $model->getId();
+                $engineName = $model->getEngineName();
+                $searchName = $model->getSearchName();
+                $url = $model->getUrl();
+                $rssFeedUrl = $model->getRssFeedUrl();
+                $rssLastChecked = $model->getRssLastChecked();
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param(
-                    'isssss',
-                    $id,
-                    $engineName,
-                    $searchName,
-                    $url,
-                    $rssFeedUrl,
-                    $rssLastChecked
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                if (! ($stmt->bind_param('isssss', $id, $engineName, $searchName, $url, $rssFeedUrl, $rssLastChecked))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
-                    throw new ControllerException('Failed to execute INSERT statement. ('
-                                                 . $this->_dbh->error .
-                                                 ')') ;
+                    throw new ControllerException('Failed to execute INSERT statement. (' . $this->_dbh->error . ')');
                 }
-                $newId = $stmt->insert_id ;
+                $newId = $stmt->insert_id;
                 /**
+                 *
                  * @SuppressWarnings checkAliases
                  */
                 if (! $stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $newId ;
+                return $newId;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.") ;
+            throw new ControllerException("Invalid data.");
         }
     }
 
     /**
+     *
      * @param SearchModel $model
      * @see ControllerBase::update()
      */
@@ -326,49 +301,40 @@ UPDATE search
      , rssLastChecked = ?
  WHERE id             = ?
 SQL;
-                $id             = $model->getId() ;
-                $engineName     = $model->getEngineName() ;
-                $searchName     = $model->getSearchName() ;
-                $url            = $model->getUrl() ;
-                $rssFeedUrl     = $model->getRssFeedUrl() ;
-                $rssLastChecked = $model->getRssLastChecked() ;
-                $stmt           = $this->_dbh->prepare($query) ;
+                $id = $model->getId();
+                $engineName = $model->getEngineName();
+                $searchName = $model->getSearchName();
+                $url = $model->getUrl();
+                $rssFeedUrl = $model->getRssFeedUrl();
+                $rssLastChecked = $model->getRssLastChecked();
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param(
-                    'sssssi',
-                    $engineName,
-                    $searchName,
-                    $url,
-                    $rssFeedUrl,
-                    $rssLastChecked,
-                    $id
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                if (! ($stmt->bind_param('sssssi', $engineName, $searchName, $url, $rssFeedUrl, $rssLastChecked, $id))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
-                if (!$stmt->execute()) {
-                    throw new ControllerException('Failed to execute UPDATE statement. ('
-                            . $this->_dbh->error .
-                            ')') ;
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute UPDATE statement. (' . $this->_dbh->error . ')');
                 }
                 /**
+                 *
                  * @SuppressWarnings checkAliases
                  */
-                if (!$stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                if (! $stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $id ;
+                return $id;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.") ;
+            throw new ControllerException("Invalid data.");
         }
     }
 
     public function delete($model)
     {
-        $this->_deleteModelById("DELETE FROM search WHERE id = ?", $model) ;
+        $this->_deleteModelById("DELETE FROM search WHERE id = ?", $model);
     }
 }

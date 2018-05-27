@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Application Status List View
@@ -30,26 +29,31 @@ class ApplicationStatusListView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType ;
+    private $_viewType;
+
     /** @var mixed */
-    private $_supportedViewTypes = [ 'html' => 1 ] ;
+    private $_supportedViewTypes = [
+        'html' => 1
+    ];
+
     /** @var ApplicationStatusModel[] */
-    private $_applicationStatusModels ;
+    private $_applicationStatusModels;
 
     /**
      * Class constructor
      *
-     * @param string View Type
+     * @param
+     *            string View Type
      * @throws ViewException
      */
     public function __construct($viewType = 'html', $applicationStatusModels = null)
     {
-        parent::__construct() ;
-        if (! isset($this->_supportedViewTypes[ $viewType ])) {
-            throw new ViewException("Unsupported view type\n") ;
+        parent::__construct();
+        if (! isset($this->_supportedViewTypes[$viewType])) {
+            throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType ;
-        $this->_applicationStatusModels = $applicationStatusModels ;
+        $this->_viewType = $viewType;
+        $this->_applicationStatusModels = $applicationStatusModels;
     }
 
     /**
@@ -78,8 +82,8 @@ class ApplicationStatusListView extends ListViewBase
 
 HTML;
         foreach ($this->_applicationStatusModels as $applicationStatus) {
-            $id   = $applicationStatus->getId() ;
-            $row  = $this->displayApplicationStatusRow($applicationStatus, 'list') ;
+            $id = $applicationStatus->getId();
+            $row = $this->displayApplicationStatusRow($applicationStatus, 'list');
             $body .= <<<HTML
     <tr id="ux$id">
       $row
@@ -87,9 +91,9 @@ HTML;
 
 HTML;
         }
-
-        $body .= "  </tbody>\n</table>\n" ;
-        return $body ;
+        
+        $body .= "  </tbody>\n</table>\n";
+        return $body;
     }
 
     /**
@@ -101,9 +105,9 @@ HTML;
     {
         switch ($this->_viewType) {
             case 'html':
-                return $this->_getHtmlView() ;
+                return $this->_getHtmlView();
             default:
-                throw new ViewException("Unsupported view type.") ;
+                throw new ViewException("Unsupported view type.");
         }
     }
 
@@ -111,20 +115,21 @@ HTML;
      * Return the display of an application status table row
      *
      * @param ApplicationStatusModel $applicationStatusModel
-     * @param string $displayMode 'add', 'edit', 'delete', 'list'
+     * @param string $displayMode
+     *            'add', 'edit', 'delete', 'list'
      * @return string
      */
     public function displayApplicationStatusRow($applicationStatusModel, $displayMode)
     {
-        $id              = $applicationStatusModel->getId() ;
-        $statusValue     = $applicationStatusModel->getStatusValue() ;
-        $style           = $applicationStatusModel->getStyle() ;
-        $isActive        = $applicationStatusModel->getIsActive() ;
-        $isActiveChecked = ($isActive) ? "checked=\"checked\"" : "" ;
-        $isActiveDisplay = ($isActive) ? "Yes" : "No" ;
-        $sortKey         = $applicationStatusModel->getSortKey() ;
-        $created         = $applicationStatusModel->getCreated() ;
-        $updated         = $applicationStatusModel->getUpdated() ;
+        $id = $applicationStatusModel->getId();
+        $statusValue = $applicationStatusModel->getStatusValue();
+        $style = $applicationStatusModel->getStyle();
+        $isActive = $applicationStatusModel->getIsActive();
+        $isActiveChecked = ($isActive) ? "checked=\"checked\"" : "";
+        $isActiveDisplay = ($isActive) ? "Yes" : "No";
+        $sortKey = $applicationStatusModel->getSortKey();
+        $created = $applicationStatusModel->getCreated();
+        $updated = $applicationStatusModel->getUpdated();
         switch ($displayMode) {
             case 'add':
                 return <<<RETVAL
@@ -179,45 +184,49 @@ RETVAL;
 
 RETVAL;
         }
-        return "" ;
+        return "";
     }
 
     /**
+     *
      * @return ApplicationStatusModel[]
      */
     public function getApplicationStatusModels()
     {
-        return $this->_applicationStatusModels ;
+        return $this->_applicationStatusModels;
     }
 
     /**
+     *
      * @param ApplicationStatusModel[] $applicationStatusModels
      */
     public function setApplicationStatusModels($applicationStatusModels)
     {
-        $this->_applicationStatusModels = $applicationStatusModels ;
+        $this->_applicationStatusModels = $applicationStatusModels;
     }
 
     /**
      * Get application status SELECT list
      *
-     * @param string $id Field ID
-     * @param integer $value The selected value
+     * @param string $id
+     *            Field ID
+     * @param integer $value
+     *            The selected value
      * @return string
      */
     public function getApplicationStatusList($id, $value)
     {
-        $retVal = "<select id=\"applicationStatusId$id\" >\n  <option value=\"\">---</option>" ;
-        $applicationStatusController = new ApplicationStatusController() ;
-        $applicationStatuses = $applicationStatusController->getAll() ;
+        $retVal = "<select id=\"applicationStatusId$id\" >\n  <option value=\"\">---</option>";
+        $applicationStatusController = new ApplicationStatusController();
+        $applicationStatuses = $applicationStatusController->getAll();
         foreach ($applicationStatuses as $applicationStatus) {
-            $selected = ($applicationStatus->getId() === $value) ? "selected=\"selected\"" : "" ;
-            $asValue  = $applicationStatus->getStatusValue() ;
-            $asStyle  = $applicationStatus->getStyle() ;
-            $asId     = $applicationStatus->getId() ;
-            $retVal   .= "  <option value=\"$asId\" style=\"$asStyle\" $selected>$asValue</option>\n" ;
+            $selected = ($applicationStatus->getId() === $value) ? "selected=\"selected\"" : "";
+            $asValue = $applicationStatus->getStatusValue();
+            $asStyle = $applicationStatus->getStyle();
+            $asId = $applicationStatus->getId();
+            $retVal .= "  <option value=\"$asId\" style=\"$asStyle\" $selected>$asValue</option>\n";
         }
-        $retVal .= "</select>\n" ;
-        return $retVal ;
+        $retVal .= "</select>\n";
+        return $retVal;
     }
 }

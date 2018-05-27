@@ -20,25 +20,26 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * AuthTicket Controller
  */
 class AuthTicketController extends ControllerBase
 {
-    private $_expireSeconds = 3600 ;
+
+    private $_expireSeconds = 3600;
 
     /**
      * Class constructor
      *
-     * @param string $readWriteMode "read", "write", or "admin"
+     * @param string $readWriteMode
+     *            "read", "write", or "admin"
      * @throws ControllerException
      */
     public function __construct($readWriteMode = 'write')
     {
-        parent::__construct($readWriteMode) ;
+        parent::__construct($readWriteMode);
     }
 
     /**
@@ -48,8 +49,8 @@ class AuthTicketController extends ControllerBase
      */
     public function dropTable()
     {
-        $sql = "DROP TABLE IF EXISTS auth_ticket" ;
-        $this->_doDDL($sql) ;
+        $sql = "DROP TABLE IF EXISTS auth_ticket";
+        $this->_doDDL($sql);
     }
 
     /**
@@ -69,7 +70,7 @@ CREATE TABLE IF NOT EXISTS auth_ticket (
   , KEY expires_idx ( expires )
 )
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
     }
 
     /**
@@ -81,7 +82,7 @@ SQL;
      */
     public function get($auth_ticket)
     {
-        $now = date('Y-m-d H:i:s', time()) ;
+        $now = date('Y-m-d H:i:s', time());
         $sql = <<<SQL
 SELECT created
      , updated
@@ -90,28 +91,28 @@ SELECT created
  WHERE auth_ticket = ?
    AND expires >= '$now'
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Prepared statement failed for ' . $sql) ;
+            throw new ControllerException('Prepared statement failed for ' . $sql);
         }
         if (! ($stmt->bind_param('s', $auth_ticket))) {
-            throw new ControllerException('Binding parameters for prepared statement failed.') ;
+            throw new ControllerException('Binding parameters for prepared statement failed.');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $created = $updated = $expires = null ;
+        $created = $updated = $expires = null;
         $stmt->bind_result($created, $updated, $expires);
         if (! $stmt->fetch()) {
-            # Record is missing.
+            // Record is missing.
             return FALSE;
         }
-        $atm = new AuthTicketModel() ;
-        $atm->setAuthTicket($auth_ticket) ;
-        $atm->setCreated($created) ;
-        $atm->setUpdated($updated) ;
-        $atm->setExpires($expires) ;
-        return $atm ;
+        $atm = new AuthTicketModel();
+        $atm->setAuthTicket($auth_ticket);
+        $atm->setCreated($created);
+        $atm->setUpdated($updated);
+        $atm->setExpires($expires);
+        return $atm;
     }
 
     /**
@@ -123,7 +124,7 @@ SQL;
      */
     public function getAll()
     {
-        $models = [] ;
+        $models = [];
         $sql = <<<SQL
 SELECT auth_ticket
      , created
@@ -132,33 +133,29 @@ SELECT auth_ticket
   FROM auth_ticket
  ORDER BY expires DESC
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $auth_ticket = $created = $updated = $expires = null ;
-        $stmt->bind_result(
-            $auth_ticket,
-            $created,
-            $updated,
-            $expires
-                          ) ;
+        $auth_ticket = $created = $updated = $expires = null;
+        $stmt->bind_result($auth_ticket, $created, $updated, $expires);
         while ($stmt->fetch()) {
-            $model = new AuthTicketModel() ;
-            $model->setAuthTicket($auth_ticket) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
-            $model->setExpires($expires) ;
-            $models[] = $model ;
+            $model = new AuthTicketModel();
+            $model->setAuthTicket($auth_ticket);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setExpires($expires);
+            $models[] = $model;
         }
-        return($models) ;
+        return ($models);
     }
 
     /**
-     * Add a new AuthTicket. Tickets will always expire in $this->_expireSeconds seconds.
+     * Add a new AuthTicket.
+     * Tickets will always expire in $this->_expireSeconds seconds.
      *
      * @param AuthTicketModel $model
      * @throws ControllerException
@@ -169,46 +166,38 @@ SQL;
     {
         if ($model->validateForAdd()) {
             try {
-                $query = 'INSERT auth_ticket'
-                           . ' ( auth_ticket'
-                            . ', created'
-                            . ', updated'
-                            . ', expires'
-                           . ' )'
-                      . ' VALUES ( ?, NOW(), NOW(), ? )'
-                      . ' ON DUPLICATE KEY UPDATE expires = ?';
-                $stmt = $this->_dbh->prepare($query) ;
+                $query = 'INSERT auth_ticket' . ' ( auth_ticket' . ', created' . ', updated' . ', expires' . ' )' . ' VALUES ( ?, NOW(), NOW(), ? )' . ' ON DUPLICATE KEY UPDATE expires = ?';
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                $authTicket = $model->getAuthTicket() ;
-                $expires    = date('Y-m-d H:i:m', time() + $this->_expireSeconds) ;
-                if (! ($stmt->bind_param(
-                    'sss',
-                    $authTicket,
-                    $expires,
-                    $expires
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                $authTicket = $model->getAuthTicket();
+                $expires = date('Y-m-d H:i:m', time() + $this->_expireSeconds);
+                if (! ($stmt->bind_param('sss', $authTicket, $expires, $expires))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
-                    throw new ControllerException('Failed to execute INSERT statement. Is this duplicate data? (' . $this->_dbh->error . ')') ;
+                    throw new ControllerException('Failed to execute INSERT statement. Is this duplicate data? (' . $this->_dbh->error . ')');
                 }
-                /** @SuppressWarnings checkAliases */
+                /**
+                 *
+                 * @SuppressWarnings checkAliases
+                 */
                 if (! $stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $authTicket ;
+                return $authTicket;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException('Invalid data') ;
+            throw new ControllerException('Invalid data');
         }
     }
 
     /**
-     * Update an AuthTicket. Note that every update to this record will always
+     * Update an AuthTicket.
+     * Note that every update to this record will always
      * reset the expires time to now + $this->_expireSeconds seconds.
      *
      * @param AuthTicketModel $model
@@ -220,36 +209,32 @@ SQL;
     {
         if ($model->validateForUpdate()) {
             try {
-                $sql = 'UPDATE auth_ticket'
-                     .   ' SET expires = ?'
-                     . ' WHERE auth_ticket = ?'
-                     ;
-                $stmt = $this->_dbh->prepare($sql) ;
+                $sql = 'UPDATE auth_ticket' . ' SET expires = ?' . ' WHERE auth_ticket = ?';
+                $stmt = $this->_dbh->prepare($sql);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $sql) ;
+                    throw new ControllerException('Prepared statement failed for ' . $sql);
                 }
-                $authTicket  = $model->getAuthTicket() ;
-                $expires     = date('Y-m-d H:i:s', time() + $this->_expireSeconds) ;
-                if (! ($stmt->bind_param(
-                    'ss',
-                    $expires,
-                    $authTicket
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                $authTicket = $model->getAuthTicket();
+                $expires = date('Y-m-d H:i:s', time() + $this->_expireSeconds);
+                if (! ($stmt->bind_param('ss', $expires, $authTicket))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
-                    throw new ControllerException('Failed to execute INSERT statement. Is this duplicate data? (' . $this->_dbh->error . ')') ;
+                    throw new ControllerException('Failed to execute INSERT statement. Is this duplicate data? (' . $this->_dbh->error . ')');
                 }
-                /** @SuppressWarnings checkAliases */
+                /**
+                 *
+                 * @SuppressWarnings checkAliases
+                 */
                 if (! $stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $authTicket ;
+                return $authTicket;
             } catch (\Exception $e) {
-                throw new ControllerException("Update failed." . $e->getMessage()) ;
+                throw new ControllerException("Update failed." . $e->getMessage());
             }
         } else {
-            throw new ControllerException('Invalid data') ;
+            throw new ControllerException('Invalid data');
         }
     }
 
@@ -261,27 +246,26 @@ SQL;
      */
     public function delete($model)
     {
-        $authTicket = $model->getAuthTicket() ;
-        $sql        = "DELETE FROM auth_ticket"
-                    . " WHERE auth_ticket = ?"
-                    ;
-        $stmt = $this->_dbh->prepare($sql) ;
-        if (!$stmt) {
-            throw new ControllerException('Prepared statement failed for ' . $sql) ;
+        $authTicket = $model->getAuthTicket();
+        $sql = "DELETE FROM auth_ticket" . " WHERE auth_ticket = ?";
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt) {
+            throw new ControllerException('Prepared statement failed for ' . $sql);
         }
         if (! $stmt->bind_param('s', $authTicket)) {
-            throw new ControllerException('Binding parameters for prepared statement failed.') ;
+            throw new ControllerException('Binding parameters for prepared statement failed.');
         }
-        if (!$stmt->execute()) {
-            throw new ControllerException('Failed to execute DELETE statement. (' . $this->_dbh->error . ')') ;
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute DELETE statement. (' . $this->_dbh->error . ')');
         }
         /**
+         *
          * @SuppressWarnings checkAliases
          */
-        if (!$stmt->close()) {
-            throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+        if (! $stmt->close()) {
+            throw new ControllerException('Something broke while trying to close the prepared statement.');
         }
-        return ;
+        return;
     }
 
     /**
@@ -291,10 +275,10 @@ SQL;
      */
     public function cleanExpiredTickets()
     {
-        $dateStr = date('Y-m-d H:i:s', time() - $this->_expireSeconds) ;
-        $sql = "DELETE FROM auth_ticket WHERE expires < '$dateStr'" ;
+        $dateStr = date('Y-m-d H:i:s', time() - $this->_expireSeconds);
+        $sql = "DELETE FROM auth_ticket WHERE expires < '$dateStr'";
         if (! $this->_dbh->query($sql)) {
-            throw new ControllerException('Failed to execute DELETE statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute DELETE statement. (' . $this->_dbh->error . ')');
         }
     }
 }

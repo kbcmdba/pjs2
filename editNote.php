@@ -20,32 +20,31 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$config = new Config() ;
-$webPage = new PJSWebPage($config->getTitle() . ' - Edit Note') ;
-$act = Tools::Param('act') ;
+$config = new Config();
+$webPage = new PJSWebPage($config->getTitle() . ' - Edit Note');
+$act = Tools::Param('act');
 if ("Edit Note" === $act) {
-    $noteModel = new NoteModel() ;
-    $noteModel->populateFromForm() ;
+    $noteModel = new NoteModel();
+    $noteModel->populateFromForm();
     if (! $noteModel->validateForUpdate()) {
-        $view = new NoteFormView('Edit Note', $noteModel) ;
-        $body = "<h2>Invalid data</h2>\n" . $view->getForm() ;
+        $view = new NoteFormView('Edit Note', $noteModel);
+        $body = "<h2>Invalid data</h2>\n" . $view->getForm();
     } else {
-        $noteController = new NoteController() ;
-        $newId = $noteController->update($noteModel) ;
+        $noteController = new NoteController();
+        $newId = $noteController->update($noteModel);
         if ($newId > 0) {
             $body = "Edited note # " . $newId . "<br />\n";
         }
     }
 } else {
-    $noteController = new NoteController() ;
-    $noteModel = $noteController->get(Tools::param('id')) ;
-    $view = new NoteFormView('Edit Note', $noteModel) ;
-    $body = $view->getForm() ;
+    $noteController = new NoteController();
+    $noteModel = $noteController->get(Tools::param('id'));
+    $view = new NoteFormView('Edit Note', $noteModel);
+    $body = $view->getForm();
 }
-$webPage->setBody($body) ;
-$webPage->displayPage() ;
+$webPage->setBody($body);
+$webPage->displayPage();

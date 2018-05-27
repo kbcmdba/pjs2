@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 class JobKeywordMapController extends ControllerBase
 {
@@ -29,20 +28,21 @@ class JobKeywordMapController extends ControllerBase
     /**
      * Class constructor
      *
-     * @param string $readWriteMode "read", "write", or "admin"
+     * @param string $readWriteMode
+     *            "read", "write", or "admin"
      * @throws ControllerException
      */
     public function __construct($readWriteMode = 'write')
     {
-        parent::__construct($readWriteMode) ;
+        parent::__construct($readWriteMode);
     }
-    
+
     public function dropTable()
     {
-        $sql = "DROP TABLE IF EXISTS jobKeywordMap" ;
-        $this->_doDDL($sql) ;
+        $sql = "DROP TABLE IF EXISTS jobKeywordMap";
+        $this->_doDDL($sql);
     }
-    
+
     public function createTable()
     {
         $sql = <<<SQL
@@ -67,10 +67,11 @@ CREATE TABLE IF NOT EXISTS jobKeywordMap
      , UNIQUE KEY uk_jobKeyword ( jobId, keywordId )
      )
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
     }
 
     /**
+     *
      * @param integer $id
      * @see ControllerBase::get()
      */
@@ -86,38 +87,32 @@ SELECT id
   FROM jobKeywordMap
  WHERE id = ?
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if ((! $stmt) || (! $stmt->bind_param('i', $id))) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result(
-            $id,
-            $jobId,
-            $keywordId,
-            $sortKey,
-            $created,
-            $updated
-                                 )) {
-            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
+        if (! $stmt->bind_result($id, $jobId, $keywordId, $sortKey, $created, $updated)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         if ($stmt->fetch()) {
-            $model = new JobKeywordMapModel() ;
-            $model->setId($id) ;
-            $model->setJobId($jobId) ;
-            $model->setKeywordId($keywordId) ;
-            $model->setSortKey($sortKey) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
+            $model = new JobKeywordMapModel();
+            $model->setId($id);
+            $model->setJobId($jobId);
+            $model->setKeywordId($keywordId);
+            $model->setSortKey($sortKey);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
         } else {
-            $model = null ;
+            $model = null;
         }
-        return($model) ;
+        return ($model);
     }
 
     /**
+     *
      * @param string $whereClause
      * @see ControllerBase::getSome()
      */
@@ -135,41 +130,35 @@ SELECT id
  ORDER
     BY sortKey
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result(
-            $id,
-            $jobId,
-            $keywordId,
-            $sortKey,
-            $created,
-            $updated
-                          ) ;
-        $models = [] ;
+        $stmt->bind_result($id, $jobId, $keywordId, $sortKey, $created, $updated);
+        $models = [];
         while ($stmt->fetch()) {
-            $model = new JobKeywordMapModel() ;
-            $model->setId($id) ;
-            $model->setJobId($jobId) ;
-            $model->setKeywordId($keywordId) ;
-            $model->setSortKey($sortKey) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
-            $models[] = $model ;
+            $model = new JobKeywordMapModel();
+            $model->setId($id);
+            $model->setJobId($jobId);
+            $model->setKeywordId($keywordId);
+            $model->setSortKey($sortKey);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $models[] = $model;
         }
-        return($models) ;
+        return ($models);
     }
 
     public function getAll()
     {
-        return $this->getSome() ;
+        return $this->getSome();
     }
 
     /**
+     *
      * @param JobKeywordMapModel $model
      * @see ControllerBase::add()
      */
@@ -188,43 +177,38 @@ INSERT jobKeywordMap
      )
 VALUES ( NULL, ?, ?, ?, NOW(), NOW() )
 SQL;
-                $jobId     = $model->getJobId() ;
-                $keywordId = $model->getKeywordId() ;
-                $sortKey   = $model->getSortKey() ;
-                $stmt      = $this->_dbh->prepare($query) ;
+                $jobId = $model->getJobId();
+                $keywordId = $model->getKeywordId();
+                $sortKey = $model->getSortKey();
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param(
-                    'iii',
-                    $jobId,
-                    $keywordId,
-                    $sortKey
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                if (! ($stmt->bind_param('iii', $jobId, $keywordId, $sortKey))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
-                    throw new ControllerException('Failed to execute INSERT statement. ('
-                                                 . $this->_dbh->error .
-                                                 ')') ;
+                    throw new ControllerException('Failed to execute INSERT statement. (' . $this->_dbh->error . ')');
                 }
-                $newId = $stmt->insert_id ;
+                $newId = $stmt->insert_id;
                 /**
+                 *
                  * @SuppressWarnings checkAliases
                  */
                 if (! $stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $newId ;
+                return $newId;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.") ;
+            throw new ControllerException("Invalid data.");
         }
     }
 
     /**
+     *
      * @param JobKeywordMapModel $model
      * @see ControllerBase::update()
      */
@@ -239,49 +223,43 @@ UPDATE jobKeywordMap
      , sortKey = ?
  WHERE id = ?
 SQL;
-                $id        = $model->getId() ;
-                $jobId     = $model->getJobId() ;
-                $keywordId = $model->getKeywordId() ;
-                $sortKey   = $model->getSortKey() ;
-                $stmt      = $this->_dbh->prepare($query) ;
+                $id = $model->getId();
+                $jobId = $model->getJobId();
+                $keywordId = $model->getKeywordId();
+                $sortKey = $model->getSortKey();
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param(
-                    'iiii',
-                    $jobId,
-                    $keywordId,
-                    $sortKey,
-                    $id
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                if (! ($stmt->bind_param('iiii', $jobId, $keywordId, $sortKey, $id))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
-                if (!$stmt->execute()) {
-                    throw new ControllerException('Failed to execute UPDATE statement. ('
-                            . $this->_dbh->error .
-                            ')') ;
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute UPDATE statement. (' . $this->_dbh->error . ')');
                 }
                 /**
+                 *
                  * @SuppressWarnings checkAliases
                  */
-                if (!$stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                if (! $stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $id ;
+                return $id;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.") ;
+            throw new ControllerException("Invalid data.");
         }
     }
 
     /**
+     *
      * @param JobKeywordMapModel $model
      * @see ControllerBase::delete()
      */
     public function delete($model)
     {
-        $this->_deleteModelById("DELETE FROM jobKeywordMap WHERE id = ?", $model) ;
+        $this->_deleteModelById("DELETE FROM jobKeywordMap WHERE id = ?", $model);
     }
 }

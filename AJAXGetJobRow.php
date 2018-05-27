@@ -20,30 +20,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$auth = new Auth() ;
+$auth = new Auth();
 if (! $auth->isAuthorized()) {
-    $auth->forbidden() ;
-    exit(0) ; // Should never get here but just in case...
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
 }
-$result   = "OK" ;
-$id       = Tools::param('id') ;
-$mode     = Tools::param('mode') ;
-$rowStyle = Tools::param('rowStyle') ;
-$html     = '' ;
-$jobListView = new JobListView('html', null) ;
+$result = "OK";
+$id = Tools::param('id');
+$mode = Tools::param('mode');
+$rowStyle = Tools::param('rowStyle');
+$html = '';
+$jobListView = new JobListView('html', null);
 if ('add' == $mode) {
-    $jobModel = new JobModel() ;
-    $jobModel->setId($id) ;
-    $htmlRow = $jobListView->displayJobRow($jobModel, $mode, $rowStyle) ;
+    $jobModel = new JobModel();
+    $jobModel->setId($id);
+    $htmlRow = $jobListView->displayJobRow($jobModel, $mode, $rowStyle);
 } else {
-    $jobController = new JobController() ;
-    $jobModel = $jobController->get($id) ;
-    $htmlRow  = $jobListView->displayJobRow($jobModel, $mode, $rowStyle) ;
+    $jobController = new JobController();
+    $jobModel = $jobController->get($id);
+    $htmlRow = $jobListView->displayJobRow($jobModel, $mode, $rowStyle);
 }
-$result = [ 'result' => $result, 'row' => $htmlRow ] ;
-echo json_encode($result) . PHP_EOL ;
+$result = [
+    'result' => $result,
+    'row' => $htmlRow
+];
+echo json_encode($result) . PHP_EOL;

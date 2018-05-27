@@ -20,52 +20,50 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$auth = new Auth() ;
+$auth = new Auth();
 if (! $auth->isAuthorized()) {
-    $auth->forbidden() ;
-    exit(0) ; // Should never get here but just in case...
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
 }
-$id              = Tools::param('id') ;
-$companyId       = Tools::param('contactCompanyId') ;
-$name            = Tools::param('contactName') ;
-$email           = Tools::param('contactEmail') ;
-$phone           = Tools::param('contactPhone') ;
-$alternatePhone  = Tools::param('contactAlternatePhone') ;
-$rowId           = Tools::param('rowId') ;
+$id = Tools::param('id');
+$companyId = Tools::param('contactCompanyId');
+$name = Tools::param('contactName');
+$email = Tools::param('contactEmail');
+$phone = Tools::param('contactPhone');
+$alternatePhone = Tools::param('contactAlternatePhone');
+$rowId = Tools::param('rowId');
 
-$result          = 'OK' ;
-$contactId       = '' ;
-$contactListView = new ContactListView('html', null) ;
+$result = 'OK';
+$contactId = '';
+$contactListView = new ContactListView('html', null);
 try {
-    $contactController = new ContactController() ;
-    $contactModel      = $contactController->get($id) ;
-    $contactModel->setContactCompanyId($companyId) ;
-    $contactModel->setContactName($name) ;
-    $contactModel->setContactEmail($email) ;
-    $contactModel->setContactPhone($phone) ;
-    $contactModel->setContactAlternatePhone($alternatePhone) ;
-
-    $result = $contactController->update($contactModel) ;
-
+    $contactController = new ContactController();
+    $contactModel = $contactController->get($id);
+    $contactModel->setContactCompanyId($companyId);
+    $contactModel->setContactName($name);
+    $contactModel->setContactEmail($email);
+    $contactModel->setContactPhone($phone);
+    $contactModel->setContactAlternatePhone($alternatePhone);
+    
+    $result = $contactController->update($contactModel);
+    
     if (! ($result > 0)) {
-        throw new ControllerException("Update failed.") ;
+        throw new ControllerException("Update failed.");
     }
-    $row = $contactListView->displayContactRow($contactModel, 'list') ;
-    $result = 'OK' ;
+    $row = $contactListView->displayContactRow($contactModel, 'list');
+    $result = 'OK';
 } catch (ControllerException $e) {
-    $result = 'FAILED' ;
-    $row = $contactListView->displayContactRow(
-        $contactModel,
-        'update',
-        'Update Contact record failed. '
-                                             . $e->getMessage()
-                                             ) ;
+    $result = 'FAILED';
+    $row = $contactListView->displayContactRow($contactModel, 'update', 'Update Contact record failed. ' . $e->getMessage());
 }
 
-$result = [ 'result' => $result, 'row' => $row, 'id' => $contactId ] ;
-echo json_encode($result) . PHP_EOL ;
+$result = [
+    'result' => $result,
+    'row' => $row,
+    'id' => $contactId
+];
+echo json_encode($result) . PHP_EOL;

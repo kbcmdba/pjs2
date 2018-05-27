@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 class CompanyController extends ControllerBase
 {
@@ -29,18 +28,19 @@ class CompanyController extends ControllerBase
     /**
      * Class constructor
      *
-     * @param string $readWriteMode "read", "write", or "admin"
+     * @param string $readWriteMode
+     *            "read", "write", or "admin"
      * @throws ControllerException
      */
     public function __construct($readWriteMode = 'write')
     {
-        parent::__construct($readWriteMode) ;
+        parent::__construct($readWriteMode);
     }
 
     public function dropTable()
     {
-        $sql = "DROP TABLE IF EXISTS company" ;
-        $this->_doDDL($sql) ;
+        $sql = "DROP TABLE IF EXISTS company";
+        $this->_doDDL($sql);
     }
 
     public function createTable()
@@ -69,18 +69,19 @@ CREATE TABLE IF NOT EXISTS company
                        ON UPDATE CASCADE ON DELETE SET NULL
      )
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
     }
 
     public function dropTriggers()
     {
-        $sqls = [ "DROP TRIGGER IF EXISTS companyBeforeDeleteTrigger ;"
-                , "DROP TRIGGER IF EXISTS companyAfterDeleteTrigger ;"
-                , "DROP TRIGGER IF EXISTS companyBeforeUpdateTrigger ;"
-                , "DROP TRIGGER IF EXISTS companyAfterUpdateTrigger ;"
-                ] ;
+        $sqls = [
+            "DROP TRIGGER IF EXISTS companyBeforeDeleteTrigger ;",
+            "DROP TRIGGER IF EXISTS companyAfterDeleteTrigger ;",
+            "DROP TRIGGER IF EXISTS companyBeforeUpdateTrigger ;",
+            "DROP TRIGGER IF EXISTS companyAfterUpdateTrigger ;"
+        ];
         foreach ($sqls as $sql) {
-            $this->_doDDL($sql) ;
+            $this->_doDDL($sql);
         }
     }
 
@@ -98,7 +99,7 @@ BEFORE DELETE
           AND appliesToId = OLD.id ;
    END
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
         $sql = <<<SQL
 CREATE TRIGGER companyBeforeUpdateTrigger
 BEFORE UPDATE
@@ -115,7 +116,7 @@ BEFORE UPDATE
        END IF ;
    END
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
     }
 
     public function get($id)
@@ -137,49 +138,35 @@ SELECT id
   FROM company
  WHERE id = ?
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if ((! $stmt) || (! $stmt->bind_param('i', $id))) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result(
-            $id,
-            $agencyCompanyId,
-            $companyName,
-            $companyAddress1,
-            $companyAddress2,
-            $companyCity,
-            $companyState,
-            $companyZip,
-            $companyPhone,
-            $companyUrl,
-            $created,
-            $updated,
-            $lastContacted
-                                 )) {
-            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
+        if (! $stmt->bind_result($id, $agencyCompanyId, $companyName, $companyAddress1, $companyAddress2, $companyCity, $companyState, $companyZip, $companyPhone, $companyUrl, $created, $updated, $lastContacted)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         if ($stmt->fetch()) {
-            $model = new CompanyModel() ;
-            $model->setId($id) ;
-            $model->setAgencyCompanyId($agencyCompanyId) ;
-            $model->setCompanyName($companyName) ;
-            $model->setCompanyAddress1($companyAddress1) ;
-            $model->setCompanyAddress2($companyAddress2) ;
-            $model->setCompanyCity($companyCity) ;
-            $model->setCompanyState($companyState) ;
-            $model->setCompanyZip($companyZip) ;
-            $model->setCompanyPhone($companyPhone) ;
-            $model->setCompanyUrl($companyUrl) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
-            $model->setLastContacted($lastContacted) ;
+            $model = new CompanyModel();
+            $model->setId($id);
+            $model->setAgencyCompanyId($agencyCompanyId);
+            $model->setCompanyName($companyName);
+            $model->setCompanyAddress1($companyAddress1);
+            $model->setCompanyAddress2($companyAddress2);
+            $model->setCompanyCity($companyCity);
+            $model->setCompanyState($companyState);
+            $model->setCompanyZip($companyZip);
+            $model->setCompanyPhone($companyPhone);
+            $model->setCompanyUrl($companyUrl);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setLastContacted($lastContacted);
         } else {
-            $model = null ;
+            $model = null;
         }
-        return($model) ;
+        return ($model);
     }
 
     public function getSome($whereClause = '1 = 1')
@@ -203,57 +190,44 @@ SELECT id
  ORDER
     BY companyName
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result(
-            $id,
-            $agencyCompanyId,
-            $companyName,
-            $companyAddress1,
-            $companyAddress2,
-            $companyCity,
-            $companyState,
-            $companyZip,
-            $companyPhone,
-            $companyUrl,
-            $created,
-            $updated,
-            $lastContacted
-                                 )) {
-            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
+        if (! $stmt->bind_result($id, $agencyCompanyId, $companyName, $companyAddress1, $companyAddress2, $companyCity, $companyState, $companyZip, $companyPhone, $companyUrl, $created, $updated, $lastContacted)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
-        $models = [] ;
+        $models = [];
         while ($stmt->fetch()) {
-            $model = new CompanyModel() ;
-            $model->setId($id) ;
-            $model->setAgencyCompanyId($agencyCompanyId) ;
-            $model->setCompanyName($companyName) ;
-            $model->setCompanyAddress1($companyAddress1) ;
-            $model->setCompanyAddress2($companyAddress2) ;
-            $model->setCompanyCity($companyCity) ;
-            $model->setCompanyState($companyState) ;
-            $model->setCompanyZip($companyZip) ;
-            $model->setCompanyPhone($companyPhone) ;
-            $model->setCompanyUrl($companyUrl) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
-            $model->setLastContacted($lastContacted) ;
-            $models[] = $model ;
+            $model = new CompanyModel();
+            $model->setId($id);
+            $model->setAgencyCompanyId($agencyCompanyId);
+            $model->setCompanyName($companyName);
+            $model->setCompanyAddress1($companyAddress1);
+            $model->setCompanyAddress2($companyAddress2);
+            $model->setCompanyCity($companyCity);
+            $model->setCompanyState($companyState);
+            $model->setCompanyZip($companyZip);
+            $model->setCompanyPhone($companyPhone);
+            $model->setCompanyUrl($companyUrl);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setLastContacted($lastContacted);
+            $models[] = $model;
         }
-        return($models) ;
+        return ($models);
     }
 
     public function getAll()
     {
-        return $this->getSome() ;
+        return $this->getSome();
     }
 
     /**
+     *
      * @param CompanyModel $model
      * @see ControllerBase::add()
      */
@@ -279,59 +253,47 @@ INSERT company
      )
 VALUES ( NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ? )
 SQL;
-                $agencyCompanyId = $model->getAgencyCompanyId() ;
-                $companyName     = $model->getCompanyName() ;
-                $companyAddress1 = $model->getCompanyAddress1() ;
-                $companyAddress2 = $model->getCompanyAddress2() ;
-                $companyCity     = $model->getCompanyCity() ;
-                $companyState    = $model->getCompanyState() ;
-                $companyZip      = $model->getCompanyZip() ;
-                $companyPhone    = $model->getCompanyPhone() ;
-                $companyUrl      = $model->getCompanyUrl() ;
-                $created         = $model->getCreated() ;
-                $updated         = $model->getUpdated() ;
-                $lastContacted   = $model->getLastContacted() ;
-                $stmt            = $this->_dbh->prepare($query) ;
+                $agencyCompanyId = $model->getAgencyCompanyId();
+                $companyName = $model->getCompanyName();
+                $companyAddress1 = $model->getCompanyAddress1();
+                $companyAddress2 = $model->getCompanyAddress2();
+                $companyCity = $model->getCompanyCity();
+                $companyState = $model->getCompanyState();
+                $companyZip = $model->getCompanyZip();
+                $companyPhone = $model->getCompanyPhone();
+                $companyUrl = $model->getCompanyUrl();
+                $created = $model->getCreated();
+                $updated = $model->getUpdated();
+                $lastContacted = $model->getLastContacted();
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param(
-                    'isssssssss',
-                    $agencyCompanyId,
-                    $companyName,
-                    $companyAddress1,
-                    $companyAddress2,
-                    $companyCity,
-                    $companyState,
-                    $companyZip,
-                    $companyPhone,
-                    $companyUrl,
-                    $lastContacted
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                if (! ($stmt->bind_param('isssssssss', $agencyCompanyId, $companyName, $companyAddress1, $companyAddress2, $companyCity, $companyState, $companyZip, $companyPhone, $companyUrl, $lastContacted))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
-                    throw new ControllerException('Failed to execute INSERT statement. ('
-                                                 . $this->_dbh->error .
-                                                 ')') ;
+                    throw new ControllerException('Failed to execute INSERT statement. (' . $this->_dbh->error . ')');
                 }
-                $newId = $stmt->insert_id ;
+                $newId = $stmt->insert_id;
                 /**
+                 *
                  * @SuppressWarnings checkAliases
                  */
                 if (! $stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $newId ;
+                return $newId;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.") ;
+            throw new ControllerException("Invalid data.");
         }
     }
 
     /**
+     *
      * @var CompanyModel $companyModel
      */
     public function update($companyModel)
@@ -352,57 +314,45 @@ UPDATE company
      , lastContacted = ?
  WHERE id = ?
 SQL;
-                $id              = $companyModel->getId() ;
-                $agencyCompanyId = $companyModel->getAgencyCompanyId() ;
-                $companyName     = $companyModel->getCompanyName() ;
-                $companyAddress1 = $companyModel->getCompanyAddress1() ;
-                $companyAddress2 = $companyModel->getCompanyAddress2() ;
-                $companyCity     = $companyModel->getCompanyCity() ;
-                $companyState    = $companyModel->getCompanyState() ;
-                $companyZip      = $companyModel->getCompanyZip() ;
-                $companyPhone    = $companyModel->getCompanyPhone() ;
-                $companyUrl      = $companyModel->getCompanyUrl() ;
-                $lastContacted   = $companyModel->getLastContacted() ;
-                $stmt       = $this->_dbh->prepare($query) ;
+                $id = $companyModel->getId();
+                $agencyCompanyId = $companyModel->getAgencyCompanyId();
+                $companyName = $companyModel->getCompanyName();
+                $companyAddress1 = $companyModel->getCompanyAddress1();
+                $companyAddress2 = $companyModel->getCompanyAddress2();
+                $companyCity = $companyModel->getCompanyCity();
+                $companyState = $companyModel->getCompanyState();
+                $companyZip = $companyModel->getCompanyZip();
+                $companyPhone = $companyModel->getCompanyPhone();
+                $companyUrl = $companyModel->getCompanyUrl();
+                $lastContacted = $companyModel->getLastContacted();
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param(
-                    'isssssssssi',
-                    $agencyCompanyId,
-                    $companyName,
-                    $companyAddress1,
-                    $companyAddress2,
-                    $companyCity,
-                    $companyState,
-                    $companyZip,
-                    $companyPhone,
-                    $companyUrl,
-                    $lastContacted,
-                    $id
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                if (! ($stmt->bind_param('isssssssssi', $agencyCompanyId, $companyName, $companyAddress1, $companyAddress2, $companyCity, $companyState, $companyZip, $companyPhone, $companyUrl, $lastContacted, $id))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
-                if (!$stmt->execute()) {
-                    throw new ControllerException('Failed to execute UPDATE statement. (' . $this->_dbh->error . ')') ;
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute UPDATE statement. (' . $this->_dbh->error . ')');
                 }
                 /**
+                 *
                  * @SuppressWarnings checkAliases
                  */
-                if (!$stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                if (! $stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $id ;
+                return $id;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.") ;
+            throw new ControllerException("Invalid data.");
         }
     }
 
     public function delete($companyModel)
     {
-        $this->_deleteModelById("DELETE FROM company WHERE id = ?", $companyModel) ;
+        $this->_deleteModelById("DELETE FROM company WHERE id = ?", $companyModel);
     }
 }

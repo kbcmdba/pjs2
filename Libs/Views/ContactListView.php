@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Contact List View
@@ -30,27 +29,32 @@ class ContactListView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType ;
+    private $_viewType;
+
     /** @var mixed */
-    private $_supportedViewTypes = [ 'html' => 1 ] ;
+    private $_supportedViewTypes = [
+        'html' => 1
+    ];
+
     /** @var ContactModel[] */
-    private $contactModels ;
+    private $contactModels;
 
     /**
      * Class constructor
      *
-     * @param string View Type
+     * @param
+     *            string View Type
      * @param ContactModel[] $contactModels
      * @throws ViewException
      */
     public function __construct($viewType = 'html', $contactModels = null)
     {
-        parent::__construct() ;
-        if (! isset($this->_supportedViewTypes[ $viewType ])) {
-            throw new ViewException("Unsupported view type\n") ;
+        parent::__construct();
+        if (! isset($this->_supportedViewTypes[$viewType])) {
+            throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType ;
-        $this->setContactModels($contactModels) ;
+        $this->_viewType = $viewType;
+        $this->setContactModels($contactModels);
     }
 
     /**
@@ -80,48 +84,41 @@ class ContactListView extends ListViewBase
     
 HTML;
         foreach ($this->getContactModels() as $contactModel) {
-            $id   = $contactModel->getId() ;
-            $row  = $this->displayContactRow($contactModel, 'list') ;
-            $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>" ;
+            $id = $contactModel->getId();
+            $row = $this->displayContactRow($contactModel, 'list');
+            $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>";
         }
-    
-        $body .= "  </tbody>\n</table>\n" ;
-    
-        return $body ;
+        
+        $body .= "  </tbody>\n</table>\n";
+        
+        return $body;
     }
 
     public function displayContactRow($contactModel, $displayMode, $errorMessage = '')
     {
-        $id = $contactModel->getId() ;
+        $id = $contactModel->getId();
         if ("add" === $displayMode) {
-            $companyId = $companyName
-                       = $name
-                       = $email
-                       = $aphone
-                       = $bphone
-                       = $created
-                       = $updated
-                       = '' ;
+            $companyId = $companyName = $name = $email = $aphone = $bphone = $created = $updated = '';
         } else {
-            $companyId         = $contactModel->getContactCompanyId() ;
-            $companyController = new CompanyController('read') ;
+            $companyId = $contactModel->getContactCompanyId();
+            $companyController = new CompanyController('read');
             if ($companyId > 0) {
-                $companyModel      = $companyController->get($companyId) ;
-                $companyName       = $companyModel->getCompanyName() ;
+                $companyModel = $companyController->get($companyId);
+                $companyName = $companyModel->getCompanyName();
             } else {
-                $companyName       = '---' ;
+                $companyName = '---';
             }
-            $name              = $contactModel->getContactName() ;
-            $email             = $contactModel->getContactEmail() ;
-            $aphone            = $contactModel->getContactPhone() ;
-            $bphone            = $contactModel->getContactAlternatePhone() ;
-            $created           = $contactModel->getCreated() ;
-            $updated           = $contactModel->getUpdated() ;
+            $name = $contactModel->getContactName();
+            $email = $contactModel->getContactEmail();
+            $aphone = $contactModel->getContactPhone();
+            $bphone = $contactModel->getContactAlternatePhone();
+            $created = $contactModel->getCreated();
+            $updated = $contactModel->getUpdated();
         }
         switch ($displayMode) {
             case 'add':
-                $companyListView = new CompanyListView('html', null) ;
-                $companyNames = $companyListView->getCompanyList("ix$id", $companyId) ;
+                $companyListView = new CompanyListView('html', null);
+                $companyNames = $companyListView->getCompanyList("ix$id", $companyId);
                 return <<<RETVAL
       <td><button type="button" id="SaveButtonix$id" onclick="saveAddContact( '$id' )">Save</button>
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
@@ -137,8 +134,8 @@ HTML;
 
 RETVAL;
             case 'update':
-                $companyListView = new CompanyListView('html', null) ;
-                $companyNames = $companyListView->getCompanyList("$id", $companyId) ;
+                $companyListView = new CompanyListView('html', null);
+                $companyNames = $companyListView->getCompanyList("$id", $companyId);
                 return <<<RETVAL
       <td><button type="button" id="SaveButton$id" onclick="saveUpdateContact( '$id' )">Save</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateContactRow( '$id' )">Cancel</button>
@@ -168,7 +165,7 @@ RETVAL;
       <td>$updated</td>
                 
 RETVAL;
-                break ;
+                break;
             case 'list':
                 return <<<RETVAL
       <td><button type="button" id="UpdateButton$id" onclick="updateContact( '$id' )">Update</button>
@@ -185,7 +182,7 @@ RETVAL;
                 
 RETVAL;
             default:
-                throw new ViewException('Undefined display mode') ;
+                throw new ViewException('Undefined display mode');
         }
     }
 
@@ -198,47 +195,51 @@ RETVAL;
     {
         switch ($this->_viewType) {
             case 'html':
-                return $this->_getHtmlView() ;
+                return $this->_getHtmlView();
             default:
-                throw new ViewException("Unsupported view type.") ;
+                throw new ViewException("Unsupported view type.");
         }
     }
 
     /**
+     *
      * @return ContactModel[]
      */
     public function getContactModels()
     {
-        return $this->contactModels ;
+        return $this->contactModels;
     }
 
     /**
+     *
      * @param ContactModel[] $contactModels
      */
     public function setContactModels($contactModels)
     {
-        $this->contactModels = $contactModels ;
+        $this->contactModels = $contactModels;
     }
 
     /**
      * Get contact SELECT list
      *
-     * @param string $id Field ID
-     * @param integer $value The selected value
+     * @param string $id
+     *            Field ID
+     * @param integer $value
+     *            The selected value
      * @return string
      */
     public function getContactList($id, $value)
     {
-        $retVal = "<select id=\"contactId$id\" >\n  <option value=\"\">---</option>" ;
-        $contactController = new ContactController() ;
-        $contacts = $contactController->getAll() ;
+        $retVal = "<select id=\"contactId$id\" >\n  <option value=\"\">---</option>";
+        $contactController = new ContactController();
+        $contacts = $contactController->getAll();
         foreach ($contacts as $contact) {
-            $cid      = $contact->getId() ;
-            $cname    = $contact->getContactName() ;
-            $selected = ($cid === $value) ? "selected=\"selected\"" : "" ;
-            $retVal   .= "  <option value=\"$cid\" $selected>$cname</option>\n" ;
+            $cid = $contact->getId();
+            $cname = $contact->getContactName();
+            $selected = ($cid === $value) ? "selected=\"selected\"" : "";
+            $retVal .= "  <option value=\"$cid\" $selected>$cname</option>\n";
         }
-        $retVal .= "</select>\n" ;
-        return $retVal ;
+        $retVal .= "</select>\n";
+        return $retVal;
     }
 }

@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * User Authorization Class
@@ -31,47 +30,49 @@ namespace com\kbcmdba\pjs2 ;
  */
 class Auth
 {
-    private static $_userId = null ;
-    private static $_password = null ;
-    private static $_authTicket = null ;
-    private static $_userValidated = null ;
+
+    private static $_userId = null;
+
+    private static $_password = null;
+
+    private static $_authTicket = null;
+
+    private static $_userValidated = null;
 
     /** @var Config */
-    private static $_config = null ;
+    private static $_config = null;
 
     /**
      * Class constructor
      *
-     * @param string $readOnly If readOnly is true, don't refresh the user's expire time.
+     * @param string $readOnly
+     *            If readOnly is true, don't refresh the user's expire time.
      */
     public function __construct($readOnly = false)
     {
-        session_start() ;
-        $config = new Config() ;
-        self::$_config = $config ;
+        session_start();
+        $config = new Config();
+        self::$_config = $config;
         // Users are always authorized if the configuration tells us to skip authentication.
         if ($config->getSkipAuth()) {
-            return ;
+            return;
         }
-        self::$_userId = $config->getUserId() ;
-        self::$_password = $config->getUserPassword() ;
+        self::$_userId = $config->getUserId();
+        self::$_password = $config->getUserPassword();
         if ($this->isAuthorized($readOnly)) {
-            if (isset($_POST[ 'auth_username' ])
-               && isset($_POST[ 'auth_password' ])
-               && ! $readOnly
-                ) {
+            if (isset($_POST['auth_username']) && isset($_POST['auth_password']) && ! $readOnly) {
                 // User is logging in.
-                $authTicket = bin2hex(openssl_random_pseudo_bytes(32)) ;
-                $atc = new AuthTicketController() ;
-                $atm = new AuthTicketModel() ;
-                $atm->setAuthTicket($authTicket) ;
-                $atc->add($atm) ;
-                $userId = self::$_userId ;
-                $now = date("Y-m-d H:i:s") ;
-                $out = "$now: Login detected for $userId with $authTicket." . PHP_EOL ;
-                file_put_contents("login.log", $out, FILE_APPEND) ;
-                self::$_authTicket = $authTicket ;
-                $_SESSION[ 'auth_ticket' ] = self::$_authTicket ;
+                $authTicket = bin2hex(openssl_random_pseudo_bytes(32));
+                $atc = new AuthTicketController();
+                $atm = new AuthTicketModel();
+                $atm->setAuthTicket($authTicket);
+                $atc->add($atm);
+                $userId = self::$_userId;
+                $now = date("Y-m-d H:i:s");
+                $out = "$now: Login detected for $userId with $authTicket." . PHP_EOL;
+                file_put_contents("login.log", $out, FILE_APPEND);
+                self::$_authTicket = $authTicket;
+                $_SESSION['auth_ticket'] = self::$_authTicket;
             }
         }
     }
@@ -79,53 +80,44 @@ class Auth
     /**
      * Checks to make sure that the user's session is logged in.
      *
-     * @param string $readOnly If readOnly is true, don't refresh the user's expire time.
+     * @param string $readOnly
+     *            If readOnly is true, don't refresh the user's expire time.
      * @return boolean
      */
     public function isAuthorized($readOnly = false)
     {
         // Users are always authorized if the configuration tells us to skip authentication.
         if (self::$_config->getSkipAuth()) {
-            return true ;
+            return true;
         }
         // Has this user already been validated during this transaction?
         if (isset(self::$_userValidated)) {
-            return self::$_userValidated ;
+            return self::$_userValidated;
         }
-        if (isset($_SESSION[ 'auth_ticket' ])) {
+        if (isset($_SESSION['auth_ticket'])) {
             // Verify that the user's session is valid.
             try {
-                $atc = new AuthTicketController() ;
-                $atc->cleanExpiredTickets() ;
-                $atm = $atc->get($_SESSION[ 'auth_ticket' ]) ;
-                if ( FALSE === $atm ) {
-                    return FALSE ;
+                $atc = new AuthTicketController();
+                $atc->cleanExpiredTickets();
+                $atm = $atc->get($_SESSION['auth_ticket']);
+                if (FALSE === $atm) {
+                    return FALSE;
                 }
             } catch (ControllerException $e) {
                 // No matching record found. User can't be validated through
                 // the auth_ticket. If the user has an expired ticket and is
                 // trying to log in, we need to check for a login attempt.
-                self::$_userValidated =  (
-                    isset($_POST[ 'auth_username' ])
-                                        && isset($_POST[ 'auth_password' ])
-                                        && (self::$_userId === $_POST[ 'auth_username' ])
-                                        && (self::$_password === $_POST[ 'auth_password' ])
-                                         ) ;
-                return self::$_userValidated ;
+                self::$_userValidated = (isset($_POST['auth_username']) && isset($_POST['auth_password']) && (self::$_userId === $_POST['auth_username']) && (self::$_password === $_POST['auth_password']));
+                return self::$_userValidated;
             }
             if (! $readOnly) {
-                $atc->update($atm) ;
+                $atc->update($atm);
             }
-            self::$_userValidated = true ;
-            return self::$_userValidated ;
+            self::$_userValidated = true;
+            return self::$_userValidated;
         }
-        self::$_userValidated =  (
-            isset($_POST[ 'auth_username' ])
-                                && isset($_POST[ 'auth_password' ])
-                                && (self::$_userId === $_POST[ 'auth_username' ])
-                                && (self::$_password === $_POST[ 'auth_password' ])
-                                 ) ;
-        return self::$_userValidated ;
+        self::$_userValidated = (isset($_POST['auth_username']) && isset($_POST['auth_password']) && (self::$_userId === $_POST['auth_username']) && (self::$_password === $_POST['auth_password']));
+        return self::$_userValidated;
     }
 
     /**
@@ -133,9 +125,9 @@ class Auth
      */
     public function forbidden()
     {
-        header("HTTP/1.0 403 Forbidden") ;
-        echo "Forbidden" ;
-        exit ;
+        header("HTTP/1.0 403 Forbidden");
+        echo "Forbidden";
+        exit();
     }
 
     /**
@@ -161,36 +153,37 @@ Login Page
   </table>
 </form>
 HTML;
-        return($body) ;
-    } // END OF function loginPage()
-
+        return ($body);
+    }
+ // END OF function loginPage()
+    
     /**
      * Destroy session variables that keep the user logged in.
      */
     public function doLogOut()
     {
         if ($this->isAuthorized()) {
-            $now = date("Y-m-d H:i:s") ;
-            $user = self::$_userId ;
-            file_put_contents("login.log", "$now: Logout detected for $user." . PHP_EOL, FILE_APPEND) ;
+            $now = date("Y-m-d H:i:s");
+            $user = self::$_userId;
+            file_put_contents("login.log", "$now: Logout detected for $user." . PHP_EOL, FILE_APPEND);
         }
-        if (isset($_SESSION[ 'auth_username' ])) {
-            unset($_SESSION[ 'auth_username' ]) ;
+        if (isset($_SESSION['auth_username'])) {
+            unset($_SESSION['auth_username']);
         }
-        if (isset($_SESSION[ 'auth_password' ])) {
-            unset($_SESSION[ 'auth_password' ]) ;
+        if (isset($_SESSION['auth_password'])) {
+            unset($_SESSION['auth_password']);
         }
-        if (isset($_SESSION[ 'auth_ticket' ])) {
-            $atm = new AuthTicketModel() ;
-            $atm->setAuthTicket($_SESSION[ 'auth_ticket' ]) ;
-            $atc = new AuthTicketController() ;
-            $atc->delete($atm) ;
-            unset($_SESSION[ 'auth_ticket' ]) ;
+        if (isset($_SESSION['auth_ticket'])) {
+            $atm = new AuthTicketModel();
+            $atm->setAuthTicket($_SESSION['auth_ticket']);
+            $atc = new AuthTicketController();
+            $atc->delete($atm);
+            unset($_SESSION['auth_ticket']);
         }
     }
 
     public function getAuthTicket()
     {
-        return self::$_authTicket ;
+        return self::$_authTicket;
     }
 }

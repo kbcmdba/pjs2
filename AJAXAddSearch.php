@@ -20,52 +20,50 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$auth = new Auth() ;
+$auth = new Auth();
 if (! $auth->isAuthorized()) {
-    $auth->forbidden() ;
-    exit(0) ; // Should never get here but just in case...
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
 }
-$result         = 'OK' ;
-$engineName     = Tools::param('engineName') ;
-$searchName     = Tools::param('searchName') ;
-$url            = Tools::param('url') ;
-$rssFeedUrl     = Tools::param('rssFeedUrl') ;
-$rssLastChecked = Tools::param('rssLastChecked') ;
-$rowId          = Tools::param('rowId') ;
-$newSearchModel = null ;
+$result = 'OK';
+$engineName = Tools::param('engineName');
+$searchName = Tools::param('searchName');
+$url = Tools::param('url');
+$rssFeedUrl = Tools::param('rssFeedUrl');
+$rssLastChecked = Tools::param('rssLastChecked');
+$rowId = Tools::param('rowId');
+$newSearchModel = null;
 try {
-    $searchModel = new SearchModel() ;
-    $searchModel->setEngineName($engineName) ;
-    $searchModel->setSearchName($searchName) ;
-    $searchModel->setUrl($url) ;
-    $searchModel->setRssFeedUrl($rssFeedUrl) ;
-    $searchModel->setRssLastChecked($rssLastChecked) ;
-
-    $searchController = new SearchController() ;
-    $searchId         = $searchController->add($searchModel) ;
-
+    $searchModel = new SearchModel();
+    $searchModel->setEngineName($engineName);
+    $searchModel->setSearchName($searchName);
+    $searchModel->setUrl($url);
+    $searchModel->setRssFeedUrl($rssFeedUrl);
+    $searchModel->setRssLastChecked($rssLastChecked);
+    
+    $searchController = new SearchController();
+    $searchId = $searchController->add($searchModel);
+    
     if (! ($searchId >= 1)) {
-        throw new ControllerException("Add failed.") ;
+        throw new ControllerException("Add failed.");
     }
-    $newSearchModel = $searchController->get($searchId) ;
-    $searchRowView = new SearchListView('html', null) ;
-    $row = $searchRowView->displaySearchRow($newSearchModel, 'list') ;
+    $newSearchModel = $searchController->get($searchId);
+    $searchRowView = new SearchListView('html', null);
+    $row = $searchRowView->displaySearchRow($newSearchModel, 'list');
 } catch (ControllerException $e) {
-    $searchRowView = new SearchListView('html', null) ;
-    $searchModel->setId($rowId) ;
-    $row = $searchRowView->displaySearchRow(
-        $searchModel,
-        'add',
-        'Add Search record failed. '
-                                           . $e->getMessage()
-                                           ) ;
-    $result = 'FAILED' ;
+    $searchRowView = new SearchListView('html', null);
+    $searchModel->setId($rowId);
+    $row = $searchRowView->displaySearchRow($searchModel, 'add', 'Add Search record failed. ' . $e->getMessage());
+    $result = 'FAILED';
 }
 
-$result = [ 'result' => $result, 'row' => $row, 'newId' => $searchId ] ;
-echo json_encode($result) . PHP_EOL ;
+$result = [
+    'result' => $result,
+    'row' => $row,
+    'newId' => $searchId
+];
+echo json_encode($result) . PHP_EOL;

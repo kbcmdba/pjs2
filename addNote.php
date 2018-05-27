@@ -20,35 +20,34 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$config = new Config() ;
-$webPage = new PJSWebPage($config->getTitle() . "Notes - Add Note") ;
-$body = '' ;
-$act = Tools::Param('act') ;
+$config = new Config();
+$webPage = new PJSWebPage($config->getTitle() . "Notes - Add Note");
+$body = '';
+$act = Tools::Param('act');
 if ("Add Note" === $act) {
-    $model = new NoteModel() ;
-    $model->populateFromForm() ;
+    $model = new NoteModel();
+    $model->populateFromForm();
     if (! $model->validateForAdd()) {
-        $view = new NoteFormView('Add Note', $model) ;
-        $body = "<h2>Invalid data</h2>\n" . $view->getForm() ;
+        $view = new NoteFormView('Add Note', $model);
+        $body = "<h2>Invalid data</h2>\n" . $view->getForm();
     } else {
-        $noteController = new NoteController() ;
-        $newId = $noteController->add($model) ;
+        $noteController = new NoteController();
+        $newId = $noteController->add($model);
         if ($newId > 0) {
             $body = "Added note # " . $newId . "<br />\n";
         }
     }
 } else {
-    $body = "" ;
-    $noteModel = new NoteModel() ;
-    $noteModel->setAppliesToTable(Tools::param('appliesToTable')) ;
-    $noteModel->setAppliesToId(Tools::param('appliesToId')) ;
-    $view = new NoteFormView("Add Note", $noteModel) ;
-    $body = $view->getForm() ;
+    $body = "";
+    $noteModel = new NoteModel();
+    $noteModel->setAppliesToTable(Tools::param('appliesToTable'));
+    $noteModel->setAppliesToId(Tools::param('appliesToId'));
+    $view = new NoteFormView("Add Note", $noteModel);
+    $body = $view->getForm();
 }
-$webPage->setBody($body) ;
-$webPage->displayPage() ;
+$webPage->setBody($body);
+$webPage->displayPage();

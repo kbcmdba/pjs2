@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Note List View
@@ -30,31 +29,38 @@ class NoteListView extends ListViewBase
 {
 
     /** @var string */
-    private $_noteAppliesToTable ;
+    private $_noteAppliesToTable;
+
     /** @var integer */
-    private $_noteAppliesToId ;
+    private $_noteAppliesToId;
+
     /** @var string */
-    private $_viewType ;
+    private $_viewType;
+
     /** @var mixed */
-    private $_supportedViewTypes = [ 'html' => 1 ] ;
+    private $_supportedViewTypes = [
+        'html' => 1
+    ];
+
     /** @var NoteModel[] */
-    private $_noteModels ;
+    private $_noteModels;
 
     /**
      * Class constructor
      *
-     * @param string View Type
+     * @param
+     *            string View Type
      * @param NoteModel[] $noteModels
      * @throws ViewException
      */
     public function __construct($viewType = 'html', $noteModels)
     {
-        parent::__construct() ;
-        if (! isset($this->_supportedViewTypes[ $viewType ])) {
-            throw new ViewException("Unsupported view type\n") ;
+        parent::__construct();
+        if (! isset($this->_supportedViewTypes[$viewType])) {
+            throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType ;
-        $this->setNoteModels($noteModels) ;
+        $this->_viewType = $viewType;
+        $this->setNoteModels($noteModels);
     }
 
     /**
@@ -64,9 +70,9 @@ class NoteListView extends ListViewBase
      */
     private function _getHtmlView()
     {
-        $noteAppliesToTable = $this->getNoteAppliesToTable() ;
-        $noteAppliesToId    = $this->getNoteAppliesToId() ;
-        $body               = <<<HTML
+        $noteAppliesToTable = $this->getNoteAppliesToTable();
+        $noteAppliesToId = $this->getNoteAppliesToId();
+        $body = <<<HTML
 <a href="addNote.php?appliesToTable=$noteAppliesToTable&appliesToId=$noteAppliesToId">Add new $noteAppliesToTable note</a><br />
 <table border="1" cellspacing="0" cellpadding="2">
   <caption>Current Notes</caption>
@@ -79,11 +85,11 @@ class NoteListView extends ListViewBase
   </tr>
 HTML;
         foreach ($this->getNoteModels() as $noteModel) {
-            $id       = $noteModel->getId() ;
-            $created  = $noteModel->getCreated() ;
-            $updated  = $noteModel->getUpdated() ;
-            $noteText = htmlspecialchars($noteModel->getNoteText()) ;
-            $body     .= <<<HTML
+            $id = $noteModel->getId();
+            $created = $noteModel->getCreated();
+            $updated = $noteModel->getUpdated();
+            $noteText = htmlspecialchars($noteModel->getNoteText());
+            $body .= <<<HTML
   <tr>
     <td>
         <a href="editNote.php?id=$id">Edit</a>
@@ -96,8 +102,8 @@ HTML;
   </tr>
 HTML;
         }
-        $body .= "</table>\n" ;
-        return $body ;
+        $body .= "</table>\n";
+        return $body;
     }
 
     /**
@@ -109,57 +115,63 @@ HTML;
     {
         switch ($this->_viewType) {
             case 'html':
-                return $this->_getHtmlView() ;
+                return $this->_getHtmlView();
             default:
-                throw new ViewException("Unsupported view type.") ;
+                throw new ViewException("Unsupported view type.");
         }
     }
 
     /**
+     *
      * @return string
      */
     public function getNoteAppliesToTable()
     {
-        return $this->_noteAppliesToTable ;
+        return $this->_noteAppliesToTable;
     }
 
     /**
+     *
      * @param string $noteAppliesToTable
      */
     public function setAppliesToTable($noteAppliesToTable)
     {
-        $this->_noteAppliesToTable = $noteAppliesToTable ;
+        $this->_noteAppliesToTable = $noteAppliesToTable;
     }
 
     /**
+     *
      * @return integer
      */
     public function getNoteAppliesToId()
     {
-        return $this->_noteAppliesToId ;
+        return $this->_noteAppliesToId;
     }
 
     /**
+     *
      * @param string $noteAppliesToId
      */
     public function setAppliesToId($noteAppliesToId)
     {
-        $this->_noteAppliesToId = $noteAppliesToId ;
+        $this->_noteAppliesToId = $noteAppliesToId;
     }
 
     /**
+     *
      * @return NoteModel[]
      */
     public function getNoteModels()
     {
-        return $this->_noteModels ;
+        return $this->_noteModels;
     }
 
     /**
+     *
      * @param NoteModel[] $noteModels
      */
     public function setNoteModels($noteModels)
     {
-        $this->_noteModels = $noteModels ;
+        $this->_noteModels = $noteModels;
     }
 }

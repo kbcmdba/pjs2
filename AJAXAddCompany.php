@@ -20,65 +20,62 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$auth = new Auth() ;
+$auth = new Auth();
 if (! $auth->isAuthorized()) {
-    $auth->forbidden() ;
-    exit(0) ; // Should never get here but just in case...
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
 }
-$result          = 'OK' ;
-$companyId       = '' ;
-$agencyCompanyId = Tools::param('agencyCompanyId') ;
-$companyName     = Tools::param('companyName') ;
-$companyAddress1 = Tools::param('companyAddress1') ;
-$companyAddress2 = Tools::param('companyAddress2') ;
-$companyCity     = Tools::param('companyCity') ;
-$companyState    = Tools::param('companyState') ;
-$companyZip      = Tools::param('companyZip') ;
-$companyPhone    = Tools::param('companyPhone') ;
-$companyUrl      = Tools::param('companyUrl') ;
-$lastContacted   = Tools::param('lastContacted') ;
-$rowStyle        = Tools::param('rowStyle') ;
-$rowId           = Tools::param('rowId') ;
-$newCompanyModel = null ;
+$result = 'OK';
+$companyId = '';
+$agencyCompanyId = Tools::param('agencyCompanyId');
+$companyName = Tools::param('companyName');
+$companyAddress1 = Tools::param('companyAddress1');
+$companyAddress2 = Tools::param('companyAddress2');
+$companyCity = Tools::param('companyCity');
+$companyState = Tools::param('companyState');
+$companyZip = Tools::param('companyZip');
+$companyPhone = Tools::param('companyPhone');
+$companyUrl = Tools::param('companyUrl');
+$lastContacted = Tools::param('lastContacted');
+$rowStyle = Tools::param('rowStyle');
+$rowId = Tools::param('rowId');
+$newCompanyModel = null;
 try {
-    $companyModel = new CompanyModel() ;
-    $companyModel->setAgencyCompanyId($agencyCompanyId) ;
-    $companyModel->setCompanyName($companyName) ;
-    $companyModel->setCompanyAddress1($companyAddress1) ;
-    $companyModel->setCompanyAddress2($companyAddress2) ;
-    $companyModel->setCompanyCity($companyCity) ;
-    $companyModel->setCompanyState($companyState) ;
-    $companyModel->setCompanyZip($companyZip) ;
-    $companyModel->setCompanyPhone($companyPhone) ;
-    $companyModel->setCompanyUrl($companyUrl) ;
-    $companyModel->setLastContacted($lastContacted) ;
-
-    $companyController = new CompanyController() ;
-    $companyId         = $companyController->add($companyModel) ;
-
+    $companyModel = new CompanyModel();
+    $companyModel->setAgencyCompanyId($agencyCompanyId);
+    $companyModel->setCompanyName($companyName);
+    $companyModel->setCompanyAddress1($companyAddress1);
+    $companyModel->setCompanyAddress2($companyAddress2);
+    $companyModel->setCompanyCity($companyCity);
+    $companyModel->setCompanyState($companyState);
+    $companyModel->setCompanyZip($companyZip);
+    $companyModel->setCompanyPhone($companyPhone);
+    $companyModel->setCompanyUrl($companyUrl);
+    $companyModel->setLastContacted($lastContacted);
+    
+    $companyController = new CompanyController();
+    $companyId = $companyController->add($companyModel);
+    
     if (! ($companyId > 0)) {
-        throw new ControllerException("Add failed.") ;
+        throw new ControllerException("Add failed.");
     }
-    $newCompanyModel = $companyController->get($companyId) ;
-    $companyRowView = new CompanyListView('html', null) ;
-    $rows = $companyRowView->displayCompanyRow($newCompanyModel, 'list', $rowStyle) ;
+    $newCompanyModel = $companyController->get($companyId);
+    $companyRowView = new CompanyListView('html', null);
+    $rows = $companyRowView->displayCompanyRow($newCompanyModel, 'list', $rowStyle);
 } catch (ControllerException $e) {
-    $companyRowView = new CompanyListView('html', null) ;
-    $companyModel->setId($rowId) ;
-    $rows = $companyRowView->displayCompanyRow(
-        $companyModel,
-        'add',
-        $rowStyle,
-        'Add Company record failed. '
-                                              . $e->getMessage()
-                                              ) ;
-    $result = 'FAILED' ;
+    $companyRowView = new CompanyListView('html', null);
+    $companyModel->setId($rowId);
+    $rows = $companyRowView->displayCompanyRow($companyModel, 'add', $rowStyle, 'Add Company record failed. ' . $e->getMessage());
+    $result = 'FAILED';
 }
 
-$result = [ 'result' => $result, 'rows' => $rows, 'newId' => $companyId ] ;
-echo json_encode($result) . PHP_EOL ;
+$result = [
+    'result' => $result,
+    'rows' => $rows,
+    'newId' => $companyId
+];
+echo json_encode($result) . PHP_EOL;

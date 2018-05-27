@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Application Status Summary View
@@ -30,26 +29,31 @@ class ApplicationStatusSummaryView extends SummaryViewBase
 {
 
     /** @var string */
-    private $_viewType ;
+    private $_viewType;
+
     /** @var mixed */
-    private $_supportedViewTypes = [ 'html' => 1 ] ;
+    private $_supportedViewTypes = [
+        'html' => 1
+    ];
+
     /** @var ApplicationStatusModel[] */
-    private $_applicationStatusModels ;
+    private $_applicationStatusModels;
 
     /**
      * Class constructor
      *
-     * @param string View Type
+     * @param
+     *            string View Type
      * @throws ViewException
      */
     public function __construct($viewType = 'html', $applicationStatusModels = null)
     {
-        parent::__construct() ;
-        if (! isset($this->_supportedViewTypes[ $viewType ])) {
-            throw new ViewException("Unsupported view type\n") ;
+        parent::__construct();
+        if (! isset($this->_supportedViewTypes[$viewType])) {
+            throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType ;
-        $this->_applicationStatusModels = $applicationStatusModels ;
+        $this->_viewType = $viewType;
+        $this->_applicationStatusModels = $applicationStatusModels;
     }
 
     /**
@@ -73,11 +77,11 @@ class ApplicationStatusSummaryView extends SummaryViewBase
 
 HTML;
         foreach ($this->_applicationStatusModels as $applicationStatus) {
-            $id   = $applicationStatus->getId() ;
-            $label = $applicationStatus->getStatusValue() ;
-            $style = $applicationStatus->getStyle() ;
-            $count = $applicationStatus->getSummaryCount() ;
-            $isAct = $applicationStatus->getIsActive() ? "Yes" : "No" ;
+            $id = $applicationStatus->getId();
+            $label = $applicationStatus->getStatusValue();
+            $style = $applicationStatus->getStyle();
+            $count = $applicationStatus->getSummaryCount();
+            $isAct = $applicationStatus->getIsActive() ? "Yes" : "No";
             $body .= <<<HTML
     <tr id="ux$id">
       <td style="$style">$label</td>
@@ -87,9 +91,9 @@ HTML;
 
 HTML;
         }
-
-        $body .= "  </tbody>\n</table>\n" ;
-        return $body ;
+        
+        $body .= "  </tbody>\n</table>\n";
+        return $body;
     }
 
     /**
@@ -101,25 +105,27 @@ HTML;
     {
         switch ($this->_viewType) {
             case 'html':
-                return $this->_getHtmlView() ;
+                return $this->_getHtmlView();
             default:
-                throw new ViewException("Unsupported view type.") ;
+                throw new ViewException("Unsupported view type.");
         }
     }
 
     /**
+     *
      * @return ApplicationStatusModel[]
      */
     public function getApplicationStatusModels()
     {
-        return $this->_applicationStatusModels ;
+        return $this->_applicationStatusModels;
     }
 
     /**
+     *
      * @param ApplicationStatusModel[] $applicationStatusModels
      */
     public function setApplicationStatusModels($applicationStatusModels)
     {
-        $this->_applicationStatusModels = $applicationStatusModels ;
+        $this->_applicationStatusModels = $applicationStatusModels;
     }
 }

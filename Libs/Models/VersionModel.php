@@ -20,23 +20,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Version Model
  */
 class VersionModel extends ModelBase
 {
-    private $_versionValue ;
-    private $_updated ;
+
+    private $_versionValue;
+
+    private $_updated;
 
     /**
      * class constructor
      */
     public function __construct()
     {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     /**
@@ -47,7 +48,7 @@ class VersionModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return 0 ;
+        return 0;
     }
 
     /**
@@ -58,44 +59,48 @@ class VersionModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return 0 ;
+        return 0;
     }
 
     public function populateFromForm()
     {
-        $this->setVersionValue(Tools::param('versionValue')) ;
-        $this->setUpdated(Tools::param('updated')) ;
+        $this->setVersionValue(Tools::param('versionValue'));
+        $this->setUpdated(Tools::param('updated'));
     }
 
     /**
+     *
      * @return string
      */
     public function getVersionValue()
     {
-        return $this->_versionValue ;
+        return $this->_versionValue;
     }
 
     /**
+     *
      * @param string $versionValue
      */
     public function setVersionValue($versionValue)
     {
-        $this->_versionValue = $versionValue ;
+        $this->_versionValue = $versionValue;
     }
 
     /**
+     *
      * @return string
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
+     *
      * @param string $updated
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated ;
+        $this->_updated = $updated;
     }
 }

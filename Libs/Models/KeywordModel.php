@@ -20,26 +20,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Keyword Model
  */
 class KeywordModel extends ModelBase
 {
-    private $_id ;
-    private $_keywordValue ;
-    private $_sortKey ;
-    private $_created ;
-    private $_updated ;
+
+    private $_id;
+
+    private $_keywordValue;
+
+    private $_sortKey;
+
+    private $_created;
+
+    private $_updated;
 
     /**
      * class constructor
      */
     public function __construct()
     {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     /**
@@ -49,10 +53,7 @@ class KeywordModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return  ((Tools::isNullOrEmptyString(Tools::param('id')))
-               && (! Tools::isNullOrEmptyString(Tools::param('value')))
-               && (Tools::isNumeric(Tools::param('sortKey')))
-                ) ;
+        return ((Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('value'))) && (Tools::isNumeric(Tools::param('sortKey'))));
     }
 
     /**
@@ -62,98 +63,105 @@ class KeywordModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return  ((! Tools::isNullOrEmptyString(Tools::param('id')))
-               && (! Tools::isNullOrEmptyString(Tools::param('value')))
-               && (Tools::isNumeric(Tools::param('sortKey')))
-                ) ;
+        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('value'))) && (Tools::isNumeric(Tools::param('sortKey'))));
     }
 
     public function populateFromForm()
     {
-        $this->setId(Tools::param('id')) ;
-        $this->setKeywordValue(Tools::param('keywordValue')) ;
-        $this->setSortKey(Tools::param('sortKey')) ;
-        $this->setCreated(Tools::param('created')) ;
-        $this->setUpdated(Tools::param('updated')) ;
+        $this->setId(Tools::param('id'));
+        $this->setKeywordValue(Tools::param('keywordValue'));
+        $this->setSortKey(Tools::param('sortKey'));
+        $this->setCreated(Tools::param('created'));
+        $this->setUpdated(Tools::param('updated'));
     }
 
     /**
+     *
      * @return integer
      */
     public function getId()
     {
-        return $this->_id ;
+        return $this->_id;
     }
 
     /**
+     *
      * @param integer $id
      */
     public function setId($id)
     {
-        $this->_id = $id ;
+        $this->_id = $id;
     }
 
     /**
+     *
      * @return string
      */
     public function getKeywordValue()
     {
-        return $this->_keywordValue ;
+        return $this->_keywordValue;
     }
 
     /**
+     *
      * @param string $keywordValue
      */
     public function setKeywordValue($keywordValue)
     {
-        $this->_keywordValue = $keywordValue ;
+        $this->_keywordValue = $keywordValue;
     }
 
     /**
+     *
      * @return integer
      */
     public function getSortKey()
     {
-        return $this->_sortKey ;
+        return $this->_sortKey;
     }
 
     /**
+     *
      * @param integer $sortKey
      */
     public function setSortKey($sortKey)
     {
-        $this->_sortKey = $sortKey ;
+        $this->_sortKey = $sortKey;
     }
 
     /**
+     *
      * @return string
      */
     public function getCreated()
     {
-        return $this->_created ;
+        return $this->_created;
     }
 
     /**
+     *
      * @param string $created
      */
     public function setCreated($created)
     {
-        $this->_created = $created ;
+        $this->_created = $created;
     }
 
     /**
+     *
      * @return string
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
+     *
      * @param string $updated
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated ;
+        $this->_updated = $updated;
     }
 }

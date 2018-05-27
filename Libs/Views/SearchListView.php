@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Search List View
@@ -30,27 +29,32 @@ class SearchListView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType ;
+    private $_viewType;
+
     /** @var mixed */
-    private $_supportedViewTypes = [ 'html' => 1 ] ;
+    private $_supportedViewTypes = [
+        'html' => 1
+    ];
+
     /** @var SearchModel[] */
-    private $searchModels ;
+    private $searchModels;
 
     /**
      * Class constructor
      *
-     * @param string View Type
+     * @param
+     *            string View Type
      * @param SearchModel[] $searchModels
      * @throws ViewException
      */
     public function __construct($viewType = 'html', $searchModels)
     {
-        parent::__construct() ;
-        if (! isset($this->_supportedViewTypes[ $viewType ])) {
-            throw new ViewException("Unsupported view type\n") ;
+        parent::__construct();
+        if (! isset($this->_supportedViewTypes[$viewType])) {
+            throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType ;
-        $this->setSearchModels($searchModels) ;
+        $this->_viewType = $viewType;
+        $this->setSearchModels($searchModels);
     }
 
     /**
@@ -80,8 +84,8 @@ class SearchListView extends ListViewBase
 
 HTML;
         foreach ($this->getSearchModels() as $search) {
-            $id    = $search->getId() ;
-            $row   = $this->displaySearchRow($search, 'list') ;
+            $id = $search->getId();
+            $row = $this->displaySearchRow($search, 'list');
             $body .= <<<HTML
     <tr id="ux$id">
       $row
@@ -89,8 +93,8 @@ HTML;
 
 HTML;
         }
-        $body .= "  </tbody>\n</table>\n" ;
-        return $body ;
+        $body .= "  </tbody>\n</table>\n";
+        return $body;
     }
 
     /**
@@ -102,9 +106,9 @@ HTML;
     {
         switch ($this->_viewType) {
             case 'html':
-                return $this->_getHtmlView() ;
+                return $this->_getHtmlView();
             default:
-                throw new ViewException("Unsupported view type.") ;
+                throw new ViewException("Unsupported view type.");
         }
     }
 
@@ -112,20 +116,21 @@ HTML;
      * Return the display of a search table row
      *
      * @param SearchModel $searchModel
-     * @param string $displayMode 'add', 'edit', 'delete', 'list'
+     * @param string $displayMode
+     *            'add', 'edit', 'delete', 'list'
      * @param string $errMessage
      * @return string
      */
     public function displaySearchRow($searchModel, $displayMode, $errMessage = '')
     {
-        $id             = $searchModel->getId() ;
-        $engineName     = $searchModel->getEngineName() ;
-        $searchName     = $searchModel->getSearchName() ;
-        $url            = $searchModel->getUrl() ;
-        $rssFeedUrl     = $searchModel->getRssFeedUrl() ;
-        $rssLastChecked = $searchModel->getRssLastChecked() ;
-        $created        = $searchModel->getCreated() ;
-        $updated        = $searchModel->getUpdated() ;
+        $id = $searchModel->getId();
+        $engineName = $searchModel->getEngineName();
+        $searchName = $searchModel->getSearchName();
+        $url = $searchModel->getUrl();
+        $rssFeedUrl = $searchModel->getRssFeedUrl();
+        $rssLastChecked = $searchModel->getRssLastChecked();
+        $created = $searchModel->getCreated();
+        $updated = $searchModel->getUpdated();
         switch ($displayMode) {
             case 'add':
                 return <<<HTML
@@ -143,7 +148,7 @@ HTML;
       <td>$updated</td>
 
 HTML;
-                break ;
+                break;
             case 'update':
                 return <<<HTML
       <td>
@@ -160,7 +165,7 @@ HTML;
       <td>$updated</td>
 
 HTML;
-                break ;
+                break;
             case 'delete':
                 return <<<HTML
       <td>
@@ -177,7 +182,7 @@ HTML;
       <td>$updated</td>
 
 HTML;
-                break ;
+                break;
             case 'list':
                 return <<<HTML
       <td>
@@ -194,27 +199,29 @@ HTML;
       <td>$updated</td>
                 
 HTML;
-                break ;
+                break;
             default:
-                throw new ViewException('Invalid display mode.') ;
-                break ;
+                throw new ViewException('Invalid display mode.');
+                break;
         }
         // Should never get here.
     }
 
     /**
+     *
      * @return SearchModel[]
      */
     public function getSearchModels()
     {
-        return $this->_searchModels ;
+        return $this->_searchModels;
     }
 
     /**
+     *
      * @param SearchModel[] $searchModels
      */
     public function setSearchModels($searchModels)
     {
-        $this->_searchModels = $searchModels ;
+        $this->_searchModels = $searchModels;
     }
 }

@@ -20,25 +20,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Model Base class
  */
 abstract class ModelBase
 {
-    /**#@+
+
+    /**
+     * #@+
+     *
      * @return boolean
      */
     /**
      * Row addition validator
      */
-    abstract public function validateForAdd() ;
+    abstract public function validateForAdd();
+
     /**
      * Row update validator
      */
-    abstract public function validateForUpdate() ;
+    abstract public function validateForUpdate();
 
     /**
      * Validate model for delete
@@ -47,40 +50,46 @@ abstract class ModelBase
      */
     public function validateForDelete()
     {
-        return ($this->validateId($this->getId())) ;
+        return ($this->validateId($this->getId()));
     }
 
     /**
      * Validate a numeric ID
      *
-     * @param string
+     * @param
+     *            string
      */
     public function validateId($id)
     {
-        return (1 === preg_match('/^[1-9]([0-9]*)$/', $id)) ;
+        return (1 === preg_match('/^[1-9]([0-9]*)$/', $id));
     }
 
     /**
      * Validate a date
      *
-     * @param string
+     * @param
+     *            string
      */
     public function validateDate($date)
     {
-        return (1 === preg_match('/^20[123][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$/', $date)) ;
+        return (1 === preg_match('/^20[123][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$/', $date));
     }
 
     /**
      * Validate a timestamp
      *
-     * @param string
+     * @param
+     *            string
      */
     public function validateTimestamp($timestamp)
     {
-        return (1 === preg_match('/^20[123][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01]) ([0-5][0-9][:]){2}[0-5][0-9]$/', $timestamp)) ;
+        return (1 === preg_match('/^20[123][0-9]-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01]) ([0-5][0-9][:]){2}[0-5][0-9]$/', $timestamp));
     }
-    /**#@-*/
 
+    /**
+     * #@-
+     */
+    
     /**
      * Stub method
      */

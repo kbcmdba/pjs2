@@ -20,40 +20,43 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Note Form View
  */
 class NoteFormView extends FormViewBase
 {
+
     /** @var NoteModel */
-    private $_noteModel ;
+    private $_noteModel;
 
     /**
      * Class constructor
      *
-     * @param string Page title and action button
-     * @param NoteModel The populated model or null
+     * @param
+     *            string Page title and action button
+     * @param
+     *            NoteModel The populated model or null
      */
     public function __construct($title = "Add Note", $noteModel = null)
     {
-        parent::__construct($title) ;
+        parent::__construct($title);
         if (null !== $noteModel) {
-            $this->_noteModel = $noteModel ;
+            $this->_noteModel = $noteModel;
         } else {
-            $this->_noteModel = new NoteModel ;
+            $this->_noteModel = new NoteModel();
         }
     }
 
     /**
      * magic method
+     *
      * @return string
      */
     public function __toString()
     {
-        return $this->getForm() ;
+        return $this->getForm();
     }
 
     /**
@@ -62,15 +65,15 @@ class NoteFormView extends FormViewBase
      */
     public function getForm($readOnly = 'readwrite')
     {
-        $RO              = ('readonly' === $readOnly) ? 'READONLY="READONLY" ' : '' ;
-        $noteModel       = $this->_noteModel ;
-        $title           = $this->getTitle() ;
-        $id              = $noteModel->getId() ;
-        $appliesToTable  = $noteModel->getAppliesToTable() ;
-        $appliesToId     = $noteModel->getAppliesToId() ;
-        $noteText        = htmlspecialchars($noteModel->getNoteText()) ;
-        $buttonLabel     = $this->getButtonLabel() ;
-        $returnValue     = <<<HTML
+        $RO = ('readonly' === $readOnly) ? 'READONLY="READONLY" ' : '';
+        $noteModel = $this->_noteModel;
+        $title = $this->getTitle();
+        $id = $noteModel->getId();
+        $appliesToTable = $noteModel->getAppliesToTable();
+        $appliesToId = $noteModel->getAppliesToId();
+        $noteText = htmlspecialchars($noteModel->getNoteText());
+        $buttonLabel = $this->getButtonLabel();
+        $returnValue = <<<HTML
     <h2>$title</h2>
     <form name="note" onsubmit="return validateNote()" method="GET">
       <table border="1" cellspacing="1" cellpadding="2">
@@ -100,6 +103,6 @@ class NoteFormView extends FormViewBase
       </table>
     </form>
 HTML;
-        return $returnValue ;
+        return $returnValue;
     }
 }

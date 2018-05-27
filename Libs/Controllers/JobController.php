@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 class JobController extends ControllerBase
 {
@@ -29,20 +28,21 @@ class JobController extends ControllerBase
     /**
      * Class constructor
      *
-     * @param string $readWriteMode "read", "write", or "admin"
+     * @param string $readWriteMode
+     *            "read", "write", or "admin"
      * @throws ControllerException
      */
     public function __construct($readWriteMode = 'write')
     {
-        parent::__construct($readWriteMode) ;
+        parent::__construct($readWriteMode);
     }
-    
+
     public function dropTable()
     {
-        $sql = "DROP TABLE IF EXISTS job" ;
-        $this->_doDDL($sql) ;
+        $sql = "DROP TABLE IF EXISTS job";
+        $this->_doDDL($sql);
     }
-    
+
     public function createTable()
     {
         $sql = <<<SQL
@@ -79,17 +79,17 @@ CREATE TABLE IF NOT EXISTS job
      )
 
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
     }
 
     public function dropTriggers()
     {
-        $sql = "DROP TRIGGER IF EXISTS jobBeforeInsertTrigger" ;
-        $this->_doDDL($sql) ;
-        $sql = "DROP TRIGGER IF EXISTS jobAfterUpdateTrigger" ;
-        $this->_doDDL($sql) ;
-        $sql = "DROP TRIGGER IF EXISTS jobAfterDeleteTrigger" ;
-        $this->_doDDL($sql) ;
+        $sql = "DROP TRIGGER IF EXISTS jobBeforeInsertTrigger";
+        $this->_doDDL($sql);
+        $sql = "DROP TRIGGER IF EXISTS jobAfterUpdateTrigger";
+        $this->_doDDL($sql);
+        $sql = "DROP TRIGGER IF EXISTS jobAfterDeleteTrigger";
+        $this->_doDDL($sql);
     }
 
     public function createTriggers()
@@ -117,7 +117,7 @@ BEFORE INSERT
    END
 
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
         $sql = <<<SQL
 CREATE TRIGGER jobAfterUpdateTrigger
 BEFORE UPDATE
@@ -153,7 +153,7 @@ BEFORE UPDATE
    END
 
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
         $sql = <<<SQL
 CREATE TRIGGER jobAfterDeleteTrigger
  AFTER DELETE
@@ -172,7 +172,7 @@ CREATE TRIGGER jobAfterDeleteTrigger
    END
 
 SQL;
-        $this->_doDDL($sql) ;
+        $this->_doDDL($sql);
     }
 
     /**
@@ -202,49 +202,35 @@ SELECT id
  WHERE id = ?
 
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if ((! $stmt) || (! $stmt->bind_param('i', $id))) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result(
-            $id,
-            $primaryContactId,
-            $companyId,
-            $applicationStatusId,
-            $lastStatusChange,
-            $urgency,
-            $created,
-            $updated,
-            $nextActionDue,
-            $nextAction,
-            $positionTitle,
-            $location,
-            $url
-                                 )) {
-            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')') ;
+        if (! $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         if ($stmt->fetch()) {
-            $model = new JobModel() ;
-            $model->setId($id) ;
-            $model->setPrimaryContactId($primaryContactId) ;
-            $model->setCompanyId($companyId) ;
-            $model->setApplicationStatusId($applicationStatusId) ;
-            $model->setLastStatusChange($lastStatusChange) ;
-            $model->setUrgency($urgency) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
-            $model->setNextActionDue($nextActionDue) ;
-            $model->setNextAction($nextAction) ;
-            $model->setPositionTitle($positionTitle) ;
-            $model->setLocation($location) ;
-            $model->setUrl($url) ;
+            $model = new JobModel();
+            $model->setId($id);
+            $model->setPrimaryContactId($primaryContactId);
+            $model->setCompanyId($companyId);
+            $model->setApplicationStatusId($applicationStatusId);
+            $model->setLastStatusChange($lastStatusChange);
+            $model->setUrgency($urgency);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setNextActionDue($nextActionDue);
+            $model->setNextAction($nextAction);
+            $model->setPositionTitle($positionTitle);
+            $model->setLocation($location);
+            $model->setUrl($url);
         } else {
-            $model = null ;
+            $model = null;
         }
-        return($model) ;
+        return ($model);
     }
 
     /**
@@ -276,47 +262,33 @@ SELECT id
     BY nextActionDue DESC
 
 SQL;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ') ' . $sql) ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ') ' . $sql);
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result(
-            $id,
-            $primaryContactId,
-            $companyId,
-            $applicationStatusId,
-            $lastStatusChange,
-            $urgency,
-            $created,
-            $updated,
-            $nextActionDue,
-            $nextAction,
-            $positionTitle,
-            $location,
-            $url
-                          ) ;
-        $models = [] ;
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url);
+        $models = [];
         while ($stmt->fetch()) {
-            $model = new JobModel() ;
-            $model->setId($id) ;
-            $model->setPrimaryContactId($primaryContactId) ;
-            $model->setCompanyId($companyId) ;
-            $model->setApplicationStatusId($applicationStatusId) ;
-            $model->setLastStatusChange($lastStatusChange) ;
-            $model->setUrgency($urgency) ;
-            $model->setCreated($created) ;
-            $model->setUpdated($updated) ;
-            $model->setNextActionDue($nextActionDue) ;
-            $model->setNextAction($nextAction) ;
-            $model->setPositionTitle($positionTitle) ;
-            $model->setLocation($location) ;
-            $model->setUrl($url) ;
-            $models[] = $model ;
+            $model = new JobModel();
+            $model->setId($id);
+            $model->setPrimaryContactId($primaryContactId);
+            $model->setCompanyId($companyId);
+            $model->setApplicationStatusId($applicationStatusId);
+            $model->setLastStatusChange($lastStatusChange);
+            $model->setUrgency($urgency);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setNextActionDue($nextActionDue);
+            $model->setNextAction($nextAction);
+            $model->setPositionTitle($positionTitle);
+            $model->setLocation($location);
+            $model->setUrl($url);
+            $models[] = $model;
         }
-        return($models) ;
+        return ($models);
     }
 
     /**
@@ -327,7 +299,7 @@ SQL;
      */
     public function getAll()
     {
-        return $this->getSome() ;
+        return $this->getSome();
     }
 
     /**
@@ -339,17 +311,17 @@ SQL;
      */
     public function countSome($whereClause = '1 = 1')
     {
-        $sql = "SELECT COUNT( id ) FROM job WHERE $whereClause" ;
-        $stmt = $this->_dbh->prepare($sql) ;
+        $sql = "SELECT COUNT( id ) FROM job WHERE $whereClause";
+        $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ') ' . $sql) ;
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ') ' . $sql);
         }
         if (! $stmt->execute()) {
-            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result($count) ;
-        $stmt->fetch() ;
-        return $count ;
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        return $count;
     }
 
     /**
@@ -360,10 +332,11 @@ SQL;
      */
     public function countAll()
     {
-        return $this->countSome() ;
+        return $this->countSome();
     }
 
     /**
+     *
      * @param JobModel $model
      */
     public function add($model)
@@ -389,57 +362,45 @@ INSERT job
 VALUES ( NULL, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ? )
 
 SQL;
-                $primaryContactId    = $model->getPrimaryContactId() ;
-                $companyId           = $model->getCompanyId() ;
-                $applicationStatusId = $model->getApplicationStatusId() ;
-                $lastStatusChange    = $model->getLastStatusChange() ;
-                $urgency             = $model->getUrgency() ;
-                $nextActionDue       = $model->getNextActionDue() ;
-                $nextAction          = $model->getNextAction() ;
-                $positionTitle       = $model->getPositionTitle() ;
-                $location            = $model->getLocation() ;
-                $url                 = $model->getUrl() ;
-                $stmt                = $this->_dbh->prepare($query) ;
+                $primaryContactId = $model->getPrimaryContactId();
+                $companyId = $model->getCompanyId();
+                $applicationStatusId = $model->getApplicationStatusId();
+                $lastStatusChange = $model->getLastStatusChange();
+                $urgency = $model->getUrgency();
+                $nextActionDue = $model->getNextActionDue();
+                $nextAction = $model->getNextAction();
+                $positionTitle = $model->getPositionTitle();
+                $location = $model->getLocation();
+                $url = $model->getUrl();
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query . ' - ' . $this->_dbh->error) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query . ' - ' . $this->_dbh->error);
                 }
-                if (! ($stmt->bind_param(
-                    'iiisssssss',
-                    $primaryContactId,
-                    $companyId,
-                    $applicationStatusId,
-                    $lastStatusChange,
-                    $urgency,
-                    $nextActionDue,
-                    $nextAction,
-                    $positionTitle,
-                    $location,
-                    $url
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                if (! ($stmt->bind_param('iiisssssss', $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $nextActionDue, $nextAction, $positionTitle, $location, $url))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
-                    throw new ControllerException('Failed to execute INSERT statement. ('
-                                                 . $this->_dbh->error .
-                                                 ')') ;
+                    throw new ControllerException('Failed to execute INSERT statement. (' . $this->_dbh->error . ')');
                 }
-                $newId = $stmt->insert_id ;
+                $newId = $stmt->insert_id;
                 /**
+                 *
                  * @SuppressWarnings checkAliases
                  */
                 if (! $stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $newId ;
+                return $newId;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.") ;
+            throw new ControllerException("Invalid data.");
         }
     }
 
     /**
+     *
      * @param JobModel $model
      * @see ControllerBase::update()
      */
@@ -462,59 +423,45 @@ UPDATE job
  WHERE id = ?
 
 SQL;
-                $id                  = $model->getId() ;
-                $primaryContactId    = $model->getPrimaryContactId() ;
-                $companyId           = $model->getCompanyId() ;
-                $applicationStatusId = $model->getApplicationStatusId() ;
-                $lastStatusChange    = $model->getLastStatusChange() ;
-                $urgency             = $model->getUrgency() ;
-                $nextActionDue       = $model->getNextActionDue() ;
-                $nextAction          = $model->getNextAction() ;
-                $positionTitle       = $model->getPositionTitle() ;
-                $location            = $model->getLocation() ;
-                $url                 = $model->getUrl() ;
-                $stmt                = $this->_dbh->prepare($query) ;
+                $id = $model->getId();
+                $primaryContactId = $model->getPrimaryContactId();
+                $companyId = $model->getCompanyId();
+                $applicationStatusId = $model->getApplicationStatusId();
+                $lastStatusChange = $model->getLastStatusChange();
+                $urgency = $model->getUrgency();
+                $nextActionDue = $model->getNextActionDue();
+                $nextAction = $model->getNextAction();
+                $positionTitle = $model->getPositionTitle();
+                $location = $model->getLocation();
+                $url = $model->getUrl();
+                $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query) ;
+                    throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param(
-                    'iiisssssssi',
-                    $primaryContactId,
-                    $companyId,
-                    $applicationStatusId,
-                    $lastStatusChange,
-                    $urgency,
-                    $nextActionDue,
-                    $nextAction,
-                    $positionTitle,
-                    $location,
-                    $url,
-                    $id
-                                          ))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.') ;
+                if (! ($stmt->bind_param('iiisssssssi', $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $nextActionDue, $nextAction, $positionTitle, $location, $url, $id))) {
+                    throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
-                if (!$stmt->execute()) {
-                    throw new ControllerException('Failed to execute UPDATE statement. ('
-                            . $this->_dbh->error .
-                            ')') ;
+                if (! $stmt->execute()) {
+                    throw new ControllerException('Failed to execute UPDATE statement. (' . $this->_dbh->error . ')');
                 }
                 /**
+                 *
                  * @SuppressWarnings checkAliases
                  */
-                if (!$stmt->close()) {
-                    throw new ControllerException('Something broke while trying to close the prepared statement.') ;
+                if (! $stmt->close()) {
+                    throw new ControllerException('Something broke while trying to close the prepared statement.');
                 }
-                return $id ;
+                return $id;
             } catch (\Exception $e) {
-                throw new ControllerException($e->getMessage()) ;
+                throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.") ;
+            throw new ControllerException("Invalid data.");
         }
     }
 
     public function delete($model)
     {
-        $this->_deleteModelById("DELETE FROM job WHERE id = ?", $model) ;
+        $this->_deleteModelById("DELETE FROM job WHERE id = ?", $model);
     }
 }

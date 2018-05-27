@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * _Template Model
@@ -30,15 +29,16 @@ class _TemplateModel extends ModelBase
 {
 
     // @todo Add _TemplateModel specific properties, getters and setters
-    private $_created ;
-    private $_updated ;
+    private $_created;
+
+    private $_updated;
 
     /**
      * class constructor
      */
     public function __construct()
     {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     /**
@@ -49,7 +49,7 @@ class _TemplateModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return 0 ;
+        return 0;
     }
 
     /**
@@ -60,45 +60,49 @@ class _TemplateModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return 0 ;
+        return 0;
     }
 
     // @todo Implement _TemplateModel::populateFromForm()
     public function populateFromForm()
     {
-        $this->setCreated(Tools::param('created')) ;
-        $this->setUpdated(Tools::param('updated')) ;
+        $this->setCreated(Tools::param('created'));
+        $this->setUpdated(Tools::param('updated'));
     }
 
     /**
+     *
      * @return string
      */
     public function getCreated()
     {
-        return $this->_created ;
+        return $this->_created;
     }
 
     /**
+     *
      * @param string $created
      */
     public function setCreated($created)
     {
-        $this->_created = $created ;
+        $this->_created = $created;
     }
 
     /**
+     *
      * @return string
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
+     *
      * @param string $updated
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated ;
+        $this->_updated = $updated;
     }
 }

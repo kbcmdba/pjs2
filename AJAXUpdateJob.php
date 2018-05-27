@@ -20,61 +20,59 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$auth = new Auth() ;
+$auth = new Auth();
 if (! $auth->isAuthorized()) {
-    $auth->forbidden() ;
-    exit(0) ; // Should never get here but just in case...
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
 }
-$id                  = Tools::param('id') ;
-$primaryContactId    = Tools::param('contactId') ;
-$companyId           = Tools::param('companyId') ;
-$applicationStatusId = Tools::param('applicationStatusId') ;
-$lastStatusChange    = Tools::param('lastStatusChange') ;
-$urgency             = Tools::param('urgency') ;
-$nextActionDue       = Tools::param('nextActionDue') ;
-$nextAction          = Tools::param('nextAction') ;
-$positionTitle       = Tools::param('positionTitle') ;
-$location            = Tools::param('location') ;
-$url                 = Tools::param('url') ;
-$rowId               = Tools::param('rowId') ;
-$result              = 'OK' ;
-$jobId               = '' ;
-$jobListView         = new JobListView('html', null) ;
+$id = Tools::param('id');
+$primaryContactId = Tools::param('contactId');
+$companyId = Tools::param('companyId');
+$applicationStatusId = Tools::param('applicationStatusId');
+$lastStatusChange = Tools::param('lastStatusChange');
+$urgency = Tools::param('urgency');
+$nextActionDue = Tools::param('nextActionDue');
+$nextAction = Tools::param('nextAction');
+$positionTitle = Tools::param('positionTitle');
+$location = Tools::param('location');
+$url = Tools::param('url');
+$rowId = Tools::param('rowId');
+$result = 'OK';
+$jobId = '';
+$jobListView = new JobListView('html', null);
 try {
-    $jobController = new JobController() ;
-    $jobModel      = $jobController->get($id) ;
-    $jobModel->setPrimaryContactId($primaryContactId) ;
-    $jobModel->setCompanyId($companyId) ;
-    $jobModel->setApplicationStatusId($applicationStatusId) ;
-    $jobModel->setLastStatusChange($lastStatusChange) ;
-    $jobModel->setUrgency($urgency) ;
-    $jobModel->setNextActionDue($nextActionDue) ;
-    $jobModel->setNextAction($nextAction) ;
-    $jobModel->setPositionTitle($positionTitle) ;
-    $jobModel->setLocation($location) ;
-    $jobModel->setUrl($url) ;
-    $result = $jobController->update($jobModel) ;
-
+    $jobController = new JobController();
+    $jobModel = $jobController->get($id);
+    $jobModel->setPrimaryContactId($primaryContactId);
+    $jobModel->setCompanyId($companyId);
+    $jobModel->setApplicationStatusId($applicationStatusId);
+    $jobModel->setLastStatusChange($lastStatusChange);
+    $jobModel->setUrgency($urgency);
+    $jobModel->setNextActionDue($nextActionDue);
+    $jobModel->setNextAction($nextAction);
+    $jobModel->setPositionTitle($positionTitle);
+    $jobModel->setLocation($location);
+    $jobModel->setUrl($url);
+    $result = $jobController->update($jobModel);
+    
     if (! ($result > 0)) {
-        throw new ControllerException("Update failed.") ;
+        throw new ControllerException("Update failed.");
     }
-    $jobId = $result ;
-    $row = $jobListView->displayJobRow($jobModel, 'list') ;
-    $result = 'OK' ;
+    $jobId = $result;
+    $row = $jobListView->displayJobRow($jobModel, 'list');
+    $result = 'OK';
 } catch (ControllerException $e) {
-    $result = 'FAILED' ;
-    $row = $jobListView->displayJobRow(
-        $jobModel,
-        'update',
-        'Update Job record failed. '
-                                      . $e->getMessage()
-                                      ) ;
+    $result = 'FAILED';
+    $row = $jobListView->displayJobRow($jobModel, 'update', 'Update Job record failed. ' . $e->getMessage());
 }
 
-$result = [ 'result' => $result, 'row' => $row, 'id' => $jobId ] ;
-echo json_encode($result) . PHP_EOL ;
+$result = [
+    'result' => $result,
+    'row' => $row,
+    'id' => $jobId
+];
+echo json_encode($result) . PHP_EOL;

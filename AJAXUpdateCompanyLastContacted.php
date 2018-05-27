@@ -20,45 +20,41 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$auth = new Auth() ;
+$auth = new Auth();
 if (! $auth->isAuthorized()) {
-    $auth->forbidden() ;
-    exit(0) ; // Should never get here but just in case...
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
 }
-$id              = Tools::param('id') ;
-$rowStyle        = Tools::param('rowStyle') ;
-$companyId       = '' ;
-$result          = 'OK' ;
-$clv             = new CompanyListView('html', null) ;
+$id = Tools::param('id');
+$rowStyle = Tools::param('rowStyle');
+$companyId = '';
+$result = 'OK';
+$clv = new CompanyListView('html', null);
 try {
-    $companyController = new CompanyController() ;
-    $companyModel = $companyController->get($id) ;
-    $companyModel->setLastContacted(Tools::currentTimestamp()) ;
-
-    $result = $companyController->update($companyModel) ;
-
+    $companyController = new CompanyController();
+    $companyModel = $companyController->get($id);
+    $companyModel->setLastContacted(Tools::currentTimestamp());
+    
+    $result = $companyController->update($companyModel);
+    
     if (! ($result > 0)) {
-        throw new ControllerException("Update failed.") ;
+        throw new ControllerException("Update failed.");
     }
     // Get it again because the updated column has changed.
-    $companyModel = $companyController->get($id) ;
-    $rows         = $clv->displayCompanyRow($companyModel, 'list', $rowStyle, '') ;
-    $result       = 'OK' ;
+    $companyModel = $companyController->get($id);
+    $rows = $clv->displayCompanyRow($companyModel, 'list', $rowStyle, '');
+    $result = 'OK';
 } catch (ControllerException $e) {
-    $result = 'FAILED' ;
-    $rows   = $clv->displayCompanyRow(
-        $companyModel,
-        'update',
-        $rowStyle,
-        'Update Company record failed. '
-                                     . $e->getMessage()
-                                     ) ;
+    $result = 'FAILED';
+    $rows = $clv->displayCompanyRow($companyModel, 'update', $rowStyle, 'Update Company record failed. ' . $e->getMessage());
 }
 
-$result = [ 'result' => $result, 'rows' => $rows ] ;
-echo json_encode($result) . PHP_EOL ;
+$result = [
+    'result' => $result,
+    'rows' => $rows
+];
+echo json_encode($result) . PHP_EOL;

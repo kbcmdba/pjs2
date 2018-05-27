@@ -20,17 +20,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once 'Libs/autoload.php';
 
-require_once 'Libs/autoload.php' ;
-
-$config = new Config() ;
-$page = new PJSWebPage($config->getTitle() . " - Searches") ;
-$body = "<h2>Searches</h2>\n" ;
-$searchController = new SearchController('read') ;
-$searchModelList = $searchController->getAll() ;
-$searchListView = new SearchListView('html', $searchModelList) ;
-$body .= $searchListView->getView() ;
-$page->setBody($body) ;
-$page->displayPage() ;
+$config = new Config();
+$page = new PJSWebPage($config->getTitle() . " - Searches");
+$body = "<h2>Searches</h2>\n";
+$searchController = new SearchController('read');
+$searchModelList = $searchController->getAll();
+$searchListView = new SearchListView('html', $searchModelList);
+$body .= $searchListView->getView();
+$page->setBody($body);
+$page->displayPage();

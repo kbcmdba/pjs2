@@ -20,29 +20,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Search Model
  */
 class SearchModel extends ModelBase
 {
-    private $_id ;
-    private $_engineName ;
-    private $_searchName ;
-    private $_url ;
-    private $_rssFeedUrl ;
-    private $_rssLastChecked ;
-    private $_created ;
-    private $_updated ;
+
+    private $_id;
+
+    private $_engineName;
+
+    private $_searchName;
+
+    private $_url;
+
+    private $_rssFeedUrl;
+
+    private $_rssLastChecked;
+
+    private $_created;
+
+    private $_updated;
 
     /**
      * class constructor
      */
     public function __construct()
     {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     /**
@@ -52,11 +59,7 @@ class SearchModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return  (Tools::isNullOrEmptyString(Tools::param('id'))
-               && ! Tools::isNullOrEmptyString(Tools::param('engineName'))
-               && ! Tools::isNullOrEmptyString(Tools::param('searchName'))
-               && ! Tools::isNullOrEmptyString(Tools::param('url'))
-                ) ;
+        return (Tools::isNullOrEmptyString(Tools::param('id')) && ! Tools::isNullOrEmptyString(Tools::param('engineName')) && ! Tools::isNullOrEmptyString(Tools::param('searchName')) && ! Tools::isNullOrEmptyString(Tools::param('url')));
     }
 
     /**
@@ -66,148 +69,160 @@ class SearchModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return  (! Tools::isNullOrEmptyString(Tools::param('id'))
-               && ! Tools::isNullOrEmptyString(Tools::param('engineName'))
-               && ! Tools::isNullOrEmptyString(Tools::param('searchName'))
-               && ! Tools::isNullOrEmptyString(Tools::param('url'))
-                ) ;
+        return (! Tools::isNullOrEmptyString(Tools::param('id')) && ! Tools::isNullOrEmptyString(Tools::param('engineName')) && ! Tools::isNullOrEmptyString(Tools::param('searchName')) && ! Tools::isNullOrEmptyString(Tools::param('url')));
     }
 
     public function populateFromForm()
     {
-        $this->setId(Tools::param('id')) ;
-        $this->setEngineName(Tools::param('engineName')) ;
-        $this->setSearchName(Tools::param('searchName')) ;
-        $this->setUrl(Tools::param('url')) ;
-        $this->setCreated(Tools::param('created')) ;
-        $this->setUpdated(Tools::param('updated')) ;
+        $this->setId(Tools::param('id'));
+        $this->setEngineName(Tools::param('engineName'));
+        $this->setSearchName(Tools::param('searchName'));
+        $this->setUrl(Tools::param('url'));
+        $this->setCreated(Tools::param('created'));
+        $this->setUpdated(Tools::param('updated'));
     }
 
     /**
+     *
      * @return integer
      */
     public function getId()
     {
-        return $this->_id ;
+        return $this->_id;
     }
 
     /**
+     *
      * @param integer $id
      */
     public function setId($id)
     {
-        $this->_id = $id ;
+        $this->_id = $id;
     }
 
     /**
+     *
      * @return string
      */
     public function getEngineName()
     {
-        return $this->_engineName ;
+        return $this->_engineName;
     }
 
     /**
+     *
      * @param string $engineName
      */
     public function setEngineName($engineName)
     {
-        $this->_engineName = $engineName ;
+        $this->_engineName = $engineName;
     }
 
     /**
+     *
      * @return string
      */
     public function getSearchName()
     {
-        return $this->_searchName ;
+        return $this->_searchName;
     }
 
     /**
+     *
      * @param string $searchName
      */
     public function setSearchName($searchName)
     {
-        $this->_searchName = $searchName ;
+        $this->_searchName = $searchName;
     }
 
     /**
+     *
      * @return string
      */
     public function getUrl()
     {
-        return $this->_url ;
+        return $this->_url;
     }
 
     /**
+     *
      * @param string $url
      */
     public function setUrl($url)
     {
-        $this->_url = $url ;
+        $this->_url = $url;
     }
 
     /**
+     *
      * @return string
      */
     public function getRssFeedUrl()
     {
-        return $this->_rssFeedUrl ;
+        return $this->_rssFeedUrl;
     }
 
     /**
+     *
      * @param string $rssFeedUrl
      */
     public function setRssFeedUrl($rssFeedUrl)
     {
-        $this->_rssFeedUrl = $rssFeedUrl ;
+        $this->_rssFeedUrl = $rssFeedUrl;
     }
 
     /**
+     *
      * @return string
      */
     public function getRssLastChecked()
     {
-        return $this->_rssLastChecked ;
+        return $this->_rssLastChecked;
     }
 
     /**
+     *
      * @param string $rssLastChecked
      */
     public function setRssLastChecked($rssLastChecked)
     {
-        $this->_rssLastChecked = $rssLastChecked ;
+        $this->_rssLastChecked = $rssLastChecked;
     }
 
     /**
+     *
      * @return string
      */
     public function getCreated()
     {
-        return $this->_created ;
+        return $this->_created;
     }
 
     /**
+     *
      * @param string $created
      */
     public function setCreated($created)
     {
-        $this->_created = $created ;
+        $this->_created = $created;
     }
 
     /**
+     *
      * @return string
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
+     *
      * @param string $updated
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated ;
+        $this->_updated = $updated;
     }
 }

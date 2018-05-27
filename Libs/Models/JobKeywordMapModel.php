@@ -20,27 +20,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * JobKeyword Model
  */
 class JobKeywordMapModel extends ModelBase
 {
-    private $_id ;
-    private $_jobId ;
-    private $_keywordId ;
-    private $_sortKey ;
-    private $_created ;
-    private $_updated ;
+
+    private $_id;
+
+    private $_jobId;
+
+    private $_keywordId;
+
+    private $_sortKey;
+
+    private $_created;
+
+    private $_updated;
 
     /**
      * class constructor
      */
     public function __construct()
     {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     /**
@@ -50,14 +55,7 @@ class JobKeywordMapModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return  ((Tools::isNullOrEmptyString(Tools::param('id')))
-               && (! Tools::isNullOrEmptyString(Tools::param('jobId')))
-               && (Tools::isNumeric(Tools::param('jobId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('keywordId')))
-               && (Tools::isNumeric(Tools::param('keywordId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('sortKey')))
-               && (Tools::isNumeric(Tools::param('sortKey')))
-                ) ;
+        return ((Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('jobId'))) && (Tools::isNumeric(Tools::param('jobId'))) && (! Tools::isNullOrEmptyString(Tools::param('keywordId'))) && (Tools::isNumeric(Tools::param('keywordId'))) && (! Tools::isNullOrEmptyString(Tools::param('sortKey'))) && (Tools::isNumeric(Tools::param('sortKey'))));
     }
 
     /**
@@ -67,120 +65,124 @@ class JobKeywordMapModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return  ((! Tools::isNullOrEmptyString(Tools::param('id')))
-               && (Tools::isNumeric(Tools::param('id')))
-               && (! Tools::isNullOrEmptyString(Tools::param('jobId')))
-               && (Tools::isNumeric(Tools::param('jobId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('keywordId')))
-               && (Tools::isNumeric(Tools::param('keywordId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('sortKey')))
-               && (Tools::isNumeric(Tools::param('sortKey')))
-                ) ;
+        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (Tools::isNumeric(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('jobId'))) && (Tools::isNumeric(Tools::param('jobId'))) && (! Tools::isNullOrEmptyString(Tools::param('keywordId'))) && (Tools::isNumeric(Tools::param('keywordId'))) && (! Tools::isNullOrEmptyString(Tools::param('sortKey'))) && (Tools::isNumeric(Tools::param('sortKey'))));
     }
 
     public function populateFromForm()
     {
-        $this->setId(Tools::param('id')) ;
-        $this->setJobId(Tools::param('jobId')) ;
-        $this->setKeywordId(Tools::param('keywordId')) ;
-        $this->setSortKey(Tools::param('sortKey')) ;
-        $this->setCreated(Tools::param('created')) ;
-        $this->setUpdated(Tools::param('updated')) ;
+        $this->setId(Tools::param('id'));
+        $this->setJobId(Tools::param('jobId'));
+        $this->setKeywordId(Tools::param('keywordId'));
+        $this->setSortKey(Tools::param('sortKey'));
+        $this->setCreated(Tools::param('created'));
+        $this->setUpdated(Tools::param('updated'));
     }
 
     /**
+     *
      * @return integer
      */
     public function getId()
     {
-        return $this->_id ;
+        return $this->_id;
     }
 
     /**
+     *
      * @param integer $id
      */
     public function setId($id)
     {
-        $this->_id = $id ;
+        $this->_id = $id;
     }
 
     /**
+     *
      * @return integer
      */
     public function getJobId()
     {
-        return $this->_jobId ;
+        return $this->_jobId;
     }
 
     /**
+     *
      * @param integer $jobId
      */
     public function setJobId($jobId)
     {
-        $this->_jobId = $jobId ;
+        $this->_jobId = $jobId;
     }
 
     /**
+     *
      * @return integer
      */
     public function getKeywordId()
     {
-        return $this->_keywordId ;
+        return $this->_keywordId;
     }
 
     /**
+     *
      * @param integer $keywordId
      */
     public function setKeywordId($keywordId)
     {
-        $this->_keywordId = $keywordId ;
+        $this->_keywordId = $keywordId;
     }
 
     /**
+     *
      * @return integer
      */
     public function getSortKey()
     {
-        return $this->_sortKey ;
+        return $this->_sortKey;
     }
 
     /**
+     *
      * @param integer $sortKey
      */
     public function setSortKey($sortKey)
     {
-        $this->_sortKey = $sortKey ;
+        $this->_sortKey = $sortKey;
     }
 
     /**
+     *
      * @return string
      */
     public function getCreated()
     {
-        return $this->_created ;
+        return $this->_created;
     }
 
     /**
+     *
      * @param string $created
      */
     public function setCreated($created)
     {
-        $this->_created = $created ;
+        $this->_created = $created;
     }
 
     /**
+     *
      * @return string
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
+     *
      * @param string $updated
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated ;
+        $this->_updated = $updated;
     }
 }

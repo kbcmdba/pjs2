@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Configuration for this tool set
@@ -37,39 +36,52 @@ class Config
      * Usage Examples:
      *
      * Constructor:
-     *   $oConfig = new Config() ;
+     * $oConfig = new Config() ;
      *
      * Getting configuration data:
-     *   $dbh = mysql_connect( $oConfig->getDbHost() . ':' . $oConfig->getDbPort()
-     *                       , $oConfig->getDbUser()
-     *                       , $oConfig->getDbPass()
-     *                       ) ;
-     *   $dbh->mysql_select_db( $oConfig->getDbName() ) ;
-     *
+     * $dbh = mysql_connect( $oConfig->getDbHost() . ':' . $oConfig->getDbPort()
+     * , $oConfig->getDbUser()
+     * , $oConfig->getDbPass()
+     * ) ;
+     * $dbh->mysql_select_db( $oConfig->getDbName() ) ;
      */
-
+    
     // This is sub-optimal but it works for now.
-
+    
     /** @var integer */
-    private $_authTimeoutSeconds = 3600 ;
+    private $_authTimeoutSeconds = 3600;
 
-    /**#@+
+    /**
+     * #@+
+     *
      * @var string
      */
-    private $_dbHost       = null ;
-    private $_dbPort       = null ;
-    private $_dbUser       = null ;
-    private $_dbPass       = null ;
-    private $_dbName       = null ;
-    private $_title        = null ;
-    private $_timeZone     = null ;
-    private $_userId       = null ;
-    private $_userPassword = null ;
-    /**#@-*/
+    private $_dbHost = null;
 
+    private $_dbPort = null;
+
+    private $_dbUser = null;
+
+    private $_dbPass = null;
+
+    private $_dbName = null;
+
+    private $_title = null;
+
+    private $_timeZone = null;
+
+    private $_userId = null;
+
+    private $_userPassword = null;
+
+    /**
+     * #@-
+     */
+    
     /** @var boolean */
-    private $_resetOk  = false ;
-    private $_skipAuth = false ;
+    private $_resetOk = false;
+
+    private $_skipAuth = false;
 
     /**
      * Class Constructor
@@ -80,62 +92,99 @@ class Config
     public function __construct()
     {
         if (! is_readable('config.xml')) {
-            throw new \Exception("Unable to load configuration from config.xml!") ;
+            throw new \Exception("Unable to load configuration from config.xml!");
         }
-        $xml = simplexml_load_file('config.xml') ;
+        $xml = simplexml_load_file('config.xml');
         if (! $xml) {
-            throw new \Exception("Invalid syntax in config.xml!") ;
+            throw new \Exception("Invalid syntax in config.xml!");
         }
-        $errors = "" ;
-        $cfgValues = [ 'resetOk'            => 0
-                          , 'authTimeoutSeconds' => 3600
-                          , 'skipAuth'           => 0
-                          ] ;
-        $paramList = [ 'authTimeoutSeconds' => [ 'isRequired' => 0, 'value' => 0 ]
-                          , 'dbHost'             => [ 'isRequired' => 1, 'value' => 0 ]
-                          , 'dbPass'             => [ 'isRequired' => 1, 'value' => 0 ]
-                          , 'dbName'             => [ 'isRequired' => 1, 'value' => 0 ]
-                          , 'dbPort'             => [ 'isRequired' => 1, 'value' => 0 ]
-                          , 'dbUser'             => [ 'isRequired' => 1, 'value' => 0 ]
-                          , 'resetOk'            => [ 'isRequired' => 0, 'value' => 0 ]
-                          , 'skipAuth'           => [ 'isRequired' => 0, 'value' => 0 ]
-                          , 'timeZone'           => [ 'isRequired' => 1, 'value' => 0 ]
-                          , 'title'              => [ 'isRequired' => 1, 'value' => 0 ]
-                          , 'userId'             => [ 'isRequired' => 1, 'value' => 0 ]
-                          , 'userPassword'       => [ 'isRequired' => 1, 'value' => 0 ]
-                          ] ;
+        $errors = "";
+        $cfgValues = [
+            'resetOk' => 0,
+            'authTimeoutSeconds' => 3600,
+            'skipAuth' => 0
+        ];
+        $paramList = [
+            'authTimeoutSeconds' => [
+                'isRequired' => 0,
+                'value' => 0
+            ],
+            'dbHost' => [
+                'isRequired' => 1,
+                'value' => 0
+            ],
+            'dbPass' => [
+                'isRequired' => 1,
+                'value' => 0
+            ],
+            'dbName' => [
+                'isRequired' => 1,
+                'value' => 0
+            ],
+            'dbPort' => [
+                'isRequired' => 1,
+                'value' => 0
+            ],
+            'dbUser' => [
+                'isRequired' => 1,
+                'value' => 0
+            ],
+            'resetOk' => [
+                'isRequired' => 0,
+                'value' => 0
+            ],
+            'skipAuth' => [
+                'isRequired' => 0,
+                'value' => 0
+            ],
+            'timeZone' => [
+                'isRequired' => 1,
+                'value' => 0
+            ],
+            'title' => [
+                'isRequired' => 1,
+                'value' => 0
+            ],
+            'userId' => [
+                'isRequired' => 1,
+                'value' => 0
+            ],
+            'userPassword' => [
+                'isRequired' => 1,
+                'value' => 0
+            ]
+        ];
         // verify that all the parameters are present and just once.
         foreach ($xml as $v) {
-            $key = ( string ) $v[ 'name' ] ;
-            if ((! isset($paramList[ $key ]))
-               || ($paramList[ $key ][ 'value' ] != 0)) {
-                $errors .= "Unset or multiply set name: " . $key . "\n" ;
+            $key = (string) $v['name'];
+            if ((! isset($paramList[$key])) || ($paramList[$key]['value'] != 0)) {
+                $errors .= "Unset or multiply set name: " . $key . "\n";
             } else {
-                $paramList[ $key ][ 'value' ] ++ ;
-                $cfgValues[ $key ] = ( string ) $v ;
+                $paramList[$key]['value'] ++;
+                $cfgValues[$key] = (string) $v;
             }
         }
         foreach ($paramList as $key => $x) {
-            if ((1 === $x[ 'isRequired' ]) && (0 === $x[ 'value' ])) {
-                $errors .= "Missing parameter: " . $key . "\n" ;
+            if ((1 === $x['isRequired']) && (0 === $x['value'])) {
+                $errors .= "Missing parameter: " . $key . "\n";
             }
         }
         if ($errors !== '') {
-            throw new \Exception("\nConfiguration problem!\n\n" . $errors . "\n") ;
+            throw new \Exception("\nConfiguration problem!\n\n" . $errors . "\n");
         }
-        $this->_authTimeoutSeconds = $cfgValues[ 'authTimeoutSeconds' ] ;
-        $this->_dbHost             = $cfgValues[ 'dbHost'       ] ;
-        $this->_dbPort             = $cfgValues[ 'dbPort'       ] ;
-        $this->_dbName             = $cfgValues[ 'dbName'       ] ;
-        $this->_dbUser             = $cfgValues[ 'dbUser'       ] ;
-        $this->_dbPass             = $cfgValues[ 'dbPass'       ] ;
-        $this->_title              = $cfgValues[ 'title'        ] ;
-        $this->_timeZone           = $cfgValues[ 'timeZone'     ] ;
-        $this->_resetOk            = $cfgValues[ 'resetOk'      ] ;
-        $this->_skipAuth           = $cfgValues[ 'skipAuth'           ] ;
-        $this->_userId             = $cfgValues[ 'userId'       ] ;
-        $this->_userPassword       = $cfgValues[ 'userPassword' ] ;
-        ini_set('date.timezone', $this->_timeZone) ;
+        $this->_authTimeoutSeconds = $cfgValues['authTimeoutSeconds'];
+        $this->_dbHost = $cfgValues['dbHost'];
+        $this->_dbPort = $cfgValues['dbPort'];
+        $this->_dbName = $cfgValues['dbName'];
+        $this->_dbUser = $cfgValues['dbUser'];
+        $this->_dbPass = $cfgValues['dbPass'];
+        $this->_title = $cfgValues['title'];
+        $this->_timeZone = $cfgValues['timeZone'];
+        $this->_resetOk = $cfgValues['resetOk'];
+        $this->_skipAuth = $cfgValues['skipAuth'];
+        $this->_userId = $cfgValues['userId'];
+        $this->_userPassword = $cfgValues['userPassword'];
+        ini_set('date.timezone', $this->_timeZone);
     }
 
     /**
@@ -145,7 +194,7 @@ class Config
      */
     public function __toString()
     {
-        return "Config::__toString not implemented" ;
+        return "Config::__toString not implemented";
     }
 
     /**
@@ -155,7 +204,7 @@ class Config
      */
     public function getAuthTimeoutSeconds()
     {
-        return $this->_authTimeoutSeconds ;
+        return $this->_authTimeoutSeconds;
     }
 
     /**
@@ -165,7 +214,7 @@ class Config
      */
     public function getDbHost()
     {
-        return $this->_dbHost ;
+        return $this->_dbHost;
     }
 
     /**
@@ -175,7 +224,7 @@ class Config
      */
     public function getDbPort()
     {
-        return $this->_dbPort ;
+        return $this->_dbPort;
     }
 
     /**
@@ -185,7 +234,7 @@ class Config
      */
     public function getDbUser()
     {
-        return $this->_dbUser ;
+        return $this->_dbUser;
     }
 
     /**
@@ -195,7 +244,7 @@ class Config
      */
     public function getDbPass()
     {
-        return $this->_dbPass ;
+        return $this->_dbPass;
     }
 
     /**
@@ -205,7 +254,7 @@ class Config
      */
     public function getDbName()
     {
-        return $this->_dbName ;
+        return $this->_dbName;
     }
 
     /**
@@ -215,7 +264,7 @@ class Config
      */
     public function getTitle()
     {
-        return $this->_title ;
+        return $this->_title;
     }
 
     /**
@@ -225,7 +274,7 @@ class Config
      */
     public function getTimeZone()
     {
-        return $this->_timeZone ;
+        return $this->_timeZone;
     }
 
     /**
@@ -235,7 +284,7 @@ class Config
      */
     public function getResetOk()
     {
-        return $this->_resetOk ;
+        return $this->_resetOk;
     }
 
     /**
@@ -245,35 +294,29 @@ class Config
      */
     public function getSkipAuth()
     {
-        return $this->_skipAuth ;
+        return $this->_skipAuth;
     }
 
     /**
      * Return the DSN for this connection
      *
-     * @param string
+     * @param
+     *            string
      * @return string
      * @SuppressWarnings indentation
      */
     public function getDsn($dbType = 'mysql')
     {
-        return $this->_dsn = $dbType
-                           . ':host='
-                           . $oConfig->getDbHost()
-                           . ':'
-                           . $oConfig->getDbPort()
-                           . ';dbname='
-                           . $oConfig->getDbName()
-                           ;
+        return $this->_dsn = $dbType . ':host=' . $oConfig->getDbHost() . ':' . $oConfig->getDbPort() . ';dbname=' . $oConfig->getDbName();
     }
 
     public function getUserId()
     {
-        return $this->_userId ;
+        return $this->_userId;
     }
 
     public function getUserPassword()
     {
-        return $this->_userPassword ;
+        return $this->_userPassword;
     }
 }

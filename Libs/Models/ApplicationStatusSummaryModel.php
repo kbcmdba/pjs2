@@ -20,25 +20,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * ApplicationStatusSummary Model
  */
 class ApplicationStatusSummaryModel extends ModelBase
 {
-    private $_id ;
-    private $_statusCount ;
-    private $_created ;
-    private $_updated ;
+
+    private $_id;
+
+    private $_statusCount;
+
+    private $_created;
+
+    private $_updated;
 
     /**
      * class constructor
      */
     public function __construct()
     {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     /**
@@ -49,7 +52,7 @@ class ApplicationStatusSummaryModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return 0 ;
+        return 0;
     }
 
     /**
@@ -60,78 +63,86 @@ class ApplicationStatusSummaryModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return 0 ;
+        return 0;
     }
 
     public function populateFromForm()
     {
-        $this->setId(Tools::param('id')) ;
-        $this->setStatusCount(Tools::param('statusCount')) ;
-        $this->setCreated(Tools::param('created')) ;
-        $this->setUpdated(Tools::param('updated')) ;
+        $this->setId(Tools::param('id'));
+        $this->setStatusCount(Tools::param('statusCount'));
+        $this->setCreated(Tools::param('created'));
+        $this->setUpdated(Tools::param('updated'));
     }
 
     /**
+     *
      * @return integer
      */
     public function getId()
     {
-        return $this->_id ;
+        return $this->_id;
     }
 
     /**
+     *
      * @param integer $id
      */
     public function setId($id)
     {
-        $this->_id = $id ;
+        $this->_id = $id;
     }
 
     /**
+     *
      * @return integer
      */
     public function getStatusCount()
     {
-        return $this->_statusCount ;
+        return $this->_statusCount;
     }
 
     /**
+     *
      * @param integer $statusCount
      */
     public function setStatusCount($statusCount)
     {
-        $this->_statusCount = $statusCount ;
+        $this->_statusCount = $statusCount;
     }
 
     /**
+     *
      * @return string
      */
     public function getCreated()
     {
-        return $this->_created ;
+        return $this->_created;
     }
 
     /**
+     *
      * @param string $created
      */
     public function setCreated($created)
     {
-        $this->_created = $created ;
+        $this->_created = $created;
     }
 
     /**
+     *
      * @return string
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
+     *
      * @param string $updated
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated ;
+        $this->_updated = $updated;
     }
 }

@@ -20,35 +20,48 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Job Model
  */
 class JobModel extends ModelBase
 {
-    private $_id ;
-    private $_primaryContactId ;
-    private $_companyId ;
-    private $_applicationStatusId ;
-    private $_isActiveSummary ;
-    private $_lastStatusChange ;
-    private $_urgency ;
-    private $_created ;
-    private $_updated ;
-    private $_nextActionDue ;
-    private $_nextAction ;
-    private $_positionTitle ;
-    private $_location ;
-    private $_url ;
+
+    private $_id;
+
+    private $_primaryContactId;
+
+    private $_companyId;
+
+    private $_applicationStatusId;
+
+    private $_isActiveSummary;
+
+    private $_lastStatusChange;
+
+    private $_urgency;
+
+    private $_created;
+
+    private $_updated;
+
+    private $_nextActionDue;
+
+    private $_nextAction;
+
+    private $_positionTitle;
+
+    private $_location;
+
+    private $_url;
 
     /**
      * class constructor
      */
     public function __construct()
     {
-        parent::__construct() ;
+        parent::__construct();
     }
 
     /**
@@ -58,13 +71,7 @@ class JobModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return  ((Tools::isNullOrEmptyString(Tools::param('id')))
-               && (! Tools::isNullOrEmptyString(Tools::param('companyId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('applicationStatusId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('urgency')))
-               && (! Tools::isNullOrEmptyString(Tools::param('positionTitle')))
-               && (! Tools::isNullOrEmptyString(Tools::param('location')))
-                ) ;
+        return ((Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('companyId'))) && (! Tools::isNullOrEmptyString(Tools::param('applicationStatusId'))) && (! Tools::isNullOrEmptyString(Tools::param('urgency'))) && (! Tools::isNullOrEmptyString(Tools::param('positionTitle'))) && (! Tools::isNullOrEmptyString(Tools::param('location'))));
     }
 
     /**
@@ -74,276 +81,294 @@ class JobModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return  ((! Tools::isNullOrEmptyString(Tools::param('id')))
-               && (! Tools::isNullOrEmptyString(Tools::param('contactId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('companyId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('applicationStatusId')))
-               && (! Tools::isNullOrEmptyString(Tools::param('urgency')))
-               && (! Tools::isNullOrEmptyString(Tools::param('positionTitle')))
-               && (! Tools::isNullOrEmptyString(Tools::param('location')))
-                ) ;
+        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('contactId'))) && (! Tools::isNullOrEmptyString(Tools::param('companyId'))) && (! Tools::isNullOrEmptyString(Tools::param('applicationStatusId'))) && (! Tools::isNullOrEmptyString(Tools::param('urgency'))) && (! Tools::isNullOrEmptyString(Tools::param('positionTitle'))) && (! Tools::isNullOrEmptyString(Tools::param('location'))));
     }
 
     public function populateFromForm()
     {
-        $this->setId(Tools::param('id')) ;
-        $this->setPrimaryContactId(Tools::param('contactId')) ;
-        $this->setCompanyId(Tools::param('companyId')) ;
-        $this->setApplicationStatusId(Tools::param('applicationStatusId')) ;
-        $this->setLastStatusChange(Tools::param('lastStatusChange')) ;
-        $this->setUrgency(Tools::param('urgency')) ;
-        $this->setCreated(Tools::param('created')) ;
-        $this->setUpdated(Tools::param('updated')) ;
-        $this->setNextActionDue(Tools::param('nextActionDue')) ;
-        $this->setNextAction(Tools::param('nextAction')) ;
-        $this->setPositionTitle(Tools::param('positionTitle')) ;
-        $this->setLocation(Tools::param('location')) ;
-        $this->setUrl(Tools::param('url')) ;
+        $this->setId(Tools::param('id'));
+        $this->setPrimaryContactId(Tools::param('contactId'));
+        $this->setCompanyId(Tools::param('companyId'));
+        $this->setApplicationStatusId(Tools::param('applicationStatusId'));
+        $this->setLastStatusChange(Tools::param('lastStatusChange'));
+        $this->setUrgency(Tools::param('urgency'));
+        $this->setCreated(Tools::param('created'));
+        $this->setUpdated(Tools::param('updated'));
+        $this->setNextActionDue(Tools::param('nextActionDue'));
+        $this->setNextAction(Tools::param('nextAction'));
+        $this->setPositionTitle(Tools::param('positionTitle'));
+        $this->setLocation(Tools::param('location'));
+        $this->setUrl(Tools::param('url'));
     }
 
     /**
+     *
      * @return integer
      */
     public function getId()
     {
-        return $this->_id ;
+        return $this->_id;
     }
 
     /**
+     *
      * @param integer $id
      */
     public function setId($id)
     {
-        $this->_id = $id ;
+        $this->_id = $id;
     }
 
     /**
+     *
      * @return integer
      */
     public function getPrimaryContactId()
     {
-        return $this->_primaryContactId ;
+        return $this->_primaryContactId;
     }
 
     /**
+     *
      * @param integer $primaryContactId
      */
     public function setPrimaryContactId($primaryContactId)
     {
-        $this->_primaryContactId = $primaryContactId ;
+        $this->_primaryContactId = $primaryContactId;
     }
 
     /**
+     *
      * @return integer
      */
     public function getCompanyId()
     {
-        return $this->_companyId ;
+        return $this->_companyId;
     }
 
     /**
+     *
      * @param integer $companyId
      */
     public function setCompanyId($companyId)
     {
-        $this->_companyId = $companyId ;
+        $this->_companyId = $companyId;
     }
 
     /**
+     *
      * @return integer
      */
     public function getApplicationStatusId()
     {
-        return $this->_applicationStatusId ;
+        return $this->_applicationStatusId;
     }
 
     /**
+     *
      * @param integer $applicationStatusId
      */
     public function setApplicationStatusId($applicationStatusId)
     {
-        $this->_applicationStatusId = $applicationStatusId ;
-        $applicationStatusController = new ApplicationStatusController('read') ;
-        $applicationStatusModel = $applicationStatusController->get($applicationStatusId) ;
-        $this->_setIsActiveSummary($applicationStatusModel->getIsActive()) ;
+        $this->_applicationStatusId = $applicationStatusId;
+        $applicationStatusController = new ApplicationStatusController('read');
+        $applicationStatusModel = $applicationStatusController->get($applicationStatusId);
+        $this->_setIsActiveSummary($applicationStatusModel->getIsActive());
     }
 
     /**
+     *
      * @param boolean $isActive
      */
     private function _setIsActiveSummary($isActive)
     {
-        $this->_isActiveSummary = $isActive ;
+        $this->_isActiveSummary = $isActive;
     }
 
     /**
+     *
      * @return boolean
      */
     public function getIsActiveSummary()
     {
-        return $this->_isActiveSummary ;
+        return $this->_isActiveSummary;
     }
 
     /**
+     *
      * @return string
      */
     public function getLastStatusChange()
     {
         if ("0000-00-00 00:00:00" === $this->_lastStatusChange) {
-            return "" ;
+            return "";
         } else {
-            return $this->_lastStatusChange ;
+            return $this->_lastStatusChange;
         }
     }
 
     /**
+     *
      * @param string $lastStatusChange
      */
     public function setLastStatusChange($lastStatusChange)
     {
-        $this->_lastStatusChange = $lastStatusChange ;
+        $this->_lastStatusChange = $lastStatusChange;
     }
 
     /**
+     *
      * @return string
      */
     public function getUrgency()
     {
-        return $this->_urgency ;
+        return $this->_urgency;
     }
 
     /**
+     *
      * @param string $urgency
      */
     public function setUrgency($urgency)
     {
-        $this->_urgency = $urgency ;
+        $this->_urgency = $urgency;
     }
 
     /**
+     *
      * @return string
      */
     public function getCreated()
     {
-        return $this->_created ;
+        return $this->_created;
     }
 
     /**
+     *
      * @param string $created
      */
     public function setCreated($created)
     {
-        $this->_created = $created ;
+        $this->_created = $created;
     }
 
     /**
+     *
      * @return string
      */
     public function getUpdated()
     {
-        return $this->_updated ;
+        return $this->_updated;
     }
 
     /**
+     *
      * @param string $updated
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated ;
+        $this->_updated = $updated;
     }
 
-
     /**
+     *
      * @return string
      */
     public function getNextActionDue()
     {
-        if ((! isset($this->_nextActionDue))
-           || ($this->_nextActionDue === '0000-00-00 00:00:00')
-            ) {
-            return '' ;
+        if ((! isset($this->_nextActionDue)) || ($this->_nextActionDue === '0000-00-00 00:00:00')) {
+            return '';
         }
-        return $this->_nextActionDue ;
+        return $this->_nextActionDue;
     }
 
     /**
+     *
      * @param string $nextActionDue
      */
     public function setNextActionDue($nextActionDue)
     {
         if ($nextActionDue === '') {
-            $nextActionDue = null ;
+            $nextActionDue = null;
         }
-        $this->_nextActionDue = $nextActionDue ;
+        $this->_nextActionDue = $nextActionDue;
     }
 
     /**
+     *
      * @return string
      */
     public function getNextAction()
     {
         if (! isset($this->_nextAction)) {
-            return '' ;
+            return '';
         }
-        return $this->_nextAction ;
+        return $this->_nextAction;
     }
 
     /**
+     *
      * @param string $nextAction
      */
     public function setNextAction($nextAction)
     {
         if (! isset($nextAction)) {
-            $nextAction = '' ;
+            $nextAction = '';
         }
-        $this->_nextAction = $nextAction ;
+        $this->_nextAction = $nextAction;
     }
 
     /**
+     *
      * @return string
      */
     public function getPositionTitle()
     {
-        return $this->_positionTitle ;
+        return $this->_positionTitle;
     }
 
     /**
+     *
      * @param string $positionTitle
      */
     public function setPositionTitle($positionTitle)
     {
-        $this->_positionTitle = $positionTitle ;
+        $this->_positionTitle = $positionTitle;
     }
 
     /**
+     *
      * @return string
      */
     public function getLocation()
     {
-        return $this->_location ;
+        return $this->_location;
     }
 
     /**
+     *
      * @param string $location
      */
     public function setLocation($location)
     {
-        $this->_location = $location ;
+        $this->_location = $location;
     }
 
     /**
+     *
      * @return string
      */
     public function getUrl()
     {
-        return $this->_url ;
+        return $this->_url;
     }
 
     /**
+     *
      * @param string $url
      */
     public function setUrl($url)
     {
-        $this->_url = $url ;
+        $this->_url = $url;
     }
 }

@@ -20,8 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-
-namespace com\kbcmdba\pjs2 ;
+namespace com\kbcmdba\pjs2;
 
 /**
  * Web Page
@@ -35,73 +34,72 @@ class WebPage
     /**
      * Page Title
      */
-    private $_pageTitle ;
+    private $_pageTitle;
 
     /**
      * Mime Type
      */
-    private $_mimeType ;
+    private $_mimeType;
 
     /**
      * Meta data for before the body tag (before the first tag)
      */
-    private $_meta ;
+    private $_meta;
 
     /**
      * Additional stuff to go in the head tag
      */
-    private $_head ;
+    private $_head;
 
     /**
      * Style tag data
      */
-    private $_styles ;
+    private $_styles;
 
     /**
      * Stuff that goes at the top of the displayed page
      */
-    private $_top ;
+    private $_top;
 
     /**
      * Stuff that occupies the body of the page (after the _top and before the _bottom)
      */
-    private $_body ;
+    private $_body;
 
     /**
      * Stuff that goes after the body
      */
-    private $_bottom ;
+    private $_bottom;
 
     /**
      * Data for non-html pages
      */
-    private $_data ;
+    private $_data;
 
     /**
      * #@-
      */
-
+    
     /**
      * Class constructor
      *
-     * @param string Title
+     * @param
+     *            string Title
      */
     public function __construct($title = '')
     {
-        $this->setPageTitle($title) ;
-        $this->setMimeType('text/html') ;
-        $this->setMeta(
-                        [
-                            "Cache-Control: no-cache, must-revalidate",
-                            "Expires: Sun, 21 Jul 2013 00:00:00 GMT"
-                        ]
-        ) ;
-        $this->setHead('') ;
-        $this->setStyles('') ;
-        $this->setTop('') ;
-        $this->setBody('') ;
-        $this->setBottom('') ;
-        $this->setData('') ;
+        $this->setPageTitle($title);
+        $this->setMimeType('text/html');
+        $this->setMeta([
+            "Cache-Control: no-cache, must-revalidate",
+            "Expires: Sun, 21 Jul 2013 00:00:00 GMT"
+        ]);
+        $this->setHead('');
+        $this->setStyles('');
+        $this->setTop('');
+        $this->setBody('');
+        $this->setBottom('');
+        $this->setData('');
     }
 
     /**
@@ -112,23 +110,11 @@ class WebPage
     public function __toString()
     {
         if ('text/html' === $this->getMimeType()) {
-            //@formatter:off
-            return ("<html>\n"
-                   . "<head>\n"
-                   . '  <title>' . $this->getPageTitle() . "</title>\n"
-                   . $this->getHead()
-                   . $this->getStyles()
-                   . "</head>\n"
-                   . "<body>\n"
-                   . $this->getTop()
-                   . $this->getBody()
-                   . $this->getBottom()
-                   . "</body>\n"
-                   . "</html>\n"
-                   ) ;
-        // @formatter:on
+            // @formatter:off
+            return ("<html>\n" . "<head>\n" . '  <title>' . $this->getPageTitle() . "</title>\n" . $this->getHead() . $this->getStyles() . "</head>\n" . "<body>\n" . $this->getTop() . $this->getBody() . $this->getBottom() . "</body>\n" . "</html>\n");
+            // @formatter:on
         } else {
-            return ($this->getData()) ;
+            return ($this->getData());
         }
     }
 
@@ -140,21 +126,22 @@ class WebPage
      */
     public function displayPage()
     {
-        header('Content-type: ' . $this->getMimeType()) ;
+        header('Content-type: ' . $this->getMimeType());
         foreach ($this->getMeta() as $meta) {
-            header($meta) ;
+            header($meta);
         }
-        echo $this->__toString() ;
+        echo $this->__toString();
     }
 
     /**
      * Setter
      *
-     * @param string
+     * @param
+     *            string
      */
     public function setPageTitle($pageTitle)
     {
-        $this->_pageTitle = $pageTitle ;
+        $this->_pageTitle = $pageTitle;
     }
 
     /**
@@ -164,17 +151,18 @@ class WebPage
      */
     public function getPageTitle()
     {
-        return $this->_pageTitle ;
+        return $this->_pageTitle;
     }
 
     /**
      * Setter
      *
-     * @param string
+     * @param
+     *            string
      */
     public function setMimeType($mimeType)
     {
-        $this->_mimeType = $mimeType ;
+        $this->_mimeType = $mimeType;
     }
 
     /**
@@ -184,17 +172,18 @@ class WebPage
      */
     public function getMimeType()
     {
-        return $this->_mimeType ;
+        return $this->_mimeType;
     }
 
     /**
      * Setter
      *
-     * @param string
+     * @param
+     *            string
      */
     public function setHead($head)
     {
-        $this->_head = $head ;
+        $this->_head = $head;
     }
 
     /**
@@ -204,7 +193,7 @@ class WebPage
      */
     public function getHead()
     {
-        return $this->_head ;
+        return $this->_head;
     }
 
     /**
@@ -217,24 +206,25 @@ class WebPage
     public function appendMeta($metaString)
     {
         if (is_string($metaString)) {
-            array_push($this->_meta, $metaString) ;
+            array_push($this->_meta, $metaString);
         } else {
-            throw ( new WebPageException("Improper usage of appendMeta") ) ;
+            throw (new WebPageException("Improper usage of appendMeta"));
         }
     }
 
     /**
      * Setter
      *
-     * @param mixed $meta Array of values to pass to header()
+     * @param mixed $meta
+     *            Array of values to pass to header()
      * @throws WebPageException
      */
     public function setMeta($meta)
     {
         if (is_array($meta)) {
-            $this->_meta = $meta ;
+            $this->_meta = $meta;
         } else {
-            throw ( new WebPageException("setMeta requires an array") ) ;
+            throw (new WebPageException("setMeta requires an array"));
         }
     }
 
@@ -245,17 +235,18 @@ class WebPage
      */
     public function getMeta()
     {
-        return $this->_meta ;
+        return $this->_meta;
     }
 
     /**
      * Setter
      *
-     * @param string
+     * @param
+     *            string
      */
     public function setStyles($styles)
     {
-        $this->_styles = $styles ;
+        $this->_styles = $styles;
     }
 
     /**
@@ -265,17 +256,18 @@ class WebPage
      */
     public function getStyles()
     {
-        return $this->_styles ;
+        return $this->_styles;
     }
 
     /**
      * Setter
      *
-     * @param string
+     * @param
+     *            string
      */
     public function setTop($top)
     {
-        $this->_top = $top ;
+        $this->_top = $top;
     }
 
     /**
@@ -285,17 +277,18 @@ class WebPage
      */
     public function getTop()
     {
-        return $this->_top ;
+        return $this->_top;
     }
 
     /**
      * Setter
      *
-     * @param string
+     * @param
+     *            string
      */
     public function setBody($body)
     {
-        $this->_body = $body ;
+        $this->_body = $body;
     }
 
     /**
@@ -305,17 +298,18 @@ class WebPage
      */
     public function getBody()
     {
-        return $this->_body ;
+        return $this->_body;
     }
 
     /**
      * Setter
      *
-     * @param string
+     * @param
+     *            string
      */
     public function setBottom($bottom)
     {
-        $this->_bottom = $bottom ;
+        $this->_bottom = $bottom;
     }
 
     /**
@@ -325,17 +319,18 @@ class WebPage
      */
     public function getBottom()
     {
-        return $this->_bottom ;
+        return $this->_bottom;
     }
 
     /**
      * Setter
      *
-     * @param string
+     * @param
+     *            string
      */
     public function setData($data)
     {
-        $this->_data = $data ;
+        $this->_data = $data;
     }
 
     /**
@@ -345,6 +340,6 @@ class WebPage
      */
     public function getData()
     {
-        return $this->_data ;
+        return $this->_data;
     }
 }

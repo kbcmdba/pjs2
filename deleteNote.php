@@ -20,30 +20,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
+namespace com\kbcmdba\pjs2;
 
-namespace com\kbcmdba\pjs2 ;
+require_once "Libs/autoload.php";
 
-require_once "Libs/autoload.php" ;
-
-$config = new Config() ;
-$webPage = new PJSWebPage($config->getTitle() . ' - Delete Note') ;
-$act = Tools::Param('act') ;
+$config = new Config();
+$webPage = new PJSWebPage($config->getTitle() . ' - Delete Note');
+$act = Tools::Param('act');
 if ("Delete Note" === $act) {
-    $noteModel = new NoteModel() ;
-    $noteModel->populateFromForm() ;
+    $noteModel = new NoteModel();
+    $noteModel->populateFromForm();
     if (! $noteModel->validateForDelete()) {
-        $noteView = new NoteFormView('Delete Note', $noteModel) ;
-        $body = "<h2>Invalid data</h2>\n" . $noteView->getForm() ;
+        $noteView = new NoteFormView('Delete Note', $noteModel);
+        $body = "<h2>Invalid data</h2>\n" . $noteView->getForm();
     } else {
-        $noteController = new NoteController() ;
-        $noteController->delete($noteModel) ;
+        $noteController = new NoteController();
+        $noteController->delete($noteModel);
         $body = "Deleted note # " . $noteModel->getId() . "<br />\n";
     }
 } else {
-    $noteController = new NoteController() ;
-    $noteModel = $noteController->get(Tools::param('id')) ;
-    $noteView = new NoteFormView('Delete Note', $noteModel) ;
-    $body = $noteView->getForm() ;
+    $noteController = new NoteController();
+    $noteModel = $noteController->get(Tools::param('id'));
+    $noteView = new NoteFormView('Delete Note', $noteModel);
+    $body = $noteView->getForm();
 }
-$webPage->setBody($body) ;
-$webPage->displayPage() ;
+$webPage->setBody($body);
+$webPage->displayPage();
