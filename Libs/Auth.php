@@ -98,6 +98,9 @@ class Auth
                 $atc = new AuthTicketController() ;
                 $atc->cleanExpiredTickets() ;
                 $atm = $atc->get($_SESSION[ 'auth_ticket' ]) ;
+                if ( FALSE === $atm ) {
+                    return FALSE ;
+                }
             } catch (ControllerException $e) {
                 // No matching record found. User can't be validated through
                 // the auth_ticket. If the user has an expired ticket and is

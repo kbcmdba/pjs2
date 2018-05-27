@@ -76,7 +76,7 @@ SQL;
      * Get data for a specific auth_ticket that hasn't expired yet.
      *
      * @param string $auth_ticket
-     * @return AuthTicketModel
+     * @return AuthTicketModel|false
      * @throws ControllerException
      */
     public function get($auth_ticket)
@@ -101,13 +101,10 @@ SQL;
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')') ;
         }
         $created = $updated = $expires = null ;
-        $stmt->bind_result(
-            $created,
-            $updated,
-            $expires
-                          ) ;
+        $stmt->bind_result($created, $updated, $expires);
         if (! $stmt->fetch()) {
-            throw new ControllerException("Record missing: $auth_ticket") ;
+            # Record is missing.
+            return FALSE;
         }
         $atm = new AuthTicketModel() ;
         $atm->setAuthTicket($auth_ticket) ;
