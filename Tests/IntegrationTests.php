@@ -21,14 +21,13 @@
  *
  */
 set_include_path(get_include_path() . PATH_SEPARATOR . $_SERVER['HOME'] . '/.config/composer');
+require_once('vendor/autoload.php');
 
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\Firefox\FirefoxPreferences;
 use Facebook\WebDriver\Firefox\FirefoxProfile;
-
-require_once('vendor/autoload.php');
 
 class IntegrationTests extends PHPUnit\Framework\TestCase
 {
