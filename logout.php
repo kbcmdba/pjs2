@@ -22,7 +22,9 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once "Libs/autoload.php";
+require_once "vendor/autoload.php";
+
+use com\kbcmdba\pjs2\Libs\Auth;
 
 $auth = new Auth();
 $auth->doLogOut();

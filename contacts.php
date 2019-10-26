@@ -22,8 +22,19 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once 'Libs/autoload.php';
+require_once 'vendor/autoload.php';
 
+use com\kbcmdba\pjs2\Libs\Auth;
+use com\kbcmdba\pjs2\Libs\Config;
+use com\kbcmdba\pjs2\Libs\Controllers\ContactController;
+use com\kbcmdba\pjs2\Libs\PJSWebPage;
+use com\kbcmdba\pjs2\Libs\Views\ContactListView;
+
+$auth = new Auth();
+if (! $auth->isAuthorized()) {
+    $auth->forbidden();
+    exit(0); // Should never get here but just in case...
+}
 $config = new Config();
 $page = new PJSWebPage($config->getTitle() . " - Contacts");
 $body = "<h2>Contacts</h2>\n";

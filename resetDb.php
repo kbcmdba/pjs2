@@ -22,22 +22,27 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once 'Libs/autoload.php';
+require_once 'vendor/autoload.php';
+
+use com\kbcmdba\pjs2\Libs\Auth;
+use com\kbcmdba\pjs2\Libs\Config;
+use com\kbcmdba\pjs2\Libs\DBConnection;
+use com\kbcmdba\pjs2\Libs\PJSWebPage;
 
 // Be sure to specify these in apply order. The reset script will automatically
 // reverse the order for safe removal.
 $controllerNames = [
-    '\\com\\kbcmdba\\pjs2\\VersionController',
-    '\\com\\kbcmdba\\pjs2\\AuthTicketController',
-    '\\com\\kbcmdba\\pjs2\\ApplicationStatusController',
-    '\\com\\kbcmdba\\pjs2\\ApplicationStatusSummaryController',
-    '\\com\\kbcmdba\\pjs2\\CompanyController',
-    '\\com\\kbcmdba\\pjs2\\ContactController',
-    '\\com\\kbcmdba\\pjs2\\JobController',
-    '\\com\\kbcmdba\\pjs2\\KeywordController',
-    '\\com\\kbcmdba\\pjs2\\NoteController',
-    '\\com\\kbcmdba\\pjs2\\SearchController',
-    '\\com\\kbcmdba\\pjs2\\JobKeywordMapController'
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\VersionController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\AuthTicketController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\ApplicationStatusController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\ApplicationStatusSummaryController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\CompanyController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\ContactController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\JobController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\KeywordController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\NoteController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\SearchController',
+    '\\com\\kbcmdba\\pjs2\\Libs\\Controllers\\JobKeywordMapController'
 ];
 $controllers = [];
 
@@ -56,7 +61,6 @@ try {
             throw new \Exception("Reset capability is turned off! See config.xml");
         }
     }
-    $dbh = $dbc->getConnection();
     foreach (array_reverse($controllerNames) as $controllerName) {
         $controller = new $controllerName('write');
         $controllers[$controllerName] = $controller;

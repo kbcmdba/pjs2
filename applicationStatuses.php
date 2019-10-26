@@ -22,7 +22,12 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once "Libs/autoload.php";
+require_once "vendor/autoload.php";
+
+use com\kbcmdba\pjs2\Libs\Config;
+use com\kbcmdba\pjs2\Libs\Controllers\ApplicationStatusController;
+use com\kbcmdba\pjs2\Libs\PJSWebPage;
+use com\kbcmdba\pjs2\Libs\Views\ApplicationStatusListView;
 
 $config = new Config();
 $page = new PJSWebPage($config->getTitle() . ' - Application Statuses');

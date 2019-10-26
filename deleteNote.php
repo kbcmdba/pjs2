@@ -22,7 +22,7 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once "Libs/autoload.php";
+require_once "vendor/autoload.php";
 
 $config = new Config();
 $webPage = new PJSWebPage($config->getTitle() . ' - Delete Note');

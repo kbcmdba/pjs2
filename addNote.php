@@ -22,7 +22,14 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once "Libs/autoload.php";
+use com\kbcmdba\pjs2\Libs\Config;
+use com\kbcmdba\pjs2\Libs\Controllers\NoteController;
+use com\kbcmdba\pjs2\Libs\Models\NoteModel;
+use com\kbcmdba\pjs2\Libs\PJSWebPage;
+use com\kbcmdba\pjs2\Libs\Tools;
+use com\kbcmdba\pjs2\Libs\Views\NoteFormView;
+
+require_once "vendor/autoload.php";
 
 $config = new Config();
 $webPage = new PJSWebPage($config->getTitle() . "Notes - Add Note");

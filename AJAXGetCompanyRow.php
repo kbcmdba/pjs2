@@ -22,7 +22,13 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once "Libs/autoload.php";
+require_once "vendor/autoload.php";
+
+use com\kbcmdba\pjs2\Libs\Auth;
+use com\kbcmdba\pjs2\Libs\Controllers\CompanyController;
+use com\kbcmdba\pjs2\Libs\Models\CompanyModel;
+use com\kbcmdba\pjs2\Libs\Tools;
+use com\kbcmdba\pjs2\Libs\Views\CompanyListView;
 
 $auth = new Auth();
 if (! $auth->isAuthorized()) {

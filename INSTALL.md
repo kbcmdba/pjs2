@@ -7,7 +7,7 @@ In order to use PHPJobSeeker2, I use the following;
 
 * Apache httpd
 * MySQL 5.6 or greater
-* PHP 5.6 or greater
+* PHP 7.2 or greater
 
 In your PHP configuration (/etc/php.ini on Unix), you'll need to set the timezone
 in order for this to work correctly. If you're in the Central US timezone, setting
