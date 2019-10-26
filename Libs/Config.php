@@ -20,7 +20,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs;
 
 /**
  * Configuration for this tool set
@@ -49,39 +49,31 @@ class Config
     // This is sub-optimal but it works for now.
     
     /** @var integer */
-    private $_authTimeoutSeconds = 3600;
+    private $authTimeoutSeconds = 3600;
 
     /**
      * #@+
      *
      * @var string
      */
-    private $_dbHost = null;
-
-    private $_dbPort = null;
-
-    private $_dbUser = null;
-
-    private $_dbPass = null;
-
-    private $_dbName = null;
-
-    private $_title = null;
-
-    private $_timeZone = null;
-
-    private $_userId = null;
-
-    private $_userPassword = null;
+    private $dbHost = null;
+    private $dbPort = null;
+    private $dbUser = null;
+    private $dbPass = null;
+    private $dbName = null;
+    private $dsn = null ;
+    private $title = null;
+    private $timeZone = null;
+    private $userId = null;
+    private $userPassword = null;
 
     /**
      * #@-
      */
     
     /** @var boolean */
-    private $_resetOk = false;
-
-    private $_skipAuth = false;
+    private $resetOk = false;
+    private $skipAuth = false;
 
     /**
      * Class Constructor
@@ -172,19 +164,19 @@ class Config
         if ($errors !== '') {
             throw new \Exception("\nConfiguration problem!\n\n" . $errors . "\n");
         }
-        $this->_authTimeoutSeconds = $cfgValues['authTimeoutSeconds'];
-        $this->_dbHost = $cfgValues['dbHost'];
-        $this->_dbPort = $cfgValues['dbPort'];
-        $this->_dbName = $cfgValues['dbName'];
-        $this->_dbUser = $cfgValues['dbUser'];
-        $this->_dbPass = $cfgValues['dbPass'];
-        $this->_title = $cfgValues['title'];
-        $this->_timeZone = $cfgValues['timeZone'];
-        $this->_resetOk = $cfgValues['resetOk'];
-        $this->_skipAuth = $cfgValues['skipAuth'];
-        $this->_userId = $cfgValues['userId'];
-        $this->_userPassword = $cfgValues['userPassword'];
-        ini_set('date.timezone', $this->_timeZone);
+        $this->authTimeoutSeconds = $cfgValues['authTimeoutSeconds'];
+        $this->dbHost = $cfgValues['dbHost'];
+        $this->dbPort = $cfgValues['dbPort'];
+        $this->dbName = $cfgValues['dbName'];
+        $this->dbUser = $cfgValues['dbUser'];
+        $this->dbPass = $cfgValues['dbPass'];
+        $this->title = $cfgValues['title'];
+        $this->timeZone = $cfgValues['timeZone'];
+        $this->resetOk = $cfgValues['resetOk'];
+        $this->skipAuth = $cfgValues['skipAuth'];
+        $this->userId = $cfgValues['userId'];
+        $this->userPassword = $cfgValues['userPassword'];
+        ini_set('date.timezone', $this->timeZone);
     }
 
     /**
@@ -204,7 +196,7 @@ class Config
      */
     public function getAuthTimeoutSeconds()
     {
-        return $this->_authTimeoutSeconds;
+        return $this->authTimeoutSeconds;
     }
 
     /**
@@ -214,7 +206,7 @@ class Config
      */
     public function getDbHost()
     {
-        return $this->_dbHost;
+        return $this->dbHost;
     }
 
     /**
@@ -224,7 +216,7 @@ class Config
      */
     public function getDbPort()
     {
-        return $this->_dbPort;
+        return $this->dbPort;
     }
 
     /**
@@ -234,7 +226,7 @@ class Config
      */
     public function getDbUser()
     {
-        return $this->_dbUser;
+        return $this->dbUser;
     }
 
     /**
@@ -244,7 +236,7 @@ class Config
      */
     public function getDbPass()
     {
-        return $this->_dbPass;
+        return $this->dbPass;
     }
 
     /**
@@ -254,7 +246,7 @@ class Config
      */
     public function getDbName()
     {
-        return $this->_dbName;
+        return $this->dbName;
     }
 
     /**
@@ -264,7 +256,7 @@ class Config
      */
     public function getTitle()
     {
-        return $this->_title;
+        return $this->title;
     }
 
     /**
@@ -274,7 +266,7 @@ class Config
      */
     public function getTimeZone()
     {
-        return $this->_timeZone;
+        return $this->timeZone;
     }
 
     /**
@@ -284,7 +276,7 @@ class Config
      */
     public function getResetOk()
     {
-        return $this->_resetOk;
+        return $this->resetOk;
     }
 
     /**
@@ -294,7 +286,7 @@ class Config
      */
     public function getSkipAuth()
     {
-        return $this->_skipAuth;
+        return $this->skipAuth;
     }
 
     /**
@@ -307,16 +299,18 @@ class Config
      */
     public function getDsn($dbType = 'mysql')
     {
-        return $this->_dsn = $dbType . ':host=' . $oConfig->getDbHost() . ':' . $oConfig->getDbPort() . ';dbname=' . $oConfig->getDbName();
+        $oConfig = new Config() ;
+        $this->dsn = $dbType . ':host=' . $oConfig->getDbHost() . ':' . $oConfig->getDbPort() . ';dbname=' . $oConfig->getDbName();
+        return $this->dsn;
     }
 
     public function getUserId()
     {
-        return $this->_userId;
+        return $this->userId;
     }
 
     public function getUserPassword()
     {
-        return $this->_userPassword;
+        return $this->userPassword;
     }
 }

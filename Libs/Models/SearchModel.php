@@ -20,28 +20,23 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Models;
+
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * Search Model
  */
 class SearchModel extends ModelBase
 {
-    private $_id;
-
-    private $_engineName;
-
-    private $_searchName;
-
-    private $_url;
-
-    private $_rssFeedUrl;
-
-    private $_rssLastChecked;
-
-    private $_created;
-
-    private $_updated;
+    private $id;
+    private $engineName;
+    private $searchName;
+    private $url;
+    private $rssFeedUrl;
+    private $rssLastChecked;
+    private $created;
+    private $updated;
 
     /**
      * class constructor
@@ -87,7 +82,7 @@ class SearchModel extends ModelBase
      */
     public function getId()
     {
-        return $this->_id;
+        return $this->id;
     }
 
     /**
@@ -96,7 +91,7 @@ class SearchModel extends ModelBase
      */
     public function setId($id)
     {
-        $this->_id = $id;
+        $this->id = $id;
     }
 
     /**
@@ -105,7 +100,7 @@ class SearchModel extends ModelBase
      */
     public function getEngineName()
     {
-        return $this->_engineName;
+        return $this->engineName;
     }
 
     /**
@@ -114,7 +109,7 @@ class SearchModel extends ModelBase
      */
     public function setEngineName($engineName)
     {
-        $this->_engineName = $engineName;
+        $this->engineName = $engineName;
     }
 
     /**
@@ -123,7 +118,7 @@ class SearchModel extends ModelBase
      */
     public function getSearchName()
     {
-        return $this->_searchName;
+        return $this->searchName;
     }
 
     /**
@@ -132,7 +127,7 @@ class SearchModel extends ModelBase
      */
     public function setSearchName($searchName)
     {
-        $this->_searchName = $searchName;
+        $this->searchName = $searchName;
     }
 
     /**
@@ -141,7 +136,7 @@ class SearchModel extends ModelBase
      */
     public function getUrl()
     {
-        return $this->_url;
+        return $this->url;
     }
 
     /**
@@ -150,7 +145,7 @@ class SearchModel extends ModelBase
      */
     public function setUrl($url)
     {
-        $this->_url = $url;
+        $this->url = $url;
     }
 
     /**
@@ -159,7 +154,7 @@ class SearchModel extends ModelBase
      */
     public function getRssFeedUrl()
     {
-        return $this->_rssFeedUrl;
+        return $this->rssFeedUrl;
     }
 
     /**
@@ -168,7 +163,7 @@ class SearchModel extends ModelBase
      */
     public function setRssFeedUrl($rssFeedUrl)
     {
-        $this->_rssFeedUrl = $rssFeedUrl;
+        $this->rssFeedUrl = $rssFeedUrl;
     }
 
     /**
@@ -177,7 +172,7 @@ class SearchModel extends ModelBase
      */
     public function getRssLastChecked()
     {
-        return $this->_rssLastChecked;
+        return $this->rssLastChecked;
     }
 
     /**
@@ -186,7 +181,7 @@ class SearchModel extends ModelBase
      */
     public function setRssLastChecked($rssLastChecked)
     {
-        $this->_rssLastChecked = $rssLastChecked;
+        $this->rssLastChecked = $rssLastChecked;
     }
 
     /**
@@ -195,7 +190,7 @@ class SearchModel extends ModelBase
      */
     public function getCreated()
     {
-        return $this->_created;
+        return $this->created;
     }
 
     /**
@@ -204,7 +199,7 @@ class SearchModel extends ModelBase
      */
     public function setCreated($created)
     {
-        $this->_created = $created;
+        $this->created = $created;
     }
 
     /**
@@ -213,7 +208,7 @@ class SearchModel extends ModelBase
      */
     public function getUpdated()
     {
-        return $this->_updated;
+        return $this->updated;
     }
 
     /**
@@ -222,6 +217,6 @@ class SearchModel extends ModelBase
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated;
+        $this->updated = $updated;
     }
 }

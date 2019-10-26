@@ -20,7 +20,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Views;
+
+use com\kbcmdba\pjs2\Libs\Models\SearchModel;
+use com\kbcmdba\pjs2\Libs\Exceptions\ViewException;
 
 /**
  * Search List View
@@ -29,10 +32,10 @@ class SearchListView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType;
+    private $viewType;
 
     /** @var mixed */
-    private $_supportedViewTypes = [
+    private $supportedViewTypes = [
         'html' => 1
     ];
 
@@ -50,10 +53,10 @@ class SearchListView extends ListViewBase
     public function __construct($viewType = 'html', $searchModels)
     {
         parent::__construct();
-        if (! isset($this->_supportedViewTypes[$viewType])) {
+        if (! isset($this->supportedViewTypes[$viewType])) {
             throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType;
+        $this->viewType = $viewType;
         $this->setSearchModels($searchModels);
     }
 
@@ -104,7 +107,7 @@ HTML;
      */
     public function getView()
     {
-        switch ($this->_viewType) {
+        switch ($this->viewType) {
             case 'html':
                 return $this->_getHtmlView();
             default:
@@ -213,7 +216,7 @@ HTML;
      */
     public function getSearchModels()
     {
-        return $this->_searchModels;
+        return $this->searchModels;
     }
 
     /**
@@ -222,6 +225,6 @@ HTML;
      */
     public function setSearchModels($searchModels)
     {
-        $this->_searchModels = $searchModels;
+        $this->searchModels = $searchModels;
     }
 }

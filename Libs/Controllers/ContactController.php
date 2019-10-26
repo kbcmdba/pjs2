@@ -20,7 +20,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Controllers;
+
+use com\kbcmdba\pjs2\Libs\Exceptions\ControllerException;
+use com\kbcmdba\pjs2\Libs\Models\ContactModel;
 
 class ContactController extends ControllerBase
 {

@@ -20,7 +20,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs;
+
+use com\kbcmdba\pjs2\Libs\Config;
+use com\kbcmdba\pjs2\Libs\Exceptions\DaoException;
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * DBConnection
@@ -31,22 +35,22 @@ class DBConnection
     /**
      * DB connection Handle
      */
-    private $_dbh;
+    private $dbh;
 
     /**
      * Configuration data
      */
-    private $_oConfig;
+    private $oConfig;
 
     /**
      * ConnectionType
      */
-    private $_connectionClass;
+    private $connectionClass;
 
     /**
      * When the database is created during construction, this is set to true, false otherwise
      */
-    private $_createdDb;
+    private $createdDb;
 
     /**
      * Class Constructor
@@ -67,11 +71,11 @@ class DBConnection
     public function __construct($connType = null, $dbHost = null, $dbName = null, $dbUser = null, $dbPass = null, $dbPort = null, $connClass = 'mysqli', $createDb = false)
     {
         $oConfig = new Config($connType, $dbHost, $dbPort, $dbName, $dbUser, $dbPass);
-        $this->_oConfig = $oConfig;
+        $this->oConfig = $oConfig;
         switch ($connClass) {
             case 'mysql':
-                $this->_dbh = mysql_connect($oConfig->getDbHost() . ':' . $oConfig->getDbPort(), $oConfig->getDbUser(), $oConfig->getDbPass());
-                if (! $this->_dbh) {
+                $this->dbh = mysql_connect($oConfig->getDbHost() . ':' . $oConfig->getDbPort(), $oConfig->getDbUser(), $oConfig->getDbPass());
+                if (! $this->dbh) {
                     throw new \Exception('Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . mysql_error());
                 }
                 $dbName = Tools::coalesce([
@@ -79,7 +83,7 @@ class DBConnection
                     ''
                 ]);
                 if ($dbName !== '') {
-                    if (! mysql_select_db($dbName, $this->_dbh)) {
+                    if (! mysql_select_db($dbName, $this->dbh)) {
                         throw new \Exception('Database does not exist: ', $dbName);
                     }
                 }
@@ -96,15 +100,15 @@ class DBConnection
                 if ((! $result) || ($mysqli->connect_errno)) {
                     throw new DaoException('Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . $mysqli->connect_error);
                 }
-                $this->_dbh = $mysqli;
-                if ($this->_dbh->connect_error) {
-                    throw new DaoException('Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . $this->_dbh->connect_error);
+                $this->dbh = $mysqli;
+                if ($this->dbh->connect_error) {
+                    throw new DaoException('Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . $this->dbh->connect_error);
                 }
-                $this->_dbh->query("SET @@SESSION.SQL_MODE = 'ALLOW_INVALID_DATES'");
+                $this->dbh->query("SET @@SESSION.SQL_MODE = 'ALLOW_INVALID_DATES'");
                 if (! $mysqli->select_db($oConfig->getDbName())) {
                     if ($createDb) {
-                        $this->_createdDb = true;
-                        $this->_dbh->query("CREATE DATABASE IF NOT EXISTS " . $oConfig->getDbName());
+                        $this->createdDb = true;
+                        $this->dbh->query("CREATE DATABASE IF NOT EXISTS " . $oConfig->getDbName());
                         if (! $mysqli->select_db($oConfig->getDbName())) {
                             throw new DaoException("Database: {$oConfig->getDbName()} is missing. Please use resetDb.php to install the database.");
                         }
@@ -115,15 +119,15 @@ class DBConnection
                 break;
             case 'PDO':
                 // May throw PDOException by itself.
-                $this->_dbh = new \PDO($oConfig->get_dsn(), $oConfig->getDbPass());
-                if (! $this->_dbh) {
+                $this->dbh = new \PDO($oConfig->get_dsn(), $oConfig->getDbPass());
+                if (! $this->dbh) {
                     throw new DaoException('Error connecting to database server(' . $oConfig->getDbHost() . ')!');
                 }
                 break;
             default:
                 throw new DaoException('Unknown connection class: ' . $connClass);
         } // END OF switch ( $connClass )
-        $this->_connectionClass = $connClass;
+        $this->connectionClass = $connClass;
     }
 
     /**
@@ -133,7 +137,7 @@ class DBConnection
      */
     public function __toString()
     {
-        if (isset($this->_dbh)) {
+        if (isset($this->dbh)) {
             return $oConfig;
         } else {
             return "Not connected.";
@@ -148,10 +152,10 @@ class DBConnection
      */
     public function getConnection()
     {
-        if ((! isset($this->_dbh)) || (! ($this->_dbh))) {
+        if ((! isset($this->dbh)) || (! ($this->dbh))) {
             throw new \Exception('Invalid connection!');
         } else {
-            return $this->_dbh;
+            return $this->dbh;
         }
     }
 
@@ -162,7 +166,7 @@ class DBConnection
      */
     public function getConnectionClass()
     {
-        return $this->_connectionClass;
+        return $this->connectionClass;
     }
 
     /**
@@ -171,6 +175,6 @@ class DBConnection
      */
     public function getCreatedDb()
     {
-        return $this->_createdDb;
+        return $this->createdDb;
     }
 }

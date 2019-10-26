@@ -6,3 +6,4 @@ config.xml.auth
 config.xml.noauth
 login.log
 .php_cs.cache
+vendor/

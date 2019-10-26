@@ -20,7 +20,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Views;
+
+use com\kbcmdba\pjs2\Libs\Controllers\ApplicationStatusController;
+use com\kbcmdba\pjs2\Libs\Exceptions\ViewException;
+use com\kbcmdba\pjs2\Libs\Models\ApplicationStatusModel;
 
 /**
  * Application Status List View
@@ -29,15 +33,15 @@ class ApplicationStatusListView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType;
+    private $viewType;
 
     /** @var mixed */
-    private $_supportedViewTypes = [
+    private $supportedViewTypes = [
         'html' => 1
     ];
 
     /** @var ApplicationStatusModel[] */
-    private $_applicationStatusModels;
+    private $applicationStatusModels;
 
     /**
      * Class constructor
@@ -49,11 +53,11 @@ class ApplicationStatusListView extends ListViewBase
     public function __construct($viewType = 'html', $applicationStatusModels = null)
     {
         parent::__construct();
-        if (! isset($this->_supportedViewTypes[$viewType])) {
+        if (! isset($this->supportedViewTypes[$viewType])) {
             throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType;
-        $this->_applicationStatusModels = $applicationStatusModels;
+        $this->viewType = $viewType;
+        $this->applicationStatusModels = $applicationStatusModels;
     }
 
     /**
@@ -81,7 +85,7 @@ class ApplicationStatusListView extends ListViewBase
   <tbody>
 
 HTML;
-        foreach ($this->_applicationStatusModels as $applicationStatus) {
+        foreach ($this->applicationStatusModels as $applicationStatus) {
             $id = $applicationStatus->getId();
             $row = $this->displayApplicationStatusRow($applicationStatus, 'list');
             $body .= <<<HTML
@@ -103,7 +107,7 @@ HTML;
      */
     public function getView()
     {
-        switch ($this->_viewType) {
+        switch ($this->viewType) {
             case 'html':
                 return $this->_getHtmlView();
             default:
@@ -193,7 +197,7 @@ RETVAL;
      */
     public function getApplicationStatusModels()
     {
-        return $this->_applicationStatusModels;
+        return $this->applicationStatusModels;
     }
 
     /**
@@ -202,7 +206,7 @@ RETVAL;
      */
     public function setApplicationStatusModels($applicationStatusModels)
     {
-        $this->_applicationStatusModels = $applicationStatusModels;
+        $this->applicationStatusModels = $applicationStatusModels;
     }
 
     /**

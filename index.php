@@ -22,7 +22,16 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once 'Libs/autoload.php';
+require_once 'vendor/autoload.php';
+
+use com\kbcmdba\pjs2\Libs\Config;
+use com\kbcmdba\pjs2\Libs\DBConnection;
+use com\kbcmdba\pjs2\Libs\Exceptions\DaoException;
+use com\kbcmdba\pjs2\Libs\Controllers\ApplicationStatusController;
+use com\kbcmdba\pjs2\Libs\Controllers\JobController;
+use com\kbcmdba\pjs2\Libs\Controllers\SearchController;
+use com\kbcmdba\pjs2\Libs\PJSWebPage;
+use com\kbcmdba\pjs2\Libs\Views\ApplicationStatusSummaryView;
 
 $config = new Config();
 try {

@@ -20,7 +20,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Views;
+
+use com\kbcmdba\pjs2\Libs\Exceptions\ViewException;
+use com\kbcmdba\pjs2\Libs\Models\NoteModel;
 
 /**
  * Note List View
@@ -29,21 +32,21 @@ class NoteListView extends ListViewBase
 {
 
     /** @var string */
-    private $_noteAppliesToTable;
+    private $noteAppliesToTable;
 
     /** @var integer */
-    private $_noteAppliesToId;
+    private $noteAppliesToId;
 
     /** @var string */
-    private $_viewType;
+    private $viewType;
 
     /** @var mixed */
-    private $_supportedViewTypes = [
+    private $supportedViewTypes = [
         'html' => 1
     ];
 
     /** @var NoteModel[] */
-    private $_noteModels;
+    private $noteModels;
 
     /**
      * Class constructor
@@ -56,10 +59,10 @@ class NoteListView extends ListViewBase
     public function __construct($viewType = 'html', $noteModels)
     {
         parent::__construct();
-        if (! isset($this->_supportedViewTypes[$viewType])) {
+        if (! isset($this->supportedViewTypes[$viewType])) {
             throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType;
+        $this->viewType = $viewType;
         $this->setNoteModels($noteModels);
     }
 
@@ -113,7 +116,7 @@ HTML;
      */
     public function getView()
     {
-        switch ($this->_viewType) {
+        switch ($this->viewType) {
             case 'html':
                 return $this->_getHtmlView();
             default:
@@ -127,7 +130,7 @@ HTML;
      */
     public function getNoteAppliesToTable()
     {
-        return $this->_noteAppliesToTable;
+        return $this->noteAppliesToTable;
     }
 
     /**
@@ -136,7 +139,7 @@ HTML;
      */
     public function setAppliesToTable($noteAppliesToTable)
     {
-        $this->_noteAppliesToTable = $noteAppliesToTable;
+        $this->noteAppliesToTable = $noteAppliesToTable;
     }
 
     /**
@@ -145,7 +148,7 @@ HTML;
      */
     public function getNoteAppliesToId()
     {
-        return $this->_noteAppliesToId;
+        return $this->noteAppliesToId;
     }
 
     /**
@@ -154,7 +157,7 @@ HTML;
      */
     public function setAppliesToId($noteAppliesToId)
     {
-        $this->_noteAppliesToId = $noteAppliesToId;
+        $this->noteAppliesToId = $noteAppliesToId;
     }
 
     /**
@@ -163,7 +166,7 @@ HTML;
      */
     public function getNoteModels()
     {
-        return $this->_noteModels;
+        return $this->noteModels;
     }
 
     /**
@@ -172,6 +175,6 @@ HTML;
      */
     public function setNoteModels($noteModels)
     {
-        $this->_noteModels = $noteModels;
+        $this->noteModels = $noteModels;
     }
 }

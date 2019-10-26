@@ -20,7 +20,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Views;
+
+use com\kbcmdba\pjs2\Libs\Controllers\ApplicationStatusController;
+use com\kbcmdba\pjs2\Libs\Controllers\CompanyController;
+use com\kbcmdba\pjs2\Libs\Exceptions\ViewException;
+use com\kbcmdba\pjs2\Libs\Models\JobModel;
 
 /**
  * Job Summary View
@@ -29,18 +34,18 @@ class JobSummaryView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType;
+    private $viewType;
 
     /** @var mixed */
-    private $_supportedViewTypes = [
+    private $supportedViewTypes = [
         'html' => 1
     ];
 
     /** @var JobModel[] */
-    private $_jobModels;
+    private $jobModels;
 
     /** @var string */
-    private $_label;
+    private $label;
 
     /**
      * Class constructor
@@ -53,10 +58,10 @@ class JobSummaryView extends ListViewBase
     public function __construct($viewType = 'html', $jobModels)
     {
         parent::__construct();
-        if (! isset($this->_supportedViewTypes[$viewType])) {
+        if (! isset($this->supportedViewTypes[$viewType])) {
             throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType;
+        $this->viewType = $viewType;
         $this->setJobModels($jobModels);
     }
 
@@ -99,7 +104,7 @@ class JobSummaryView extends ListViewBase
      */
     public function getView()
     {
-        switch ($this->_viewType) {
+        switch ($this->viewType) {
             case 'html':
                 return $this->_getHtmlView();
             default:
@@ -113,7 +118,7 @@ class JobSummaryView extends ListViewBase
      */
     public function getJobModels()
     {
-        return $this->_jobModels;
+        return $this->jobModels;
     }
 
     /**
@@ -122,7 +127,7 @@ class JobSummaryView extends ListViewBase
      */
     public function setJobModels($jobModels)
     {
-        $this->_jobModels = $jobModels;
+        $this->jobModels = $jobModels;
     }
 
     /**
@@ -131,7 +136,7 @@ class JobSummaryView extends ListViewBase
      */
     public function setLabel($label)
     {
-        $this->_label = $label;
+        $this->label = $label;
     }
 
     /**
@@ -140,6 +145,6 @@ class JobSummaryView extends ListViewBase
      */
     public function getLabel()
     {
-        return $this->_label;
+        return $this->label;
     }
 }

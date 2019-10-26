@@ -10,6 +10,6 @@ dictated in the included LICENSE file.
 
 In order to use PHP Job Seeker, you will need the following:
 
-Apache or a similar web server
-PHP 5.6 or later
-MySQL 5.6 or later
+* Apache or a similar web server
+* PHP 5.6 or later
+* MySQL 5.6 or later

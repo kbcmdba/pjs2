@@ -20,22 +20,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Models;
+
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * Keyword Model
  */
 class KeywordModel extends ModelBase
 {
-    private $_id;
-
-    private $_keywordValue;
-
-    private $_sortKey;
-
-    private $_created;
-
-    private $_updated;
+    private $id;
+    private $keywordValue;
+    private $sortKey;
+    private $created;
+    private $updated;
 
     /**
      * class constructor
@@ -80,7 +78,7 @@ class KeywordModel extends ModelBase
      */
     public function getId()
     {
-        return $this->_id;
+        return $this->id;
     }
 
     /**
@@ -89,7 +87,7 @@ class KeywordModel extends ModelBase
      */
     public function setId($id)
     {
-        $this->_id = $id;
+        $this->id = $id;
     }
 
     /**
@@ -98,7 +96,7 @@ class KeywordModel extends ModelBase
      */
     public function getKeywordValue()
     {
-        return $this->_keywordValue;
+        return $this->keywordValue;
     }
 
     /**
@@ -107,7 +105,7 @@ class KeywordModel extends ModelBase
      */
     public function setKeywordValue($keywordValue)
     {
-        $this->_keywordValue = $keywordValue;
+        $this->keywordValue = $keywordValue;
     }
 
     /**
@@ -116,7 +114,7 @@ class KeywordModel extends ModelBase
      */
     public function getSortKey()
     {
-        return $this->_sortKey;
+        return $this->sortKey;
     }
 
     /**
@@ -125,7 +123,7 @@ class KeywordModel extends ModelBase
      */
     public function setSortKey($sortKey)
     {
-        $this->_sortKey = $sortKey;
+        $this->sortKey = $sortKey;
     }
 
     /**
@@ -134,7 +132,7 @@ class KeywordModel extends ModelBase
      */
     public function getCreated()
     {
-        return $this->_created;
+        return $this->created;
     }
 
     /**
@@ -143,7 +141,7 @@ class KeywordModel extends ModelBase
      */
     public function setCreated($created)
     {
-        $this->_created = $created;
+        $this->created = $created;
     }
 
     /**
@@ -152,7 +150,7 @@ class KeywordModel extends ModelBase
      */
     public function getUpdated()
     {
-        return $this->_updated;
+        return $this->updated;
     }
 
     /**
@@ -161,6 +159,6 @@ class KeywordModel extends ModelBase
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated;
+        $this->updated = $updated;
     }
 }

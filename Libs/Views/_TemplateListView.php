@@ -20,7 +20,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Views;
+
+use com\kbcmdba\pjs2\Libs\Exceptions\ViewException;
+use com\kbcmdba\pjs2\Libs\Models\_TemplateModel;
 
 /**
  * _Template List View
@@ -34,15 +37,15 @@ class _TemplateListView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType;
+    private $viewType;
 
     /** @var mixed */
-    private $_supportedViewTypes = [
+    private $supportedViewTypes = [
         'html' => 1
     ];
 
     /** @var _TemplateModel[] */
-    private $_templateModels;
+    private $templateModels;
 
     /**
      * Class constructor
@@ -55,11 +58,11 @@ class _TemplateListView extends ListViewBase
     public function __construct($viewType = 'html', $templateModels)
     {
         parent::__construct();
-        if (! isset($this->_supportedViewTypes[$viewType])) {
+        if (! isset($this->supportedViewTypes[$viewType])) {
             throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType;
-        $this->set_TemplateModels($templateModels);
+        $this->viewType = $viewType;
+        $this->settemplateModels($templateModels);
     }
 
     /**
@@ -75,7 +78,7 @@ class _TemplateListView extends ListViewBase
   <caption>Current Templates</caption>
   <tr><th>Actions</th><th>Blah</th><th>Blah</th><th>Blah</th></tr>
 HTML;
-        foreach ($this->get_TemplateModels() as $templateModel) {
+        foreach ($this->gettemplateModels() as $templateModel) {
             $id = $templateModel->getId();
             $body .= <<<HTML
   <tr>
@@ -102,7 +105,7 @@ HTML;
      */
     public function getView()
     {
-        switch ($this->_viewType) {
+        switch ($this->viewType) {
             case 'html':
                 return $this->_getHtmlView();
             default:
@@ -114,17 +117,17 @@ HTML;
      *
      * @return _TemplateModel[]
      */
-    public function get_TemplateModels()
+    public function gettemplateModels()
     {
-        return $this->_templateModels;
+        return $this->templateModels;
     }
 
     /**
      *
      * @param _TemplateModel[] $templateModels
      */
-    public function set_TemplateModels($templateModels)
+    public function settemplateModels($templateModels)
     {
-        $this->_templateModels = $templateModels;
+        $this->templateModels = $templateModels;
     }
 }

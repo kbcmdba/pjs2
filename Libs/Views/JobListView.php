@@ -20,7 +20,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Views;
+
+use com\kbcmdba\pjs2\Libs\Controllers\ApplicationStatusController;
+use com\kbcmdba\pjs2\Libs\Controllers\CompanyController;
+use com\kbcmdba\pjs2\Libs\Controllers\ContactController;
+use com\kbcmdba\pjs2\Libs\Exceptions\ViewException;
+use com\kbcmdba\pjs2\Libs\Models\JobModel;
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * Job List View
@@ -29,27 +36,27 @@ class JobListView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType;
+    private $viewType;
 
     /** @var mixed */
-    private $_supportedViewTypes = [
+    private $supportedViewTypes = [
         'html' => 1
     ];
 
     /** @var JobModel[] */
-    private $_jobModels;
+    private $jobModels;
 
     /** @var string */
-    private $_contactList;
+    private $contactList;
 
     /** @var string */
-    private $_companyList;
+    private $companyList;
 
     /** @var string */
-    private $_applicationStatusList;
+    private $applicationStatusList;
 
     /** @var string */
-    private $_urgencyList;
+    private $urgencyList;
 
     /**
      * Class constructor
@@ -62,10 +69,10 @@ class JobListView extends ListViewBase
     public function __construct($viewType = 'html', $jobModels)
     {
         parent::__construct();
-        if (! isset($this->_supportedViewTypes[$viewType])) {
+        if (! isset($this->supportedViewTypes[$viewType])) {
             throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType;
+        $this->viewType = $viewType;
         $this->setJobModels($jobModels);
     }
 
@@ -117,12 +124,12 @@ HTML;
     private function _getListValues($id, $contactId, $companyId, $applicationStatusId, $urgency)
     {
         $contactListView = new ContactListView('html', null);
-        $this->_contactList = $contactListView->getContactList("$id", $contactId);
+        $this->contactList = $contactListView->getContactList("$id", $contactId);
         $companyListView = new CompanyListView('html', null);
-        $this->_companyList = $companyListView->getCompanyList("$id", $companyId);
+        $this->companyList = $companyListView->getCompanyList("$id", $companyId);
         $applicationStatusListView = new ApplicationStatusListView('html', null);
-        $this->_applicationStatusList = $applicationStatusListView->getApplicationStatusList("$id", $applicationStatusId);
-        $this->_urgencyList = "      <select id=\"urgency$id\">\n";
+        $this->applicationStatusList = $applicationStatusListView->getApplicationStatusList("$id", $applicationStatusId);
+        $this->urgencyList = "      <select id=\"urgency$id\">\n";
         foreach ([
             '---',
             'high',
@@ -136,9 +143,9 @@ HTML;
             if (('---' === $urgency_value) && ((! isset($urgency)) || ('' === $urgency))) {
                 $selected = 'selected="selected"';
             }
-            $this->_urgencyList .= "       <option value=\"$urgency_value\" $selected>$urgency_value</option>\n";
+            $this->urgencyList .= "       <option value=\"$urgency_value\" $selected>$urgency_value</option>\n";
         }
-        $this->_urgencyList .= "     </select>\n";
+        $this->urgencyList .= "     </select>\n";
     }
 
     /**
@@ -198,12 +205,12 @@ HTML;
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
           $errorMessage
       </td>
-      <td>{$this->_urgencyList}</td>
+      <td>{$this->urgencyList}</td>
       <td><input type="text" id="positionTitleix$id" value="$positionTitle" /></td>
       <td><input type="text" id="locationix$id" value="$location" /></td>
-      <td>{$this->_companyList}</td>
-      <td>{$this->_contactList}</td>
-      <td>{$this->_applicationStatusList}</td>
+      <td>{$this->companyList}</td>
+      <td>{$this->contactList}</td>
+      <td>{$this->applicationStatusList}</td>
       <td><input type="text" id="nextActionix$id" value="$nextAction" /></td>
       <td $dueClass><input type="text" id="nextActionDueix$id" value="$nextActionDue" class="datepicker" /></td>
       <td><input type="text" id="urlix$id" value="$url" /></td>
@@ -220,12 +227,12 @@ HTML;
           <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>
           $errorMessage
       </td>
-      <td>{$this->_urgencyList}</td>
+      <td>{$this->urgencyList}</td>
       <td><input type="text" id="positionTitle$id" value="$positionTitle" /></td>
       <td><input type="text" id="location$id" value="$location" /></td>
-      <td>{$this->_companyList}</td>
-      <td>{$this->_contactList}</td>
-      <td>{$this->_applicationStatusList}</td>
+      <td>{$this->companyList}</td>
+      <td>{$this->contactList}</td>
+      <td>{$this->applicationStatusList}</td>
       <td><input type="text" id="nextAction$id" value="$nextAction" /></td>
       <td $dueClass><input type="text" id="nextActionDue$id" value="$nextActionDue" class="datepicker" /></td>
       <td><input type="text" id="url$id" value="$url" /></td>
@@ -290,7 +297,7 @@ HTML;
      */
     public function getView()
     {
-        switch ($this->_viewType) {
+        switch ($this->viewType) {
             case 'html':
                 return $this->_getHtmlView();
             default:
@@ -304,7 +311,7 @@ HTML;
      */
     public function getJobModels()
     {
-        return $this->_jobModels;
+        return $this->jobModels;
     }
 
     /**
@@ -313,6 +320,6 @@ HTML;
      */
     public function setJobModels($jobModels)
     {
-        $this->_jobModels = $jobModels;
+        $this->jobModels = $jobModels;
     }
 }

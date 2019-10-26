@@ -1,0 +1,24 @@
+{
+	"name" : "kbcmdba/pjs2",
+	"description" : "PHP Job Seeker 2",
+	"type" : "project",
+	"license" : "GPL 2",
+	"authors" : [{
+			"name" : "KB Benton",
+			"email" : "kbcmdba@gmail.com"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"com\\kbcmdba\\pjs2\\Libs\\" : "Libs/"
+		}
+	},
+	"config" : {
+		"vendor-dir" : "vendor"
+	},
+	"scripts" : {
+		"clean" : "rm -fr build"
+	},
+	"minimum-stability" : "beta",
+	"homepage" : "http://github.com/kbcmdba/pjs2"
+}

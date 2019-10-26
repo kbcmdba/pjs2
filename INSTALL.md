@@ -5,9 +5,9 @@ those items on the Internet quite readily.
 
 In order to use PHPJobSeeker2, I use the following;
 
-Apache httpd
-MySQL 5.6 or greater
-PHP 5.6 or greater
+* Apache httpd
+* MySQL 5.6 or greater
+* PHP 5.6 or greater
 
 In your PHP configuration (/etc/php.ini on Unix), you'll need to set the timezone
 in order for this to work correctly. If you're in the Central US timezone, setting
@@ -22,7 +22,7 @@ The modules I had to load to make this work are included below:
 
 After verifying the modules are properly installed, perform the following tasks:
 
-1) Copy the file config_sample.xml to config.xml
-2) Update the new config.xml according to your needs
+1. Copy the file config_sample.xml to config.xml
+    1. Update the new config.xml according to your needs
 
 

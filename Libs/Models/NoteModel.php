@@ -20,25 +20,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Models;
+
+use com\kbcmdba\pjs2\Libs\Exceptions\ModelException;
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * Template Model
  */
 class NoteModel extends ModelBase
 {
-    private $_id;
-
-    private $_appliesToTable;
-
-    private $_appliesToId;
-
-    private $_created;
-
-    private $_updated;
-
-    private $_noteText;
-
+    private $id;
+    private $appliesToTable;
+    private $appliesToId;
+    private $created;
+    private $updated;
+    private $noteText;
     private static $appliesToTables = [
         'job' => 1,
         'company' => 1,
@@ -91,7 +88,7 @@ class NoteModel extends ModelBase
      */
     public function getId()
     {
-        return $this->_id;
+        return $this->id;
     }
 
     /**
@@ -100,7 +97,7 @@ class NoteModel extends ModelBase
      */
     public function setId($id)
     {
-        $this->_id = $id;
+        $this->id = $id;
     }
 
     /**
@@ -109,7 +106,7 @@ class NoteModel extends ModelBase
      */
     public function getAppliesToTable()
     {
-        return $this->_appliesToTable;
+        return $this->appliesToTable;
     }
 
     /**
@@ -119,7 +116,7 @@ class NoteModel extends ModelBase
     public function setAppliesToTable($appliesToTable)
     {
         if (('job' === $appliesToTable) || ('company' === $appliesToTable) || ('contact' === $appliesToTable) || ('keyword' === $appliesToTable) || ('search' === $appliesToTable)) {
-            $this->_appliesToTable = $appliesToTable;
+            $this->appliesToTable = $appliesToTable;
         } else {
             throw new ModelException("Invalid appliesToTable: $appliesToTable");
         }
@@ -131,7 +128,7 @@ class NoteModel extends ModelBase
      */
     public function getAppliesToId()
     {
-        return $this->_appliesToId;
+        return $this->appliesToId;
     }
 
     /**
@@ -140,7 +137,7 @@ class NoteModel extends ModelBase
      */
     public function setAppliesToId($appliesToId)
     {
-        $this->_appliesToId = $appliesToId;
+        $this->appliesToId = $appliesToId;
     }
 
     /**
@@ -149,7 +146,7 @@ class NoteModel extends ModelBase
      */
     public function getCreated()
     {
-        return $this->_created;
+        return $this->created;
     }
 
     /**
@@ -158,7 +155,7 @@ class NoteModel extends ModelBase
      */
     public function setCreated($created)
     {
-        $this->_created = $created;
+        $this->created = $created;
     }
 
     /**
@@ -167,7 +164,7 @@ class NoteModel extends ModelBase
      */
     public function getUpdated()
     {
-        return $this->_updated;
+        return $this->updated;
     }
 
     /**
@@ -176,7 +173,7 @@ class NoteModel extends ModelBase
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated;
+        $this->updated = $updated;
     }
 
     /**
@@ -185,7 +182,7 @@ class NoteModel extends ModelBase
      */
     public function getNoteText()
     {
-        return $this->_noteText;
+        return $this->noteText;
     }
 
     /**
@@ -194,6 +191,6 @@ class NoteModel extends ModelBase
      */
     public function setNoteText($noteText)
     {
-        $this->_noteText = $noteText;
+        $this->noteText = $noteText;
     }
 }

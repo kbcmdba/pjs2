@@ -22,7 +22,14 @@
  */
 namespace com\kbcmdba\pjs2;
 
-require_once "Libs/autoload.php";
+require_once "vendor/autoload.php";
+
+use com\kbcmdba\pjs2\Libs\Auth;
+use com\kbcmdba\pjs2\Libs\Controllers\ApplicationStatusController;
+use com\kbcmdba\pjs2\Libs\Exceptions\ControllerException;
+use com\kbcmdba\pjs2\Libs\Models\ApplicationStatusModel;
+use com\kbcmdba\pjs2\Libs\Tools;
+use com\kbcmdba\pjs2\Libs\Views\ApplicationStatusListView;
 
 $auth = new Auth();
 if (! $auth->isAuthorized()) {

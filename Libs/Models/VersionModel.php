@@ -20,16 +20,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Models;
+
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * Version Model
  */
 class VersionModel extends ModelBase
 {
-    private $_versionValue;
+    private $versionValue;
 
-    private $_updated;
+    private $updated;
 
     /**
      * class constructor
@@ -73,7 +75,7 @@ class VersionModel extends ModelBase
      */
     public function getVersionValue()
     {
-        return $this->_versionValue;
+        return $this->versionValue;
     }
 
     /**
@@ -82,7 +84,7 @@ class VersionModel extends ModelBase
      */
     public function setVersionValue($versionValue)
     {
-        $this->_versionValue = $versionValue;
+        $this->versionValue = $versionValue;
     }
 
     /**
@@ -91,7 +93,7 @@ class VersionModel extends ModelBase
      */
     public function getUpdated()
     {
-        return $this->_updated;
+        return $this->updated;
     }
 
     /**
@@ -100,6 +102,6 @@ class VersionModel extends ModelBase
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated;
+        $this->updated = $updated;
     }
 }

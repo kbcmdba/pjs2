@@ -20,40 +20,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Models;
+
+use com\kbcmdba\pjs2\Libs\Controllers\ApplicationStatusController;
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * Job Model
  */
 class JobModel extends ModelBase
 {
-    private $_id;
-
-    private $_primaryContactId;
-
-    private $_companyId;
-
-    private $_applicationStatusId;
-
-    private $_isActiveSummary;
-
-    private $_lastStatusChange;
-
-    private $_urgency;
-
-    private $_created;
-
-    private $_updated;
-
-    private $_nextActionDue;
-
-    private $_nextAction;
-
-    private $_positionTitle;
-
-    private $_location;
-
-    private $_url;
+    private $id;
+    private $primaryContactId;
+    private $companyId;
+    private $applicationStatusId;
+    private $isActiveSummary;
+    private $lastStatusChange;
+    private $urgency;
+    private $created;
+    private $updated;
+    private $nextActionDue;
+    private $nextAction;
+    private $positionTitle;
+    private $location;
+    private $url;
 
     /**
      * class constructor
@@ -106,7 +96,7 @@ class JobModel extends ModelBase
      */
     public function getId()
     {
-        return $this->_id;
+        return $this->id;
     }
 
     /**
@@ -115,7 +105,7 @@ class JobModel extends ModelBase
      */
     public function setId($id)
     {
-        $this->_id = $id;
+        $this->id = $id;
     }
 
     /**
@@ -124,7 +114,7 @@ class JobModel extends ModelBase
      */
     public function getPrimaryContactId()
     {
-        return $this->_primaryContactId;
+        return $this->primaryContactId;
     }
 
     /**
@@ -133,7 +123,7 @@ class JobModel extends ModelBase
      */
     public function setPrimaryContactId($primaryContactId)
     {
-        $this->_primaryContactId = $primaryContactId;
+        $this->primaryContactId = $primaryContactId;
     }
 
     /**
@@ -142,7 +132,7 @@ class JobModel extends ModelBase
      */
     public function getCompanyId()
     {
-        return $this->_companyId;
+        return $this->companyId;
     }
 
     /**
@@ -151,7 +141,7 @@ class JobModel extends ModelBase
      */
     public function setCompanyId($companyId)
     {
-        $this->_companyId = $companyId;
+        $this->companyId = $companyId;
     }
 
     /**
@@ -160,7 +150,7 @@ class JobModel extends ModelBase
      */
     public function getApplicationStatusId()
     {
-        return $this->_applicationStatusId;
+        return $this->applicationStatusId;
     }
 
     /**
@@ -169,7 +159,7 @@ class JobModel extends ModelBase
      */
     public function setApplicationStatusId($applicationStatusId)
     {
-        $this->_applicationStatusId = $applicationStatusId;
+        $this->applicationStatusId = $applicationStatusId;
         $applicationStatusController = new ApplicationStatusController('read');
         $applicationStatusModel = $applicationStatusController->get($applicationStatusId);
         $this->_setIsActiveSummary($applicationStatusModel->getIsActive());
@@ -181,7 +171,7 @@ class JobModel extends ModelBase
      */
     private function _setIsActiveSummary($isActive)
     {
-        $this->_isActiveSummary = $isActive;
+        $this->isActiveSummary = $isActive;
     }
 
     /**
@@ -190,7 +180,7 @@ class JobModel extends ModelBase
      */
     public function getIsActiveSummary()
     {
-        return $this->_isActiveSummary;
+        return $this->isActiveSummary;
     }
 
     /**
@@ -199,10 +189,10 @@ class JobModel extends ModelBase
      */
     public function getLastStatusChange()
     {
-        if ("0000-00-00 00:00:00" === $this->_lastStatusChange) {
+        if ("0000-00-00 00:00:00" === $this->lastStatusChange) {
             return "";
         } else {
-            return $this->_lastStatusChange;
+            return $this->lastStatusChange;
         }
     }
 
@@ -212,7 +202,7 @@ class JobModel extends ModelBase
      */
     public function setLastStatusChange($lastStatusChange)
     {
-        $this->_lastStatusChange = $lastStatusChange;
+        $this->lastStatusChange = $lastStatusChange;
     }
 
     /**
@@ -221,7 +211,7 @@ class JobModel extends ModelBase
      */
     public function getUrgency()
     {
-        return $this->_urgency;
+        return $this->urgency;
     }
 
     /**
@@ -230,7 +220,7 @@ class JobModel extends ModelBase
      */
     public function setUrgency($urgency)
     {
-        $this->_urgency = $urgency;
+        $this->urgency = $urgency;
     }
 
     /**
@@ -239,7 +229,7 @@ class JobModel extends ModelBase
      */
     public function getCreated()
     {
-        return $this->_created;
+        return $this->created;
     }
 
     /**
@@ -248,7 +238,7 @@ class JobModel extends ModelBase
      */
     public function setCreated($created)
     {
-        $this->_created = $created;
+        $this->created = $created;
     }
 
     /**
@@ -257,7 +247,7 @@ class JobModel extends ModelBase
      */
     public function getUpdated()
     {
-        return $this->_updated;
+        return $this->updated;
     }
 
     /**
@@ -266,7 +256,7 @@ class JobModel extends ModelBase
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated;
+        $this->updated = $updated;
     }
 
     /**
@@ -275,10 +265,10 @@ class JobModel extends ModelBase
      */
     public function getNextActionDue()
     {
-        if ((! isset($this->_nextActionDue)) || ($this->_nextActionDue === '0000-00-00 00:00:00')) {
+        if ((! isset($this->nextActionDue)) || ($this->nextActionDue === '0000-00-00 00:00:00')) {
             return '';
         }
-        return $this->_nextActionDue;
+        return $this->nextActionDue;
     }
 
     /**
@@ -290,7 +280,7 @@ class JobModel extends ModelBase
         if ($nextActionDue === '') {
             $nextActionDue = null;
         }
-        $this->_nextActionDue = $nextActionDue;
+        $this->nextActionDue = $nextActionDue;
     }
 
     /**
@@ -299,10 +289,10 @@ class JobModel extends ModelBase
      */
     public function getNextAction()
     {
-        if (! isset($this->_nextAction)) {
+        if (! isset($this->nextAction)) {
             return '';
         }
-        return $this->_nextAction;
+        return $this->nextAction;
     }
 
     /**
@@ -314,7 +304,7 @@ class JobModel extends ModelBase
         if (! isset($nextAction)) {
             $nextAction = '';
         }
-        $this->_nextAction = $nextAction;
+        $this->nextAction = $nextAction;
     }
 
     /**
@@ -323,7 +313,7 @@ class JobModel extends ModelBase
      */
     public function getPositionTitle()
     {
-        return $this->_positionTitle;
+        return $this->positionTitle;
     }
 
     /**
@@ -332,7 +322,7 @@ class JobModel extends ModelBase
      */
     public function setPositionTitle($positionTitle)
     {
-        $this->_positionTitle = $positionTitle;
+        $this->positionTitle = $positionTitle;
     }
 
     /**
@@ -341,7 +331,7 @@ class JobModel extends ModelBase
      */
     public function getLocation()
     {
-        return $this->_location;
+        return $this->location;
     }
 
     /**
@@ -350,7 +340,7 @@ class JobModel extends ModelBase
      */
     public function setLocation($location)
     {
-        $this->_location = $location;
+        $this->location = $location;
     }
 
     /**
@@ -359,7 +349,7 @@ class JobModel extends ModelBase
      */
     public function getUrl()
     {
-        return $this->_url;
+        return $this->url;
     }
 
     /**
@@ -368,6 +358,6 @@ class JobModel extends ModelBase
      */
     public function setUrl($url)
     {
-        $this->_url = $url;
+        $this->url = $url;
     }
 }

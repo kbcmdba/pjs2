@@ -20,7 +20,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Views;
+
+use com\kbcmdba\pjs2\Libs\Controllers\CompanyController;
+use com\kbcmdba\pjs2\Libs\Exceptions\ViewException;
+use com\kbcmdba\pjs2\Libs\Models\CompanyModel;
 
 /**
  * Company List View
@@ -29,15 +33,15 @@ class CompanyListView extends ListViewBase
 {
 
     /** @var string */
-    private $_viewType;
+    private $viewType;
 
     /** @var mixed */
-    private $_supportedViewTypes = [
+    private $supportedViewTypes = [
         'html' => 1
     ];
 
     /** @var CompanyModel[] */
-    private $_companyModels;
+    private $companyModels;
 
     /**
      * Class constructor
@@ -50,10 +54,10 @@ class CompanyListView extends ListViewBase
     public function __construct($viewType = 'html', $companyModels)
     {
         parent::__construct();
-        if (! isset($this->_supportedViewTypes[$viewType])) {
+        if (! isset($this->supportedViewTypes[$viewType])) {
             throw new ViewException("Unsupported view type\n");
         }
-        $this->_viewType = $viewType;
+        $this->viewType = $viewType;
         $this->setCompanyModels($companyModels);
     }
 
@@ -240,7 +244,7 @@ HTML;
      */
     public function getView()
     {
-        switch ($this->_viewType) {
+        switch ($this->viewType) {
             case 'html':
                 return $this->_getHtmlView();
             default:
@@ -254,7 +258,7 @@ HTML;
      */
     public function getCompanyModels()
     {
-        return $this->_companyModels;
+        return $this->companyModels;
     }
 
     /**
@@ -263,7 +267,7 @@ HTML;
      */
     public function setCompanyModels($companyModels)
     {
-        $this->_companyModels = $companyModels;
+        $this->companyModels = $companyModels;
     }
 
     /**

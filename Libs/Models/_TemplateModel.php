@@ -20,7 +20,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Models;
+
+use com\kbcmdba\pjs2\Libs\Models\ModelBase;
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * _Template Model
@@ -29,9 +32,9 @@ class _TemplateModel extends ModelBase
 {
 
     // @todo Add _TemplateModel specific properties, getters and setters
-    private $_created;
+    private $created;
 
-    private $_updated;
+    private $updated;
 
     /**
      * class constructor
@@ -76,7 +79,7 @@ class _TemplateModel extends ModelBase
      */
     public function getCreated()
     {
-        return $this->_created;
+        return $this->created;
     }
 
     /**
@@ -85,7 +88,7 @@ class _TemplateModel extends ModelBase
      */
     public function setCreated($created)
     {
-        $this->_created = $created;
+        $this->created = $created;
     }
 
     /**
@@ -94,7 +97,7 @@ class _TemplateModel extends ModelBase
      */
     public function getUpdated()
     {
-        return $this->_updated;
+        return $this->updated;
     }
 
     /**
@@ -103,6 +106,6 @@ class _TemplateModel extends ModelBase
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated;
+        $this->updated = $updated;
     }
 }

@@ -20,22 +20,24 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  *
  */
-namespace com\kbcmdba\pjs2;
+namespace com\kbcmdba\pjs2\Libs\Models;
+
+use com\kbcmdba\pjs2\Libs\Tools;
 
 /**
  * _User Model
  */
 class UserModel extends ModelBase
 {
-    private $_userName;
+    private $userName;
 
-    private $_password;
+    private $password;
 
-    private $_pSalt;
+    private $pSalt;
 
-    private $_created;
+    private $created;
 
-    private $_updated;
+    private $updated;
 
     /**
      * class constructor
@@ -80,7 +82,7 @@ class UserModel extends ModelBase
      */
     public function getUserName()
     {
-        return $this->_userName;
+        return $this->userName;
     }
 
     /**
@@ -89,7 +91,7 @@ class UserModel extends ModelBase
      */
     public function setUserName($userName)
     {
-        $this->_userName = $userName;
+        $this->userName = $userName;
     }
 
     /**
@@ -98,7 +100,7 @@ class UserModel extends ModelBase
      */
     public function getPassword()
     {
-        return $this->_password;
+        return $this->password;
     }
 
     /**
@@ -107,7 +109,7 @@ class UserModel extends ModelBase
      */
     public function setPassword($password)
     {
-        $this->_password = $password;
+        $this->password = $password;
     }
 
     /**
@@ -116,7 +118,7 @@ class UserModel extends ModelBase
      */
     public function getPSalt()
     {
-        return $this->_pSalt;
+        return $this->pSalt;
     }
 
     /**
@@ -125,7 +127,7 @@ class UserModel extends ModelBase
      */
     public function setPSalt($pSalt)
     {
-        $this->_pSalt = $pSalt;
+        $this->pSalt = $pSalt;
     }
 
     /**
@@ -134,7 +136,7 @@ class UserModel extends ModelBase
      */
     public function getCreated()
     {
-        return $this->_created;
+        return $this->created;
     }
 
     /**
@@ -143,7 +145,7 @@ class UserModel extends ModelBase
      */
     public function setCreated($created)
     {
-        $this->_created = $created;
+        $this->created = $created;
     }
 
     /**
@@ -152,7 +154,7 @@ class UserModel extends ModelBase
      */
     public function getUpdated()
     {
-        return $this->_updated;
+        return $this->updated;
     }
 
     /**
@@ -161,6 +163,6 @@ class UserModel extends ModelBase
      */
     public function setUpdated($updated)
     {
-        $this->_updated = $updated;
+        $this->updated = $updated;
     }
 }
