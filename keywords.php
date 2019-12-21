@@ -28,7 +28,7 @@ use com\kbcmdba\pjs2\Libs\Auth;
 use com\kbcmdba\pjs2\Libs\Config;
 use com\kbcmdba\pjs2\Libs\Controllers\KeywordController;
 use com\kbcmdba\pjs2\Libs\PJSWebPage;
-// use com\kbcmdba\pjs2\Libs\Views\KeywordListView;
+use com\kbcmdba\pjs2\Libs\Views\KeywordListView;
 
 $auth = new Auth();
 if (! $auth->isAuthorized()) {
@@ -38,5 +38,10 @@ if (! $auth->isAuthorized()) {
 $config = new Config();
 $page = new PJSWebPage($config->getTitle() . " - Keywords");
 $body = "<h2>Keywords</h2>\n<div>Not yet written.<div>";
+$keywordController = new KeywordController('read');
+$keywordModelList = $keywordController->getAll();
+$keywordListView = new KeywordListView('html', $keywordModelList);
+$body .= $keywordListView->getView();
 $page->setBody($body);
 $page->displayPage();
+
