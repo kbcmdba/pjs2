@@ -54,17 +54,18 @@ class PJSWebPage extends WebPage
             $csrfToken = Tools::htmlOut($auth->getCsrfToken());
             $csrfMeta = "  <meta name=\"csrf-token\" content=\"$csrfToken\" />\n";
         }
+        $v = date('YmdHis');
         $header = <<<HTML
-$csrfMeta  <link rel="stylesheet" href="css/main.css" />
+$csrfMeta  <link rel="stylesheet" href="css/main.css?v=$v" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
-  <script src="js/common.js"></script>
-  <script src="js/ajaxApplicationStatus.js"></script>
-  <script src="js/ajaxCompany.js"></script>
-  <script src="js/ajaxContact.js"></script>
-  <script src="js/ajaxJob.js"></script>
-  <script src="js/ajaxKeyword.js"></script>
-  <script src="js/ajaxSearch.js"></script>
-  <script src="js/oldValidation.js"></script>
+  <script src="js/common.js?v=$v"></script>
+  <script src="js/ajaxApplicationStatus.js?v=$v"></script>
+  <script src="js/ajaxCompany.js?v=$v"></script>
+  <script src="js/ajaxContact.js?v=$v"></script>
+  <script src="js/ajaxJob.js?v=$v"></script>
+  <script src="js/ajaxKeyword.js?v=$v"></script>
+  <script src="js/ajaxSearch.js?v=$v"></script>
+  <script src="js/oldValidation.js?v=$v"></script>
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   <script>
