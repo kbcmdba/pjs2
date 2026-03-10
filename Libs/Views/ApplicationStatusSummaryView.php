@@ -63,36 +63,29 @@ class ApplicationStatusSummaryView extends SummaryViewBase
      */
     private function _getHtmlView()
     {
-        $body = <<<'HTML'
-<table id="applicationStatus">
-  <caption>Current Application Statuses</caption>
-  <thead>
-    <tr>
-      <th>Status</th>
-      <th>Count</th>
-      <th>Is Active?</th>
-    </tr>
-  </thead>
-  <tbody>
-
-HTML;
+        $jobController = new JobController('read');
+        $appStatusController = new ApplicationStatusController('read');
+        $body = "<h3>Application Statuses</h3>\n";
         foreach ($this->_applicationStatusModels as $applicationStatus) {
             $id = $applicationStatus->getId();
             $label = Tools::htmlOut($applicationStatus->getStatusValue());
             $style = Tools::htmlOut($applicationStatus->getStyle());
-            $count = Tools::htmlOut($applicationStatus->getSummaryCount());
-            $isAct = $applicationStatus->getIsActive() ? "Yes" : "No";
-            $body .= <<<HTML
-    <tr id="ux$id">
-      <td style="$style"><a href="jobsByStatus.php?statusId=$id">$label</a></td>
-      <td>$count</td>
-      <td>$isAct</td>
-    </tr>
-
-HTML;
+            $count = (int) $applicationStatus->getSummaryCount();
+            $isAct = $applicationStatus->getIsActive() ? "Active" : "Inactive";
+            $body .= "<details id=\"ux$id\">\n";
+            $body .= "  <summary style=\"$style cursor: pointer; padding: 6px 10px; margin: 2px 0;\">$label &mdash; $count job(s) &mdash; $isAct</summary>\n";
+            if ($count > 0) {
+                $jobs = $jobController->getByApplicationStatus($id);
+                if (count($jobs) > 0) {
+                    $view = new JobSummaryView('html', $jobs);
+                    $view->setLabel($label);
+                    $body .= $view->getView();
+                }
+            } else {
+                $body .= "  <p style=\"padding-left: 20px;\">No jobs with this status.</p>\n";
+            }
+            $body .= "</details>\n";
         }
-        
-        $body .= "  </tbody>\n</table>\n";
         return $body;
     }
 

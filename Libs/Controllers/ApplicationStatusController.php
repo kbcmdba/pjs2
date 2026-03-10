@@ -168,17 +168,18 @@ SQL;
     public function getSome()
     {
         $sql = <<<SQL
-SELECT id
-     , statusValue
-     , isActive
-     , sortKey
-     , style
-     , summaryCount
-     , created
-     , updated
-  FROM applicationStatus
+SELECT a.id
+     , a.statusValue
+     , a.isActive
+     , a.sortKey
+     , a.style
+     , COALESCE(s.statusCount, 0) AS summaryCount
+     , a.created
+     , a.updated
+  FROM applicationStatus a
+  LEFT JOIN applicationStatusSummary s ON s.id = a.id
  ORDER
-    BY sortKey
+    BY a.sortKey
 SQL;
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
