@@ -389,6 +389,125 @@ SQL;
     }
 
     /**
+     * Get active jobs where nextActionDue is before the given timestamp.
+     *
+     * @param string $before Timestamp string (Y-m-d H:i:s)
+     * @throws ControllerException
+     * @return JobModel[]
+     */
+    public function getActiveOverdue($before)
+    {
+        $sql = <<<SQL
+SELECT id
+     , primaryContactId
+     , companyId
+     , applicationStatusId
+     , lastStatusChange
+     , urgency
+     , created
+     , updated
+     , nextActionDue
+     , nextAction
+     , positionTitle
+     , location
+     , url
+  FROM job
+ WHERE isActiveSummary = true
+   AND nextActionDue < ?
+ ORDER
+    BY nextActionDue ASC
+
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('s', $before)) {
+            throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url);
+        $models = [];
+        while ($stmt->fetch()) {
+            $model = new JobModel();
+            $model->setId($id);
+            $model->setPrimaryContactId($primaryContactId);
+            $model->setCompanyId($companyId);
+            $model->setApplicationStatusId($applicationStatusId);
+            $model->setLastStatusChange($lastStatusChange);
+            $model->setUrgency($urgency);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setNextActionDue($nextActionDue);
+            $model->setNextAction($nextAction);
+            $model->setPositionTitle($positionTitle);
+            $model->setLocation($location);
+            $model->setUrl($url);
+            $models[] = $model;
+        }
+        return $models;
+    }
+
+    /**
+     * Get active jobs with nextActionDue between two dates.
+     *
+     * @param string $from Date string (Y-m-d)
+     * @param string $to Date string (Y-m-d)
+     * @throws ControllerException
+     * @return JobModel[]
+     */
+    public function getActiveDueRange($from, $to)
+    {
+        $sql = <<<SQL
+SELECT id
+     , primaryContactId
+     , companyId
+     , applicationStatusId
+     , lastStatusChange
+     , urgency
+     , created
+     , updated
+     , nextActionDue
+     , nextAction
+     , positionTitle
+     , location
+     , url
+  FROM job
+ WHERE isActiveSummary = true
+   AND nextActionDue BETWEEN ? AND ?
+ ORDER
+    BY nextActionDue ASC
+
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('ss', $from, $to)) {
+            throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url);
+        $models = [];
+        while ($stmt->fetch()) {
+            $model = new JobModel();
+            $model->setId($id);
+            $model->setPrimaryContactId($primaryContactId);
+            $model->setCompanyId($companyId);
+            $model->setApplicationStatusId($applicationStatusId);
+            $model->setLastStatusChange($lastStatusChange);
+            $model->setUrgency($urgency);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setNextActionDue($nextActionDue);
+            $model->setNextAction($nextAction);
+            $model->setPositionTitle($positionTitle);
+            $model->setLocation($location);
+            $model->setUrl($url);
+            $models[] = $model;
+        }
+        return $models;
+    }
+
+    /**
      *
      * @param JobModel $model
      */

@@ -34,12 +34,7 @@ try {
 
 $config = new Config();
 $page = new PJSWebPage($config->getTitle());
-$applicationStatusController = new ApplicationStatusController('read');
-$applicationStatusList = $applicationStatusController->getAll();
-$appStatusBody = new ApplicationStatusSummaryView('html', $applicationStatusList);
-$asmList = $applicationStatusController->getAll();
-$asv = new ApplicationStatusSummaryView('html', $asmList);
-$body .= $asv->getView();
+$body = '';
 
 $jobController = new JobController('read');
 $now = $jobController->now();
@@ -47,6 +42,7 @@ $today = $jobController->today();
 $tomorrow = $jobController->tomorrow();
 $nextWeek = ControllerBase::datestamp(time() + 7 * 86400);
 
+// Counts
 $jobsOverdue = $jobController->countActiveOverdue($now);
 $jobsDueToday = $jobController->countActiveDueRange($today, $tomorrow);
 $jobsDue7Days = $jobController->countActiveDueRange($today, $nextWeek);
@@ -58,17 +54,51 @@ $searchController = new SearchController('read');
 $searches = $searchController->countAll();
 
 $body .= <<<HTML
-
-<div id="overdue">Active Overdue Jobs: <span id="overdue_count">$jobsOverdue</span></div>
-<div id="today">Active Jobs Due Today: <span id="today_count">$jobsDueToday</span></div>
-<div id="7days">Active Jobs Due In 7 Days: <span id="7day_count">$jobsDue7Days</span></div>
-<div id="high">Active High Urgency Jobs: <span id="high_count">$highUrgency</span></div>
-<div id="med">Active Medium Urgency Jobs: <span id="med_count">$mediumUrgency</span></div>
-<div id="low">Active Low Urgency Jobs: <span id="low_count">$lowUrgency</span></div>
-
-<div id="searches">Active Job Search URLs: <span id="search_count">$searches</span></div>
+<h2>Dashboard</h2>
+<table id="dashboardSummary">
+  <tr>
+    <th>Overdue</th><th>Due Today</th><th>Due This Week</th>
+    <th>High Urgency</th><th>Medium Urgency</th><th>Low Urgency</th>
+    <th>Saved Searches</th>
+  </tr>
+  <tr>
+    <td>$jobsOverdue</td><td>$jobsDueToday</td><td>$jobsDue7Days</td>
+    <td>$highUrgency</td><td>$mediumUrgency</td><td>$lowUrgency</td>
+    <td>$searches</td>
+  </tr>
+</table>
 
 HTML;
+
+// Overdue jobs detail
+$overdueJobs = $jobController->getActiveOverdue($now);
+if (count($overdueJobs) > 0) {
+    $overdueView = new JobSummaryView('html', $overdueJobs);
+    $overdueView->setLabel('Overdue Jobs');
+    $body .= $overdueView->getView();
+}
+
+// Due today detail
+$dueTodayJobs = $jobController->getActiveDueRange($today, $tomorrow);
+if (count($dueTodayJobs) > 0) {
+    $dueTodayView = new JobSummaryView('html', $dueTodayJobs);
+    $dueTodayView->setLabel('Due Today');
+    $body .= $dueTodayView->getView();
+}
+
+// Due this week detail
+$dueWeekJobs = $jobController->getActiveDueRange($tomorrow, $nextWeek);
+if (count($dueWeekJobs) > 0) {
+    $dueWeekView = new JobSummaryView('html', $dueWeekJobs);
+    $dueWeekView->setLabel('Due This Week');
+    $body .= $dueWeekView->getView();
+}
+
+// Application status summary
+$applicationStatusController = new ApplicationStatusController('read');
+$asmList = $applicationStatusController->getAll();
+$asv = new ApplicationStatusSummaryView('html', $asmList);
+$body .= $asv->getView();
 
 $page->setBody($body);
 $page->displayPage();
