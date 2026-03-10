@@ -86,6 +86,36 @@ class Tools
     }
 
     /**
+     * Escape a string for safe HTML output.
+     *
+     * @param string $value
+     * @return string
+     */
+    public static function htmlOut($value)
+    {
+        return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
+    }
+
+    /**
+     * Validate that a URL uses a safe scheme (http or https only).
+     * Returns the htmlspecialchars-escaped URL if safe, '#' otherwise.
+     *
+     * @param string $url
+     * @return string
+     */
+    public static function safeUrl($url)
+    {
+        $url = trim($url ?? '');
+        if ($url === '') {
+            return '';
+        }
+        if (preg_match('/^https?:\/\//i', $url)) {
+            return htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+        }
+        return '#';
+    }
+
+    /**
      * Return true when the value passed is a number
      *
      * @param boolean $x

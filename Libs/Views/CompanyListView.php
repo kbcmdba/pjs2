@@ -106,26 +106,26 @@ HTML;
         if (null === $warningMsg) {
             $warningMsg = '';
         } else {
-            $warningMsg = "<br /><span style=\"color: red;\">$warningMsg</span>";
+            $warningMsg = "<br /><span style=\"color: red;\">" . Tools::htmlOut($warningMsg) . "</span>";
         }
         $id = $companyModel->getId();
         $agencyCompanyId = $companyModel->getAgencyCompanyId();
-        $companyName = $companyModel->getCompanyName();
-        $companyAddress1 = $companyModel->getCompanyAddress1();
-        $companyAddress2 = $companyModel->getCompanyAddress2();
-        $companyCity = $companyModel->getCompanyCity();
-        $companyState = $companyModel->getCompanyState();
-        $companyZip = $companyModel->getCompanyZip();
-        $companyPhone = $companyModel->getCompanyPhone();
+        $companyName = Tools::htmlOut($companyModel->getCompanyName());
+        $companyAddress1 = Tools::htmlOut($companyModel->getCompanyAddress1());
+        $companyAddress2 = Tools::htmlOut($companyModel->getCompanyAddress2());
+        $companyCity = Tools::htmlOut($companyModel->getCompanyCity());
+        $companyState = Tools::htmlOut($companyModel->getCompanyState());
+        $companyZip = Tools::htmlOut($companyModel->getCompanyZip());
+        $companyPhone = Tools::htmlOut($companyModel->getCompanyPhone());
         $companyUrl = $companyModel->getCompanyUrl();
-        $created = $companyModel->getCreated();
-        $updated = $companyModel->getUpdated();
-        $lastContacted = $companyModel->getLastContacted();
-        $encodedUrl = htmlspecialchars($companyUrl);
+        $created = Tools::htmlOut($companyModel->getCreated());
+        $updated = Tools::htmlOut($companyModel->getUpdated());
+        $lastContacted = Tools::htmlOut($companyModel->getLastContacted());
+        $encodedUrl = Tools::safeUrl($companyUrl);
         if ($agencyCompanyId > 0) {
             $agencyCompanyController = new CompanyController();
             $agencyCompanyModel = $agencyCompanyController->get($agencyCompanyId);
-            $agency = $agencyCompanyModel->getCompanyName();
+            $agency = Tools::htmlOut($agencyCompanyModel->getCompanyName());
         } else {
             $agency = 'None';
         }
@@ -282,7 +282,7 @@ HTML;
         $companies = $companyController->getAll();
         foreach ($companies as $company) {
             $cid = $company->getId();
-            $cname = $company->getCompanyName();
+            $cname = Tools::htmlOut($company->getCompanyName());
             $selected = ($cid === $value) ? "selected=\"selected\"" : "";
             $retVal .= "  <option value=\"$cid\" $selected>$cname</option>\n";
         }
@@ -306,7 +306,7 @@ HTML;
         $agencies = $companyController->getAll();
         foreach ($agencies as $agency) {
             $selected = ($agency->getId() === $value) ? "selected=\"selected\"" : "";
-            $aname = $agency->getCompanyName();
+            $aname = Tools::htmlOut($agency->getCompanyName());
             $aid = $agency->getId();
             $retVal .= "  <option value=\"$aid\" $selected>$aname</option>\n";
         }

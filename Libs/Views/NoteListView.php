@@ -70,8 +70,8 @@ class NoteListView extends ListViewBase
      */
     private function _getHtmlView()
     {
-        $noteAppliesToTable = $this->getNoteAppliesToTable();
-        $noteAppliesToId = $this->getNoteAppliesToId();
+        $noteAppliesToTable = Tools::htmlOut($this->getNoteAppliesToTable());
+        $noteAppliesToId = Tools::htmlOut($this->getNoteAppliesToId());
         $body = <<<HTML
 <a href="addNote.php?appliesToTable=$noteAppliesToTable&appliesToId=$noteAppliesToId">Add new $noteAppliesToTable note</a><br />
 <table>

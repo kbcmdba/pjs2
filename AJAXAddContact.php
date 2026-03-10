@@ -71,4 +71,5 @@ $result = [
     'row' => $row,
     'newId' => $contactId
 ];
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result) . PHP_EOL;

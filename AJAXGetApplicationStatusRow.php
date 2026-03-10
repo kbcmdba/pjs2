@@ -47,4 +47,5 @@ $result = [
     'result' => $result,
     'row' => $html
 ];
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result) . PHP_EOL;

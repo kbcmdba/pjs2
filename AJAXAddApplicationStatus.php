@@ -69,4 +69,5 @@ $result = [
     'row' => $row,
     'newId' => $applicationStatusId
 ];
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result) . PHP_EOL;

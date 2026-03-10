@@ -67,7 +67,7 @@ class JobSummaryView extends ListViewBase
     private function _getHtmlView()
     {
         $jobModels = $this->getJobModels();
-        $label = $this->getLabel();
+        $label = Tools::htmlOut($this->getLabel());
         $count = count($jobModels);
         $output = "<table>\n" . "  <caption>$label ($count)</caption>\n" . "  <tr>\n" . "    <th>ID</th>\n" . "    <th>Status / Urgency</th>\n" . "    <th>Title</th>\n" . "    <th>Company</th>\n" . "    <th>URL</th>\n" . "    <th>Next Action / Due</th>\n" . "  </tr>\n";
         $appStatusController = new ApplicationStatusController('read');
@@ -76,16 +76,16 @@ class JobSummaryView extends ListViewBase
             $cid = $jobModel->getCompanyId();
             $companyController = new CompanyController();
             $companyModel = $companyController->get($cid);
-            $cName = $companyModel->getCompanyName();
-            $cCity = $companyModel->getCompanyCity();
-            $cState = $companyModel->getCompanyState();
-            $cUrl = $companyModel->getCompanyUrl();
-            $jobTitle = $jobModel->getPositionTitle();
+            $cName = Tools::htmlOut($companyModel->getCompanyName());
+            $cCity = Tools::htmlOut($companyModel->getCompanyCity());
+            $cState = Tools::htmlOut($companyModel->getCompanyState());
+            $cUrl = Tools::safeUrl($companyModel->getCompanyUrl());
+            $jobTitle = Tools::htmlOut($jobModel->getPositionTitle());
             $jobAppId = $jobModel->getApplicationStatusId();
-            $jobStatus = $appStatusController->get($jobAppId)->getStatusValue();
-            $jobNextAction = $jobModel->getNextAction();
-            $jobNextActDue = $jobModel->getNextActionDue();
-            $jobUrgency = $jobModel->getUrgency();
+            $jobStatus = Tools::htmlOut($appStatusController->get($jobAppId)->getStatusValue());
+            $jobNextAction = Tools::htmlOut($jobModel->getNextAction());
+            $jobNextActDue = Tools::htmlOut($jobModel->getNextActionDue());
+            $jobUrgency = Tools::htmlOut($jobModel->getUrgency());
             $output .= "  <tr>\n" . "    <th>$id</th>\n" . "    <td>$jobStatus / $jobUrgency</td>\n" . "    <td>$jobTitle</td>\n" . "    <td>$cName ($cCity, $cState)</td>\n" . "    <td><a href=\"$cUrl\">Link</a></td>\n" . "    <td>$jobNextAction / $jobNextActDue</td>\n" . "  </tr>\n";
         }
         $output .= "</table>\n";

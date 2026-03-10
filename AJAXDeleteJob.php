@@ -49,6 +49,7 @@ try {
     $row = $jobListView->displayJobRow($jobModel, 'list', 'add', $result);
 }
 
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'result' => $result,
     'row' => $row

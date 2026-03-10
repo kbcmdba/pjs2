@@ -189,7 +189,23 @@ HTML;
             $url = $jobModel->getUrl();
             $now = Tools::currentTimestamp();
             $dueClass = (isset($nextActionDue) && ($nextActionDue !== '') && ($nextActionDue < $now)) ? "class=\"overdue\"" : "";
+            // Escape all output variables to prevent XSS
+            $positionTitle = Tools::htmlOut($positionTitle);
+            $location = Tools::htmlOut($location);
+            $safeUrl = Tools::safeUrl($url);
+            $url = Tools::htmlOut($url);
+            $nextAction = Tools::htmlOut($nextAction);
+            $nextActionDue = Tools::htmlOut($nextActionDue);
+            $lastStatusChange = Tools::htmlOut($lastStatusChange);
+            $companyName = Tools::htmlOut($companyName);
+            $contactName = Tools::htmlOut($contactName);
+            $applicationStatusValue = Tools::htmlOut($applicationStatusValue);
+            $applicationStatusStyle = Tools::htmlOut($applicationStatusStyle);
+            $urgency = Tools::htmlOut($urgency);
+            $created = Tools::htmlOut($created);
+            $updated = Tools::htmlOut($updated);
         }
+        $errorMessage = Tools::htmlOut($errorMessage);
         switch ($displayMode) {
             case 'add':
                 $this->_getListValues("ix$id", $primaryContactId, $companyId, $applicationStatusId, $urgency);
@@ -249,7 +265,7 @@ HTML;
       <td style="$applicationStatusStyle">$applicationStatusValue</td>
       <td>$nextAction</td>
       <td $dueClass>$nextActionDue</td>
-      <td><a href="$url">$url</a></td>
+      <td><a href="$safeUrl">$url</a></td>
       <td>$lastStatusChange</td>
       <td>$created</td>
       <td>$updated</td>
@@ -270,7 +286,7 @@ HTML;
       <td style="$applicationStatusStyle">$applicationStatusValue</td>
       <td>$nextAction</td>
       <td $dueClass>$nextActionDue</td>
-      <td><a href="$url" target="_blank">Link</a></td>
+      <td><a href="$safeUrl" target="_blank">Link</a></td>
       <td>$lastStatusChange</td>
       <td>$created</td>
       <td>$updated</td>

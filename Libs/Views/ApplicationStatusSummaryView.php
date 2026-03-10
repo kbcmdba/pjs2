@@ -78,9 +78,9 @@ class ApplicationStatusSummaryView extends SummaryViewBase
 HTML;
         foreach ($this->_applicationStatusModels as $applicationStatus) {
             $id = $applicationStatus->getId();
-            $label = $applicationStatus->getStatusValue();
-            $style = $applicationStatus->getStyle();
-            $count = $applicationStatus->getSummaryCount();
+            $label = Tools::htmlOut($applicationStatus->getStatusValue());
+            $style = Tools::htmlOut($applicationStatus->getStyle());
+            $count = Tools::htmlOut($applicationStatus->getSummaryCount());
             $isAct = $applicationStatus->getIsActive() ? "Yes" : "No";
             $body .= <<<HTML
     <tr id="ux$id">

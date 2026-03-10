@@ -122,12 +122,12 @@ HTML;
     public function displayApplicationStatusRow($applicationStatusModel, $displayMode)
     {
         $id = $applicationStatusModel->getId();
-        $statusValue = $applicationStatusModel->getStatusValue();
-        $style = $applicationStatusModel->getStyle();
+        $statusValue = Tools::htmlOut($applicationStatusModel->getStatusValue());
+        $style = Tools::htmlOut($applicationStatusModel->getStyle());
         $isActive = $applicationStatusModel->getIsActive();
         $isActiveChecked = ($isActive) ? "checked=\"checked\"" : "";
         $isActiveDisplay = ($isActive) ? "Yes" : "No";
-        $sortKey = $applicationStatusModel->getSortKey();
+        $sortKey = Tools::htmlOut($applicationStatusModel->getSortKey());
         $created = $applicationStatusModel->getCreated();
         $updated = $applicationStatusModel->getUpdated();
         switch ($displayMode) {
@@ -221,8 +221,8 @@ RETVAL;
         $applicationStatuses = $applicationStatusController->getAll();
         foreach ($applicationStatuses as $applicationStatus) {
             $selected = ($applicationStatus->getId() === $value) ? "selected=\"selected\"" : "";
-            $asValue = $applicationStatus->getStatusValue();
-            $asStyle = $applicationStatus->getStyle();
+            $asValue = Tools::htmlOut($applicationStatus->getStatusValue());
+            $asStyle = Tools::htmlOut($applicationStatus->getStyle());
             $asId = $applicationStatus->getId();
             $retVal .= "  <option value=\"$asId\" style=\"$asStyle\" $selected>$asValue</option>\n";
         }

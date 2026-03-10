@@ -104,17 +104,18 @@ HTML;
             $companyController = new CompanyController('read');
             if ($companyId > 0) {
                 $companyModel = $companyController->get($companyId);
-                $companyName = $companyModel->getCompanyName();
+                $companyName = Tools::htmlOut($companyModel->getCompanyName());
             } else {
                 $companyName = '---';
             }
-            $name = $contactModel->getContactName();
-            $email = $contactModel->getContactEmail();
-            $aphone = $contactModel->getContactPhone();
-            $bphone = $contactModel->getContactAlternatePhone();
-            $created = $contactModel->getCreated();
-            $updated = $contactModel->getUpdated();
+            $name = Tools::htmlOut($contactModel->getContactName());
+            $email = Tools::htmlOut($contactModel->getContactEmail());
+            $aphone = Tools::htmlOut($contactModel->getContactPhone());
+            $bphone = Tools::htmlOut($contactModel->getContactAlternatePhone());
+            $created = Tools::htmlOut($contactModel->getCreated());
+            $updated = Tools::htmlOut($contactModel->getUpdated());
         }
+        $errorMessage = Tools::htmlOut($errorMessage);
         switch ($displayMode) {
             case 'add':
                 $companyListView = new CompanyListView('html', null);
@@ -235,7 +236,7 @@ RETVAL;
         $contacts = $contactController->getAll();
         foreach ($contacts as $contact) {
             $cid = $contact->getId();
-            $cname = $contact->getContactName();
+            $cname = Tools::htmlOut($contact->getContactName());
             $selected = ($cid === $value) ? "selected=\"selected\"" : "";
             $retVal .= "  <option value=\"$cid\" $selected>$cname</option>\n";
         }

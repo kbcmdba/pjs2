@@ -68,10 +68,10 @@ class NoteFormView extends FormViewBase
         $RO = ('readonly' === $readOnly) ? 'READONLY="READONLY" ' : '';
         $noteModel = $this->_noteModel;
         $title = $this->getTitle();
-        $id = $noteModel->getId();
-        $appliesToTable = $noteModel->getAppliesToTable();
-        $appliesToId = $noteModel->getAppliesToId();
-        $noteText = htmlspecialchars($noteModel->getNoteText());
+        $id = Tools::htmlOut($noteModel->getId());
+        $appliesToTable = Tools::htmlOut($noteModel->getAppliesToTable());
+        $appliesToId = Tools::htmlOut($noteModel->getAppliesToId());
+        $noteText = Tools::htmlOut($noteModel->getNoteText());
         $buttonLabel = $this->getButtonLabel();
         $returnValue = <<<HTML
     <h2>$title</h2>

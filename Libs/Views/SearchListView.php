@@ -131,6 +131,16 @@ HTML;
         $rssLastChecked = $searchModel->getRssLastChecked();
         $created = $searchModel->getCreated();
         $updated = $searchModel->getUpdated();
+        $engineName = Tools::htmlOut($engineName);
+        $searchName = Tools::htmlOut($searchName);
+        $url = Tools::htmlOut($url);
+        $rssFeedUrl = Tools::htmlOut($rssFeedUrl);
+        $rssLastChecked = Tools::htmlOut($rssLastChecked);
+        $created = Tools::htmlOut($created);
+        $updated = Tools::htmlOut($updated);
+        $safeUrl = Tools::safeUrl($searchModel->getUrl());
+        $safeRssFeedUrl = Tools::safeUrl($searchModel->getRssFeedUrl());
+        $errMessage = Tools::htmlOut($errMessage);
         switch ($displayMode) {
             case 'add':
                 return <<<HTML
@@ -175,8 +185,8 @@ HTML;
       </td>
       <td>$engineName</td>
       <td>$searchName</td>
-      <td><a href="$url">$url</a></td>
-      <td><a href="$rssFeedUrl">$rssFeedUrl</a></td>
+      <td><a href="$safeUrl">$url</a></td>
+      <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
       <td>$rssLastChecked</td>
       <td>$created</td>
       <td>$updated</td>
@@ -192,8 +202,8 @@ HTML;
       </td>
       <td>$engineName</td>
       <td>$searchName</td>
-      <td><a href="$url">$url</a></td>
-      <td><a href="$rssFeedUrl">$rssFeedUrl</a></td>
+      <td><a href="$safeUrl">$url</a></td>
+      <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
       <td>$rssLastChecked</td>
       <td>$created</td>
       <td>$updated</td>

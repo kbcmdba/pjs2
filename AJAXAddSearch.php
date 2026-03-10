@@ -70,4 +70,5 @@ $result = [
     'row' => $row,
     'newId' => $searchId
 ];
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result) . PHP_EOL;

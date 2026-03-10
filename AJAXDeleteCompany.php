@@ -52,6 +52,7 @@ try {
     $rows = $companyListView->displayCompanyRow($companyModel, 'list', 'add', $result);
 }
 
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'result' => $result,
     'rows' => $rows

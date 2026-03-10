@@ -49,6 +49,7 @@ try {
     $row = $searchListView->displaySearchRow($searchModel, 'list', $result);
 }
 
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
     'result' => $result,
     'row' => $row
