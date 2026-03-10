@@ -84,7 +84,7 @@ HTML;
             $isAct = $applicationStatus->getIsActive() ? "Yes" : "No";
             $body .= <<<HTML
     <tr id="ux$id">
-      <td style="$style">$label</td>
+      <td style="$style"><a href="jobsByStatus.php?statusId=$id">$label</a></td>
       <td>$count</td>
       <td>$isAct</td>
     </tr>

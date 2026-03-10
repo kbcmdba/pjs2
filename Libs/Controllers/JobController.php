@@ -389,6 +389,64 @@ SQL;
     }
 
     /**
+     * Get jobs matching a given application status ID.
+     *
+     * @param int $applicationStatusId
+     * @throws ControllerException
+     * @return JobModel[]
+     */
+    public function getByApplicationStatus($applicationStatusId)
+    {
+        $sql = <<<SQL
+SELECT id
+     , primaryContactId
+     , companyId
+     , applicationStatusId
+     , lastStatusChange
+     , urgency
+     , created
+     , updated
+     , nextActionDue
+     , nextAction
+     , positionTitle
+     , location
+     , url
+  FROM job
+ WHERE applicationStatusId = ?
+ ORDER
+    BY nextActionDue ASC
+
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('i', $applicationStatusId)) {
+            throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url);
+        $models = [];
+        while ($stmt->fetch()) {
+            $model = new JobModel();
+            $model->setId($id);
+            $model->setPrimaryContactId($primaryContactId);
+            $model->setCompanyId($companyId);
+            $model->setApplicationStatusId($applicationStatusId);
+            $model->setLastStatusChange($lastStatusChange);
+            $model->setUrgency($urgency);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setNextActionDue($nextActionDue);
+            $model->setNextAction($nextAction);
+            $model->setPositionTitle($positionTitle);
+            $model->setLocation($location);
+            $model->setUrl($url);
+            $models[] = $model;
+        }
+        return $models;
+    }
+
+    /**
      * Get active jobs where nextActionDue is before the given timestamp.
      *
      * @param string $before Timestamp string (Y-m-d H:i:s)
