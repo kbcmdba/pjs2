@@ -49,8 +49,13 @@ class PJSWebPage extends WebPage
         }
         // Only allow reset to authenticated users and only if the config allows it.
         $this->_resetOk = $config->getResetOk() && ($skipAuth || $auth->isAuthorized());
+        $csrfMeta = '';
+        if (! $skipAuth && $auth->isAuthorized()) {
+            $csrfToken = Tools::htmlOut($auth->getCsrfToken());
+            $csrfMeta = "  <meta name=\"csrf-token\" content=\"$csrfToken\" />\n";
+        }
         $header = <<<HTML
-  <link rel="stylesheet" href="css/main.css" />
+$csrfMeta  <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
   <script src="js/common.js"></script>
   <script src="js/ajaxApplicationStatus.js"></script>

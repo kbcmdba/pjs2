@@ -53,10 +53,11 @@ class Auth
         // Users are always authorized if the configuration tells us to skip authentication.
         if ($config->getSkipAuth()) {
             self::$_userRole = 'admin';
+            $this->_ensureCsrfToken();
             return;
         }
         if ($this->isAuthorized($readOnly)) {
-            if (isset($_POST['auth_username']) && isset($_POST['auth_password']) && ! $readOnly) {
+            if (isset($_POST['auth_username']) && isset($_POST['auth_password']) && ! $readOnly && self::validateCsrfToken()) {
                 // User is logging in.
                 $authTicket = bin2hex(openssl_random_pseudo_bytes(32));
                 $atc = new AuthTicketController();
@@ -70,6 +71,7 @@ class Auth
                 self::$_authTicket = $authTicket;
                 $_SESSION['auth_ticket'] = self::$_authTicket;
                 $_SESSION['user_role'] = self::$_userRole;
+                $this->_ensureCsrfToken();
             }
         }
     }
@@ -111,6 +113,7 @@ class Auth
             if (isset($_SESSION['user_role'])) {
                 self::$_userRole = $_SESSION['user_role'];
             }
+            $this->_ensureCsrfToken();
             self::$_userValidated = true;
             return self::$_userValidated;
         }
@@ -161,8 +164,11 @@ class Auth
      */
     public function getLoginPage()
     {
+        $this->_ensureCsrfToken();
+        $csrfToken = Tools::htmlOut($_SESSION['csrf_token']);
         $body = <<<HTML
 <form action="index.php" method="POST">
+<input type="hidden" name="csrf_token" value="$csrfToken" />
 Login Page
   <table>
     <tr>
@@ -243,5 +249,49 @@ HTML;
         $userLevel = isset($roleLevels[self::$_userRole]) ? $roleLevels[self::$_userRole] : 0;
         $requiredLevel = isset($roleLevels[$requiredRole]) ? $roleLevels[$requiredRole] : 99;
         return $userLevel >= $requiredLevel;
+    }
+
+    /**
+     * Ensure a CSRF token exists in the session.
+     */
+    private function _ensureCsrfToken()
+    {
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(openssl_random_pseudo_bytes(32));
+        }
+    }
+
+    /**
+     * Get the current CSRF token.
+     *
+     * @return string
+     */
+    public function getCsrfToken()
+    {
+        $this->_ensureCsrfToken();
+        return $_SESSION['csrf_token'];
+    }
+
+    /**
+     * Validate a CSRF token from the request.
+     * Checks both POST parameter and X-CSRF-Token header.
+     *
+     * @return boolean
+     */
+    public static function validateCsrfToken()
+    {
+        if (self::$_config !== null && self::$_config->getSkipAuth()) {
+            return true;
+        }
+        $token = null;
+        if (isset($_POST['csrf_token'])) {
+            $token = $_POST['csrf_token'];
+        } elseif (isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+            $token = $_SERVER['HTTP_X_CSRF_TOKEN'];
+        }
+        if ($token === null || empty($_SESSION['csrf_token'])) {
+            return false;
+        }
+        return hash_equals($_SESSION['csrf_token'], $token);
     }
 }

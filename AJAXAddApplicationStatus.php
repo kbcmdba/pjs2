@@ -33,6 +33,12 @@ if (! $auth->hasRole('user')) {
     $auth->forbidden();
     exit(0);
 }
+if (! Auth::validateCsrfToken()) {
+    header('HTTP/1.0 403 Forbidden');
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['result' => 'FAILED', 'error' => 'Invalid CSRF token']) . PHP_EOL;
+    exit(0);
+}
 $statusValue = Tools::post('statusValue');
 $style = Tools::post('style');
 $isActive = Tools::post('isActive');

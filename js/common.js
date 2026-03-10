@@ -123,6 +123,11 @@ function isNumeric( n ) {
  * @param isAsync    Load the response asynchronously.
  * @param callback    A user-defined routine to handle the results.
  */
+function getCsrfToken() {
+    var meta = document.querySelector( 'meta[name="csrf-token"]' ) ;
+    return meta ? meta.getAttribute( 'content' ) : '' ;
+}
+
 function doLoadAjaxJsonResultWithCallback( uri, data, targetId, isAsync, callback ) {
     var xhttp = new XMLHttpRequest() ;
     xhttp.onreadystatechange = function() {
@@ -132,6 +137,7 @@ function doLoadAjaxJsonResultWithCallback( uri, data, targetId, isAsync, callbac
     } ;
     xhttp.open( "POST", uri, isAsync ) ;
     xhttp.setRequestHeader( "Content-type", "application/x-www-form-urlencoded" ) ;
+    xhttp.setRequestHeader( "X-CSRF-Token", getCsrfToken() ) ;
     xhttp.send( data ) ;
 }
 

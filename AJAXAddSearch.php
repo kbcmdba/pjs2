@@ -33,6 +33,12 @@ if (! $auth->hasRole('user')) {
     $auth->forbidden();
     exit(0);
 }
+if (! Auth::validateCsrfToken()) {
+    header('HTTP/1.0 403 Forbidden');
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['result' => 'FAILED', 'error' => 'Invalid CSRF token']) . PHP_EOL;
+    exit(0);
+}
 $result = 'OK';
 $engineName = Tools::param('engineName');
 $searchName = Tools::param('searchName');
