@@ -89,13 +89,13 @@ SELECT created
      , expires
   FROM auth_ticket
  WHERE auth_ticket = ?
-   AND expires >= '$now'
+   AND expires >= ?
 SQL;
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Prepared statement failed for ' . $sql);
+            throw new ControllerException('Prepared statement failed.');
         }
-        if (! ($stmt->bind_param('s', $auth_ticket))) {
+        if (! ($stmt->bind_param('ss', $auth_ticket, $now))) {
             throw new ControllerException('Binding parameters for prepared statement failed.');
         }
         if (! $stmt->execute()) {
@@ -169,7 +169,7 @@ SQL;
                 $query = 'INSERT auth_ticket' . ' ( auth_ticket' . ', created' . ', updated' . ', expires' . ' )' . ' VALUES ( ?, NOW(), NOW(), ? )' . ' ON DUPLICATE KEY UPDATE expires = ?';
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query);
+                    throw new ControllerException('Prepared statement failed.');
                 }
                 $authTicket = $model->getAuthTicket();
                 $expires = date('Y-m-d H:i:m', time() + $this->_expireSeconds);
@@ -212,7 +212,7 @@ SQL;
                 $sql = 'UPDATE auth_ticket' . ' SET expires = ?' . ' WHERE auth_ticket = ?';
                 $stmt = $this->_dbh->prepare($sql);
                 if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $sql);
+                    throw new ControllerException('Prepared statement failed.');
                 }
                 $authTicket = $model->getAuthTicket();
                 $expires = date('Y-m-d H:i:s', time() + $this->_expireSeconds);
@@ -250,7 +250,7 @@ SQL;
         $sql = "DELETE FROM auth_ticket" . " WHERE auth_ticket = ?";
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Prepared statement failed for ' . $sql);
+            throw new ControllerException('Prepared statement failed.');
         }
         if (! $stmt->bind_param('s', $authTicket)) {
             throw new ControllerException('Binding parameters for prepared statement failed.');
@@ -276,8 +276,12 @@ SQL;
     public function cleanExpiredTickets()
     {
         $dateStr = date('Y-m-d H:i:s', time() - $this->_expireSeconds);
-        $sql = "DELETE FROM auth_ticket WHERE expires < '$dateStr'";
-        if (! $this->_dbh->query($sql)) {
+        $sql = "DELETE FROM auth_ticket WHERE expires < ?";
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('s', $dateStr)) {
+            throw new ControllerException('Failed to prepare DELETE statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute DELETE statement. (' . $this->_dbh->error . ')');
         }
     }

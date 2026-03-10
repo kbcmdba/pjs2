@@ -47,7 +47,12 @@ class Auth
      */
     public function __construct($readOnly = false)
     {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            ini_set('session.cookie_httponly', 1);
+            ini_set('session.cookie_secure', 1);
+            ini_set('session.cookie_samesite', 'Strict');
+            session_start();
+        }
         $config = new Config();
         self::$_config = $config;
         // Users are always authorized if the configuration tells us to skip authentication.
@@ -68,6 +73,7 @@ class Auth
                 $now = date("Y-m-d H:i:s");
                 $out = "$now: Login detected for $userId." . PHP_EOL;
                 file_put_contents("login.log", $out, FILE_APPEND);
+                session_regenerate_id(true);
                 self::$_authTicket = $authTicket;
                 $_SESSION['auth_ticket'] = self::$_authTicket;
                 $_SESSION['user_role'] = self::$_userRole;

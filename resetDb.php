@@ -56,6 +56,9 @@ try {
         if (! $auth->isAuthorized()) {
             throw new \Exception("User must be logged in to reset the database!");
         }
+        if (! $auth->hasRole('admin')) {
+            throw new \Exception("Only admins can reset the database!");
+        }
         if ("1" !== $config->getResetOk()) {
             throw new \Exception("Reset capability is turned off! See config.xml");
         }

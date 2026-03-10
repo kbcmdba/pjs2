@@ -85,10 +85,10 @@ class NoteListView extends ListViewBase
   </tr>
 HTML;
         foreach ($this->getNoteModels() as $noteModel) {
-            $id = $noteModel->getId();
-            $created = $noteModel->getCreated();
-            $updated = $noteModel->getUpdated();
-            $noteText = htmlspecialchars($noteModel->getNoteText());
+            $id = (int) $noteModel->getId();
+            $created = Tools::htmlOut($noteModel->getCreated());
+            $updated = Tools::htmlOut($noteModel->getUpdated());
+            $noteText = Tools::htmlOut($noteModel->getNoteText());
             $body .= <<<HTML
   <tr>
     <td>

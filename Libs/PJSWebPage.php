@@ -79,7 +79,11 @@ HTML;
         $this->setMeta([
             "Cache-Control: no-cache, must-revalidate",
             "Expires: Sat, 26 Oct 2013 05:00:00 GMT",
-            'Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'
+            'Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT',
+            "X-Frame-Options: DENY",
+            "X-Content-Type-Options: nosniff",
+            "Referrer-Policy: strict-origin-when-cross-origin",
+            "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' code.jquery.com; style-src 'self' 'unsafe-inline' code.jquery.com"
         ]);
         $this->setStyles('');
         $this->setTop($this->_getTop());

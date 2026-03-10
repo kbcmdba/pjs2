@@ -75,7 +75,7 @@ class NoteFormView extends FormViewBase
         $buttonLabel = $this->getButtonLabel();
         $returnValue = <<<HTML
     <h2>$title</h2>
-    <form name="note" onsubmit="return validateNote()" method="GET">
+    <form name="note" onsubmit="return validateNote()" method="POST">
       <table>
         <tr>
           <th>ID</th>
