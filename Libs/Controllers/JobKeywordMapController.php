@@ -111,12 +111,7 @@ SQL;
         return ($model);
     }
 
-    /**
-     *
-     * @param string $whereClause
-     * @see ControllerBase::getSome()
-     */
-    public function getSome($whereClause = '1 = 1')
+    public function getSome()
     {
         $sql = <<<SQL
 SELECT id
@@ -126,7 +121,6 @@ SELECT id
      , created
      , updated
   FROM jobKeywordMap
- WHERE $whereClause
  ORDER
     BY sortKey
 SQL;

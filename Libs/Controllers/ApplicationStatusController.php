@@ -165,7 +165,7 @@ SQL;
         }
     }
 
-    public function getSome($whereClause = '1 = 1')
+    public function getSome()
     {
         $sql = <<<SQL
 SELECT id
@@ -177,7 +177,6 @@ SELECT id
      , created
      , updated
   FROM applicationStatus
- WHERE $whereClause
  ORDER
     BY sortKey
 SQL;

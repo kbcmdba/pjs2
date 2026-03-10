@@ -69,8 +69,8 @@ SQL;
         throw new ControllerException("Not implemented.");
     }
 
-    // @todo Implement ApplicationStatusSummaryController::getSome( $whereClause ) ;
-    public function getSome($whereClause = '1 = 1')
+    // @todo Implement ApplicationStatusSummaryController::getSome() ;
+    public function getSome()
     {
         throw new ControllerException("Not implemented.");
     }

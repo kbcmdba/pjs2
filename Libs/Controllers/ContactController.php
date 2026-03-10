@@ -166,7 +166,7 @@ SQL;
      *
      * @see ControllerBase::getSome()
      */
-    public function getSome($whereClause = '1 = 1')
+    public function getSome()
     {
         $sql = <<<SQL
 SELECT id
@@ -178,7 +178,6 @@ SELECT id
      , created
      , updated
   FROM contact
- WHERE $whereClause
  ORDER
     BY contactName
 SQL;

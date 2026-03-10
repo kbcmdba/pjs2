@@ -145,7 +145,7 @@ SQL;
         return ($model);
     }
 
-    public function getSome($whereClause = '1 = 1')
+    public function getSome()
     {
         $sql = <<<SQL
 SELECT id
@@ -157,7 +157,6 @@ SELECT id
      , created
      , updated
   FROM search
- WHERE $whereClause
  ORDER
     BY searchName
      , engineName
@@ -192,18 +191,16 @@ SQL;
     }
 
     /**
-     * Count the number of matching searches
+     * Count the number of rows in the table.
      *
-     * @param string $whereClause
      * @throws ControllerException
      * @return int
      */
-    public function countSome($whereClause = '1 = 1')
+    public function countAll()
     {
         $sql = <<<SQL
 SELECT COUNT( id )
   FROM search
- WHERE $whereClause
 SQL;
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
@@ -217,16 +214,6 @@ SQL;
         return ($count);
     }
 
-    /**
-     * Count the number rows in the table
-     *
-     * @throws ControllerException
-     * @return int
-     */
-    public function countAll()
-    {
-        return $this->countSome();
-    }
 
     /**
      *

@@ -169,7 +169,7 @@ SQL;
         return ($model);
     }
 
-    public function getSome($whereClause = '1 = 1')
+    public function getSome()
     {
         $sql = <<<SQL
 SELECT id
@@ -186,7 +186,6 @@ SELECT id
      , updated
      , lastContacted
   FROM company
- WHERE $whereClause
  ORDER
     BY companyName
 SQL;

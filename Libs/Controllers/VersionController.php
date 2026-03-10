@@ -70,8 +70,8 @@ SQL;
         throw new ControllerException("Not implemented.");
     }
 
-    // @todo Implement VersionController::getSome( $whereClause )
-    public function getSome($whereClause = '1 = 1')
+    // @todo Implement VersionController::getSome()
+    public function getSome()
     {
         throw new ControllerException("Not implemented.");
     }

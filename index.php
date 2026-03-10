@@ -45,17 +45,17 @@ $jobController = new JobController('read');
 $now = $jobController->now();
 $today = $jobController->today();
 $tomorrow = $jobController->tomorrow();
-$active = "isActiveSummary = true";
+$nextWeek = ControllerBase::datestamp(time() + 7 * 86400);
 
-$jobsOverdue = $jobController->countSome("$active AND nextActionDue < '$now'");
-$jobsDueToday = $jobController->countSome("$active AND nextActionDue BETWEEN '$today' AND '$tomorrow'");
-$jobsDue7Days = $jobController->countSome("$active AND nextActionDue BETWEEN '$today' AND '$nextWeek'");
-$highUrgency = $jobController->countSome("$active AND urgency = 'high'");
-$mediumUrgency = $jobController->countSome("$active AND urgency = 'medium'");
-$lowUrgency = $jobController->countSome("$active AND urgency = 'low'");
+$jobsOverdue = $jobController->countActiveOverdue($now);
+$jobsDueToday = $jobController->countActiveDueRange($today, $tomorrow);
+$jobsDue7Days = $jobController->countActiveDueRange($today, $nextWeek);
+$highUrgency = $jobController->countActiveByUrgency('high');
+$mediumUrgency = $jobController->countActiveByUrgency('medium');
+$lowUrgency = $jobController->countActiveByUrgency('low');
 
 $searchController = new SearchController('read');
-$searches = $searchController->countSome();
+$searches = $searchController->countAll();
 
 $body .= <<<HTML
 

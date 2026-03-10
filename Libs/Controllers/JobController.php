@@ -234,13 +234,12 @@ SQL;
     }
 
     /**
-     * Get models matching the where clause
+     * Get all models from the table.
      *
-     * @param string $whereClause
      * @throws ControllerException
      * @return JobModel[]
      */
-    public function getSome($whereClause = '1 = 1')
+    public function getSome()
     {
         $sql = <<<SQL
 SELECT id
@@ -257,7 +256,6 @@ SELECT id
      , location
      , url
   FROM job
- WHERE $whereClause
  ORDER
     BY nextActionDue DESC
 
@@ -303,18 +301,17 @@ SQL;
     }
 
     /**
-     * Count the number of rows matching the where clause in this table.
+     * Count the number of rows in the table.
      *
-     * @param string $whereClause
      * @throws ControllerException
      * @return int
      */
-    public function countSome($whereClause = '1 = 1')
+    public function countAll()
     {
-        $sql = "SELECT COUNT( id ) FROM job WHERE $whereClause";
+        $sql = "SELECT COUNT( id ) FROM job";
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
-            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ') ' . $sql);
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
@@ -325,14 +322,70 @@ SQL;
     }
 
     /**
-     * Count the number of rows in the table.
+     * Count active jobs overdue (nextActionDue before given timestamp).
      *
+     * @param string $before Timestamp string (Y-m-d H:i:s)
      * @throws ControllerException
      * @return int
      */
-    public function countAll()
+    public function countActiveOverdue($before)
     {
-        return $this->countSome();
+        $sql = "SELECT COUNT( id ) FROM job WHERE isActiveSummary = true AND nextActionDue < ?";
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('s', $before)) {
+            throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        return $count;
+    }
+
+    /**
+     * Count active jobs with nextActionDue between two dates.
+     *
+     * @param string $from Date string (Y-m-d)
+     * @param string $to Date string (Y-m-d)
+     * @throws ControllerException
+     * @return int
+     */
+    public function countActiveDueRange($from, $to)
+    {
+        $sql = "SELECT COUNT( id ) FROM job WHERE isActiveSummary = true AND nextActionDue BETWEEN ? AND ?";
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('ss', $from, $to)) {
+            throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        return $count;
+    }
+
+    /**
+     * Count active jobs with a given urgency level.
+     *
+     * @param string $urgency 'high', 'medium', or 'low'
+     * @throws ControllerException
+     * @return int
+     */
+    public function countActiveByUrgency($urgency)
+    {
+        $sql = "SELECT COUNT( id ) FROM job WHERE isActiveSummary = true AND urgency = ?";
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('s', $urgency)) {
+            throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($count);
+        $stmt->fetch();
+        return $count;
     }
 
     /**
