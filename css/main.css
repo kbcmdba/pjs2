@@ -22,25 +22,35 @@
  */
 
 body {
-	background-color: white ;
+	background-color: #f5f5fa ;
+	font-family: Arial, Helvetica, sans-serif ;
+	color: #333 ;
+	margin: 0 ;
+	padding: 0 ;
+}
+
+h2 {
+	color: #4a4a8a ;
+	margin: 16px 12px 8px ;
 }
 
 ul#navBar {
 	list-style-type: none ;
 	margin: 0 ;
 	padding: 0 ;
-    overflow: hidden ;
-    background-color: #8080c0 ;
+	overflow: hidden ;
+	background-color: #4a4a8a ;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) ;
 }
 
 ul#navBar li {
-	float: left;
-	border-right: 1px solid #dddddd ;
-	border-left: 1px solid #dddddd ;
+	float: left ;
+	border-right: 1px solid #6a6aaa ;
+	border-left: 1px solid #6a6aaa ;
 }
 
 ul#navBar li:last-child {
-    border-left: none ;
+	border-left: none ;
 }
 
 ul#navBar li:last-child {
@@ -48,29 +58,89 @@ ul#navBar li:last-child {
 }
 
 ul#navBar li a {
-    display: block ;
-    color: white ;
-    text-align: center ;
-    padding: 10px 12px ;
-    text-decoration: none ;
+	display: block ;
+	color: #e8e8f0 ;
+	text-align: center ;
+	padding: 10px 14px ;
+	text-decoration: none ;
+	transition: background-color 0.2s ;
 }
 
 ul#navBar li a:hover {
-	background-color: #111 ;
+	background-color: #6a6aaa ;
+}
+
+/* Tables */
+table {
+	border-collapse: collapse ;
+	margin: 8px 12px ;
+	width: calc(100% - 24px) ;
+}
+
+table caption {
+	font-size: 1.1em ;
+	font-weight: bold ;
+	color: #4a4a8a ;
+	padding: 6px 0 ;
+	text-align: left ;
+}
+
+th, td {
+	padding: 8px 10px ;
+	border: 1px solid #c8c8d8 ;
 }
 
 .thead th {
-	background-color: #F0F0F0 ;
+	background-color: #4a4a8a ;
+	color: #fff ;
+	font-weight: bold ;
 }
 
 .treven td {
-    background-color: #F8F8FF ;
+	background-color: #ffffff ;
 }
 
 .trodd td {
-	background-color: #FFFFF0 ;
+	background-color: #ededf5 ;
 }
 
 .overdue {
-	background-color: yellow ;
+	background-color: #fff3cd ;
+}
+
+/* Buttons */
+button {
+	background-color: #4a4a8a ;
+	color: #fff ;
+	border: none ;
+	padding: 5px 12px ;
+	cursor: pointer ;
+	border-radius: 3px ;
+	font-size: 0.85em ;
+	transition: background-color 0.2s ;
+}
+
+button:hover {
+	background-color: #6a6aaa ;
+}
+
+/* Login form */
+form input[type="text"],
+form input[type="password"] {
+	padding: 4px 6px ;
+	border: 1px solid #c8c8d8 ;
+	border-radius: 3px ;
+}
+
+form input[type="submit"] {
+	background-color: #4a4a8a ;
+	color: #fff ;
+	border: none ;
+	padding: 6px 16px ;
+	cursor: pointer ;
+	border-radius: 3px ;
+}
+
+form input[type="submit"]:hover {
+	background-color: #6a6aaa ;
 }

@@ -66,7 +66,7 @@ class ContactListView extends ListViewBase
     {
         $body = <<<'HTML'
 <button id="AddButton" onclick="addContact()">Add Contact</button><br />
-<table border="1" cellspacing="0" cellpadding="2" id="contacts">
+<table id="contacts">
   <caption>Current Contacts</caption>
   <thead>
     <tr>

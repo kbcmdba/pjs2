@@ -23,16 +23,18 @@
 namespace com\kbcmdba\pjs2;
 
 /**
- * _User Model
+ * User Model
  */
 class UserModel extends ModelBase
 {
+
+    private $_id;
 
     private $_userName;
 
     private $_password;
 
-    private $_pSalt;
+    private $_role;
 
     private $_created;
 
@@ -53,7 +55,9 @@ class UserModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return ((Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('userName'))) && (! Tools::isNullOrEmptyString(Tools::param('password'))) && (! Tools::isNullOrEmptyString(Tools::param('pSalt'))));
+        return (! Tools::isNullOrEmptyString($this->_userName))
+            && (! Tools::isNullOrEmptyString($this->_password))
+            && (! Tools::isNullOrEmptyString($this->_role));
     }
 
     /**
@@ -63,16 +67,27 @@ class UserModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (Tools::isNumeric(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('userName'))) && (! Tools::isNullOrEmptyString(Tools::param('password'))) && (! Tools::isNullOrEmptyString(Tools::param('pSalt'))));
+        return ($this->validateId($this->getId()))
+            && (! Tools::isNullOrEmptyString($this->_userName))
+            && (! Tools::isNullOrEmptyString($this->_role));
     }
 
-    public function populateFromForm()
+    /**
+     *
+     * @return integer
+     */
+    public function getId()
     {
-        $this->setUserName(Tools::param('userName'));
-        $this->setPassword(Tools::param('password'));
-        $this->setPSalt(Tools::param('pSalt'));
-        $this->setCreated(Tools::param('created'));
-        $this->setUpdated(Tools::param('updated'));
+        return $this->_id;
+    }
+
+    /**
+     *
+     * @param integer $id
+     */
+    public function setId($id)
+    {
+        $this->_id = $id;
     }
 
     /**
@@ -115,18 +130,18 @@ class UserModel extends ModelBase
      *
      * @return string
      */
-    public function getPSalt()
+    public function getRole()
     {
-        return $this->_pSalt;
+        return $this->_role;
     }
 
     /**
      *
-     * @param string $pSalt
+     * @param string $role
      */
-    public function setPSalt($pSalt)
+    public function setRole($role)
     {
-        $this->_pSalt = $pSalt;
+        $this->_role = $role;
     }
 
     /**

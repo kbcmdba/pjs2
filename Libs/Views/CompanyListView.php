@@ -67,7 +67,7 @@ class CompanyListView extends ListViewBase
         $rowStyle = "even";
         $body = <<<'HTML'
 <button id="AddButton" onclick="addCompany()">Add Company</button><br />
-<table border="1" cellspacing="0" cellpadding="2" id="companies">
+<table id="companies">
   <caption>Current Companies</caption>
   <thead>
     <tr class="thead">

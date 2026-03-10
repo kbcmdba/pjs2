@@ -49,23 +49,35 @@ class UserController extends ControllerBase
 CREATE TABLE IF NOT EXISTS user
      (
        id          INT UNSIGNED NOT NULL AUTO_INCREMENT
-     , username    TEXT NOT NULL
-     , password    TEXT NOT NULL
-     , psalt       TEXT NOT NULL
-     , created     TIMESTAMP NOT NULL DEFAULT 0
+     , username    VARCHAR(255) NOT NULL
+     , password    VARCHAR(255) NOT NULL
+     , role        ENUM('admin', 'user', 'viewer') NOT NULL DEFAULT 'viewer'
+     , created     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
      , updated     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                    ON UPDATE CURRENT_TIMESTAMP
      , PRIMARY KEY pk_userId ( id )
-     , INDEX appliesTo ( appliesToTable, appliesToId, created )
+     , UNIQUE KEY uk_username ( username )
      )
 SQL;
         $this->_doDDL($sql);
     }
 
     /**
+     * Pre-load the admin user from config.xml credentials.
+     */
+    public function preLoadData()
+    {
+        $config = new Config();
+        $model = new UserModel();
+        $model->setUserName($config->getUserId());
+        $model->setPassword(password_hash($config->getUserPassword(), PASSWORD_DEFAULT));
+        $model->setRole('admin');
+        $this->add($model);
+    }
+
+    /**
      *
      * @param integer $id
-     * @see ControllerBase::get()
      */
     public function get($id)
     {
@@ -73,7 +85,7 @@ SQL;
 SELECT id
      , username
      , password
-     , psalt
+     , role
      , created
      , updated
   FROM user
@@ -86,8 +98,8 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $newId = $userName = $password = $pSalt = $created = $updated = null;
-        if (! $stmt->bind_result($newId, $userName, $password, $pSalt, $created, $updated)) {
+        $newId = $userName = $password = $role = $created = $updated = null;
+        if (! $stmt->bind_result($newId, $userName, $password, $role, $created, $updated)) {
             throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         $model = null;
@@ -96,7 +108,50 @@ SQL;
             $model->setId($newId);
             $model->setUserName($userName);
             $model->setPassword($password);
-            $model->setPSalt($pSalt);
+            $model->setRole($role);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+        }
+        return ($model);
+    }
+
+    /**
+     * Get a user by username.
+     *
+     * @param string $username
+     * @return UserModel|null
+     * @throws ControllerException
+     */
+    public function getByUsername($username)
+    {
+        $sql = <<<SQL
+SELECT id
+     , username
+     , password
+     , role
+     , created
+     , updated
+  FROM user
+ WHERE username = ?
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if ((! $stmt) || (! $stmt->bind_param('s', $username))) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        $id = $userName = $password = $role = $created = $updated = null;
+        if (! $stmt->bind_result($id, $userName, $password, $role, $created, $updated)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
+        }
+        $model = null;
+        if ($stmt->fetch()) {
+            $model = new UserModel();
+            $model->setId($id);
+            $model->setUserName($userName);
+            $model->setPassword($password);
+            $model->setRole($role);
             $model->setCreated($created);
             $model->setUpdated($updated);
         }
@@ -106,7 +161,6 @@ SQL;
     /**
      *
      * @param string $whereClause
-     * @see ControllerBase::getSome()
      */
     public function getSome($whereClause = '1 = 1')
     {
@@ -114,13 +168,13 @@ SQL;
 SELECT id
      , username
      , password
-     , psalt
+     , role
      , created
      , updated
   FROM user
  WHERE $whereClause
  ORDER
-    BY updated
+    BY username
 SQL;
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
@@ -129,15 +183,15 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $id = $userName = $password = $psalt = $created = $updated = null;
-        $stmt->bind_result($id, $userName, $password, $psalt, $created, $updated);
+        $id = $userName = $password = $role = $created = $updated = null;
+        $stmt->bind_result($id, $userName, $password, $role, $created, $updated);
         $models = [];
         while ($stmt->fetch()) {
             $model = new UserModel();
             $model->setId($id);
             $model->setUserName($userName);
             $model->setPassword($password);
-            $model->setPSalt($psalt);
+            $model->setRole($role);
             $model->setCreated($created);
             $model->setUpdated($updated);
             $models[] = $model;
@@ -153,7 +207,6 @@ SQL;
     /**
      *
      * @param UserModel $model
-     * @see ControllerBase::add()
      */
     public function add($model)
     {
@@ -164,7 +217,7 @@ INSERT user
      ( id
      , username
      , password
-     , psalt
+     , role
      , created
      , updated
      )
@@ -172,12 +225,12 @@ VALUES ( NULL, ?, ?, ?, NOW(), NOW() )
 SQL;
                 $userName = $model->getUserName();
                 $password = $model->getPassword();
-                $pSalt = $model->getPSalt();
+                $role = $model->getRole();
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param('sss', $userName, $password, $pSalt))) {
+                if (! ($stmt->bind_param('sss', $userName, $password, $role))) {
                     throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
@@ -203,29 +256,47 @@ SQL;
     /**
      *
      * @param UserModel $model
-     * @see ControllerBase::update()
      */
     public function update($model)
     {
         if ($model->validateForUpdate()) {
             try {
-                $query = <<<SQL
+                $password = $model->getPassword();
+                if (! Tools::isNullOrEmptyString($password)) {
+                    $query = <<<SQL
 UPDATE user
    SET username = ?
      , password = ?
-     , psalt = ?
+     , role = ?
  WHERE id = ?
 SQL;
-                $id = $model->getId();
-                $userName = $model->getuUserName();
-                $password = $model->getPassword();
-                $pSalt = $model->getPSalt();
-                $stmt = $this->_dbh->prepare($query);
-                if (! $stmt) {
-                    throw new ControllerException('Prepared statement failed for ' . $query);
-                }
-                if (! ($stmt->bind_param('sssi', $userName, $password, $pSalt, $id))) {
-                    throw new ControllerException('Binding parameters for prepared statement failed.');
+                    $id = $model->getId();
+                    $userName = $model->getUserName();
+                    $role = $model->getRole();
+                    $stmt = $this->_dbh->prepare($query);
+                    if (! $stmt) {
+                        throw new ControllerException('Prepared statement failed for ' . $query);
+                    }
+                    if (! ($stmt->bind_param('sssi', $userName, $password, $role, $id))) {
+                        throw new ControllerException('Binding parameters for prepared statement failed.');
+                    }
+                } else {
+                    $query = <<<SQL
+UPDATE user
+   SET username = ?
+     , role = ?
+ WHERE id = ?
+SQL;
+                    $id = $model->getId();
+                    $userName = $model->getUserName();
+                    $role = $model->getRole();
+                    $stmt = $this->_dbh->prepare($query);
+                    if (! $stmt) {
+                        throw new ControllerException('Prepared statement failed for ' . $query);
+                    }
+                    if (! ($stmt->bind_param('ssi', $userName, $role, $id))) {
+                        throw new ControllerException('Binding parameters for prepared statement failed.');
+                    }
                 }
                 if (! $stmt->execute()) {
                     throw new ControllerException('Failed to execute UPDATE statement. (' . $this->_dbh->error . ')');
@@ -249,7 +320,6 @@ SQL;
     /**
      *
      * @param UserModel $model
-     * @see ControllerBase::delete()
      */
     public function delete($model)
     {

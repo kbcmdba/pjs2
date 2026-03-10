@@ -29,6 +29,10 @@ if (! $auth->isAuthorized()) {
     $auth->forbidden();
     exit(0); // Should never get here but just in case...
 }
+if (! $auth->hasRole('admin')) {
+    $auth->forbidden();
+    exit(0);
+}
 $id = Tools::param('id');
 $rowStyle = Tools::param('rowStyle');
 $companyId = '';

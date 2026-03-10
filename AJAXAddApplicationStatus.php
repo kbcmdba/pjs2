@@ -29,6 +29,10 @@ if (! $auth->isAuthorized()) {
     $auth->forbidden();
     exit(0); // Should never get here but just in case...
 }
+if (! $auth->hasRole('user')) {
+    $auth->forbidden();
+    exit(0);
+}
 $statusValue = Tools::post('statusValue');
 $style = Tools::post('style');
 $isActive = Tools::post('isActive');

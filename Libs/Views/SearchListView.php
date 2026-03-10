@@ -66,7 +66,7 @@ class SearchListView extends ListViewBase
     {
         $body = <<<'HTML'
 <button type="button" id="AddButton" onclick="addSearch()" >Add Search</button>
-<table border="1" cellspacing="0" cellpadding="2" id="search">
+<table id="search">
   <caption>Current Searches</caption>
   <thead>
     <tr>

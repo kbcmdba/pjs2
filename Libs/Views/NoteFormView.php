@@ -76,7 +76,7 @@ class NoteFormView extends FormViewBase
         $returnValue = <<<HTML
     <h2>$title</h2>
     <form name="note" onsubmit="return validateNote()" method="GET">
-      <table border="1" cellspacing="1" cellpadding="2">
+      <table>
         <tr>
           <th>ID</th>
           <td><input type="text" name="id" value="$id" readonly="readonly" /></td>

@@ -64,7 +64,7 @@ class ApplicationStatusSummaryView extends SummaryViewBase
     private function _getHtmlView()
     {
         $body = <<<'HTML'
-<table border="1" cellspacing="0" cellpadding="2" id="applicationStatus" >
+<table id="applicationStatus">
   <caption>Current Application Statuses</caption>
   <thead>
     <tr>

@@ -28,6 +28,7 @@ require_once 'Libs/autoload.php';
 // reverse the order for safe removal.
 $controllerNames = [
     '\\com\\kbcmdba\\pjs2\\VersionController',
+    '\\com\\kbcmdba\\pjs2\\UserController',
     '\\com\\kbcmdba\\pjs2\\AuthTicketController',
     '\\com\\kbcmdba\\pjs2\\ApplicationStatusController',
     '\\com\\kbcmdba\\pjs2\\ApplicationStatusSummaryController',

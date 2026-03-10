@@ -71,7 +71,7 @@ class _TemplateListView extends ListViewBase
     {
         $body = <<<'HTML'
 <a href="add_Template.php">Add new template</a><br />
-<table border="1" cellspacing="0" cellpadding="2">
+<table>
   <caption>Current Templates</caption>
   <tr><th>Actions</th><th>Blah</th><th>Blah</th><th>Blah</th></tr>
 HTML;

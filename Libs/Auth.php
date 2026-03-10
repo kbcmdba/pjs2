@@ -24,16 +24,13 @@ namespace com\kbcmdba\pjs2;
 
 /**
  * User Authorization Class
- *
- * Note: This is *NOT* secure enough to use over a public internet connection.
- * At this point, it is a stub to be improved at a future time.
  */
 class Auth
 {
 
     private static $_userId = null;
 
-    private static $_password = null;
+    private static $_userRole = null;
 
     private static $_authTicket = null;
 
@@ -55,10 +52,9 @@ class Auth
         self::$_config = $config;
         // Users are always authorized if the configuration tells us to skip authentication.
         if ($config->getSkipAuth()) {
+            self::$_userRole = 'admin';
             return;
         }
-        self::$_userId = $config->getUserId();
-        self::$_password = $config->getUserPassword();
         if ($this->isAuthorized($readOnly)) {
             if (isset($_POST['auth_username']) && isset($_POST['auth_password']) && ! $readOnly) {
                 // User is logging in.
@@ -69,10 +65,11 @@ class Auth
                 $atc->add($atm);
                 $userId = self::$_userId;
                 $now = date("Y-m-d H:i:s");
-                $out = "$now: Login detected for $userId with $authTicket." . PHP_EOL;
+                $out = "$now: Login detected for $userId." . PHP_EOL;
                 file_put_contents("login.log", $out, FILE_APPEND);
                 self::$_authTicket = $authTicket;
                 $_SESSION['auth_ticket'] = self::$_authTicket;
+                $_SESSION['user_role'] = self::$_userRole;
             }
         }
     }
@@ -101,23 +98,52 @@ class Auth
                 $atc->cleanExpiredTickets();
                 $atm = $atc->get($_SESSION['auth_ticket']);
                 if (FALSE === $atm) {
-                    return FALSE;
+                    // Ticket expired or missing. Check for a new login attempt.
+                    return $this->_validateCredentials();
                 }
             } catch (ControllerException $e) {
-                // No matching record found. User can't be validated through
-                // the auth_ticket. If the user has an expired ticket and is
-                // trying to log in, we need to check for a login attempt.
-                self::$_userValidated = (isset($_POST['auth_username']) && isset($_POST['auth_password']) && (self::$_userId === $_POST['auth_username']) && (self::$_password === $_POST['auth_password']));
-                return self::$_userValidated;
+                return $this->_validateCredentials();
             }
             if (! $readOnly) {
                 $atc->update($atm);
             }
+            // Restore role from session
+            if (isset($_SESSION['user_role'])) {
+                self::$_userRole = $_SESSION['user_role'];
+            }
             self::$_userValidated = true;
             return self::$_userValidated;
         }
-        self::$_userValidated = (isset($_POST['auth_username']) && isset($_POST['auth_password']) && (self::$_userId === $_POST['auth_username']) && (self::$_password === $_POST['auth_password']));
-        return self::$_userValidated;
+        return $this->_validateCredentials();
+    }
+
+    /**
+     * Validate username/password from POST against the user table.
+     *
+     * @return boolean
+     */
+    private function _validateCredentials()
+    {
+        if (! isset($_POST['auth_username']) || ! isset($_POST['auth_password'])) {
+            self::$_userValidated = false;
+            return false;
+        }
+        $username = $_POST['auth_username'];
+        $password = $_POST['auth_password'];
+        try {
+            $uc = new UserController('read');
+            $user = $uc->getByUsername($username);
+            if ($user && password_verify($password, $user->getPassword())) {
+                self::$_userId = $user->getUserName();
+                self::$_userRole = $user->getRole();
+                self::$_userValidated = true;
+                return true;
+            }
+        } catch (ControllerException $e) {
+            // Fall through to false
+        }
+        self::$_userValidated = false;
+        return false;
     }
 
     /**
@@ -156,7 +182,7 @@ HTML;
         return ($body);
     }
  // END OF function loginPage()
-    
+
     /**
      * Destroy session variables that keep the user logged in.
      */
@@ -173,6 +199,9 @@ HTML;
         if (isset($_SESSION['auth_password'])) {
             unset($_SESSION['auth_password']);
         }
+        if (isset($_SESSION['user_role'])) {
+            unset($_SESSION['user_role']);
+        }
         if (isset($_SESSION['auth_ticket'])) {
             $atm = new AuthTicketModel();
             $atm->setAuthTicket($_SESSION['auth_ticket']);
@@ -185,5 +214,34 @@ HTML;
     public function getAuthTicket()
     {
         return self::$_authTicket;
+    }
+
+    /**
+     * Get the current user's role.
+     *
+     * @return string|null 'admin', 'user', or 'viewer'
+     */
+    public function getUserRole()
+    {
+        return self::$_userRole;
+    }
+
+    /**
+     * Check if the current user has at least the given role level.
+     * admin > user > viewer
+     *
+     * @param string $requiredRole
+     * @return boolean
+     */
+    public function hasRole($requiredRole)
+    {
+        $roleLevels = [
+            'viewer' => 1,
+            'user' => 2,
+            'admin' => 3
+        ];
+        $userLevel = isset($roleLevels[self::$_userRole]) ? $roleLevels[self::$_userRole] : 0;
+        $requiredLevel = isset($roleLevels[$requiredRole]) ? $roleLevels[$requiredRole] : 99;
+        return $userLevel >= $requiredLevel;
     }
 }

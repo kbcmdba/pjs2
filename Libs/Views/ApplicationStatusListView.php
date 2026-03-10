@@ -65,7 +65,7 @@ class ApplicationStatusListView extends ListViewBase
     {
         $body = <<<'HTML'
 <button type="button" onclick="addApplicationStatus()" >Add Application Status</button>
-<table border="1" cellspacing="0" cellpadding="2" id="applicationStatus" >
+<table id="applicationStatus">
   <caption>Current Application Statuses</caption>
   <thead>
     <tr>

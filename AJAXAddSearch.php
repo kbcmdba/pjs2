@@ -29,6 +29,10 @@ if (! $auth->isAuthorized()) {
     $auth->forbidden();
     exit(0); // Should never get here but just in case...
 }
+if (! $auth->hasRole('user')) {
+    $auth->forbidden();
+    exit(0);
+}
 $result = 'OK';
 $engineName = Tools::param('engineName');
 $searchName = Tools::param('searchName');

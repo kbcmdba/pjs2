@@ -81,7 +81,7 @@ class JobListView extends ListViewBase
         // Status Company Contact NADue LastStatusChange
         $body = <<<'HTML'
 <button id="AddButton" onclick="addJob()">Add Job</button><br />
-<table border="1" cellspacing="0" cellpadding="2" id="jobs">
+<table id="jobs">
   <caption>Current Jobs</caption>
   <thead>
     <tr>
