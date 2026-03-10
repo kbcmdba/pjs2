@@ -1,28 +1,66 @@
-Please note that this file is incomplete and will be developed further as the
-software matures. Please note - I do not expect to repeat common documentation on
-how to install things like Apache, MySQL or PHP. You can find documentaiton on
-those items on the Internet quite readily.
+Installation Guide for PHP Job Seeker 2
+========================================
 
-In order to use PHPJobSeeker2, I use the following;
+Prerequisites
+-------------
 
-Apache httpd
-MySQL 5.6 or greater
-PHP 5.6 or greater
+- Apache httpd (or similar web server) with PHP module
+- PHP 5.6 or later (tested with PHP 8.4)
+- MySQL 5.6 or later (tested with MySQL 8.4)
+- PHP mysqli extension
 
-In your PHP configuration (/etc/php.ini on Unix), you'll need to set the timezone
-in order for this to work correctly. If you're in the Central US timezone, setting
+In your PHP configuration (/etc/php.ini on Unix), set the timezone. For example,
+if you're in the Central US timezone:
 
-date.timezone = America/Chicago
+    date.timezone = America/Chicago
 
-may be appropriate for you. Check your documentation for more information.
+Installation Steps
+------------------
 
-The modules I had to load to make this work are included below:
+1) Clone the repository into your web server's document root:
 
-...
+    git clone git@github.com:kbcmdba/pjs2.git /var/www/html/pjs2
 
-After verifying the modules are properly installed, perform the following tasks:
+2) Create the MySQL database and application user:
 
-1) Copy the file config_sample.xml to config.xml
-2) Update the new config.xml according to your needs
+    mysql -e "CREATE DATABASE pjs2;"
+    mysql -e "CREATE USER 'pjs2_app'@'127.0.0.1' IDENTIFIED BY 'YourPasswordHere';"
+    mysql -e "GRANT ALL PRIVILEGES ON pjs2.* TO 'pjs2_app'@'127.0.0.1';"
+    mysql -e "FLUSH PRIVILEGES;"
 
+3) Copy config_sample.xml to config.xml and update it with your settings:
 
+    cp config_sample.xml config.xml
+
+   Required settings in config.xml:
+   - dbHost, dbPort, dbName, dbUser, dbPass: your MySQL connection details
+   - userId, userPassword: credentials for the PJS2 web interface
+   - timeZone: your local timezone (e.g., America/Chicago)
+
+4) Initialize the database by visiting resetDb.php in your browser or running:
+
+    php-cgi resetDb.php
+
+   This creates all tables, triggers, and seed data.
+
+MySQL 8 Notes
+-------------
+
+MySQL 8 introduced two changes that affect installation:
+
+a) GRANT ALL ON dbname.* no longer implicitly allows creating the database.
+   You must create the database (step 2 above) before the application user
+   can use it.
+
+b) If binary logging is enabled, you must allow the application user to
+   create triggers:
+
+    mysql -e "SET GLOBAL log_bin_trust_function_creators = 1;"
+
+   To make this persistent across MySQL restarts, add to your MySQL
+   configuration (e.g., /etc/my.cnf or /etc/my.cnf.d/*.cnf):
+
+    [mysqld]
+    log_bin_trust_function_creators = 1
+
+   Run this before step 4 (resetDb.php), or trigger creation will fail.

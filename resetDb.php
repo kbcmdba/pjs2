@@ -46,8 +46,11 @@ $page = new PJSWebPage($config->getTitle() . " - Reset DB", true);
 $body = "<ul>\n";
 try {
     $dbc = new DBConnection("admin", null, null, null, null, null, 'mysqli', true);
-    if (! $dbc->getCreatedDb()) {
-        // Database exists. Don't allow reset if the user is not logged in.
+    $dbh = $dbc->getConnection();
+    $tablesResult = $dbh->query("SHOW TABLES");
+    $hasExistingTables = $tablesResult && $tablesResult->num_rows > 0;
+    if (! $dbc->getCreatedDb() && $hasExistingTables) {
+        // Database exists with tables. Don't allow reset if the user is not logged in.
         $auth = new Auth();
         if (! $auth->isAuthorized()) {
             throw new \Exception("User must be logged in to reset the database!");
@@ -56,7 +59,6 @@ try {
             throw new \Exception("Reset capability is turned off! See config.xml");
         }
     }
-    $dbh = $dbc->getConnection();
     foreach (array_reverse($controllerNames) as $controllerName) {
         $controller = new $controllerName('write');
         $controllers[$controllerName] = $controller;
