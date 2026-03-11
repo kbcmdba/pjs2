@@ -37,3 +37,6 @@
 // @todo 90 Style the site
 // @todo 95 Add help to the site
 // @todo 99 Build a manual on how to use the site.
+// @todo 99 Future: Mobile-first hosted service — let job seekers track and
+//           direct their search entirely from their smartphone. Multi-tenant,
+//           billing, REST API, responsive/native UI.
