@@ -6,8 +6,9 @@ companies, specific jobs, contacts, and application statuses.
 ## Requirements
 
 - Apache or a similar web server with PHP module
-- PHP 5.6 or later
-- MySQL 5.6 or later
+- PHP 8.0 or later
+- MySQL 8.0 or later
+- HTTPS recommended
 
 ## Quick Start
 

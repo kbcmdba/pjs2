@@ -5,9 +5,10 @@ Prerequisites
 -------------
 
 - Apache httpd (or similar web server) with PHP module
-- PHP 5.6 or later (tested with PHP 8.4)
-- MySQL 5.6 or later (tested with MySQL 8.4)
+- PHP 8.0 or later (tested with PHP 8.4)
+- MySQL 8.0 or later (tested with MySQL 8.4)
 - PHP mysqli extension
+- HTTPS recommended (required for secure session cookies)
 
 In your PHP configuration (/etc/php.ini on Unix), set the timezone. For example,
 if you're in the Central US timezone:
@@ -34,14 +35,35 @@ Installation Steps
 
    Required settings in config.xml:
    - dbHost, dbPort, dbName, dbUser, dbPass: your MySQL connection details
-   - userId, userPassword: credentials for the PJS2 web interface
    - timeZone: your local timezone (e.g., America/Chicago)
+   - userId, userPassword: fallback credentials for the web interface
+     (used when there are no users in the user table yet)
+
+   Security settings:
+   - resetOk: set to 0 in production (1 allows database reset via resetDb.php)
+   - skipAuth: set to 0 in production (1 disables authentication entirely)
 
 4) Initialize the database by visiting resetDb.php in your browser or running:
 
     php-cgi resetDb.php
 
    This creates all tables, triggers, and seed data.
+
+   WARNING: resetDb.php drops and recreates all tables. Only run this on
+   initial setup or when you want to start fresh. It requires admin role
+   access and resetOk=1 in config.xml.
+
+5) Log in using the userId/userPassword from config.xml. Once logged in,
+   create user accounts via the user table in MySQL:
+
+    mysql pjs2 -e "INSERT INTO user (userName, userPassword, role, created, updated)
+                   VALUES ('yourname', SHA2('YourPassword', 256), 'admin', NOW(), NOW());"
+
+   Available roles: admin, user
+
+   After creating a user account, log in with those credentials instead.
+   Admin users can access resetDb.php and manage application statuses.
+   Regular users can manage jobs, companies, contacts, searches, and keywords.
 
 MySQL 8 Notes
 -------------
@@ -64,3 +86,38 @@ b) If binary logging is enabled, you must allow the application user to
     log_bin_trust_function_creators = 1
 
    Run this before step 4 (resetDb.php), or trigger creation will fail.
+
+Apache SSL Configuration (Recommended)
+---------------------------------------
+
+PJS2 uses secure session cookies (HttpOnly, Secure, SameSite=Strict).
+For these to work properly, serve the site over HTTPS.
+
+Example Apache SSL virtual host snippet:
+
+    <VirtualHost *:443>
+        ServerName your-hostname
+        DocumentRoot /var/www/html
+        SSLEngine on
+        SSLCertificateFile /etc/pki/tls/certs/your-cert.pem
+        SSLCertificateKeyFile /etc/pki/tls/private/your-key.pem
+    </VirtualHost>
+
+If running locally for development, you can generate a self-signed certificate:
+
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout /etc/pki/tls/private/localhost.key \
+        -out /etc/pki/tls/certs/localhost.crt
+
+Development Setup
+-----------------
+
+If you want a separate development checkout from the web-served copy:
+
+    git clone git@github.com:kbcmdba/pjs2.git ~/work/pjs2
+
+Make changes in the development checkout, commit, push, then pull in the
+web checkout to deploy:
+
+    cd /var/www/html/pjs2
+    git pull
