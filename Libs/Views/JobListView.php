@@ -273,21 +273,22 @@ HTML;
 HTML;
                 break;
             case 'list':
+                $click = "onclick=\"updateJob( '$id' )\" style=\"cursor: pointer;\"";
                 return <<<HTML
       <td><button type="button" id="UpdateButton$id" onclick="updateJob( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteJob( '$id' )">Delete</button>
           $errorMessage
       </td>
-      <td>$urgency</td>
-      <td>$positionTitle</td>
-      <td>$location</td>
-      <td>$companyName</td>
-      <td>$contactName</td>
-      <td style="$applicationStatusStyle">$applicationStatusValue</td>
-      <td>$nextAction</td>
-      <td $dueClass>$nextActionDue</td>
+      <td $click>$urgency</td>
+      <td $click>$positionTitle</td>
+      <td $click>$location</td>
+      <td $click>$companyName</td>
+      <td $click>$contactName</td>
+      <td style="$applicationStatusStyle cursor: pointer;" onclick="updateJob( '$id' )">$applicationStatusValue</td>
+      <td $click>$nextAction</td>
+      <td $dueClass $click>$nextActionDue</td>
       <td><a href="$safeUrl" target="_blank">Link</a></td>
-      <td>$lastStatusChange</td>
+      <td $click>$lastStatusChange</td>
       <td>$created</td>
       <td>$updated</td>
 
