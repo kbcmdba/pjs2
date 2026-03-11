@@ -29,23 +29,41 @@ if (! $auth->isAuthorized()) {
     $auth->forbidden();
     exit(0); // Should never get here but just in case...
 }
-$result = "OK";
-$id = Tools::post('id');
-$mode = Tools::post('mode');
-$html = '';
-$applicationStatusListView = new ApplicationStatusListView('html', null);
-if ('add' == $mode) {
-    $applicationStatusModel = new ApplicationStatusModel();
-    $applicationStatusModel->setId($id);
-    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode);
-} else {
-    $applicationStatusController = new ApplicationStatusController();
-    $applicationStatusModel = $applicationStatusController->get($id);
-    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode);
+if (! $auth->hasRole('user')) {
+    $auth->forbidden();
+    exit(0);
 }
+if (! Auth::validateCsrfToken()) {
+    header('HTTP/1.0 403 Forbidden');
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['result' => 'FAILED', 'error' => 'Invalid CSRF token']) . PHP_EOL;
+    exit(0);
+}
+$id = Tools::post('id');
+$keywordValue = Tools::post('value');
+$sortKey = Tools::post('sortKey');
+$result = 'OK';
+$klv = new KeywordListView('html', null);
+try {
+    $keywordController = new KeywordController();
+    $keywordModel = $keywordController->get($id);
+
+    $keywordModel->setKeywordValue($keywordValue);
+    $keywordModel->setSortKey($sortKey);
+
+    $result = $keywordController->update($keywordModel);
+
+    if (! ($result > 0)) {
+        throw new ControllerException("Update failed.");
+    }
+    $row = $klv->displayKeywordRow($keywordModel, 'list');
+} catch (ControllerException $e) {
+    $row = $klv->displayKeywordRow($keywordModel, 'update', 'Update Keyword record failed. ' . $e->getMessage());
+}
+
 $result = [
     'result' => $result,
-    'row' => $html
+    'row' => $row
 ];
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result) . PHP_EOL;

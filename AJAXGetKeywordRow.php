@@ -33,15 +33,15 @@ $result = "OK";
 $id = Tools::post('id');
 $mode = Tools::post('mode');
 $html = '';
-$applicationStatusListView = new ApplicationStatusListView('html', null);
+$keywordListView = new KeywordListView('html', null);
 if ('add' == $mode) {
-    $applicationStatusModel = new ApplicationStatusModel();
-    $applicationStatusModel->setId($id);
-    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode);
+    $keywordModel = new KeywordModel();
+    $keywordModel->setId($id);
+    $html = $keywordListView->displayKeywordRow($keywordModel, $mode);
 } else {
-    $applicationStatusController = new ApplicationStatusController();
-    $applicationStatusModel = $applicationStatusController->get($id);
-    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode);
+    $keywordController = new KeywordController();
+    $keywordModel = $keywordController->get($id);
+    $html = $keywordListView->displayKeywordRow($keywordModel, $mode);
 }
 $result = [
     'result' => $result,

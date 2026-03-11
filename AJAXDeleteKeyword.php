@@ -29,23 +29,30 @@ if (! $auth->isAuthorized()) {
     $auth->forbidden();
     exit(0); // Should never get here but just in case...
 }
-$result = "OK";
-$id = Tools::post('id');
-$mode = Tools::post('mode');
-$html = '';
-$applicationStatusListView = new ApplicationStatusListView('html', null);
-if ('add' == $mode) {
-    $applicationStatusModel = new ApplicationStatusModel();
-    $applicationStatusModel->setId($id);
-    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode);
-} else {
-    $applicationStatusController = new ApplicationStatusController();
-    $applicationStatusModel = $applicationStatusController->get($id);
-    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode);
+if (! $auth->hasRole('user')) {
+    $auth->forbidden();
+    exit(0);
 }
-$result = [
-    'result' => $result,
-    'row' => $html
-];
+if (! Auth::validateCsrfToken()) {
+    header('HTTP/1.0 403 Forbidden');
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['result' => 'FAILED', 'error' => 'Invalid CSRF token']) . PHP_EOL;
+    exit(0);
+}
+$id = Tools::post('id');
+$result = 'OK';
+$row = "";
+try {
+    $keywordModel = new KeywordModel();
+    $keywordModel->setId($id);
+    $keywordController = new KeywordController();
+    $keywordController->delete($keywordModel);
+} catch (ControllerException $e) {
+    $result = "Delete failed. " . $e->getMessage();
+}
+
 header('Content-Type: application/json; charset=utf-8');
-echo json_encode($result) . PHP_EOL;
+echo json_encode([
+    'result' => $result,
+    'row' => $row
+]) . PHP_EOL;

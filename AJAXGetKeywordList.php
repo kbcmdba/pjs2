@@ -27,25 +27,13 @@ require_once "Libs/autoload.php";
 $auth = new Auth();
 if (! $auth->isAuthorized()) {
     $auth->forbidden();
-    exit(0); // Should never get here but just in case...
+    exit(0);
 }
-$result = "OK";
-$id = Tools::post('id');
-$mode = Tools::post('mode');
-$html = '';
-$applicationStatusListView = new ApplicationStatusListView('html', null);
-if ('add' == $mode) {
-    $applicationStatusModel = new ApplicationStatusModel();
-    $applicationStatusModel->setId($id);
-    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode);
-} else {
-    $applicationStatusController = new ApplicationStatusController();
-    $applicationStatusModel = $applicationStatusController->get($id);
-    $html = $applicationStatusListView->displayApplicationStatusRow($applicationStatusModel, $mode);
+$keywordController = new KeywordController('read');
+$keywords = $keywordController->getAll();
+$values = [];
+foreach ($keywords as $keyword) {
+    $values[] = $keyword->getKeywordValue();
 }
-$result = [
-    'result' => $result,
-    'row' => $html
-];
 header('Content-Type: application/json; charset=utf-8');
-echo json_encode($result) . PHP_EOL;
+echo json_encode($values) . PHP_EOL;

@@ -3,7 +3,7 @@
 /**
  * phpjobseeker
  *
- * Copyright (C) 2009, 2015, 2017 Kevin Benton - kbenton at bentonfam dot org
+ * Copyright (C) 2009, 2015, 2017, 2026 Kevin Benton - kbenton at bentonfam dot org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -127,6 +127,7 @@ SQL;
         if ($stmt->fetch()) {
             $model = new KeywordModel();
             $model->setId($id);
+            $model->setKeywordValue($keywordValue);
             $model->setSortKey($sortKey);
             $model->setCreated($created);
             $model->setUpdated($updated);

@@ -29,7 +29,7 @@ if (! $auth->isAuthorized()) {
     $auth->forbidden();
     exit(0); // Should never get here but just in case...
 }
-if (! $auth->hasRole('admin')) {
+if (! $auth->hasRole('user')) {
     $auth->forbidden();
     exit(0);
 }
@@ -39,51 +39,35 @@ if (! Auth::validateCsrfToken()) {
     echo json_encode(['result' => 'FAILED', 'error' => 'Invalid CSRF token']) . PHP_EOL;
     exit(0);
 }
-$id = Tools::param('id');
-$primaryContactId = Tools::param('contactId');
-$companyId = Tools::param('companyId');
-$applicationStatusId = Tools::param('applicationStatusId');
-$lastStatusChange = Tools::param('lastStatusChange');
-$urgency = Tools::param('urgency');
-$nextActionDue = Tools::param('nextActionDue');
-$nextAction = Tools::param('nextAction');
-$positionTitle = Tools::param('positionTitle');
-$location = Tools::param('location');
-$url = Tools::param('url');
-$rowId = Tools::param('rowId');
+$keywordValue = Tools::post('value');
+$sortKey = Tools::post('sortKey');
+$rowId = Tools::post('rowId');
 $result = 'OK';
-$jobId = '';
-$jobListView = new JobListView('html', null);
+$keywordId = '';
 try {
-    $jobController = new JobController();
-    $jobModel = $jobController->get($id);
-    $jobModel->setPrimaryContactId($primaryContactId);
-    $jobModel->setCompanyId($companyId);
-    $jobModel->setApplicationStatusId($applicationStatusId);
-    $jobModel->setLastStatusChange($lastStatusChange);
-    $jobModel->setUrgency($urgency);
-    $jobModel->setNextActionDue($nextActionDue);
-    $jobModel->setNextAction($nextAction);
-    $jobModel->setPositionTitle($positionTitle);
-    $jobModel->setLocation($location);
-    $jobModel->setUrl($url);
-    $result = $jobController->update($jobModel);
-    
-    if (! ($result > 0)) {
-        throw new ControllerException("Update failed.");
+    $keywordModel = new KeywordModel();
+    $keywordModel->setKeywordValue($keywordValue);
+    $keywordModel->setSortKey($sortKey);
+
+    $keywordController = new KeywordController();
+    $keywordId = $keywordController->add($keywordModel);
+
+    if (! ($keywordId > 0)) {
+        throw new ControllerException("Add failed.");
     }
-    $jobId = $result;
-    $row = $jobListView->displayJobRow($jobModel, 'list');
-    $result = 'OK';
+    $newKeywordModel = $keywordController->get($keywordId);
+    $keywordListView = new KeywordListView();
+    $row = $keywordListView->displayKeywordRow($newKeywordModel, 'list');
 } catch (ControllerException $e) {
-    $result = 'FAILED';
-    $row = $jobListView->displayJobRow($jobModel, 'update', 'Update Job record failed. ' . $e->getMessage());
+    $keywordListView = new KeywordListView('html', null);
+    $keywordModel->setId($rowId);
+    $row = $keywordListView->displayKeywordRow($keywordModel, 'add', 'Add Keyword record failed. ' . $e->getMessage());
 }
 
 $result = [
     'result' => $result,
     'row' => $row,
-    'id' => $jobId
+    'newId' => $keywordId
 ];
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result) . PHP_EOL;

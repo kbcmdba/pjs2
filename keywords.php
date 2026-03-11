@@ -3,7 +3,7 @@
 /**
  * phpjobseeker
  *
- * Copyright (C) 2009, 2015, 2017 Kevin Benton - kbenton at bentonfam dot org
+ * Copyright (C) 2009, 2015, 2017, 2026 Kevin Benton - kbenton at bentonfam dot org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,12 @@ require_once 'Libs/autoload.php';
 
 $config = new Config();
 $page = new PJSWebPage($config->getTitle() . " - Keywords");
-$body = "<h2>Keywords</h2>\n<div>Not yet written.<div>";
+
+$body = "<h2>Keywords</h2>\n";
+$keywordController = new KeywordController('read');
+$keywordModels = $keywordController->getAll();
+$keywordListView = new KeywordListView('html', $keywordModels);
+$body .= $keywordListView->getView();
+
 $page->setBody($body);
 $page->displayPage();
