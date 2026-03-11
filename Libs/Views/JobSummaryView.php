@@ -71,6 +71,7 @@ class JobSummaryView extends ListViewBase
         $count = count($jobModels);
         $output = "<table>\n" . "  <tr>\n" . "    <th>Urgency</th>\n" . "    <th>Title</th>\n" . "    <th>Company</th>\n" . "    <th>URL</th>\n" . "    <th>Next Action</th>\n" . "    <th>Due</th>\n" . "  </tr>\n";
         foreach ($jobModels as $jobModel) {
+            $id = (int) $jobModel->getId();
             $cid = $jobModel->getCompanyId();
             $companyController = new CompanyController();
             $companyModel = $companyController->get($cid);
@@ -82,7 +83,7 @@ class JobSummaryView extends ListViewBase
             $jobNextAction = Tools::htmlOut($jobModel->getNextAction());
             $jobNextActDue = Tools::htmlOut($jobModel->getNextActionDue());
             $jobUrgency = Tools::htmlOut($jobModel->getUrgency());
-            $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td>$jobTitle</td>\n" . "    <td>$cName ($cCity, $cState)</td>\n" . "    <td><a href=\"$cUrl\">Link</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td>$jobNextActDue</td>\n" . "  </tr>\n";
+            $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td><a href=\"jobs.php#ux$id\">$jobTitle</a></td>\n" . "    <td>$cName ($cCity, $cState)</td>\n" . "    <td><a href=\"$cUrl\">Link</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td>$jobNextActDue</td>\n" . "  </tr>\n";
         }
         $output .= "</table>\n";
         return $output;
