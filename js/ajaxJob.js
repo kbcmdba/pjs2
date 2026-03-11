@@ -84,11 +84,14 @@ function updateJobSetNow( id ) {
         var jsonObj = JSON.parse( xhttp.responseText ) ;
         row.innerHTML = jsonObj.row ;
         var now = new Date() ;
-        var y = now.getFullYear() ;
-        var m = ( '0' + ( now.getMonth() + 1 ) ).slice( -2 ) ;
-        var d = ( '0' + now.getDate() ).slice( -2 ) ;
-        var today = y + '-' + m + '-' + d ;
-        document.getElementById( 'lastStatusChange' + id ).value = today ;
+        var y  = now.getFullYear() ;
+        var mo = ( '0' + ( now.getMonth() + 1 ) ).slice( -2 ) ;
+        var d  = ( '0' + now.getDate() ).slice( -2 ) ;
+        var h  = ( '0' + now.getHours() ).slice( -2 ) ;
+        var mi = ( '0' + now.getMinutes() ).slice( -2 ) ;
+        var s  = ( '0' + now.getSeconds() ).slice( -2 ) ;
+        var nowStr = y + '-' + mo + '-' + d + ' ' + h + ':' + mi + ':' + s ;
+        document.getElementById( 'lastStatusChange' + id ).value = nowStr ;
         $( "#lastStatusChange" + id ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
         $( "#nextActionDue" + id ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
     } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
