@@ -171,14 +171,15 @@ RETVAL;
 
 RETVAL;
             case 'list':
+                $click = "onclick=\"updateApplicationStatus( '$id' )\" style=\"cursor: pointer;\"";
                 return <<<RETVAL
       <td><button type="button" id="UpdateButton$id" onclick="updateApplicationStatus( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteApplicationStatus( '$id' )">Delete</button>
       </td>
-      <td style="$style">$statusValue</td>
-      <td>$style</td>
-      <td>$isActiveDisplay</td>
-      <td>$sortKey</td>
+      <td style="$style cursor: pointer;" onclick="updateApplicationStatus( '$id' )">$statusValue</td>
+      <td $click>$style</td>
+      <td $click>$isActiveDisplay</td>
+      <td $click>$sortKey</td>
       <td>$created</td>
       <td>$updated</td>
 

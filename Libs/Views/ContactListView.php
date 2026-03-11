@@ -168,19 +168,20 @@ RETVAL;
 RETVAL;
                 break;
             case 'list':
+                $click = "onclick=\"updateContact( '$id' )\" style=\"cursor: pointer;\"";
                 return <<<RETVAL
       <td><button type="button" id="UpdateButton$id" onclick="updateContact( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteContact( '$id' )">Delete</button>
           $errorMessage
       </td>
-      <td>$companyName</td>
-      <td>$name</td>
-      <td>$email</td>
-      <td>$aphone</td>
-      <td>$bphone</td>
+      <td $click>$companyName</td>
+      <td $click>$name</td>
+      <td $click>$email</td>
+      <td $click>$aphone</td>
+      <td $click>$bphone</td>
       <td>$created</td>
       <td>$updated</td>
-                
+
 RETVAL;
             default:
                 throw new ViewException('Undefined display mode');

@@ -179,6 +179,7 @@ HTML;
 HTML;
                 break;
             case 'list':
+                $click = "onclick=\"updateCompany( '$id' )\" style=\"cursor: pointer;\"";
                 $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="UpdateButton$id" onclick="updateCompany( '$id' )">Update</button>
@@ -186,18 +187,18 @@ HTML;
         <button type="button" id="ContactButton$id" onclick="doUpdateLastContacted( '$id' )">Contacted</button>
         $warningMsg
       </td>
-      <td><font size="+2">$companyName</font></td>
-      <td>$companyAddress1</th>
-      <td>$companyCity</td>
-      <td>$companyState</td>
-      <td>$companyZip</td>
-      <td>$lastContacted</td>
+      <td $click><font size="+2">$companyName</font></td>
+      <td $click>$companyAddress1</td>
+      <td $click>$companyCity</td>
+      <td $click>$companyState</td>
+      <td $click>$companyZip</td>
+      <td $click>$lastContacted</td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
-      <td>$agency</td>
-      <td>$companyAddress2</th>
-      <td>$companyPhone</td>
+      <td $click>$agency</td>
+      <td $click>$companyAddress2</td>
+      <td $click>$companyPhone</td>
       <td colspan="3"><a href="$encodedUrl">$encodedUrl</a></td>
       <td>$updated</td>
 HTML;

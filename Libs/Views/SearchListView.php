@@ -194,20 +194,21 @@ HTML;
 HTML;
                 break;
             case 'list':
+                $click = "onclick=\"updateSearch( '$id' )\" style=\"cursor: pointer;\"";
                 return <<<HTML
       <td>
         <button id="UpdateButton$id" onclick="updateSearch( '$id' )">Update</a>
         <button id="DeleteButton$id" onclick="deleteSearch( '$id' )">Delete</a>
         $errMessage
       </td>
-      <td>$engineName</td>
-      <td>$searchName</td>
+      <td $click>$engineName</td>
+      <td $click>$searchName</td>
       <td><a href="$safeUrl">$url</a></td>
       <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
-      <td>$rssLastChecked</td>
+      <td $click>$rssLastChecked</td>
       <td>$created</td>
       <td>$updated</td>
-                
+
 HTML;
                 break;
             default:
