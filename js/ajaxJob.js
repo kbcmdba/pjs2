@@ -72,6 +72,29 @@ function updateJob( id ) {
     return false ;
 }
 
+function updateJobSetNow( id ) {
+    var row  = document.getElementById( 'ux' + id ) ;
+    var data = 'id=' + id + '&mode=update' ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetJobRow.php'
+                                    , data
+                                    , 'ux'
+                                    + id
+                                    , true
+                                    , function ( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        row.innerHTML = jsonObj.row ;
+        var now = new Date() ;
+        var y = now.getFullYear() ;
+        var m = ( '0' + ( now.getMonth() + 1 ) ).slice( -2 ) ;
+        var d = ( '0' + now.getDate() ).slice( -2 ) ;
+        var today = y + '-' + m + '-' + d ;
+        document.getElementById( 'lastStatusChange' + id ).value = today ;
+        $( "#lastStatusChange" + id ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
+        $( "#nextActionDue" + id ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
 /**
  * Display the Application Status row to be removed based on the id provided.
  * 

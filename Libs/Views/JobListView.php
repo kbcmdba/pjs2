@@ -274,6 +274,7 @@ HTML;
                 break;
             case 'list':
                 $click = "onclick=\"updateJob( '$id' )\" style=\"cursor: pointer;\"";
+                $clickNow = "onclick=\"updateJobSetNow( '$id' )\" style=\"cursor: pointer;\" title=\"Click to edit and set to today\"";
                 return <<<HTML
       <td><button type="button" id="UpdateButton$id" onclick="updateJob( '$id' )">Update</button>
           <button type="button" id="DeleteButton$id" onclick="deleteJob( '$id' )">Delete</button>
@@ -288,9 +289,9 @@ HTML;
       <td $click>$nextAction</td>
       <td $dueClass $click>$nextActionDue</td>
       <td><a href="$safeUrl" target="_blank">Link</a></td>
-      <td $click>$lastStatusChange</td>
-      <td>$created</td>
-      <td>$updated</td>
+      <td $clickNow>$lastStatusChange</td>
+      <td $click>$created</td>
+      <td $click>$updated</td>
 
 HTML;
                 break;
