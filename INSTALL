@@ -93,7 +93,24 @@ Apache SSL Configuration (Recommended)
 PJS2 uses secure session cookies (HttpOnly, Secure, SameSite=Strict).
 For these to work properly, serve the site over HTTPS.
 
-Example Apache SSL virtual host snippet:
+For production or internet-facing servers, Let's Encrypt provides free,
+automatically-renewing SSL certificates:
+
+    dnf install certbot python3-certbot-apache   # Fedora/RHEL
+    apt install certbot python3-certbot-apache    # Debian/Ubuntu
+
+    certbot --apache -d your-hostname
+
+Certbot will configure Apache automatically and set up auto-renewal.
+See https://letsencrypt.org for more details.
+
+For local development, you can generate a self-signed certificate instead:
+
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+        -keyout /etc/pki/tls/private/localhost.key \
+        -out /etc/pki/tls/certs/localhost.crt
+
+Example Apache SSL virtual host snippet (if configuring manually):
 
     <VirtualHost *:443>
         ServerName your-hostname
@@ -102,12 +119,6 @@ Example Apache SSL virtual host snippet:
         SSLCertificateFile /etc/pki/tls/certs/your-cert.pem
         SSLCertificateKeyFile /etc/pki/tls/private/your-key.pem
     </VirtualHost>
-
-If running locally for development, you can generate a self-signed certificate:
-
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout /etc/pki/tls/private/localhost.key \
-        -out /etc/pki/tls/certs/localhost.crt
 
 Development Setup
 -----------------
