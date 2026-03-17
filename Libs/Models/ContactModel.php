@@ -40,6 +40,8 @@ class ContactModel extends ModelBase
 
     private $_contactAlternatePhone;
 
+    private $_lastContacted;
+
     private $_created;
 
     private $_updated;
@@ -193,6 +195,24 @@ class ContactModel extends ModelBase
     public function setContactAlternatePhone($contactAlternatePhone)
     {
         $this->_contactAlternatePhone = $contactAlternatePhone;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getLastContacted()
+    {
+        return $this->_lastContacted;
+    }
+
+    /**
+     *
+     * @param string $lastContacted
+     */
+    public function setLastContacted($lastContacted)
+    {
+        $this->_lastContacted = $lastContacted;
     }
 
     /**

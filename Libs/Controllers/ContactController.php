@@ -62,6 +62,7 @@ CREATE TABLE contact
      , contactEmail          VARCHAR(100) NOT NULL DEFAULT ''
      , contactPhone          VARCHAR(25) NOT NULL DEFAULT ''
      , contactAlternatePhone VARCHAR(25) NOT NULL DEFAULT ''
+     , lastContacted         TIMESTAMP NULL DEFAULT NULL
      , created               TIMESTAMP NOT NULL DEFAULT 0
      , updated               TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
                              ON UPDATE CURRENT_TIMESTAMP
@@ -131,6 +132,7 @@ SELECT id
      , contactEmail
      , contactPhone
      , contactAlternatePhone
+     , lastContacted
      , created
      , updated
   FROM contact
@@ -143,7 +145,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result($id, $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone, $created, $updated)) {
+        if (! $stmt->bind_result($id, $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone, $lastContacted, $created, $updated)) {
             throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         if ($stmt->fetch()) {
@@ -154,6 +156,7 @@ SQL;
             $model->setContactEmail($contactEmail);
             $model->setContactPhone($contactPhone);
             $model->setContactAlternatePhone($contactAlternatePhone);
+            $model->setLastContacted($lastContacted);
             $model->setCreated($created);
             $model->setUpdated($updated);
         } else {
@@ -175,6 +178,7 @@ SELECT id
      , contactEmail
      , contactPhone
      , contactAlternatePhone
+     , lastContacted
      , created
      , updated
   FROM contact
@@ -188,7 +192,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result($id, $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone, $created, $updated);
+        $stmt->bind_result($id, $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone, $lastContacted, $created, $updated);
         $models = [];
         while ($stmt->fetch()) {
             $model = new ContactModel();
@@ -198,6 +202,7 @@ SQL;
             $model->setContactEmail($contactEmail);
             $model->setContactPhone($contactPhone);
             $model->setContactAlternatePhone($contactAlternatePhone);
+            $model->setLastContacted($lastContacted);
             $model->setCreated($created);
             $model->setUpdated($updated);
             $models[] = $model;
@@ -227,10 +232,11 @@ INSERT contact
      , contactEmail
      , contactPhone
      , contactAlternatePhone
+     , lastContacted
      , created
      , updated
      )
-VALUES ( NULL, ?, ?, ?, ?, ?, NOW(), NOW() )
+VALUES ( NULL, ?, ?, ?, ?, ?, ?, NOW(), NOW() )
 SQL;
                 $id = $model->getId();
                 $contactCompanyId = $model->getContactCompanyId();
@@ -238,11 +244,12 @@ SQL;
                 $contactEmail = $model->getContactEmail();
                 $contactPhone = $model->getContactPhone();
                 $contactAlternatePhone = $model->getContactAlternatePhone();
+                $lastContacted = $model->getLastContacted();
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param('issss', $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone))) {
+                if (! ($stmt->bind_param('isssss', $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone, $lastContacted))) {
                     throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
@@ -281,6 +288,7 @@ UPDATE contact
      , contactEmail = ?
      , contactPhone = ?
      , contactAlternatePhone = ?
+     , lastContacted = ?
  WHERE id = ?
 SQL;
                 $id = $model->getId();
@@ -289,11 +297,12 @@ SQL;
                 $contactEmail = $model->getContactEmail();
                 $contactPhone = $model->getContactPhone();
                 $contactAlternatePhone = $model->getContactAlternatePhone();
+                $lastContacted = $model->getLastContacted();
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param('issssi', $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone, $id))) {
+                if (! ($stmt->bind_param('isssssi', $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone, $lastContacted, $id))) {
                     throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {

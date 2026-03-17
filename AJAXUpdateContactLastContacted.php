@@ -27,9 +27,9 @@ require_once "Libs/autoload.php";
 $auth = new Auth();
 if (! $auth->isAuthorized()) {
     $auth->forbidden();
-    exit(0); // Should never get here but just in case...
+    exit(0);
 }
-if (! $auth->hasRole('admin')) {
+if (! $auth->hasRole('user')) {
     $auth->forbidden();
     exit(0);
 }
@@ -40,43 +40,30 @@ if (! Auth::validateCsrfToken()) {
     exit(0);
 }
 $id = Tools::param('id');
-$companyId = Tools::param('contactCompanyId');
-$name = Tools::param('contactName');
-$email = Tools::param('contactEmail');
-$phone = Tools::param('contactPhone');
-$alternatePhone = Tools::param('contactAlternatePhone');
-$lastContacted = Tools::param('lastContacted');
-$rowId = Tools::param('rowId');
-
 $result = 'OK';
-$contactId = '';
-$contactListView = new ContactListView('html', null);
+$clv = new ContactListView('html', null);
 try {
     $contactController = new ContactController();
     $contactModel = $contactController->get($id);
-    $contactModel->setContactCompanyId($companyId);
-    $contactModel->setContactName($name);
-    $contactModel->setContactEmail($email);
-    $contactModel->setContactPhone($phone);
-    $contactModel->setContactAlternatePhone($alternatePhone);
-    $contactModel->setLastContacted($lastContacted ?: null);
-    
+    $contactModel->setLastContacted(Tools::currentTimestamp());
+
     $result = $contactController->update($contactModel);
-    
+
     if (! ($result > 0)) {
         throw new ControllerException("Update failed.");
     }
-    $row = $contactListView->displayContactRow($contactModel, 'list');
+    // Get it again because the updated column has changed.
+    $contactModel = $contactController->get($id);
+    $row = $clv->displayContactRow($contactModel, 'list');
     $result = 'OK';
 } catch (ControllerException $e) {
     $result = 'FAILED';
-    $row = $contactListView->displayContactRow($contactModel, 'update', 'Update Contact record failed. ' . $e->getMessage());
+    $row = $clv->displayContactRow($contactModel, 'update', 'Update Contact record failed. ' . $e->getMessage());
 }
 
 $result = [
     'result' => $result,
-    'row' => $row,
-    'id' => $contactId
+    'row' => $row
 ];
 header('Content-Type: application/json; charset=utf-8');
 echo json_encode($result) . PHP_EOL;

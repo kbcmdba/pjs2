@@ -44,6 +44,7 @@ $name = Tools::param('contactName');
 $email = Tools::param('contactEmail');
 $phone = Tools::param('contactPhone');
 $alternatePhone = Tools::param('contactAlternatePhone');
+$lastContacted = Tools::param('lastContacted');
 $rowId = Tools::param('rowId');
 
 $result = 'OK';
@@ -56,6 +57,7 @@ try {
     $contactModel->setContactEmail($email);
     $contactModel->setContactPhone($phone);
     $contactModel->setContactAlternatePhone($alternatePhone);
+    $contactModel->setLastContacted($lastContacted ?: null);
     
     $contactController = new ContactController();
     $contactId = $contactController->add($contactModel);

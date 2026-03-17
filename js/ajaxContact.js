@@ -142,13 +142,14 @@ function cancelUpdateContactRow( id ) {
  * @returns {Boolean}
  */
 function saveAddContact( id ) {
-    var rowId     = 'ix' + id ;
-    var companyId = document.getElementById( "companyId" + rowId ).value ;
-    var name      = document.getElementById( "name" + rowId ).value ;
-    var email     = document.getElementById( "email" + rowId ).value ;
-    var phone     = document.getElementById( "phone" + rowId ).value ;
-    var altPhone  = document.getElementById( "alternatePhone" + rowId ).value ;
-    var msg       = ajaxValidateContact( companyId, name, email, phone, altPhone ) ;
+    var rowId         = 'ix' + id ;
+    var companyId     = document.getElementById( "companyId" + rowId ).value ;
+    var name          = document.getElementById( "name" + rowId ).value ;
+    var email         = document.getElementById( "email" + rowId ).value ;
+    var phone         = document.getElementById( "phone" + rowId ).value ;
+    var altPhone      = document.getElementById( "alternatePhone" + rowId ).value ;
+    var lastContacted = document.getElementById( "lastContacted" + rowId ).value ;
+    var msg           = ajaxValidateContact( companyId, name, email, phone, altPhone ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
         return false ;
@@ -159,6 +160,7 @@ function saveAddContact( id ) {
              + "&contactEmail=" + encodeURIComponent( email )
              + "&contactPhone=" + encodeURIComponent( phone )
              + "&contactAlternatePhone=" + encodeURIComponent( altPhone )
+             + "&lastContacted=" + encodeURIComponent( lastContacted )
              + "&rowId=" + encodeURIComponent( rowId )
              + "&rowStyle=add"
              ;
@@ -179,13 +181,14 @@ function saveAddContact( id ) {
  * @returns {Boolean}
  */
 function saveUpdateContact( id ) {
-    var rowId        = 'ux' + id ;
-    var companyId = document.getElementById( "companyId" + id ).value ;
-    var name      = document.getElementById( "name" + id ).value ;
-    var email     = document.getElementById( "email" + id ).value ;
-    var phone     = document.getElementById( "phone" + id ).value ;
-    var altPhone  = document.getElementById( "alternatePhone" + id ).value ;
-    var msg       = ajaxValidateContact( companyId, name, email, phone, altPhone ) ;
+    var rowId         = 'ux' + id ;
+    var companyId     = document.getElementById( "companyId" + id ).value ;
+    var name          = document.getElementById( "name" + id ).value ;
+    var email         = document.getElementById( "email" + id ).value ;
+    var phone         = document.getElementById( "phone" + id ).value ;
+    var altPhone      = document.getElementById( "alternatePhone" + id ).value ;
+    var lastContacted = document.getElementById( "lastContacted" + id ).value ;
+    var msg           = ajaxValidateContact( companyId, name, email, phone, altPhone ) ;
     if ( '' !== msg ) {
         alert( msg ) ;
         return false ;
@@ -197,8 +200,27 @@ function saveUpdateContact( id ) {
              + "&contactEmail=" + encodeURIComponent( email )
              + "&contactPhone=" + encodeURIComponent( phone )
              + "&contactAlternatePhone=" + encodeURIComponent( altPhone )
+             + "&lastContacted=" + encodeURIComponent( lastContacted )
              + "&rowStyle=update"
              ;
+    var isAsync = true ;
+    doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
+        var jsonObj   = JSON.parse( xhttp.responseText ) ;
+        var row       = document.getElementById( "ux" + targetId ) ;
+        row.innerHTML = jsonObj.row ;
+    } ) ; // END OF doLoadAjaxJsonResultWithCallback( ...
+    return false ;
+}
+
+/**
+ * Update the last contacted date for the contact to now.
+ *
+ * @param id
+ * @returns {Boolean}
+ */
+function doUpdateContactLastContacted( id ) {
+    var uri     = "AJAXUpdateContactLastContacted.php" ;
+    var data    = "id=" + id ;
     var isAsync = true ;
     doLoadAjaxJsonResultWithCallback( uri, data, id, isAsync, function( xhttp, targetId ) {
         var jsonObj   = JSON.parse( xhttp.responseText ) ;
