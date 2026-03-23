@@ -69,21 +69,34 @@ class JobSummaryView extends ListViewBase
         $jobModels = $this->getJobModels();
         $label = Tools::htmlOut($this->getLabel());
         $count = count($jobModels);
-        $output = "<table>\n" . "  <tr>\n" . "    <th>Urgency</th>\n" . "    <th>Title</th>\n" . "    <th>Company</th>\n" . "    <th>URL</th>\n" . "    <th>Next Action</th>\n" . "    <th>Due</th>\n" . "  </tr>\n";
+        $output = "<table>\n" . "  <tr>\n" . "    <th>Urgency</th>\n" . "    <th>Title</th>\n" . "    <th>Company</th>\n" . "    <th>Status</th>\n" . "    <th>URL</th>\n" . "    <th>Next Action</th>\n" . "    <th>Due</th>\n" . "  </tr>\n";
+        $applicationStatusController = new ApplicationStatusController('read');
         foreach ($jobModels as $jobModel) {
             $id = (int) $jobModel->getId();
             $cid = $jobModel->getCompanyId();
-            $companyController = new CompanyController();
+            $companyController = new CompanyController('read');
             $companyModel = $companyController->get($cid);
             $cName = Tools::htmlOut($companyModel->getCompanyName());
-            $cCity = Tools::htmlOut($companyModel->getCompanyCity());
-            $cState = Tools::htmlOut($companyModel->getCompanyState());
+            $cCity = $companyModel->getCompanyCity();
+            $cState = $companyModel->getCompanyState();
+            $cLocation = '';
+            if ($cCity !== '' && $cState !== '' && $cState !== 'XX') {
+                $cLocation = ' (' . Tools::htmlOut($cCity) . ', ' . Tools::htmlOut($cState) . ')';
+            } elseif ($cCity !== '') {
+                $cLocation = ' (' . Tools::htmlOut($cCity) . ')';
+            } elseif ($cState !== '' && $cState !== 'XX') {
+                $cLocation = ' (' . Tools::htmlOut($cState) . ')';
+            }
             $cUrl = Tools::safeUrl($companyModel->getCompanyUrl());
             $jobTitle = Tools::htmlOut($jobModel->getPositionTitle());
             $jobNextAction = Tools::htmlOut($jobModel->getNextAction());
             $jobNextActDue = Tools::htmlOut($jobModel->getNextActionDue());
             $jobUrgency = Tools::htmlOut($jobModel->getUrgency());
-            $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td><a href=\"jobs.php#ux$id\">$jobTitle</a></td>\n" . "    <td>$cName ($cCity, $cState)</td>\n" . "    <td><a href=\"$cUrl\">Link</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td>$jobNextActDue</td>\n" . "  </tr>\n";
+            $asId = $jobModel->getApplicationStatusId();
+            $statusModel = $applicationStatusController->get($asId);
+            $statusValue = $statusModel ? Tools::htmlOut($statusModel->getStatusValue()) : '---';
+            $statusStyle = $statusModel ? $statusModel->getStyle() : '';
+            $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td><a href=\"jobs.php#ux$id\">$jobTitle</a></td>\n" . "    <td>$cName$cLocation</td>\n" . "    <td style=\"$statusStyle\">$statusValue</td>\n" . "    <td><a href=\"$cUrl\">Link</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td>$jobNextActDue</td>\n" . "  </tr>\n";
         }
         $output .= "</table>\n";
         return $output;

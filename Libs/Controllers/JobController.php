@@ -332,7 +332,7 @@ SQL;
      */
     public function countActiveOverdue($before)
     {
-        $sql = "SELECT COUNT( id ) FROM job WHERE isActiveSummary = true AND nextActionDue < ?";
+        $sql = "SELECT COUNT( j.id ) FROM job j JOIN applicationStatus a ON a.id = j.applicationStatusId WHERE a.isActive = 1 AND j.nextActionDue < ?";
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt || ! $stmt->bind_param('s', $before)) {
             throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
@@ -355,7 +355,7 @@ SQL;
      */
     public function countActiveDueRange($from, $to)
     {
-        $sql = "SELECT COUNT( id ) FROM job WHERE isActiveSummary = true AND nextActionDue BETWEEN ? AND ?";
+        $sql = "SELECT COUNT( j.id ) FROM job j JOIN applicationStatus a ON a.id = j.applicationStatusId WHERE a.isActive = 1 AND j.nextActionDue BETWEEN ? AND ?";
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt || ! $stmt->bind_param('ss', $from, $to)) {
             throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
@@ -377,7 +377,7 @@ SQL;
      */
     public function countActiveByUrgency($urgency)
     {
-        $sql = "SELECT COUNT( id ) FROM job WHERE isActiveSummary = true AND urgency = ?";
+        $sql = "SELECT COUNT( j.id ) FROM job j JOIN applicationStatus a ON a.id = j.applicationStatusId WHERE a.isActive = 1 AND j.urgency = ?";
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt || ! $stmt->bind_param('s', $urgency)) {
             throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
@@ -458,24 +458,25 @@ SQL;
     public function getActiveOverdue($before)
     {
         $sql = <<<SQL
-SELECT id
-     , primaryContactId
-     , companyId
-     , applicationStatusId
-     , lastStatusChange
-     , urgency
-     , created
-     , updated
-     , nextActionDue
-     , nextAction
-     , positionTitle
-     , location
-     , url
-  FROM job
- WHERE isActiveSummary = true
-   AND nextActionDue < ?
+SELECT j.id
+     , j.primaryContactId
+     , j.companyId
+     , j.applicationStatusId
+     , j.lastStatusChange
+     , j.urgency
+     , j.created
+     , j.updated
+     , j.nextActionDue
+     , j.nextAction
+     , j.positionTitle
+     , j.location
+     , j.url
+  FROM job j
+  JOIN applicationStatus a ON a.id = j.applicationStatusId
+ WHERE a.isActive = 1
+   AND j.nextActionDue < ?
  ORDER
-    BY nextActionDue ASC
+    BY j.nextActionDue ASC
 
 SQL;
         $stmt = $this->_dbh->prepare($sql);
@@ -518,24 +519,25 @@ SQL;
     public function getActiveDueRange($from, $to)
     {
         $sql = <<<SQL
-SELECT id
-     , primaryContactId
-     , companyId
-     , applicationStatusId
-     , lastStatusChange
-     , urgency
-     , created
-     , updated
-     , nextActionDue
-     , nextAction
-     , positionTitle
-     , location
-     , url
-  FROM job
- WHERE isActiveSummary = true
-   AND nextActionDue BETWEEN ? AND ?
+SELECT j.id
+     , j.primaryContactId
+     , j.companyId
+     , j.applicationStatusId
+     , j.lastStatusChange
+     , j.urgency
+     , j.created
+     , j.updated
+     , j.nextActionDue
+     , j.nextAction
+     , j.positionTitle
+     , j.location
+     , j.url
+  FROM job j
+  JOIN applicationStatus a ON a.id = j.applicationStatusId
+ WHERE a.isActive = 1
+   AND j.nextActionDue BETWEEN ? AND ?
  ORDER
-    BY nextActionDue ASC
+    BY j.nextActionDue ASC
 
 SQL;
         $stmt = $this->_dbh->prepare($sql);
