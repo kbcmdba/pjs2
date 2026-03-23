@@ -43,6 +43,10 @@ This runs a PHP syntax check on all `.php` files, then runs PHPUnit integration 
 
 **Auth:** `Libs/Auth.php` handles authentication. Can be bypassed with `skipAuth=1` in config.xml for development.
 
+## Database Access
+
+See [DATABASE.md](DATABASE.md) for table schemas, common DML operations, and useful queries. Direct CLI access: `mysql pjs2 -e "SQL HERE;"`
+
 ## Code Style
 
 The project follows PSR-2 coding standards (recent commits focus on PSR-2 compliance).

@@ -21,18 +21,20 @@
  *
  */
 
-// @todo 06 Implement last contact date for contacts
-// @todo 06 Implement and test last contact date update button for contacts
+// DONE 06 Implement last contact date for contacts
+// DONE 06 Implement and test last contact date update button for contacts
+// DONE 60 Write KeywordListView
+//
 // @todo 10 Implement data validation tests for all required fields
 // @todo 40 Jobs: Make it possible to log time and date together with jobs
 // @todo 50 Write note interface for contacts
 // @todo 50 Write note interface for jobs
-// @todo 60 Write KeywordFormView
+// @todo 60 Write KeywordFormView — tag jobs with keywords
 // @todo 60 Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )
-// @todo 60 Write KeywordListView
 // @todo 70 Write note interface for keywords
 // @todo 80 Make the interface multiuser
 // @todo 80 User entitlements
+// @todo 80 REST API for external access
 // @todo 90 Make input fields mobile-friendly
 // @todo 90 Style the site
 // @todo 95 Add help to the site
