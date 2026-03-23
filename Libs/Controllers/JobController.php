@@ -242,22 +242,24 @@ SQL;
     public function getSome()
     {
         $sql = <<<SQL
-SELECT id
-     , primaryContactId
-     , companyId
-     , applicationStatusId
-     , lastStatusChange
-     , urgency
-     , created
-     , updated
-     , nextActionDue
-     , nextAction
-     , positionTitle
-     , location
-     , url
-  FROM job
+SELECT j.id
+     , j.primaryContactId
+     , j.companyId
+     , j.applicationStatusId
+     , j.lastStatusChange
+     , j.urgency
+     , j.created
+     , j.updated
+     , j.nextActionDue
+     , j.nextAction
+     , j.positionTitle
+     , j.location
+     , j.url
+  FROM job j
+  LEFT JOIN applicationStatus a ON a.id = j.applicationStatusId
  ORDER
-    BY nextActionDue ASC
+    BY a.isActive DESC
+     , j.nextActionDue ASC
 
 SQL;
         $stmt = $this->_dbh->prepare($sql);
