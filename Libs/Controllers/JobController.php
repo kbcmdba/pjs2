@@ -257,7 +257,7 @@ SELECT id
      , url
   FROM job
  ORDER
-    BY nextActionDue DESC
+    BY nextActionDue ASC
 
 SQL;
         $stmt = $this->_dbh->prepare($sql);
