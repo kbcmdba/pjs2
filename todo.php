@@ -21,11 +21,8 @@
  *
  */
 
-// DONE 06 Implement last contact date for contacts
-// DONE 06 Implement and test last contact date update button for contacts
-// DONE 60 Write KeywordListView
-//
 // @todo 10 Implement data validation tests for all required fields
+// @todo 30 Give users control over sorting in each page (e.g., Jobs by status, then next action due)
 // @todo 40 Jobs: Make it possible to log time and date together with jobs
 // @todo 50 Write note interface for contacts
 // @todo 50 Write note interface for jobs
@@ -42,3 +39,7 @@
 // @todo 99 Future: Mobile-first hosted service — let job seekers track and
 //           direct their search entirely from their smartphone. Multi-tenant,
 //           billing, REST API, responsive/native UI.
+//
+// DONE 06 Implement last contact date for contacts
+// DONE 06 Implement and test last contact date update button for contacts
+// DONE 60 Write KeywordListView
