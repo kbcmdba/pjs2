@@ -150,7 +150,8 @@ HTML;
     public function displayJobRow($jobModel, $displayMode, $errorMessage = '')
     {
         $id = $jobModel->getId();
-        $primaryContactId = $companyId = $applicationStatusId = $lastStatusChange = $urgency = $created = $updated = $nextActionDue = $nextAction = $positionTitle = $location = $url = $dueClass = '';
+        $primaryContactId = $companyId = $applicationStatusId = $urgency = $created = $updated = $nextActionDue = $nextAction = $positionTitle = $location = $url = $dueClass = '';
+        $lastStatusChange = ('add' === $displayMode) ? date('Y-m-d H:i:s') : '';
         if ('add' !== $displayMode) {
             $primaryContactId = $jobModel->getPrimaryContactId();
             $contactController = new ContactController('read');
