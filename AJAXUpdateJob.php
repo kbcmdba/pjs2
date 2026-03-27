@@ -57,8 +57,8 @@ $jobListView = new JobListView('html', null);
 try {
     $jobController = new JobController();
     $jobModel = $jobController->get($id);
-    $jobModel->setPrimaryContactId($primaryContactId);
-    $jobModel->setCompanyId($companyId);
+    $jobModel->setPrimaryContactId($primaryContactId ?: null);
+    $jobModel->setCompanyId($companyId ?: null);
     $jobModel->setApplicationStatusId($applicationStatusId);
     $jobModel->setLastStatusChange($lastStatusChange);
     $jobModel->setUrgency($urgency);

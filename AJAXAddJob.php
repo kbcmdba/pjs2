@@ -55,8 +55,8 @@ $rowId = Tools::param('rowId');
 $newJobModel = null;
 try {
     $jobModel = new JobModel();
-    $jobModel->setPrimaryContactId($primaryContactId);
-    $jobModel->setCompanyId($companyId);
+    $jobModel->setPrimaryContactId($primaryContactId ?: null);
+    $jobModel->setCompanyId($companyId ?: null);
     $jobModel->setApplicationStatusId($applicationStatusId);
     $jobModel->setLastStatusChange($lastStatusChange);
     $jobModel->setUrgency($urgency);
