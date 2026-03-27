@@ -1,7 +1,7 @@
 /**
  * phpjobseeker
  *
- * Copyright (C) 2009, 2015, 2017 Kevin Benton - kbenton at bentonfam dot org
+ * Copyright (C) 2009, 2015, 2017, 2026 Kevin Benton - kbenton at bentonfam dot org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -221,16 +221,16 @@ function cancelUpdateJobRow( id ) {
  */
 function saveAddJob( id ) {
     var rowId               = 'ix' + id ;
-    var primaryContactId    = document.getElementById( "contactId" + rowId ).value ;
-    var companyId           = document.getElementById( "companyId" + rowId ).value ;
-    var applicationStatusId = document.getElementById( "applicationStatusId" + rowId ).value ;
-    var lastStatusChange    = document.getElementById( "lastStatusChange" + rowId ).value ;
-    var urgency             = document.getElementById( "urgency" + rowId ).value ;
-    var nextActionDue       = document.getElementById( "nextActionDue" + rowId ).value ;
-    var nextAction          = document.getElementById( "nextAction" + rowId ).value ;
-    var positionTitle       = document.getElementById( "positionTitle" + rowId ).value ;
-    var location            = document.getElementById( "location" + rowId ).value ;
-    var url                 = document.getElementById( "url" + rowId ).value ;
+    var primaryContactId    = document.getElementById( "contactId" + rowId ).value.trim() ;
+    var companyId           = document.getElementById( "companyId" + rowId ).value.trim() ;
+    var applicationStatusId = document.getElementById( "applicationStatusId" + rowId ).value.trim() ;
+    var lastStatusChange    = document.getElementById( "lastStatusChange" + rowId ).value.trim() ;
+    var urgency             = document.getElementById( "urgency" + rowId ).value.trim() ;
+    var nextActionDue       = document.getElementById( "nextActionDue" + rowId ).value.trim() ;
+    var nextAction          = document.getElementById( "nextAction" + rowId ).value.trim() ;
+    var positionTitle       = document.getElementById( "positionTitle" + rowId ).value.trim() ;
+    var location            = document.getElementById( "location" + rowId ).value.trim() ;
+    var url                 = document.getElementById( "url" + rowId ).value.trim() ;
     var msg                 = ajaxValidateJob( primaryContactId
                                              , companyId
                                              , applicationStatusId
@@ -278,16 +278,16 @@ function saveAddJob( id ) {
  */
 function saveUpdateJob( id ) {
     var rowId               = 'ux' + id ;
-    var primaryContactId    = document.getElementById( "contactId" + id ).value ;
-    var companyId           = document.getElementById( "companyId" + id ).value ;
-    var applicationStatusId = document.getElementById( "applicationStatusId" + id ).value ;
-    var lastStatusChange    = document.getElementById( "lastStatusChange" + id ).value ;
-    var urgency             = document.getElementById( "urgency" + id ).value ;
-    var nextActionDue       = document.getElementById( "nextActionDue" + id ).value ;
-    var nextAction          = document.getElementById( "nextAction" + id ).value ;
-    var positionTitle       = document.getElementById( "positionTitle" + id ).value ;
-    var location            = document.getElementById( "location" + id ).value ;
-    var url                 = document.getElementById( "url" + id ).value ;
+    var primaryContactId    = document.getElementById( "contactId" + id ).value.trim() ;
+    var companyId           = document.getElementById( "companyId" + id ).value.trim() ;
+    var applicationStatusId = document.getElementById( "applicationStatusId" + id ).value.trim() ;
+    var lastStatusChange    = document.getElementById( "lastStatusChange" + id ).value.trim() ;
+    var urgency             = document.getElementById( "urgency" + id ).value.trim() ;
+    var nextActionDue       = document.getElementById( "nextActionDue" + id ).value.trim() ;
+    var nextAction          = document.getElementById( "nextAction" + id ).value.trim() ;
+    var positionTitle       = document.getElementById( "positionTitle" + id ).value.trim() ;
+    var location            = document.getElementById( "location" + id ).value.trim() ;
+    var url                 = document.getElementById( "url" + id ).value.trim() ;
     var msg                 = ajaxValidateJob( primaryContactId
                                              , companyId
                                              , applicationStatusId

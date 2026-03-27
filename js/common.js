@@ -50,12 +50,12 @@ function isDateValid( dateString, isRequired ) {
         var yr = parseInt( dateString.substring( 0, 4 ) ) ;
         var mo = parseInt( dateString.substring( 5, 7 ) ) ;
         var da = parseInt( dateString.substring( 8, 10 ) ) ;
-        if ( ( yr % 4 ) && ( ( yr % 400 ) || ! ( yr % 100 ) ) ) {
+        if ( ! ( yr % 4 ) && ( ( yr % 100 ) || ! ( yr % 400 ) ) ) {
                 daysInMonths[ 1 ]++ ; // Leap day!
         }
         if  ( ( yr < 2000 ) || ( yr > 2038 )
            || ( mo < 1 ) || ( mo > 12 )
-           || ( da < 1 ) || ( da > daysInMonths[ mo ] )
+           || ( da < 1 ) || ( da > daysInMonths[ mo - 1 ] )
             ) {
             retVal = false ;
         }
@@ -99,7 +99,7 @@ function isDateTimeValid( dateTimeString, isRequired ) {
         }
         if  ( ( yr < 2000 ) || ( yr > 2038 )
            || ( mo < 1 ) || ( mo > 12 )
-           || ( da < 1 ) || ( da > daysInMonths[ mo ] )
+           || ( da < 1 ) || ( da > daysInMonths[ mo - 1 ] )
            || ( hr < 0 ) || ( hr > 23 )
            || ( mi < 0 ) || ( mi > 59 )
            || ( se < 0 ) || ( se > 59 )
