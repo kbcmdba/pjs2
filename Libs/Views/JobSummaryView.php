@@ -90,13 +90,15 @@ class JobSummaryView extends ListViewBase
             $cUrl = Tools::safeUrl($companyModel->getCompanyUrl());
             $jobTitle = Tools::htmlOut($jobModel->getPositionTitle());
             $jobNextAction = Tools::htmlOut($jobModel->getNextAction());
-            $jobNextActDue = Tools::htmlOut($jobModel->getNextActionDue());
+            $rawNextActDue = $jobModel->getNextActionDue();
+            $jobNextActDue = Tools::htmlOut($rawNextActDue);
+            $dueClass = (isset($rawNextActDue) && ($rawNextActDue !== '') && ($rawNextActDue < date('Y-m-d H:i:s'))) ? ' class="overdue"' : '';
             $jobUrgency = Tools::htmlOut($jobModel->getUrgency());
             $asId = $jobModel->getApplicationStatusId();
             $statusModel = $applicationStatusController->get($asId);
             $statusValue = $statusModel ? Tools::htmlOut($statusModel->getStatusValue()) : '---';
             $statusStyle = $statusModel ? $statusModel->getStyle() : '';
-            $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td><a href=\"jobs.php#ux$id\">$jobTitle</a></td>\n" . "    <td>$cName$cLocation</td>\n" . "    <td style=\"$statusStyle\">$statusValue</td>\n" . "    <td><a href=\"$cUrl\">Link</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td>$jobNextActDue</td>\n" . "  </tr>\n";
+            $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td><a href=\"jobs.php#ux$id\">$jobTitle</a></td>\n" . "    <td>$cName$cLocation</td>\n" . "    <td style=\"$statusStyle\">$statusValue</td>\n" . "    <td><a href=\"$cUrl\">Link</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td$dueClass>$jobNextActDue</td>\n" . "  </tr>\n";
         }
         $output .= "</table>\n";
         return $output;
