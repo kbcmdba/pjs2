@@ -194,7 +194,7 @@ function saveReviewPanel() {
             }
             showToast( 'Saved', 'success' ) ;
         } else {
-            showToast( 'Save failed: ' + ( jsonObj.error || 'Unknown error' ), 'error', 5000 ) ;
+            showToast( 'Save failed: ' + ( jsonObj.error || 'Unknown error' ), 'error' ) ;
         }
     } ) ;
     return false ;
@@ -230,14 +230,21 @@ function closeReviewPanel() {
  * @param {String} type     'success' or 'error'
  * @param {Number} duration Milliseconds before auto-hide (default 3000)
  */
+var toastTimer = null ;
 function showToast( message, type, duration ) {
     var toast = document.getElementById( 'reviewToast' ) ;
-    toast.textContent = message ;
+    toast.innerHTML = message + ' <span onclick="hideToast()" style="cursor: pointer; margin-left: 12px; font-size: 1.1em;">&times;</span>' ;
     toast.className = type || 'success' ;
     toast.style.display = 'block' ;
-    setTimeout( function() {
+    if ( toastTimer ) clearTimeout( toastTimer ) ;
+    toastTimer = setTimeout( function() {
         toast.style.display = 'none' ;
-    }, duration || 3000 ) ;
+    }, duration || 10000 ) ;
+}
+function hideToast() {
+    var toast = document.getElementById( 'reviewToast' ) ;
+    toast.style.display = 'none' ;
+    if ( toastTimer ) clearTimeout( toastTimer ) ;
 }
 
 /**
