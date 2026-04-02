@@ -21,8 +21,127 @@
 
 // This is local to this file.
 var rowNumber = 1 ;
+var searchReviewQueue = [] ;
+var searchReviewIndex = -1 ;
 
 ///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Build the search review queue from rows on the page.
+ */
+function buildSearchReviewQueue() {
+    searchReviewQueue = [] ;
+    var rows = document.querySelectorAll( 'tr[id^="ux"]' ) ;
+    for ( var i = 0 ; i < rows.length ; i++ ) {
+        var row = rows[ i ] ;
+        var links = row.querySelectorAll( 'a[onclick*="reviewSearch"]' ) ;
+        if ( links.length > 0 ) {
+            var onclick = links[ 0 ].getAttribute( 'onclick' ) ;
+            var match = onclick.match( /reviewSearch\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)/ ) ;
+            if ( match ) {
+                searchReviewQueue.push( { id: match[ 1 ], url: match[ 2 ] } ) ;
+            }
+        }
+    }
+}
+
+/**
+ * Open the search review panel with an iframe.
+ *
+ * @param {String} id   The search ID
+ * @param {String} url  The search URL
+ * @returns {Boolean}
+ */
+function reviewSearch( id, url ) {
+    if ( searchReviewQueue.length === 0 ) {
+        buildSearchReviewQueue() ;
+    }
+    for ( var i = 0 ; i < searchReviewQueue.length ; i++ ) {
+        if ( searchReviewQueue[ i ].id == id ) {
+            searchReviewIndex = i ;
+            break ;
+        }
+    }
+    var overlay = document.getElementById( 'reviewOverlay' ) ;
+    var bar     = document.getElementById( 'reviewBar' ) ;
+    var frame   = document.getElementById( 'reviewFrame' ) ;
+    var nav     = document.getElementById( 'navBar' ) ;
+    var navHeight = nav ? nav.offsetHeight : 40 ;
+    overlay.style.top = navHeight + 'px' ;
+    overlay.style.height = 'calc(100% - ' + navHeight + 'px)' ;
+    // Find the search name from the row
+    var row = document.getElementById( 'ux' + id ) ;
+    var cells = row ? row.querySelectorAll( 'td' ) : [] ;
+    var engineName = cells.length > 1 ? cells[ 1 ].textContent : '' ;
+    var searchName = cells.length > 2 ? cells[ 2 ].textContent : '' ;
+    var remaining = searchReviewQueue.length - searchReviewIndex - 1 ;
+    var html = '<span class="reviewTitle">' + escapeHtml( engineName ) + ': ' + escapeHtml( searchName ) + '</span>'
+             + ' <button onclick="closeSearchReview()">Close</button>' ;
+    if ( remaining > 0 ) {
+        html += ' <button onclick="searchReviewNext()">Next (' + remaining + ')</button>' ;
+    }
+    html += ' <a href="jobs.php" target="_blank"><button>Go to Jobs</button></a>' ;
+    bar.innerHTML = html ;
+    overlay.style.display = 'block' ;
+    // Try loading the URL; show fallback if blocked
+    frame.onload = function() {
+        try {
+            var doc = frame.contentDocument || frame.contentWindow.document ;
+            if ( ! doc || doc.URL === 'about:blank' ) {
+                throw new Error( 'blocked' ) ;
+            }
+        } catch ( e ) {
+            frame.style.display = 'none' ;
+            var fallback = document.getElementById( 'reviewFallback' ) ;
+            if ( ! fallback ) {
+                fallback = document.createElement( 'div' ) ;
+                fallback.id = 'reviewFallback' ;
+                overlay.appendChild( fallback ) ;
+            }
+            fallback.style.display = 'flex' ;
+            fallback.innerHTML = '<div style="text-align: center;">'
+                + '<p style="font-size: 1.2em; margin-bottom: 16px;">This site cannot be embedded.</p>'
+                + '<a href="' + url + '" target="_blank"><button style="font-size: 1em; padding: 10px 24px;">Open in New Tab</button></a>'
+                + '</div>' ;
+        }
+    } ;
+    frame.style.display = '' ;
+    var fallback = document.getElementById( 'reviewFallback' ) ;
+    if ( fallback ) fallback.style.display = 'none' ;
+    frame.src = url ;
+    return false ;
+}
+
+/**
+ * Advance to the next search in the review queue.
+ *
+ * @returns {Boolean}
+ */
+function searchReviewNext() {
+    if ( searchReviewIndex < searchReviewQueue.length - 1 ) {
+        searchReviewIndex++ ;
+        var next = searchReviewQueue[ searchReviewIndex ] ;
+        reviewSearch( next.id, next.url ) ;
+    }
+    return false ;
+}
+
+/**
+ * Close the search review panel.
+ *
+ * @returns {Boolean}
+ */
+function closeSearchReview() {
+    var overlay = document.getElementById( 'reviewOverlay' ) ;
+    var frame   = document.getElementById( 'reviewFrame' ) ;
+    overlay.style.display = 'none' ;
+    frame.src = 'about:blank' ;
+    frame.style.display = '' ;
+    var fallback = document.getElementById( 'reviewFallback' ) ;
+    if ( fallback ) fallback.style.display = 'none' ;
+    searchReviewIndex = -1 ;
+    return false ;
+}
 
 /**
  * Add an application status row for user input.

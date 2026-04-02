@@ -203,7 +203,7 @@ HTML;
       </td>
       <td $click>$engineName</td>
       <td $click>$searchName</td>
-      <td><a href="$safeUrl">$url</a></td>
+      <td><a href="#" onclick="reviewSearch( '$id', '$safeUrl' ); return false;">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
       <td $click>$rssLastChecked</td>
       <td>$created</td>
