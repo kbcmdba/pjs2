@@ -87,7 +87,7 @@ HTML;
         ]);
         $this->setStyles('');
         $this->setTop($this->_getTop());
-        $this->setBottom('<div id="reviewToast"></div><div id="reviewOverlay"><div id="reviewBar"></div><iframe id="reviewFrame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe></div><!-- EndOfPage -->');
+        $this->setBottom('<div id="reviewOverlay"><div id="reviewBar"></div><div id="reviewToast"></div><iframe id="reviewFrame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe></div><!-- EndOfPage -->');
         
         if ((! $skipAuth) && (! $auth->isAuthorized())) {
             $this->setBody($auth->getLoginPage());
