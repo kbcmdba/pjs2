@@ -289,7 +289,7 @@ HTML;
       <td style="$applicationStatusStyle cursor: pointer;" onclick="updateJob( '$id' )">$applicationStatusValue</td>
       <td $click>$nextAction</td>
       <td $dueClass $click>$nextActionDue</td>
-      <td><a href="$safeUrl" target="_blank">Link</a></td>
+      <td><a href="#" onclick="reviewJob( '$id', '$safeUrl' ); return false;">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td $clickNow>$lastStatusChange</td>
       <td $click>$created</td>
       <td $click>$updated</td>

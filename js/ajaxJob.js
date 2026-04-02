@@ -21,8 +21,126 @@
 
 // This is local to this file.
 var rowNumber = 1 ;
+var reviewJobId = null ;
 
 ///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Open the job review panel with an iframe showing the job URL
+ * and a control bar for updating status, next action, etc.
+ *
+ * @param {String} id   The job ID
+ * @param {String} url  The job posting URL
+ * @returns {Boolean}
+ */
+function reviewJob( id, url ) {
+    reviewJobId = id ;
+    var overlay = document.getElementById( 'reviewOverlay' ) ;
+    var bar     = document.getElementById( 'reviewBar' ) ;
+    var frame   = document.getElementById( 'reviewFrame' ) ;
+    bar.innerHTML = '<span class="reviewTitle">Loading...</span>' ;
+    frame.src     = url ;
+    overlay.style.display = 'block' ;
+    var data = 'id=' + encodeURIComponent( id ) ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetJobData.php', data, id, true, function( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        if ( jsonObj.result !== 'OK' ) {
+            bar.innerHTML = '<span class="reviewTitle">Error loading job data</span>'
+                          + ' <button onclick="closeReviewPanel()">Close</button>' ;
+            return ;
+        }
+        var job      = jsonObj.job ;
+        var statuses = jsonObj.statuses ;
+        var statusOpts = '' ;
+        for ( var i = 0 ; i < statuses.length ; i++ ) {
+            var sel = ( statuses[ i ].id == job.applicationStatusId ) ? ' selected="selected"' : '' ;
+            statusOpts += '<option value="' + statuses[ i ].id + '"' + sel + '>'
+                        + statuses[ i ].value + '</option>' ;
+        }
+        var html = '<span class="reviewTitle">' + escapeHtml( job.positionTitle ) + '</span>'
+                 + '<span class="reviewCompany">' + escapeHtml( job.companyName ) + '</span>'
+                 + ' <label>Status:</label>'
+                 + '<select id="reviewStatus">' + statusOpts + '</select>'
+                 + ' <label>Next Action:</label>'
+                 + '<input type="text" id="reviewNextAction" value="' + escapeHtml( job.nextAction || '' ) + '" size="30" />'
+                 + ' <label>Due:</label>'
+                 + '<input type="text" id="reviewNextActionDue" value="' + escapeHtml( job.nextActionDue || '' ) + '" size="12" class="datepicker" />'
+                 + ' <button onclick="saveReviewPanel()">Save</button>'
+                 + ' <button onclick="closeReviewPanel()">Close</button>' ;
+        bar.innerHTML = html ;
+        $( "#reviewNextActionDue" ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
+    } ) ;
+    return false ;
+}
+
+/**
+ * Save changes from the review panel control bar.
+ *
+ * @returns {Boolean}
+ */
+function saveReviewPanel() {
+    if ( ! reviewJobId ) return false ;
+    var statusId      = document.getElementById( 'reviewStatus' ).value ;
+    var nextAction    = document.getElementById( 'reviewNextAction' ).value.trim() ;
+    var nextActionDue = document.getElementById( 'reviewNextActionDue' ).value.trim() ;
+    var uri  = "AJAXUpdateJobReview.php" ;
+    var data = "id=" + reviewJobId
+             + "&applicationStatusId=" + encodeURIComponent( statusId )
+             + "&nextAction=" + encodeURIComponent( nextAction )
+             + "&nextActionDue=" + encodeURIComponent( nextActionDue )
+             ;
+    doLoadAjaxJsonResultWithCallback( uri, data, reviewJobId, true, function( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        if ( jsonObj.result === 'OK' || jsonObj.result > 0 ) {
+            var row = document.getElementById( "ux" + targetId ) ;
+            if ( row ) {
+                row.innerHTML = jsonObj.row ;
+            }
+        }
+    } ) ;
+    return false ;
+}
+
+/**
+ * Close the review panel.
+ *
+ * @returns {Boolean}
+ */
+function closeReviewPanel() {
+    var overlay = document.getElementById( 'reviewOverlay' ) ;
+    var frame   = document.getElementById( 'reviewFrame' ) ;
+    overlay.style.display = 'none' ;
+    frame.src = 'about:blank' ;
+    reviewJobId = null ;
+    return false ;
+}
+
+/**
+ * Escape HTML entities for safe display.
+ *
+ * @param {String} str
+ * @returns {String}
+ */
+// Close review panel on Escape key
+document.addEventListener( 'keydown', function( e ) {
+    if ( e.key === 'Escape' && reviewJobId !== null ) {
+        closeReviewPanel() ;
+    }
+} ) ;
+
+/**
+ * Escape HTML entities for safe display.
+ *
+ * @param {String} str
+ * @returns {String}
+ */
+function escapeHtml( str ) {
+    if ( ! str ) return '' ;
+    return str.replace( /&/g, '&amp;' )
+              .replace( /</g, '&lt;' )
+              .replace( />/g, '&gt;' )
+              .replace( /"/g, '&quot;' ) ;
+}
 
 /**
  * Add an application status row for user input.

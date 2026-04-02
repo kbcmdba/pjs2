@@ -88,6 +88,7 @@ class JobSummaryView extends ListViewBase
                 $cLocation = ' (' . Tools::htmlOut($cState) . ')';
             }
             $cUrl = Tools::safeUrl($companyModel->getCompanyUrl());
+            $jobUrl = Tools::safeUrl($jobModel->getUrl());
             $jobTitle = Tools::htmlOut($jobModel->getPositionTitle());
             $jobNextAction = Tools::htmlOut($jobModel->getNextAction());
             $rawNextActDue = $jobModel->getNextActionDue();
@@ -98,7 +99,7 @@ class JobSummaryView extends ListViewBase
             $statusModel = $applicationStatusController->get($asId);
             $statusValue = $statusModel ? Tools::htmlOut($statusModel->getStatusValue()) : '---';
             $statusStyle = $statusModel ? $statusModel->getStyle() : '';
-            $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td><a href=\"jobs.php#ux$id\">$jobTitle</a></td>\n" . "    <td>$cName$cLocation</td>\n" . "    <td style=\"$statusStyle\">$statusValue</td>\n" . "    <td><a href=\"$cUrl\">Link</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td$dueClass>$jobNextActDue</td>\n" . "  </tr>\n";
+            $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td><a href=\"jobs.php#ux$id\">$jobTitle</a></td>\n" . "    <td>$cName$cLocation</td>\n" . "    <td style=\"$statusStyle\">$statusValue</td>\n" . "    <td><a href=\"#\" onclick=\"reviewJob( '$id', '$jobUrl' ); return false;\">Review</a> | <a href=\"$jobUrl\" target=\"_blank\">New Tab</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td$dueClass>$jobNextActDue</td>\n" . "  </tr>\n";
         }
         $output .= "</table>\n";
         return $output;

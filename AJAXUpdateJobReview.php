@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * phpjobseeker
+ *
+ * Copyright (C) 2009, 2015, 2017, 2026 Kevin Benton - kbenton at bentonfam dot org
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ */
+namespace com\kbcmdba\pjs2;
+
+require_once "Libs/autoload.php";
+
+$auth = new Auth();
+if (! $auth->isAuthorized()) {
+    $auth->forbidden();
+    exit(0);
+}
+if (! $auth->hasRole('user')) {
+    $auth->forbidden();
+    exit(0);
+}
+if (! Auth::validateCsrfToken()) {
+    header('HTTP/1.0 403 Forbidden');
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['result' => 'FAILED', 'error' => 'Invalid CSRF token']) . PHP_EOL;
+    exit(0);
+}
+
+$id = Tools::param('id');
+$applicationStatusId = Tools::param('applicationStatusId');
+$nextAction = Tools::param('nextAction');
+$nextActionDue = Tools::param('nextActionDue');
+$result = 'OK';
+
+try {
+    $jobController = new JobController();
+    $jobModel = $jobController->get($id);
+
+    if (! $jobModel) {
+        throw new ControllerException("Job not found.");
+    }
+
+    $jobModel->setApplicationStatusId($applicationStatusId);
+    $jobModel->setNextAction($nextAction);
+    $jobModel->setNextActionDue($nextActionDue ?: null);
+    $jobModel->setLastStatusChange(Tools::currentTimestamp());
+
+    $updateResult = $jobController->update($jobModel);
+
+    if (! ($updateResult > 0)) {
+        throw new ControllerException("Update failed.");
+    }
+
+    $jobModel = $jobController->get($id);
+    $jobListView = new JobListView('html', null);
+    $row = $jobListView->displayJobRow($jobModel, 'list');
+} catch (ControllerException $e) {
+    $result = 'FAILED';
+    $row = '';
+}
+
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode([
+    'result' => $result,
+    'row' => $row
+]) . PHP_EOL;
