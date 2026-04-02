@@ -140,15 +140,19 @@ function reviewJob( id, url ) {
         var job      = jsonObj.job ;
         var statuses = jsonObj.statuses ;
         var statusOpts = '' ;
+        var currentStyle = '' ;
         for ( var i = 0 ; i < statuses.length ; i++ ) {
             var sel = ( statuses[ i ].id == job.applicationStatusId ) ? ' selected="selected"' : '' ;
-            statusOpts += '<option value="' + statuses[ i ].id + '"' + sel + '>'
+            var optStyle = statuses[ i ].style || '' ;
+            if ( sel ) currentStyle = optStyle ;
+            statusOpts += '<option value="' + statuses[ i ].id + '" style="' + escapeHtml( optStyle ) + '"'
+                        + ' data-style="' + escapeHtml( optStyle ) + '"' + sel + '>'
                         + statuses[ i ].value + '</option>' ;
         }
         var html = '<span class="reviewTitle">' + escapeHtml( job.positionTitle ) + '</span>'
                  + '<span class="reviewCompany">' + escapeHtml( job.companyName ) + '</span>'
                  + ' <label>Status:</label>'
-                 + '<select id="reviewStatus">' + statusOpts + '</select>'
+                 + '<select id="reviewStatus" style="' + escapeHtml( currentStyle ) + '" onchange="updateReviewStatusStyle(this)">' + statusOpts + '</select>'
                  + ' <label>Next Action:</label>'
                  + '<input type="text" id="reviewNextAction" value="' + escapeHtml( job.nextAction || '' ) + '" size="30" />'
                  + ' <label>Due:</label>'
@@ -216,6 +220,16 @@ function closeReviewPanel() {
  * @param {String} str
  * @returns {String}
  */
+/**
+ * Update the review status dropdown style when selection changes.
+ *
+ * @param {HTMLSelectElement} sel
+ */
+function updateReviewStatusStyle( sel ) {
+    var opt = sel.options[ sel.selectedIndex ] ;
+    sel.setAttribute( 'style', opt.getAttribute( 'data-style' ) || '' ) ;
+}
+
 // Close review panel on Escape key
 document.addEventListener( 'keydown', function( e ) {
     if ( e.key === 'Escape' && reviewJobId !== null ) {

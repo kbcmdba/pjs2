@@ -57,7 +57,8 @@ foreach ($statuses as $status) {
     $statusOptions[] = [
         'id' => $status->getId(),
         'value' => $status->getStatusValue(),
-        'isActive' => $status->getIsActive()
+        'isActive' => $status->getIsActive(),
+        'style' => $status->getStyle()
     ];
 }
 
