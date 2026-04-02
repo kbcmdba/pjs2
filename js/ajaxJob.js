@@ -24,6 +24,7 @@ var rowNumber = 1 ;
 var reviewJobId = null ;
 var reviewQueue = [] ;
 var reviewQueueIndex = -1 ;
+var reviewAdvancedViaSaveNext = false ;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -77,6 +78,7 @@ function reviewNext() {
     // Save current first
     saveReviewPanel() ;
     if ( reviewQueueIndex < reviewQueue.length - 1 ) {
+        reviewAdvancedViaSaveNext = true ;
         reviewQueueIndex++ ;
         var next = reviewQueue[ reviewQueueIndex ] ;
         reviewJob( next.id, next.url ) ;
@@ -90,7 +92,8 @@ function reviewNext() {
  * @returns {Boolean}
  */
 function reviewPrev() {
-    if ( reviewQueueIndex > 0 ) {
+    if ( reviewAdvancedViaSaveNext && reviewQueueIndex > 0 ) {
+        reviewAdvancedViaSaveNext = false ;
         reviewQueueIndex-- ;
         var prev = reviewQueue[ reviewQueueIndex ] ;
         reviewJob( prev.id, prev.url ) ;
@@ -177,7 +180,7 @@ function reviewJob( id, url ) {
                  + '<input type="text" id="reviewNextActionDue" value="' + escapeHtml( job.nextActionDue || '' ) + '" size="12" class="datepicker" />'
                  + ' <button onclick="saveReviewPanel()">Save</button>'
                  + ' <button onclick="closeReviewPanel()">Close</button>' ;
-        if ( reviewQueueIndex > 0 ) {
+        if ( reviewAdvancedViaSaveNext ) {
             html += ' <button onclick="reviewPrev()">Go Back</button>' ;
         }
         var remaining = reviewQueueRemaining() ;
@@ -235,6 +238,7 @@ function closeReviewPanel() {
     var fallback = document.getElementById( 'reviewFallback' ) ;
     if ( fallback ) fallback.style.display = 'none' ;
     reviewJobId = null ;
+    reviewAdvancedViaSaveNext = false ;
     return false ;
 }
 
