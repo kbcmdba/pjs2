@@ -84,6 +84,20 @@ function reviewNext() {
     return false ;
 }
 
+/**
+ * Go back to the previous job in the review queue.
+ *
+ * @returns {Boolean}
+ */
+function reviewPrev() {
+    if ( reviewQueueIndex > 0 ) {
+        reviewQueueIndex-- ;
+        var prev = reviewQueue[ reviewQueueIndex ] ;
+        reviewJob( prev.id, prev.url ) ;
+    }
+    return false ;
+}
+
 function reviewJob( id, url ) {
     reviewJobId = id ;
     // Build queue on first open, find our position
@@ -163,6 +177,9 @@ function reviewJob( id, url ) {
                  + '<input type="text" id="reviewNextActionDue" value="' + escapeHtml( job.nextActionDue || '' ) + '" size="12" class="datepicker" />'
                  + ' <button onclick="saveReviewPanel()">Save</button>'
                  + ' <button onclick="closeReviewPanel()">Close</button>' ;
+        if ( reviewQueueIndex > 0 ) {
+            html += ' <button onclick="reviewPrev()">Go Back</button>' ;
+        }
         var remaining = reviewQueueRemaining() ;
         if ( remaining > 0 ) {
             html += ' <button onclick="reviewNext()">Save &amp; Next (' + remaining + ')</button>' ;
