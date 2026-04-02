@@ -22,6 +22,8 @@
 // This is local to this file.
 var rowNumber = 1 ;
 var reviewJobId = null ;
+var reviewQueue = [] ;
+var reviewQueueIndex = -1 ;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,8 +35,67 @@ var reviewJobId = null ;
  * @param {String} url  The job posting URL
  * @returns {Boolean}
  */
+/**
+ * Build the review queue from active job rows on the page.
+ * Each entry is { id: jobId, url: jobUrl }.
+ */
+function buildReviewQueue() {
+    reviewQueue = [] ;
+    // Get all job rows from the table
+    var rows = document.querySelectorAll( 'tr[id^="ux"]' ) ;
+    for ( var i = 0 ; i < rows.length ; i++ ) {
+        var row = rows[ i ] ;
+        var jobId = row.id.replace( 'ux', '' ) ;
+        // Find the review link in this row
+        var links = row.querySelectorAll( 'a[onclick*="reviewJob"]' ) ;
+        if ( links.length > 0 ) {
+            var onclick = links[ 0 ].getAttribute( 'onclick' ) ;
+            var match = onclick.match( /reviewJob\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)/ ) ;
+            if ( match ) {
+                reviewQueue.push( { id: match[ 1 ], url: match[ 2 ] } ) ;
+            }
+        }
+    }
+}
+
+/**
+ * Get count of remaining active jobs after current position in the queue.
+ *
+ * @returns {Number}
+ */
+function reviewQueueRemaining() {
+    if ( reviewQueueIndex < 0 || reviewQueueIndex >= reviewQueue.length - 1 ) return 0 ;
+    return reviewQueue.length - reviewQueueIndex - 1 ;
+}
+
+/**
+ * Advance to the next job in the review queue.
+ *
+ * @returns {Boolean}
+ */
+function reviewNext() {
+    // Save current first
+    saveReviewPanel() ;
+    if ( reviewQueueIndex < reviewQueue.length - 1 ) {
+        reviewQueueIndex++ ;
+        var next = reviewQueue[ reviewQueueIndex ] ;
+        reviewJob( next.id, next.url ) ;
+    }
+    return false ;
+}
+
 function reviewJob( id, url ) {
     reviewJobId = id ;
+    // Build queue on first open, find our position
+    if ( reviewQueue.length === 0 ) {
+        buildReviewQueue() ;
+    }
+    for ( var i = 0 ; i < reviewQueue.length ; i++ ) {
+        if ( reviewQueue[ i ].id == id ) {
+            reviewQueueIndex = i ;
+            break ;
+        }
+    }
     var overlay = document.getElementById( 'reviewOverlay' ) ;
     var bar     = document.getElementById( 'reviewBar' ) ;
     var frame   = document.getElementById( 'reviewFrame' ) ;
@@ -94,6 +155,10 @@ function reviewJob( id, url ) {
                  + '<input type="text" id="reviewNextActionDue" value="' + escapeHtml( job.nextActionDue || '' ) + '" size="12" class="datepicker" />'
                  + ' <button onclick="saveReviewPanel()">Save</button>'
                  + ' <button onclick="closeReviewPanel()">Close</button>' ;
+        var remaining = reviewQueueRemaining() ;
+        if ( remaining > 0 ) {
+            html += ' <button onclick="reviewNext()">Next (' + remaining + ')</button>' ;
+        }
         bar.innerHTML = html ;
         $( "#reviewNextActionDue" ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
     } ) ;
