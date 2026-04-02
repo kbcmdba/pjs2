@@ -24,6 +24,7 @@
 // @todo 10 Implement data validation tests for all required fields
 // @todo 30 Give users control over sorting in each page (e.g., Jobs by status, then next action due)
 // @todo 40 Jobs: Make it possible to log time and date together with jobs
+// @todo 40 Allow moving a job entry to a search (and vice versa) when a URL is a search page, not a posting
 // @todo 50 Write note interface for contacts
 // @todo 50 Write note interface for jobs
 // @todo 60 Write KeywordFormView — tag jobs with keywords
