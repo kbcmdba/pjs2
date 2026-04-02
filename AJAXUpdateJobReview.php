@@ -59,6 +59,14 @@ try {
     $jobModel->setNextActionDue($nextActionDue ?: null);
     $jobModel->setLastStatusChange(Tools::currentTimestamp());
 
+    // Set $_REQUEST params so validateForUpdate() passes
+    // (it reads from Tools::param which checks $_REQUEST)
+    $_REQUEST['id'] = $jobModel->getId();
+    $_REQUEST['applicationStatusId'] = $applicationStatusId;
+    $_REQUEST['urgency'] = $jobModel->getUrgency();
+    $_REQUEST['positionTitle'] = $jobModel->getPositionTitle();
+    $_REQUEST['location'] = $jobModel->getLocation();
+
     $updateResult = $jobController->update($jobModel);
 
     if (! ($updateResult > 0)) {

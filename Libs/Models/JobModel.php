@@ -81,7 +81,7 @@ class JobModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('contactId'))) && (! Tools::isNullOrEmptyString(Tools::param('companyId'))) && (! Tools::isNullOrEmptyString(Tools::param('applicationStatusId'))) && (! Tools::isNullOrEmptyString(Tools::param('urgency'))) && (! Tools::isNullOrEmptyString(Tools::param('positionTitle'))) && (! Tools::isNullOrEmptyString(Tools::param('location'))));
+        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('applicationStatusId'))) && (! Tools::isNullOrEmptyString(Tools::param('urgency'))) && (! Tools::isNullOrEmptyString(Tools::param('positionTitle'))) && (! Tools::isNullOrEmptyString(Tools::param('location'))));
     }
 
     public function populateFromForm()
