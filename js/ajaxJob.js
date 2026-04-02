@@ -39,8 +39,35 @@ function reviewJob( id, url ) {
     var bar     = document.getElementById( 'reviewBar' ) ;
     var frame   = document.getElementById( 'reviewFrame' ) ;
     bar.innerHTML = '<span class="reviewTitle">Loading...</span>' ;
-    frame.src     = url ;
     overlay.style.display = 'block' ;
+    // Try loading the URL; show fallback if blocked
+    frame.onload = function() {
+        try {
+            // Accessing contentDocument will throw if cross-origin blocked
+            var doc = frame.contentDocument || frame.contentWindow.document ;
+            if ( ! doc || doc.URL === 'about:blank' ) {
+                throw new Error( 'blocked' ) ;
+            }
+        } catch ( e ) {
+            // Site blocked framing — show fallback
+            frame.style.display = 'none' ;
+            var fallback = document.getElementById( 'reviewFallback' ) ;
+            if ( ! fallback ) {
+                fallback = document.createElement( 'div' ) ;
+                fallback.id = 'reviewFallback' ;
+                overlay.appendChild( fallback ) ;
+            }
+            fallback.style.display = 'flex' ;
+            fallback.innerHTML = '<div style="text-align: center;">'
+                + '<p style="font-size: 1.2em; margin-bottom: 16px;">This site cannot be embedded.</p>'
+                + '<a href="' + url + '" target="_blank"><button style="font-size: 1em; padding: 10px 24px;">Open in New Tab</button></a>'
+                + '</div>' ;
+        }
+    } ;
+    frame.style.display = '' ;
+    var fallback = document.getElementById( 'reviewFallback' ) ;
+    if ( fallback ) fallback.style.display = 'none' ;
+    frame.src = url ;
     var data = 'id=' + encodeURIComponent( id ) ;
     doLoadAjaxJsonResultWithCallback( 'AJAXGetJobData.php', data, id, true, function( xhttp, targetId ) {
         var jsonObj = JSON.parse( xhttp.responseText ) ;
@@ -111,6 +138,9 @@ function closeReviewPanel() {
     var frame   = document.getElementById( 'reviewFrame' ) ;
     overlay.style.display = 'none' ;
     frame.src = 'about:blank' ;
+    frame.style.display = '' ;
+    var fallback = document.getElementById( 'reviewFallback' ) ;
+    if ( fallback ) fallback.style.display = 'none' ;
     reviewJobId = null ;
     return false ;
 }
