@@ -25,6 +25,7 @@ var reviewJobId = null ;
 var reviewQueue = [] ;
 var reviewQueueIndex = -1 ;
 var reviewAdvancedViaSaveNext = false ;
+var reviewActiveStatusIds = [] ;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +54,8 @@ function buildReviewQueue() {
             var onclick = links[ 0 ].getAttribute( 'onclick' ) ;
             var match = onclick.match( /reviewJob\(\s*'([^']+)'\s*,\s*'([^']+)'\s*\)/ ) ;
             if ( match ) {
-                reviewQueue.push( { id: match[ 1 ], url: match[ 2 ] } ) ;
+                var statusId = parseInt( links[ 0 ].getAttribute( 'data-status-id' ) ) || 0 ;
+                reviewQueue.push( { id: match[ 1 ], url: match[ 2 ], statusId: statusId } ) ;
             }
         }
     }
@@ -67,6 +69,29 @@ function buildReviewQueue() {
 function reviewQueueRemaining() {
     if ( reviewQueueIndex < 0 || reviewQueueIndex >= reviewQueue.length - 1 ) return 0 ;
     return reviewQueue.length - reviewQueueIndex - 1 ;
+}
+
+/**
+ * Count active (non-closed) jobs remaining in the queue after current position.
+ * Falls back to total remaining if active status IDs haven't been loaded yet.
+ *
+ * @returns {Number}
+ */
+/**
+ * Get count of active (non-closed) jobs remaining after current position,
+ * using the applicationStatusId stored in each queue entry.
+ *
+ * @returns {Number}
+ */
+function reviewQueueActiveRemaining() {
+    if ( reviewActiveStatusIds.length === 0 ) return reviewQueueRemaining() ;
+    var count = 0 ;
+    for ( var i = reviewQueueIndex + 1 ; i < reviewQueue.length ; i++ ) {
+        if ( reviewActiveStatusIds.indexOf( reviewQueue[ i ].statusId ) >= 0 ) {
+            count++ ;
+        }
+    }
+    return count ;
 }
 
 /**
@@ -91,6 +116,21 @@ function reviewNext() {
  *
  * @returns {Boolean}
  */
+/**
+ * Skip to the next job without saving changes.
+ *
+ * @returns {Boolean}
+ */
+function reviewSkip() {
+    if ( reviewQueueIndex < reviewQueue.length - 1 ) {
+        reviewAdvancedViaSaveNext = false ;
+        reviewQueueIndex++ ;
+        var next = reviewQueue[ reviewQueueIndex ] ;
+        reviewJob( next.id, next.url ) ;
+    }
+    return false ;
+}
+
 function reviewPrev() {
     if ( reviewAdvancedViaSaveNext && reviewQueueIndex > 0 ) {
         reviewAdvancedViaSaveNext = false ;
@@ -160,9 +200,13 @@ function reviewJob( id, url ) {
         }
         var job      = jsonObj.job ;
         var statuses = jsonObj.statuses ;
+        reviewActiveStatusIds = [] ;
         var statusOpts = '' ;
         var currentStyle = '' ;
         for ( var i = 0 ; i < statuses.length ; i++ ) {
+            if ( statuses[ i ].isActive ) {
+                reviewActiveStatusIds.push( parseInt( statuses[ i ].id ) ) ;
+            }
             var sel = ( statuses[ i ].id == job.applicationStatusId ) ? ' selected="selected"' : '' ;
             var optStyle = statuses[ i ].style || '' ;
             if ( sel ) currentStyle = optStyle ;
@@ -183,8 +227,9 @@ function reviewJob( id, url ) {
         if ( reviewAdvancedViaSaveNext ) {
             html += ' <button onclick="reviewPrev()">Go Back</button>' ;
         }
-        var remaining = reviewQueueRemaining() ;
+        var remaining = reviewQueueActiveRemaining() ;
         if ( remaining > 0 ) {
+            html += ' <button onclick="reviewSkip()">Next (' + remaining + ')</button>' ;
             html += ' <button onclick="reviewNext()">Save &amp; Next (' + remaining + ')</button>' ;
         }
         bar.innerHTML = html ;
