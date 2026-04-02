@@ -161,7 +161,7 @@ function reviewJob( id, url ) {
                  + ' <button onclick="closeReviewPanel()">Close</button>' ;
         var remaining = reviewQueueRemaining() ;
         if ( remaining > 0 ) {
-            html += ' <button onclick="reviewNext()">Next (' + remaining + ')</button>' ;
+            html += ' <button onclick="reviewNext()">Save &amp; Next (' + remaining + ')</button>' ;
         }
         bar.innerHTML = html ;
         $( "#reviewNextActionDue" ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;
