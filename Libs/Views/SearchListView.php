@@ -75,7 +75,7 @@ class SearchListView extends ListViewBase
       <th>Search Name</th>
       <th>Status</th>
       <th>Link</th>
-      <th>Feed</th>
+      <th>RSS<br>Feed</th>
       <th>Feed Last Checked</th>
       <th>Created</th>
       <th>Updated</th>
