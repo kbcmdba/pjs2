@@ -164,6 +164,7 @@ HTML;
         $selLow = ($urgency === 'low') ? ' selected="selected"' : '';
         $safeUrl = Tools::safeUrl($searchModel->getUrl());
         $safeRssFeedUrl = Tools::safeUrl($searchModel->getRssFeedUrl());
+        $rssFeedLink = ($rssFeedUrl !== '') ? "<a href=\"$safeRssFeedUrl\" target=\"_blank\">RSS Feed Here</a>" : '';
         $errMessage = Tools::htmlOut($errMessage);
         switch ($displayMode) {
             case 'add':
@@ -216,7 +217,7 @@ HTML;
       <td style="$urgencyStyle">$urgency</td>
       <td style="$statusStyle">$statusValue</td>
       <td><a href="$safeUrl">$url</a></td>
-      <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
+      <td>$rssFeedLink</td>
       <td>$rssLastChecked</td>
       <td>$created</td>
       <td>$updated</td>
@@ -236,7 +237,7 @@ HTML;
       <td style="$urgencyStyle" $click>$urgency</td>
       <td style="$statusStyle" $click>$statusValue</td>
       <td><a href="#" onclick="reviewSearch( '$id', '$safeUrl' ); return false;">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
-      <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
+      <td>$rssFeedLink</td>
       <td $click>$rssLastChecked</td>
       <td>$created</td>
       <td>$updated</td>
