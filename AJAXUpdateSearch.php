@@ -44,6 +44,7 @@ $engineName = Tools::param('engineName');
 $searchName = Tools::param('searchName');
 $url = Tools::param('url');
 $rssFeedUrl = Tools::param('rssFeedUrl');
+$urgency = Tools::param('urgency');
 $rssLastChecked = Tools::param('rssLastChecked');
 $rowId = Tools::param('rowId');
 $result = 'OK';
@@ -56,6 +57,7 @@ try {
     $searchModel->setSearchName($searchName);
     $searchModel->setUrl($url);
     $searchModel->setRssFeedUrl($rssFeedUrl);
+    $searchModel->setUrgency($urgency ?: $searchModel->getUrgency());
     $searchModel->setRssLastChecked($rssLastChecked);
     $result = $searchController->update($searchModel);
     

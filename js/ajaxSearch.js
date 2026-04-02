@@ -144,6 +144,36 @@ function closeSearchReview() {
 }
 
 /**
+ * Sort the search table by clicking on a column header.
+ * Toggles between ascending and descending on repeated clicks.
+ *
+ * @param {Number} colIndex  The column index to sort by (0-based)
+ */
+var searchSortCol = -1 ;
+var searchSortAsc = true ;
+function sortSearchTable( colIndex ) {
+    var table = document.getElementById( 'search' ) ;
+    var tbody = table.querySelector( 'tbody' ) ;
+    var rows  = Array.prototype.slice.call( tbody.querySelectorAll( 'tr' ) ) ;
+    if ( searchSortCol === colIndex ) {
+        searchSortAsc = ! searchSortAsc ;
+    } else {
+        searchSortCol = colIndex ;
+        searchSortAsc = true ;
+    }
+    rows.sort( function( a, b ) {
+        var aText = a.cells[ colIndex ] ? a.cells[ colIndex ].textContent.trim().toLowerCase() : '' ;
+        var bText = b.cells[ colIndex ] ? b.cells[ colIndex ].textContent.trim().toLowerCase() : '' ;
+        if ( aText < bText ) return searchSortAsc ? -1 : 1 ;
+        if ( aText > bText ) return searchSortAsc ? 1 : -1 ;
+        return 0 ;
+    } ) ;
+    for ( var i = 0 ; i < rows.length ; i++ ) {
+        tbody.appendChild( rows[ i ] ) ;
+    }
+}
+
+/**
  * Add an application status row for user input.
  *
  * @returns {Boolean}
@@ -286,6 +316,7 @@ function doAddSearch( id ) {
     var searchName     = document.getElementById( "searchName" + rowId ).value ;
     var url            = document.getElementById( "url" + rowId ).value ;
     var rssFeedUrl     = document.getElementById( "rssFeedUrl" + rowId ).value ;
+    var urgency        = document.getElementById( "urgency" + rowId ).value ;
     var rssLastChecked = document.getElementById( "rssLastChecked" + rowId ).value ;
     var msg            = ajaxValidateSearch( engineName
                                            , searchName
@@ -302,6 +333,7 @@ function doAddSearch( id ) {
              + "&searchName=" + encodeURIComponent( searchName )
              + "&url=" + encodeURIComponent( url )
              + "&rssFeedUrl=" + encodeURIComponent( rssFeedUrl )
+             + "&urgency=" + encodeURIComponent( urgency )
              + "&rssLastChecked=" + encodeURIComponent( rssLastChecked )
              + "&rowId=" + encodeURIComponent( rowId )
              + "&rowStyle=add"
@@ -328,6 +360,7 @@ function doUpdateSearch( id ) {
     var searchName     = document.getElementById( "searchName" + id ).value ;
     var url            = document.getElementById( "url" + id ).value ;
     var rssFeedUrl     = document.getElementById( "rssFeedUrl" + id ).value ;
+    var urgency        = document.getElementById( "urgency" + id ).value ;
     var rssLastChecked = document.getElementById( "rssLastChecked" + id ).value ;
     var msg            = ajaxValidateSearch( engineName
                                            , searchName
@@ -345,6 +378,7 @@ function doUpdateSearch( id ) {
              + "&searchName=" + encodeURIComponent( searchName )
              + "&url=" + encodeURIComponent( url )
              + "&rssFeedUrl=" + encodeURIComponent( rssFeedUrl )
+             + "&urgency=" + encodeURIComponent( urgency )
              + "&rssLastChecked=" + encodeURIComponent( rssLastChecked )
              + "&rowId=" + encodeURIComponent( rowId )
              + "&rowStyle=update"

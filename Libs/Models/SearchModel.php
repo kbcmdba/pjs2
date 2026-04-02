@@ -40,6 +40,8 @@ class SearchModel extends ModelBase
 
     private $_searchStatusId;
 
+    private $_urgency;
+
     private $_rssLastChecked;
 
     private $_created;
@@ -190,6 +192,20 @@ class SearchModel extends ModelBase
     public function setSearchStatusId($searchStatusId)
     {
         $this->_searchStatusId = $searchStatusId;
+    }
+
+    public function getUrgency()
+    {
+        return $this->_urgency;
+    }
+
+    /**
+     *
+     * @param string $urgency
+     */
+    public function setUrgency($urgency)
+    {
+        $this->_urgency = $urgency;
     }
 
     public function getRssLastChecked()

@@ -71,14 +71,15 @@ class SearchListView extends ListViewBase
   <thead>
     <tr>
       <th>Actions</th>
-      <th>Engine</th>
-      <th>Search Name</th>
-      <th>Status</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(1)">Engine</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(2)">Search Name</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(3)">Urgency</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(4)">Status</th>
       <th>Link</th>
       <th>RSS<br>Feed</th>
-      <th>Feed Last Checked</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(7)">Feed Last<br>Checked</th>
       <th>Created</th>
-      <th>Updated</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(9)">Updated</th>
     </tr>
   </thead>
   <tbody>
@@ -130,6 +131,13 @@ HTML;
         $url = $searchModel->getUrl();
         $rssFeedUrl = $searchModel->getRssFeedUrl();
         $searchStatusId = $searchModel->getSearchStatusId();
+        $urgency = $searchModel->getUrgency() ?: 'medium';
+        $urgencyStyles = [
+            'high' => 'background-color: hotpink;',
+            'medium' => 'background-color: lightgreen;',
+            'low' => 'background-color: cyan;'
+        ];
+        $urgencyStyle = isset($urgencyStyles[$urgency]) ? $urgencyStyles[$urgency] : '';
         $rssLastChecked = $searchModel->getRssLastChecked();
         $created = $searchModel->getCreated();
         $updated = $searchModel->getUpdated();
@@ -151,6 +159,9 @@ HTML;
             }
         }
         $statusValue = Tools::htmlOut($statusValue);
+        $selHigh = ($urgency === 'high') ? ' selected="selected"' : '';
+        $selMed = ($urgency === 'medium') ? ' selected="selected"' : '';
+        $selLow = ($urgency === 'low') ? ' selected="selected"' : '';
         $safeUrl = Tools::safeUrl($searchModel->getUrl());
         $safeRssFeedUrl = Tools::safeUrl($searchModel->getRssFeedUrl());
         $errMessage = Tools::htmlOut($errMessage);
@@ -164,6 +175,7 @@ HTML;
       </td>
       <td><input type="text" id="engineNameix$id" value="$engineName" /></td>
       <td><input type="text" id="searchNameix$id" value="$searchName" /></td>
+      <td><select id="urgencyix$id"><option value="high">high</option><option value="medium" selected="selected">medium</option><option value="low">low</option></select></td>
       <td style="$statusStyle">$statusValue</td>
       <td><input type="text" id="urlix$id" value="$url" /></td>
       <td><input type="text" id="rssFeedUrlix$id" value="$rssFeedUrl" /></td>
@@ -182,6 +194,7 @@ HTML;
       </td>
       <td><input type="text" id="engineName$id" value="$engineName" /></td>
       <td><input type="text" id="searchName$id" value="$searchName" /></td>
+      <td><select id="urgency$id"><option value="high"$selHigh>high</option><option value="medium"$selMed>medium</option><option value="low"$selLow>low</option></select></td>
       <td style="$statusStyle">$statusValue</td>
       <td><input type="text" id="url$id" value="$url" /></td>
       <td><input type="text" id="rssFeedUrl$id" value="$rssFeedUrl" /></td>
@@ -200,6 +213,7 @@ HTML;
       </td>
       <td>$engineName</td>
       <td>$searchName</td>
+      <td style="$urgencyStyle">$urgency</td>
       <td style="$statusStyle">$statusValue</td>
       <td><a href="$safeUrl">$url</a></td>
       <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
@@ -219,6 +233,7 @@ HTML;
       </td>
       <td $click>$engineName</td>
       <td $click>$searchName</td>
+      <td style="$urgencyStyle" $click>$urgency</td>
       <td style="$statusStyle" $click>$statusValue</td>
       <td><a href="#" onclick="reviewSearch( '$id', '$safeUrl' ); return false;">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>

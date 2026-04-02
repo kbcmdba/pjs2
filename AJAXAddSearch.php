@@ -44,6 +44,7 @@ $engineName = Tools::param('engineName');
 $searchName = Tools::param('searchName');
 $url = Tools::param('url');
 $rssFeedUrl = Tools::param('rssFeedUrl');
+$urgency = Tools::param('urgency');
 $rssLastChecked = Tools::param('rssLastChecked');
 $rowId = Tools::param('rowId');
 $newSearchModel = null;
@@ -53,6 +54,8 @@ try {
     $searchModel->setSearchName($searchName);
     $searchModel->setUrl($url);
     $searchModel->setRssFeedUrl($rssFeedUrl);
+    $searchModel->setSearchStatusId(1); // Default to FRUITFUL
+    $searchModel->setUrgency($urgency ?: 'medium');
     $searchModel->setRssLastChecked($rssLastChecked);
     
     $searchController = new SearchController();
