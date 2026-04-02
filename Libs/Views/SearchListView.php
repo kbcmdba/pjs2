@@ -71,15 +71,15 @@ class SearchListView extends ListViewBase
   <thead>
     <tr>
       <th>Actions</th>
-      <th style="cursor: pointer;" onclick="sortSearchTable(1)">Engine</th>
-      <th style="cursor: pointer;" onclick="sortSearchTable(2)">Search Name</th>
-      <th style="cursor: pointer;" onclick="sortSearchTable(3)">Urgency</th>
-      <th style="cursor: pointer;" onclick="sortSearchTable(4)">Status</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(1)" id="searchSortCol1">Engine <span class="sortIndicator">&loz;</span></th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(2)" id="searchSortCol2">Search Name <span class="sortIndicator">&loz;</span></th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(3)" id="searchSortCol3">Urgency <span class="sortIndicator">&loz;</span></th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(4)" id="searchSortCol4">Status <span class="sortIndicator">&loz;</span></th>
       <th>Link</th>
       <th>RSS<br>Feed</th>
-      <th style="cursor: pointer;" onclick="sortSearchTable(7)">Feed Last<br>Checked</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(7)" id="searchSortCol7">Feed Last<br>Checked <span class="sortIndicator">&loz;</span></th>
       <th>Created</th>
-      <th style="cursor: pointer;" onclick="sortSearchTable(9)">Updated</th>
+      <th style="cursor: pointer;" onclick="sortSearchTable(9)" id="searchSortCol9">Updated <span class="sortIndicator">&loz;</span></th>
     </tr>
   </thead>
   <tbody>

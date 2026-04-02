@@ -151,6 +151,7 @@ function closeSearchReview() {
  */
 var searchSortCol = -1 ;
 var searchSortAsc = true ;
+var searchSortableCols = [ 1, 2, 3, 4, 7, 9 ] ;
 function sortSearchTable( colIndex ) {
     var table = document.getElementById( 'search' ) ;
     var tbody = table.querySelector( 'tbody' ) ;
@@ -170,6 +171,21 @@ function sortSearchTable( colIndex ) {
     } ) ;
     for ( var i = 0 ; i < rows.length ; i++ ) {
         tbody.appendChild( rows[ i ] ) ;
+    }
+    // Update sort indicators
+    for ( var j = 0 ; j < searchSortableCols.length ; j++ ) {
+        var col = searchSortableCols[ j ] ;
+        var th  = document.getElementById( 'searchSortCol' + col ) ;
+        if ( th ) {
+            var span = th.querySelector( '.sortIndicator' ) ;
+            if ( span ) {
+                if ( col === colIndex ) {
+                    span.textContent = searchSortAsc ? '\u25B2' : '\u25BC' ;
+                } else {
+                    span.innerHTML = '&loz;' ;
+                }
+            }
+        }
     }
 }
 
