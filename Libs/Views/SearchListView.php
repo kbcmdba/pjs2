@@ -73,6 +73,7 @@ class SearchListView extends ListViewBase
       <th>Actions</th>
       <th>Engine</th>
       <th>Search Name</th>
+      <th>Status</th>
       <th>Link</th>
       <th>Feed</th>
       <th>Feed Last Checked</th>
@@ -128,6 +129,7 @@ HTML;
         $searchName = $searchModel->getSearchName();
         $url = $searchModel->getUrl();
         $rssFeedUrl = $searchModel->getRssFeedUrl();
+        $searchStatusId = $searchModel->getSearchStatusId();
         $rssLastChecked = $searchModel->getRssLastChecked();
         $created = $searchModel->getCreated();
         $updated = $searchModel->getUpdated();
@@ -138,6 +140,17 @@ HTML;
         $rssLastChecked = Tools::htmlOut($rssLastChecked);
         $created = Tools::htmlOut($created);
         $updated = Tools::htmlOut($updated);
+        $statusValue = '---';
+        $statusStyle = '';
+        if ($searchStatusId >= 1) {
+            $searchStatusController = new SearchStatusController('read');
+            $searchStatusModel = $searchStatusController->get($searchStatusId);
+            if ($searchStatusModel) {
+                $statusValue = $searchStatusModel->getStatusValue();
+                $statusStyle = $searchStatusModel->getStyle();
+            }
+        }
+        $statusValue = Tools::htmlOut($statusValue);
         $safeUrl = Tools::safeUrl($searchModel->getUrl());
         $safeRssFeedUrl = Tools::safeUrl($searchModel->getRssFeedUrl());
         $errMessage = Tools::htmlOut($errMessage);
@@ -151,6 +164,7 @@ HTML;
       </td>
       <td><input type="text" id="engineNameix$id" value="$engineName" /></td>
       <td><input type="text" id="searchNameix$id" value="$searchName" /></td>
+      <td style="$statusStyle">$statusValue</td>
       <td><input type="text" id="urlix$id" value="$url" /></td>
       <td><input type="text" id="rssFeedUrlix$id" value="$rssFeedUrl" /></td>
       <td><input type="text" id="rssLastCheckedix$id" value="$rssLastChecked" class="datepicker" /></td>
@@ -168,6 +182,7 @@ HTML;
       </td>
       <td><input type="text" id="engineName$id" value="$engineName" /></td>
       <td><input type="text" id="searchName$id" value="$searchName" /></td>
+      <td style="$statusStyle">$statusValue</td>
       <td><input type="text" id="url$id" value="$url" /></td>
       <td><input type="text" id="rssFeedUrl$id" value="$rssFeedUrl" /></td>
       <td><input type="text" id="rssLastChecked$id" value="$rssLastChecked" class="datepicker" /></td>
@@ -185,6 +200,7 @@ HTML;
       </td>
       <td>$engineName</td>
       <td>$searchName</td>
+      <td style="$statusStyle">$statusValue</td>
       <td><a href="$safeUrl">$url</a></td>
       <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
       <td>$rssLastChecked</td>
@@ -203,6 +219,7 @@ HTML;
       </td>
       <td $click>$engineName</td>
       <td $click>$searchName</td>
+      <td style="$statusStyle" $click>$statusValue</td>
       <td><a href="#" onclick="reviewSearch( '$id', '$safeUrl' ); return false;">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td><a href="$safeRssFeedUrl">$rssFeedUrl</a></td>
       <td $click>$rssLastChecked</td>

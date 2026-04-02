@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS search
      , searchName     VARCHAR(255) NOT NULL DEFAULT ''
      , url            VARCHAR(4096) NOT NULL DEFAULT ''
      , rssFeedUrl     VARCHAR(4096) NOT NULL DEFAULT ''
+     , searchStatusId INT UNSIGNED NULL
      , rssLastChecked TIMESTAMP NULL DEFAULT NULL
      , created        TIMESTAMP NOT NULL DEFAULT 0
      , updated        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -113,6 +114,7 @@ SELECT id
      , searchName
      , url
      , rssFeedUrl
+     , searchStatusId
      , rssLastChecked
      , created
      , updated
@@ -126,7 +128,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result($id, $engineName, $searchName, $url, $rssFeedUrl, $rssLastChecked, $created, $updated)) {
+        if (! $stmt->bind_result($id, $engineName, $searchName, $url, $rssFeedUrl, $searchStatusId, $rssLastChecked, $created, $updated)) {
             throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         if ($stmt->fetch()) {
@@ -136,6 +138,7 @@ SQL;
             $model->setSearchName($searchName);
             $model->setUrl($url);
             $model->setRssFeedUrl($rssFeedUrl);
+            $model->setSearchStatusId($searchStatusId);
             $model->setRssLastChecked($rssLastChecked);
             $model->setCreated($created);
             $model->setUpdated($updated);
@@ -152,14 +155,17 @@ SELECT id
      , engineName
      , searchName
      , url
-     , rssFeedUrl
-     , rssLastChecked
-     , created
-     , updated
-  FROM search
+     , s.rssFeedUrl
+     , s.searchStatusId
+     , s.rssLastChecked
+     , s.created
+     , s.updated
+  FROM search s
+  LEFT JOIN searchStatus ss ON ss.id = s.searchStatusId
  ORDER
-    BY searchName
-     , engineName
+    BY COALESCE(ss.isActive, 1) DESC
+     , s.searchName
+     , s.engineName
 SQL;
         $stmt = $this->_dbh->prepare($sql);
         if (! $stmt) {
@@ -168,7 +174,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result($id, $engineName, $searchName, $url, $rssFeedUrl, $rssLastChecked, $created, $updated);
+        $stmt->bind_result($id, $engineName, $searchName, $url, $rssFeedUrl, $searchStatusId, $rssLastChecked, $created, $updated);
         $models = [];
         while ($stmt->fetch()) {
             $model = new SearchModel();
@@ -177,6 +183,7 @@ SQL;
             $model->setSearchName($searchName);
             $model->setUrl($url);
             $model->setRssFeedUrl($rssFeedUrl);
+            $model->setSearchStatusId($searchStatusId);
             $model->setRssLastChecked($rssLastChecked);
             $model->setCreated($created);
             $model->setUpdated($updated);
@@ -231,23 +238,25 @@ INSERT search
      , searchName
      , url
      , rssFeedUrl
+     , searchStatusId
      , rssLastChecked
      , created
      , updated
      )
-VALUES ( ?, ?, ?, ?, ?, ?, NOW(), NOW() )
+VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW(), NOW() )
 SQL;
                 $id = $model->getId();
                 $engineName = $model->getEngineName();
                 $searchName = $model->getSearchName();
                 $url = $model->getUrl();
                 $rssFeedUrl = $model->getRssFeedUrl();
+                $searchStatusId = $model->getSearchStatusId();
                 $rssLastChecked = $model->getRssLastChecked();
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param('isssss', $id, $engineName, $searchName, $url, $rssFeedUrl, $rssLastChecked))) {
+                if (! ($stmt->bind_param('issssss', $id, $engineName, $searchName, $url, $rssFeedUrl, $searchStatusId, $rssLastChecked))) {
                     throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
@@ -285,6 +294,7 @@ UPDATE search
      , searchName     = ?
      , url            = ?
      , rssFeedUrl     = ?
+     , searchStatusId = ?
      , rssLastChecked = ?
  WHERE id             = ?
 SQL;
@@ -293,12 +303,13 @@ SQL;
                 $searchName = $model->getSearchName();
                 $url = $model->getUrl();
                 $rssFeedUrl = $model->getRssFeedUrl();
+                $searchStatusId = $model->getSearchStatusId();
                 $rssLastChecked = $model->getRssLastChecked();
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param('sssssi', $engineName, $searchName, $url, $rssFeedUrl, $rssLastChecked, $id))) {
+                if (! ($stmt->bind_param('ssssisi', $engineName, $searchName, $url, $rssFeedUrl, $searchStatusId, $rssLastChecked, $id))) {
                     throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {

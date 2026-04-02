@@ -38,6 +38,8 @@ class SearchModel extends ModelBase
 
     private $_rssFeedUrl;
 
+    private $_searchStatusId;
+
     private $_rssLastChecked;
 
     private $_created;
@@ -176,6 +178,20 @@ class SearchModel extends ModelBase
      *
      * @return string
      */
+    public function getSearchStatusId()
+    {
+        return $this->_searchStatusId;
+    }
+
+    /**
+     *
+     * @param integer $searchStatusId
+     */
+    public function setSearchStatusId($searchStatusId)
+    {
+        $this->_searchStatusId = $searchStatusId;
+    }
+
     public function getRssLastChecked()
     {
         return $this->_rssLastChecked;
