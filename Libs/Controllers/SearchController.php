@@ -151,10 +151,10 @@ SQL;
     public function getSome()
     {
         $sql = <<<SQL
-SELECT id
-     , engineName
-     , searchName
-     , url
+SELECT s.id
+     , s.engineName
+     , s.searchName
+     , s.url
      , s.rssFeedUrl
      , s.searchStatusId
      , s.rssLastChecked
