@@ -99,6 +99,10 @@ function reviewJob( id, url ) {
     var overlay = document.getElementById( 'reviewOverlay' ) ;
     var bar     = document.getElementById( 'reviewBar' ) ;
     var frame   = document.getElementById( 'reviewFrame' ) ;
+    var nav     = document.getElementById( 'navBar' ) ;
+    var navHeight = nav ? nav.offsetHeight : 40 ;
+    overlay.style.top = navHeight + 'px' ;
+    overlay.style.height = 'calc(100% - ' + navHeight + 'px)' ;
     bar.innerHTML = '<span class="reviewTitle">Loading...</span>' ;
     overlay.style.display = 'block' ;
     // Try loading the URL; show fallback if blocked

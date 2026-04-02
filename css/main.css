@@ -41,6 +41,9 @@ ul#navBar {
 	overflow: hidden ;
 	background-color: #4a4a8a ;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15) ;
+	position: sticky ;
+	top: 0 ;
+	z-index: 1000 ;
 }
 
 ul#navBar li {
@@ -149,11 +152,11 @@ form input[type="submit"]:hover {
 #reviewOverlay {
 	display: none ;
 	position: fixed ;
-	top: 0 ;
+	top: 40px ;
 	left: 0 ;
 	width: 100% ;
-	height: 100% ;
-	z-index: 1000 ;
+	height: calc(100% - 40px) ;
+	z-index: 999 ;
 	background-color: #f5f5fa ;
 }
 
