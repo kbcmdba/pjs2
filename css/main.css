@@ -208,6 +208,30 @@ form input[type="submit"]:hover {
 	border: none ;
 }
 
+#reviewToast {
+	display: none ;
+	position: fixed ;
+	top: 20% ;
+	left: 50% ;
+	transform: translateX(-50%) ;
+	padding: 12px 24px ;
+	border-radius: 6px ;
+	font-size: 1em ;
+	font-weight: bold ;
+	z-index: 1100 ;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) ;
+}
+
+#reviewToast.success {
+	background-color: #28a745 ;
+	color: #fff ;
+}
+
+#reviewToast.error {
+	background-color: #dc3545 ;
+	color: #fff ;
+}
+
 #reviewFallback {
 	display: none ;
 	width: 100% ;

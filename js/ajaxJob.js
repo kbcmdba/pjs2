@@ -192,6 +192,9 @@ function saveReviewPanel() {
             if ( row ) {
                 row.innerHTML = jsonObj.row ;
             }
+            showToast( 'Saved', 'success' ) ;
+        } else {
+            showToast( 'Save failed: ' + ( jsonObj.error || 'Unknown error' ), 'error', 5000 ) ;
         }
     } ) ;
     return false ;
@@ -220,6 +223,23 @@ function closeReviewPanel() {
  * @param {String} str
  * @returns {String}
  */
+/**
+ * Show a temporary toast message.
+ *
+ * @param {String} message  Text to display
+ * @param {String} type     'success' or 'error'
+ * @param {Number} duration Milliseconds before auto-hide (default 3000)
+ */
+function showToast( message, type, duration ) {
+    var toast = document.getElementById( 'reviewToast' ) ;
+    toast.textContent = message ;
+    toast.className = type || 'success' ;
+    toast.style.display = 'block' ;
+    setTimeout( function() {
+        toast.style.display = 'none' ;
+    }, duration || 3000 ) ;
+}
+
 /**
  * Update the review status dropdown style when selection changes.
  *
