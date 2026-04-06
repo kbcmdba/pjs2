@@ -384,6 +384,17 @@ function checkDuplicateUrl( inputId, excludeId ) {
                            + 'return false;" style="color: red;">'
                            + 'Edit job #' + jsonObj.jobId + ' (' + desc + ')</a>' ;
             urlInput.parentNode.appendChild( warn ) ;
+            // Auto-set status to DUPLICATE on the current row
+            var statusId = targetId.replace( 'url', 'applicationStatusId' ) ;
+            var statusSelect = document.getElementById( statusId ) ;
+            if ( statusSelect ) {
+                for ( var i = 0 ; i < statusSelect.options.length ; i++ ) {
+                    if ( statusSelect.options[ i ].text === 'DUPLICATE' ) {
+                        statusSelect.selectedIndex = i ;
+                        break ;
+                    }
+                }
+            }
         }
     } ) ;
 }

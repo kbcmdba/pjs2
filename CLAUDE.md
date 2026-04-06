@@ -51,7 +51,19 @@ See [DATABASE.md](DATABASE.md) for table schemas, common DML operations, and use
 
 - **`~/.my.claude.cnf`** contains the pjs2_app credentials (user, password, host, database). Always use `--defaults-file=~/.my.claude.cnf` instead of inline `-u`/`-p` flags to avoid exposing credentials on the command line.
 - **DB hosts:** Production app runs on web1.hole with mysql1.hole serving the database. dc1.hole redirects all `/pjs2/` requests to web1.hole (301 via `.htaccess`).
+- **Trigger definer:** All triggers use `DEFINER='dba_sproc'@'localhost'` — a dedicated account with full privileges on the pjs2 database. Never create triggers without an explicit `DEFINER` clause, as MySQL will use the current connection user, which may lack the required grants when the app connects later.
 - **Job posting URLs go stale fast** — always verify a URL is live (not 404/410/closed) before adding or updating a job in the database.
+- **Duplicate URL detection:** `AJAXCheckDuplicateUrl.php` and `JobController::getByUrl()` check for duplicate job URLs. The JS checks on blur of the URL field; PHP checks on add and update.
+
+## Deployment
+
+Production is on web1.hole. To deploy:
+
+```bash
+ssh web1.hole "sudo -u www-data git -C /var/www/html/pjs2 pull"
+```
+
+The repo on web1.hole is owned by `www-data`, so git commands must run as that user. Schema changes (ALTER TABLE, triggers) must be applied separately on mysql1.hole using `mysql --defaults-file=~/.my.cnf -h mysql1.hole -D pjs2`.
 
 ## Code Style
 

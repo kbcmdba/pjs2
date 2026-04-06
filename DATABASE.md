@@ -1,6 +1,6 @@
 # PJS2 Database Reference
 
-Direct database access: `mysql pjs2 -e "SQL HERE;"`
+Direct database access: `mysql --defaults-file=~/.my.claude.cnf -e "SQL HERE;"`
 
 For timestamps with MySQL 8 strict mode, prefix with: `SET SESSION sql_mode = '';`
 
@@ -19,6 +19,8 @@ For timestamps with MySQL 8 strict mode, prefix with: `SET SESSION sql_mode = ''
 | 9  | INVALID       | no     |
 | 10 | DUPLICATE     | no     |
 | 11 | CLOSED        | no     |
+| 12 | MISSING       | no     |
+| 13 | MISMATCH      | no     |
 
 ## Common DML
 
