@@ -86,6 +86,7 @@ class JobListView extends ListViewBase
   <thead>
     <tr>
       <th>Actions</th>
+      <th>URL</th>
       <th>Urgency</th>
       <th>Title</th>
       <th>Location</th>
@@ -94,7 +95,6 @@ class JobListView extends ListViewBase
       <th>Status</th>
       <th>Next Action</th>
       <th>Next Action Due</th>
-      <th>URL</th>
       <th>Last Status Change</th>
       <th>Created</th>
       <th>Updated</th>
@@ -215,6 +215,7 @@ HTML;
           <button type="button" id="CancelButtonix$id" onclick="deleteRow( 'ix$id' )">Cancel</button>
           $errorMessage
       </td>
+      <td><input type="text" id="urlix$id" value="$url" onblur="checkDuplicateUrl( 'urlix$id' )" /></td>
       <td>{$this->_urgencyList}</td>
       <td><input type="text" id="positionTitleix$id" value="$positionTitle" /></td>
       <td><input type="text" id="locationix$id" value="$location" /></td>
@@ -223,7 +224,6 @@ HTML;
       <td>{$this->_applicationStatusList}</td>
       <td><input type="text" id="nextActionix$id" value="$nextAction" /></td>
       <td $dueClass><input type="text" id="nextActionDueix$id" value="$nextActionDue" class="datepicker" /></td>
-      <td><input type="text" id="urlix$id" value="$url" onblur="checkDuplicateUrl( 'urlix$id' )" /></td>
       <td><input type="text" id="lastStatusChangeix$id" value="$lastStatusChange" class="datepicker" /></td>
       <td>$created</td>
       <td>$updated</td>
@@ -237,6 +237,7 @@ HTML;
           <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>
           $errorMessage
       </td>
+      <td><input type="text" id="url$id" value="$url" onblur="checkDuplicateUrl( 'url$id', '$id' )" /></td>
       <td>{$this->_urgencyList}</td>
       <td><input type="text" id="positionTitle$id" value="$positionTitle" /></td>
       <td><input type="text" id="location$id" value="$location" /></td>
@@ -245,7 +246,6 @@ HTML;
       <td>{$this->_applicationStatusList}</td>
       <td><input type="text" id="nextAction$id" value="$nextAction" /></td>
       <td $dueClass><input type="text" id="nextActionDue$id" value="$nextActionDue" class="datepicker" /></td>
-      <td><input type="text" id="url$id" value="$url" onblur="checkDuplicateUrl( 'url$id', '$id' )" /></td>
       <td><input type="text" id="lastStatusChange$id" value="$lastStatusChange" class="datepicker" /></td>
       <td>$created</td>
       <td>$updated</td>
@@ -258,6 +258,7 @@ HTML;
           <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>
           $errorMessage
       </td>
+      <td><a href="$safeUrl">$url</a></td>
       <td>$urgency</td>
       <td>$positionTitle</td>
       <td>$location</td>
@@ -266,7 +267,6 @@ HTML;
       <td style="$applicationStatusStyle">$applicationStatusValue</td>
       <td>$nextAction</td>
       <td $dueClass>$nextActionDue</td>
-      <td><a href="$safeUrl">$url</a></td>
       <td>$lastStatusChange</td>
       <td>$created</td>
       <td>$updated</td>
@@ -281,6 +281,7 @@ HTML;
           <button type="button" id="DeleteButton$id" onclick="deleteJob( '$id' )">Delete</button>
           $errorMessage
       </td>
+      <td><a href="#" onclick="reviewJob( '$id', '$safeUrl' ); return false;" data-status-id="$applicationStatusId">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td $click>$urgency</td>
       <td $click>$positionTitle</td>
       <td $click>$location</td>
@@ -289,7 +290,6 @@ HTML;
       <td style="$applicationStatusStyle cursor: pointer;" onclick="updateJob( '$id' )">$applicationStatusValue</td>
       <td $click>$nextAction</td>
       <td $dueClass $click>$nextActionDue</td>
-      <td><a href="#" onclick="reviewJob( '$id', '$safeUrl' ); return false;" data-status-id="$applicationStatusId">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td $clickNow>$lastStatusChange</td>
       <td $click>$created</td>
       <td $click>$updated</td>
