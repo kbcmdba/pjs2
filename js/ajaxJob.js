@@ -349,6 +349,44 @@ function escapeHtml( str ) {
 }
 
 /**
+ * Check if a URL is already in use by another job.
+ * Shows a warning next to the URL field if a duplicate is found.
+ *
+ * @param {String} inputId   The DOM id of the URL input field
+ * @param {String} excludeId Job ID to exclude from the check (for updates)
+ */
+function checkDuplicateUrl( inputId, excludeId ) {
+    var urlInput = document.getElementById( inputId ) ;
+    var url = urlInput.value.trim() ;
+    // Remove any existing warning
+    var existingWarn = document.getElementById( inputId + '_dupwarn' ) ;
+    if ( existingWarn ) existingWarn.parentNode.removeChild( existingWarn ) ;
+    if ( url === '' ) return ;
+    var data = 'url=' + encodeURIComponent( url ) ;
+    if ( excludeId ) {
+        data += '&excludeId=' + encodeURIComponent( excludeId ) ;
+    }
+    doLoadAjaxJsonResultWithCallback( 'AJAXCheckDuplicateUrl.php', data, inputId, true, function( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        if ( jsonObj.isDuplicate ) {
+            var warn = document.createElement( 'div' ) ;
+            warn.id = targetId + '_dupwarn' ;
+            warn.style.color = 'red' ;
+            warn.style.fontWeight = 'bold' ;
+            warn.style.fontSize = '0.9em' ;
+            var msg = 'Duplicate URL! Already on job #' + jsonObj.jobId
+                    + ' (' + escapeHtml( jsonObj.positionTitle ) ;
+            if ( jsonObj.companyName ) {
+                msg += ' at ' + escapeHtml( jsonObj.companyName ) ;
+            }
+            msg += ')' ;
+            warn.innerHTML = msg ;
+            urlInput.parentNode.appendChild( warn ) ;
+        }
+    } ) ;
+}
+
+/**
  * Add an application status row for user input.
  *
  * @returns {Boolean}

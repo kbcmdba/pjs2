@@ -56,6 +56,26 @@ $jobId = '';
 $jobListView = new JobListView('html', null);
 try {
     $jobController = new JobController();
+    if ($url !== '' && $url !== null) {
+        $existingJob = $jobController->getByUrl($url);
+        if ($existingJob !== null && $existingJob->getId() != $id) {
+            $existingId = $existingJob->getId();
+            $existingTitle = $existingJob->getPositionTitle();
+            $companyName = '';
+            $existingCompanyId = $existingJob->getCompanyId();
+            if ($existingCompanyId) {
+                $cc = new CompanyController('read');
+                $cm = $cc->get($existingCompanyId);
+                if ($cm) {
+                    $companyName = ' at ' . $cm->getCompanyName();
+                }
+            }
+            throw new ControllerException(
+                "Duplicate URL. Already exists on job #$existingId"
+                . " ($existingTitle$companyName)."
+            );
+        }
+    }
     $jobModel = $jobController->get($id);
     $jobModel->setPrimaryContactId($primaryContactId ?: null);
     $jobModel->setCompanyId($companyId ?: null);
