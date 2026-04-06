@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 PHP Job Seeker 2 (PJS2) is a single-user job search tracking web application. It tracks searches, companies, jobs, contacts, application statuses, keywords, and notes. Requires Apache, PHP 5.6+, and MySQL 5.6+.
 
+PJS2 is expected to evolve incrementally into PJS3 — a multi-user SaaS product rather than a separate rewrite. The transition will happen through architectural changes made over time (REST API, multi-tenancy, responsive web frontend). There is no fixed boundary between PJS2 and PJS3.
+
 ## Setup
 
 1. Copy `config_sample.xml` to `config.xml` and update with your database/auth settings
@@ -45,8 +47,26 @@ This runs a PHP syntax check on all `.php` files, then runs PHPUnit integration 
 
 ## Database Access
 
-See [DATABASE.md](DATABASE.md) for table schemas, common DML operations, and useful queries. Direct CLI access: `mysql pjs2 -e "SQL HERE;"`
+See [DATABASE.md](DATABASE.md) for table schemas, common DML operations, and useful queries. Direct CLI access: `mysql --defaults-file=~/.my.claude.cnf -e "SQL HERE;"`
+
+- **`~/.my.claude.cnf`** contains the pjs2_app credentials (user, password, host, database). Always use `--defaults-file=~/.my.claude.cnf` instead of inline `-u`/`-p` flags to avoid exposing credentials on the command line.
+- **Current DB location:** dc1.hole (localhost/127.0.0.1). Migration to mysql1.hole is planned. web1.hole has a separate PJS2 instance with its own database — they do not share data.
+- **Job posting URLs go stale fast** — always verify a URL is live (not 404/410/closed) before adding or updating a job in the database.
 
 ## Code Style
 
 The project follows PSR-2 coding standards (recent commits focus on PSR-2 compliance).
+
+## Future Direction (PJS3)
+
+PJS2 will evolve toward a hosted multi-user SaaS product. Key goals:
+
+- **REST API** — Replace AJAX endpoints with a proper JSON REST API. The existing controller/model architecture was designed with this in mind.
+- **Multi-tenancy** — Add user management and per-user data isolation. Currently single-user with no user association on data rows.
+- **Mobile-friendly web client** — A responsive SPA frontend (no native mobile apps) that works on phones and desktops, consuming the REST API.
+- **Hosting** — Cloud deployment (AWS or another provider), accessible without requiring users to self-host or run a VPN.
+- **Scale** — PJS3 must be able to scale 10,000x over PJS2.
+- **Paid subscriptions** — Low monthly fee to cover infrastructure costs. Payment processor TBD (Stripe considered expensive for low price points; exploring alternatives like Square, Lemon Squeezy, or annual billing).
+- **Tech stack** — Undecided. PJS3 may stay in PHP or move to a different language/framework. The decision will be driven by concrete benefits, not change for its own sake. Frameworks are acceptable if they don't create heavy lock-in.
+
+Features like RSS feed ingestion should be built now for single-user use and designed so they can be extended to multi-user later.
