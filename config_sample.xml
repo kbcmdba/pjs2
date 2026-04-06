@@ -35,4 +35,6 @@
     <!-- ONLY ENABLE THE FOLLOWING FOR DEVELOPMENT/TESTING -->
     <!-- DO NOT ENABLE IN YOUR PUBLIC WEB SITE -->
     <param name="skipAuth">0</param>
+    <!-- Session timeout in seconds (default: 3600) -->
+    <param name="authTimeoutSeconds">3600</param>
 </config>

@@ -28,7 +28,7 @@ namespace com\kbcmdba\pjs2;
 class AuthTicketController extends ControllerBase
 {
 
-    private $_expireSeconds = 3600;
+    private $_expireSeconds;
 
     /**
      * Class constructor
@@ -40,6 +40,8 @@ class AuthTicketController extends ControllerBase
     public function __construct($readWriteMode = 'write')
     {
         parent::__construct($readWriteMode);
+        $config = new Config();
+        $this->_expireSeconds = $config->getAuthTimeoutSeconds();
     }
 
     /**
