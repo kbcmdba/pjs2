@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS job
      , nextAction            VARCHAR(255) NULL DEFAULT ''
      , positionTitle         VARCHAR(255) NOT NULL DEFAULT ''
      , location              VARCHAR(255) NOT NULL DEFAULT ''
-     , url                   VARCHAR(4096) NOT NULL DEFAULT ''
+     , url                   VARCHAR(768) NOT NULL DEFAULT ''
      , PRIMARY KEY pk_jobId ( id )
      , FOREIGN KEY fk_primaryContactId ( primaryContactId )
         REFERENCES contact ( id )
@@ -217,6 +217,64 @@ SELECT id
 SQL;
         $stmt = $this->_dbh->prepare($sql);
         if ((! $stmt) || (! $stmt->bind_param('i', $id))) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
+        }
+        if ($stmt->fetch()) {
+            $model = new JobModel();
+            $model->setId($id);
+            $model->setPrimaryContactId($primaryContactId);
+            $model->setCompanyId($companyId);
+            $model->setApplicationStatusId($applicationStatusId);
+            $model->setLastStatusChange($lastStatusChange);
+            $model->setUrgency($urgency);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setNextActionDue($nextActionDue);
+            $model->setNextAction($nextAction);
+            $model->setPositionTitle($positionTitle);
+            $model->setLocation($location);
+            $model->setUrl($url);
+        } else {
+            $model = null;
+        }
+        return ($model);
+    }
+
+    /**
+     * Get a job by its URL.
+     *
+     * @param string $url
+     * @throws ControllerException
+     * @return NULL|JobModel
+     */
+    public function getByUrl($url)
+    {
+        $sql = <<<SQL
+SELECT id
+     , primaryContactId
+     , companyId
+     , applicationStatusId
+     , lastStatusChange
+     , urgency
+     , created
+     , updated
+     , nextActionDue
+     , nextAction
+     , positionTitle
+     , location
+     , url
+  FROM job
+ WHERE url = ?
+
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if ((! $stmt) || (! $stmt->bind_param('s', $url))) {
             throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
         }
         if (! $stmt->execute()) {
