@@ -150,7 +150,7 @@ id, agencyCompanyId (FK->company), companyName, companyAddress1, companyAddress2
 id, contactCompanyId (FK->company), contactName, contactEmail, contactPhone, contactAlternatePhone, lastContacted, created, updated
 
 ### job
-id, primaryContactId (FK->contact), companyId (FK->company), applicationStatusId (FK->applicationStatus), isActiveSummary, lastStatusChange, urgency (high/medium/low), created, updated, nextActionDue, nextAction, positionTitle, location, url
+id, primaryContactId (FK->contact), companyId (FK->company), applicationStatusId (FK->applicationStatus), isActiveSummary, lastStatusChange, urgency (high/medium/low), created, updated, nextActionDue, nextAction, positionTitle, location, url (VARCHAR(768))
 
 ### keyword
 id, keywordValue (UNIQUE), sortKey, created, updated

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PHP Job Seeker 2 (PJS2) is a single-user job search tracking web application. It tracks searches, companies, jobs, contacts, application statuses, keywords, and notes. Requires Apache, PHP 5.6+, and MySQL 5.6+.
+PHP Job Seeker 2 (PJS2) is a single-user job search tracking web application. It tracks searches, companies, jobs, contacts, application statuses, keywords, and notes. Requires Apache, PHP 8.0+, and MySQL 8.0+.
 
 PJS2 is expected to evolve incrementally into PJS3 — a multi-user SaaS product rather than a separate rewrite. The transition will happen through architectural changes made over time (REST API, multi-tenancy, responsive web frontend). There is no fixed boundary between PJS2 and PJS3.
 
