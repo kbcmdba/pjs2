@@ -374,13 +374,15 @@ function checkDuplicateUrl( inputId, excludeId ) {
             warn.style.color = 'red' ;
             warn.style.fontWeight = 'bold' ;
             warn.style.fontSize = '0.9em' ;
-            var msg = 'Duplicate URL! Already on job #' + jsonObj.jobId
-                    + ' (' + escapeHtml( jsonObj.positionTitle ) ;
+            var desc = escapeHtml( jsonObj.positionTitle ) ;
             if ( jsonObj.companyName ) {
-                msg += ' at ' + escapeHtml( jsonObj.companyName ) ;
+                desc += ' at ' + escapeHtml( jsonObj.companyName ) ;
             }
-            msg += ')' ;
-            warn.innerHTML = msg ;
+            warn.innerHTML = 'Duplicate URL! <a href="#" onclick="updateJob(\'' + jsonObj.jobId + '\'); '
+                           + 'var r = document.getElementById(\'ux' + jsonObj.jobId + '\'); '
+                           + 'if (r) r.scrollIntoView({behavior:\'smooth\',block:\'center\'}); '
+                           + 'return false;" style="color: red;">'
+                           + 'Edit job #' + jsonObj.jobId + ' (' + desc + ')</a>' ;
             urlInput.parentNode.appendChild( warn ) ;
         }
     } ) ;
