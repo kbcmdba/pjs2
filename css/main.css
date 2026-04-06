@@ -235,6 +235,17 @@ form input[type="submit"]:hover {
 	color: #fff ;
 }
 
+/* Hide closed jobs toggle */
+table.hide-closed tr.closed-job {
+	display: none ;
+}
+
+@media print {
+	table.hide-closed tr.closed-job {
+		display: none ;
+	}
+}
+
 #reviewFallback {
 	display: none ;
 	width: 100% ;

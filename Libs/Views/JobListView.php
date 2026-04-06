@@ -80,7 +80,8 @@ class JobListView extends ListViewBase
         // Urgency Location Title NextAction Url
         // Status Company Contact NADue LastStatusChange
         $body = <<<'HTML'
-<button id="AddButton" onclick="addJob()">Add Job</button><br />
+<button id="AddButton" onclick="addJob()">Add Job</button>
+<button id="ToggleClosedButton" onclick="toggleClosedJobs()">Hide Closed</button><br />
 <table id="jobs">
   <caption>Current Jobs</caption>
   <thead>
@@ -106,7 +107,8 @@ HTML;
         foreach ($this->getJobModels() as $jobModel) {
             $id = $jobModel->getId();
             $row = $this->displayJobRow($jobModel, 'list');
-            $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>";
+            $activeClass = $jobModel->getIsActiveSummary() ? '' : ' class="closed-job"';
+            $body .= "    <tr id=\"ux$id\"$activeClass>\n$row\n    </tr>";
         }
         
         $body .= "  </tbody>\n</table>\n";

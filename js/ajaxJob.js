@@ -349,6 +349,21 @@ function escapeHtml( str ) {
 }
 
 /**
+ * Toggle visibility of closed (inactive) job rows.
+ */
+function toggleClosedJobs() {
+    var table  = document.getElementById( 'jobs' ) ;
+    var button = document.getElementById( 'ToggleClosedButton' ) ;
+    if ( table.classList.contains( 'hide-closed' ) ) {
+        table.classList.remove( 'hide-closed' ) ;
+        button.innerHTML = 'Hide Closed' ;
+    } else {
+        table.classList.add( 'hide-closed' ) ;
+        button.innerHTML = 'Show Closed' ;
+    }
+}
+
+/**
  * Check if a URL is already in use by another job.
  * Shows a warning next to the URL field if a duplicate is found.
  *
