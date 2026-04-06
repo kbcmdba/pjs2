@@ -86,6 +86,8 @@ SQL;
     {
         $sql = "DROP TRIGGER IF EXISTS jobBeforeInsertTrigger";
         $this->_doDDL($sql);
+        $sql = "DROP TRIGGER IF EXISTS jobBeforeUpdateTrigger";
+        $this->_doDDL($sql);
         $sql = "DROP TRIGGER IF EXISTS jobAfterUpdateTrigger";
         $this->_doDDL($sql);
         $sql = "DROP TRIGGER IF EXISTS jobAfterDeleteTrigger";
@@ -119,16 +121,27 @@ BEFORE INSERT
 SQL;
         $this->_doDDL($sql);
         $sql = <<<SQL
-CREATE TRIGGER jobAfterUpdateTrigger
+CREATE TRIGGER jobBeforeUpdateTrigger
 BEFORE UPDATE
     ON job
    FOR EACH ROW
  BEGIN
+       DECLARE newIsActive BOOLEAN ;
          IF OLD.applicationStatusId <> NEW.applicationStatusId
        THEN
+              SELECT isActive INTO newIsActive
+                FROM applicationStatus
+               WHERE id = NEW.applicationStatusId
+                   ;
               IF 0 = NEW.lastStatusChange
             THEN
                  SET NEW.lastStatusChange = NOW() ;
+             END IF
+               ;
+              IF NOT newIsActive
+            THEN
+                 SET NEW.nextActionDue = NULL ;
+                 SET NEW.nextAction = NULL ;
              END IF
                ;
             UPDATE applicationStatusSummary

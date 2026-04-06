@@ -50,7 +50,7 @@ This runs a PHP syntax check on all `.php` files, then runs PHPUnit integration 
 See [DATABASE.md](DATABASE.md) for table schemas, common DML operations, and useful queries. Direct CLI access: `mysql --defaults-file=~/.my.claude.cnf -e "SQL HERE;"`
 
 - **`~/.my.claude.cnf`** contains the pjs2_app credentials (user, password, host, database). Always use `--defaults-file=~/.my.claude.cnf` instead of inline `-u`/`-p` flags to avoid exposing credentials on the command line.
-- **Current DB location:** dc1.hole (localhost/127.0.0.1). Migration to mysql1.hole is planned. web1.hole has a separate PJS2 instance with its own database — they do not share data.
+- **DB hosts:** Production app runs on web1.hole with mysql1.hole serving the database. dc1.hole redirects all `/pjs2/` requests to web1.hole (301 via `.htaccess`).
 - **Job posting URLs go stale fast** — always verify a URL is live (not 404/410/closed) before adding or updating a job in the database.
 
 ## Code Style
