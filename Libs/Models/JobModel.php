@@ -67,21 +67,66 @@ class JobModel extends ModelBase
     /**
      * Validate model for insert
      *
+     * @param string &$errors Optional reference to receive specific error messages
      * @return boolean
      */
-    public function validateForAdd()
+    public function validateForAdd(&$errors = null)
     {
-        return ((Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('companyId'))) && (! Tools::isNullOrEmptyString(Tools::param('applicationStatusId'))) && (! Tools::isNullOrEmptyString(Tools::param('urgency'))) && (! Tools::isNullOrEmptyString(Tools::param('positionTitle'))) && (! Tools::isNullOrEmptyString(Tools::param('location'))));
+        $messages = [];
+        if (! Tools::isNullOrEmptyString(Tools::param('id'))) {
+            $messages[] = "ID must be empty for add";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('companyId'))) {
+            $messages[] = "Company is required";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('applicationStatusId'))) {
+            $messages[] = "Application Status is required";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('urgency'))) {
+            $messages[] = "Urgency is required";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('positionTitle'))) {
+            $messages[] = "Position Title is required";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('location'))) {
+            $messages[] = "Location is required";
+        }
+        if (! empty($messages)) {
+            $errors = implode('. ', $messages) . '.';
+            return false;
+        }
+        return true;
     }
 
     /**
      * Validate model for update
      *
+     * @param string &$errors Optional reference to receive specific error messages
      * @return boolean
      */
-    public function validateForUpdate()
+    public function validateForUpdate(&$errors = null)
     {
-        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('applicationStatusId'))) && (! Tools::isNullOrEmptyString(Tools::param('urgency'))) && (! Tools::isNullOrEmptyString(Tools::param('positionTitle'))) && (! Tools::isNullOrEmptyString(Tools::param('location'))));
+        $messages = [];
+        if (Tools::isNullOrEmptyString(Tools::param('id'))) {
+            $messages[] = "ID is required for update";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('applicationStatusId'))) {
+            $messages[] = "Application Status is required";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('urgency'))) {
+            $messages[] = "Urgency is required";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('positionTitle'))) {
+            $messages[] = "Position Title is required";
+        }
+        if (Tools::isNullOrEmptyString(Tools::param('location'))) {
+            $messages[] = "Location is required";
+        }
+        if (! empty($messages)) {
+            $errors = implode('. ', $messages) . '.';
+            return false;
+        }
+        return true;
     }
 
     public function populateFromForm()

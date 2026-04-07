@@ -646,7 +646,8 @@ SQL;
      */
     public function add($model)
     {
-        if ($model->validateForAdd()) {
+        $errors = null;
+        if ($model->validateForAdd($errors)) {
             try {
                 $query = <<<SQL
 INSERT job
@@ -700,7 +701,7 @@ SQL;
                 throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.");
+            throw new ControllerException("Invalid data. $errors");
         }
     }
 
@@ -711,7 +712,8 @@ SQL;
      */
     public function update($model)
     {
-        if ($model->validateForUpdate()) {
+        $errors = null;
+        if ($model->validateForUpdate($errors)) {
             try {
                 $query = <<<SQL
 UPDATE job
@@ -761,7 +763,7 @@ SQL;
                 throw new ControllerException($e->getMessage());
             }
         } else {
-            throw new ControllerException("Invalid data.");
+            throw new ControllerException("Invalid data. $errors");
         }
     }
 
