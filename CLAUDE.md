@@ -75,7 +75,11 @@ The project follows PSR-2 coding standards (recent commits focus on PSR-2 compli
 
 API endpoints live in `api/` and are authenticated via API key (not session/CSRF). The key is set in `config.xml` as `apiKey` and passed in the `X-API-Key` request header. Validated by `Libs/ApiAuth.php` using `hash_equals()`.
 
-JSON request bodies are decoded into `$_REQUEST`/`$_POST` by `ApiAuth::populateRequestFromJson()` so that existing model validation methods (which read `Tools::param()`) work without modification.
+JSON request bodies are decoded into `$_REQUEST`/`$_POST` by `ApiAuth::populateRequestFromJson()` so that existing model validation methods (which read `Tools::param()`) work without modification. **Note:** Not all models need this — `CompanyModel::validateForAdd()` reads from model properties, but `JobModel` and `ContactModel` read from `$_REQUEST`. Call `populateRequestFromJson()` for any endpoint where the model's validation uses `Tools::param()`.
+
+**CWD gotcha:** API files in `api/` must call `chdir(__DIR__ . '/..')` before requiring the autoloader, because `Config.php` reads `config.xml` relative to CWD.
+
+**API key:** Managed via Ansible Vault (`vault_pjs2_api_key` in `~/claude/projects/Ansible-Terraform`), templated into `config.xml` on deploy. Never hardcode the key.
 
 ### Endpoints
 
@@ -102,7 +106,7 @@ The primary API consumer is [JobImporter](~/claude/projects/JobImporter) — a c
 
 PJS2 will evolve toward a hosted multi-user SaaS product. Key goals:
 
-- **REST API** — Replace AJAX endpoints with a proper JSON REST API. The existing controller/model architecture was designed with this in mind.
+- **REST API** — Initial API endpoints exist in `api/` (see above). Expand to cover all entities and eventually replace AJAX endpoints.
 - **Multi-tenancy** — Add user management and per-user data isolation. Currently single-user with no user association on data rows.
 - **Mobile-friendly web client** — A responsive SPA frontend (no native mobile apps) that works on phones and desktops, consuming the REST API.
 - **Hosting** — Cloud deployment (AWS or another provider), accessible without requiring users to self-host or run a VPN.
