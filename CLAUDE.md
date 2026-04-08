@@ -43,7 +43,9 @@ This runs a PHP syntax check on all `.php` files, then runs PHPUnit integration 
 
 **Page Files:** Top-level PHP files (`jobs.php`, `companies.php`, `contacts.php`, `searches.php`, `applicationStatuses.php`, `keywords.php`) are the main page entry points. Each includes `Libs/autoload.php` and renders via `PJSWebPage`.
 
-**Auth:** `Libs/Auth.php` handles authentication. Can be bypassed with `skipAuth=1` in config.xml for development.
+**Auth:** `Libs/Auth.php` handles authentication against the `user` database table (bcrypt passwords, roles: `admin`, `user`, `viewer`). Config.xml's `userId`/`userPassword` are legacy fields not used by the current auth flow. Session timeout is controlled by `authTimeoutSeconds` in config.xml (default 3600). Can be bypassed with `skipAuth=1` in config.xml for development.
+
+**Notes:** AJAX-based notes system (`js/ajaxNote.js`, `AJAXGetNotes.php`, `AJAXAddNote.php`, `AJAXUpdateNote.php`, `AJAXDeleteNote.php`) provides a shared modal for viewing, adding, editing, and deleting notes. Used by Jobs, Companies, and Contacts listings via `NoteController::countByTable()` for counts and `getByTableAndId()` for content.
 
 ## Database Access
 
