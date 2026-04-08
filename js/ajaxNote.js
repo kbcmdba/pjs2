@@ -66,7 +66,7 @@ function loadNotes() {
         var html = '' ;
         var notes = jsonObj.notes ;
         if ( notes.length === 0 ) {
-            html = '<p style="color: #888;">No notes yet.</p>' ;
+            html = '<p style="color: #888;">No notes yet. Add one below.</p>' ;
         } else {
             for ( var i = 0 ; i < notes.length ; i++ ) {
                 var n = notes[ i ] ;
