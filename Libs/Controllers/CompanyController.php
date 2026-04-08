@@ -226,6 +226,68 @@ SQL;
     }
 
     /**
+     * Find companies by name (case-insensitive exact match).
+     * Returns all matches — a company name may appear multiple times
+     * (different locations or unrelated companies sharing a name).
+     *
+     * @param string $name
+     * @return CompanyModel[]
+     * @throws ControllerException
+     */
+    public function getByName($name)
+    {
+        $sql = <<<SQL
+SELECT id
+     , agencyCompanyId
+     , companyName
+     , companyAddress1
+     , companyAddress2
+     , companyCity
+     , companyState
+     , companyZip
+     , companyPhone
+     , companyUrl
+     , created
+     , updated
+     , lastContacted
+  FROM company
+ WHERE LOWER(companyName) = LOWER(?)
+ ORDER
+    BY companyCity, companyState
+
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if ((! $stmt) || (! $stmt->bind_param('s', $name))) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->bind_result($id, $agencyCompanyId, $companyName, $companyAddress1, $companyAddress2, $companyCity, $companyState, $companyZip, $companyPhone, $companyUrl, $created, $updated, $lastContacted)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
+        }
+        $models = [];
+        while ($stmt->fetch()) {
+            $model = new CompanyModel();
+            $model->setId($id);
+            $model->setAgencyCompanyId($agencyCompanyId);
+            $model->setCompanyName($companyName);
+            $model->setCompanyAddress1($companyAddress1);
+            $model->setCompanyAddress2($companyAddress2);
+            $model->setCompanyCity($companyCity);
+            $model->setCompanyState($companyState);
+            $model->setCompanyZip($companyZip);
+            $model->setCompanyPhone($companyPhone);
+            $model->setCompanyUrl($companyUrl);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setLastContacted($lastContacted);
+            $models[] = $model;
+        }
+        return ($models);
+    }
+
+    /**
      *
      * @param CompanyModel $model
      * @see ControllerBase::add()

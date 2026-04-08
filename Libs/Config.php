@@ -83,6 +83,8 @@ class Config
 
     private $_skipAuth = false;
 
+    private $_apiKey = '';
+
     /**
      * Class Constructor
      *
@@ -102,7 +104,8 @@ class Config
         $cfgValues = [
             'resetOk' => 0,
             'authTimeoutSeconds' => 3600,
-            'skipAuth' => 0
+            'skipAuth' => 0,
+            'apiKey' => ''
         ];
         $paramList = [
             'authTimeoutSeconds' => [
@@ -134,6 +137,10 @@ class Config
                 'value' => 0
             ],
             'skipAuth' => [
+                'isRequired' => 0,
+                'value' => 0
+            ],
+            'apiKey' => [
                 'isRequired' => 0,
                 'value' => 0
             ],
@@ -182,6 +189,7 @@ class Config
         $this->_timeZone = $cfgValues['timeZone'];
         $this->_resetOk = $cfgValues['resetOk'];
         $this->_skipAuth = $cfgValues['skipAuth'];
+        $this->_apiKey = $cfgValues['apiKey'];
         $this->_userId = $cfgValues['userId'];
         $this->_userPassword = $cfgValues['userPassword'];
         ini_set('date.timezone', $this->_timeZone);
@@ -318,5 +326,15 @@ class Config
     public function getUserPassword()
     {
         return $this->_userPassword;
+    }
+
+    /**
+     * Getter
+     *
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->_apiKey;
     }
 }

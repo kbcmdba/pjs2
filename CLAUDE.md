@@ -71,6 +71,33 @@ The repo on web1.hole is owned by `www-data`, so git commands must run as that u
 
 The project follows PSR-2 coding standards (recent commits focus on PSR-2 compliance).
 
+## REST API
+
+API endpoints live in `api/` and are authenticated via API key (not session/CSRF). The key is set in `config.xml` as `apiKey` and passed in the `X-API-Key` request header. Validated by `Libs/ApiAuth.php` using `hash_equals()`.
+
+JSON request bodies are decoded into `$_REQUEST`/`$_POST` by `ApiAuth::populateRequestFromJson()` so that existing model validation methods (which read `Tools::param()`) work without modification.
+
+### Endpoints
+
+| Method | URL | Purpose |
+|--------|-----|---------|
+| `GET` | `api/jobs.php?url=X` | Check for duplicate job by URL |
+| `POST` | `api/jobs.php` | Create a job |
+| `GET` | `api/companies.php?name=X` | Find companies by name (returns all matches) |
+| `POST` | `api/companies.php` | Create a company |
+| `GET` | `api/contacts.php?email=X` | Find contact by email |
+| `POST` | `api/contacts.php` | Create a contact |
+| `POST` | `api/notes.php` | Create a note |
+
+### Response Format
+
+Success: HTTP 200/201 + `{"result": "OK", ...}`
+Failure: HTTP 400/401/409/500 + `{"result": "FAILED", "error": "message"}`
+
+### Consumer
+
+The primary API consumer is [JobImporter](~/claude/projects/JobImporter) — a cron job that parses forwarded job emails and imports them into PJS2.
+
 ## Future Direction (PJS3)
 
 PJS2 will evolve toward a hosted multi-user SaaS product. Key goals:

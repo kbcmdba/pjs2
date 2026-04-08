@@ -37,4 +37,6 @@
     <param name="skipAuth">0</param>
     <!-- Session timeout in seconds (default: 3600) -->
     <param name="authTimeoutSeconds">3600</param>
+    <!-- API key for REST API access (required for api/ endpoints) -->
+    <param name="apiKey">ChangeThisToARandomString</param>
 </config>

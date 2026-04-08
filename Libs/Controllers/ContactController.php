@@ -216,6 +216,56 @@ SQL;
     }
 
     /**
+     * Find a contact by email address (case-insensitive exact match).
+     *
+     * @param string $email
+     * @return ContactModel|null
+     * @throws ControllerException
+     */
+    public function getByEmail($email)
+    {
+        $sql = <<<SQL
+SELECT id
+     , contactCompanyId
+     , contactName
+     , contactEmail
+     , contactPhone
+     , contactAlternatePhone
+     , lastContacted
+     , created
+     , updated
+  FROM contact
+ WHERE LOWER(contactEmail) = LOWER(?)
+
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if ((! $stmt) || (! $stmt->bind_param('s', $email))) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->bind_result($id, $contactCompanyId, $contactName, $contactEmail, $contactPhone, $contactAlternatePhone, $lastContacted, $created, $updated)) {
+            throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
+        }
+        if ($stmt->fetch()) {
+            $model = new ContactModel();
+            $model->setId($id);
+            $model->setContactCompanyId($contactCompanyId);
+            $model->setContactName($contactName);
+            $model->setContactEmail($contactEmail);
+            $model->setContactPhone($contactPhone);
+            $model->setContactAlternatePhone($contactAlternatePhone);
+            $model->setLastContacted($lastContacted);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+        } else {
+            $model = null;
+        }
+        return ($model);
+    }
+
+    /**
      *
      * @param ContactModel $model
      * @see ControllerBase::add()
