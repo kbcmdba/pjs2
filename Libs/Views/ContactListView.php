@@ -39,6 +39,9 @@ class ContactListView extends ListViewBase
     /** @var ContactModel[] */
     private $contactModels;
 
+    /** @var array */
+    private $_noteCounts = [];
+
     /**
      * Class constructor
      *
@@ -64,6 +67,8 @@ class ContactListView extends ListViewBase
      */
     private function _getHtmlView()
     {
+        $noteController = new NoteController('read');
+        $this->_noteCounts = $noteController->countByTable('contact');
         $body = <<<'HTML'
 <button id="AddButton" onclick="addContact()">Add Contact</button><br />
 <table id="contacts">
@@ -77,6 +82,7 @@ class ContactListView extends ListViewBase
       <th>Phone</th>
       <th>Alternate Phone</th>
       <th>Last Contacted</th>
+      <th>Notes</th>
       <th>Created</th>
       <th>Updated</th>
     </tr>
@@ -133,11 +139,13 @@ HTML;
       <td><input type="text" id="phoneix$id" value="$aphone"</td>
       <td><input type="text" id="alternatePhoneix$id" value="$bphone" /></td>
       <td><input type="text" id="lastContactedix$id" value="$lastContacted" class="datepicker" /></td>
+      <td></td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
 
 RETVAL;
             case 'update':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 $companyListView = new CompanyListView('html', null);
                 $companyNames = $companyListView->getCompanyList("$id", $companyId);
                 return <<<RETVAL
@@ -151,11 +159,13 @@ RETVAL;
       <td><input type="text" id="phone$id" value="$aphone"</td>
       <td><input type="text" id="alternatePhone$id" value="$bphone" /></td>
       <td><input type="text" id="lastContacted$id" value="$lastContacted" class="datepicker" /></td>
+      <td><a href="#" class="note-count-link" id="noteCount-contact-$id" onclick="openNotesModal( 'contact', '$id', '$name' ); return false;">$noteCount</a></td>
       <td>$created</td>
       <td>$updated</td>
 
 RETVAL;
             case 'delete':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 return <<<RETVAL
       <td><button type="button" id="DeleteButton$id" onclick="doDeleteContact( '$id' )">Confirm Delete</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateContactRow( '$id' )">Cancel</button>
@@ -167,12 +177,14 @@ RETVAL;
       <td>$aphone</td>
       <td>$bphone</td>
       <td>$lastContacted</td>
+      <td>$noteCount</td>
       <td>$created</td>
       <td>$updated</td>
 
 RETVAL;
                 break;
             case 'list':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 $click = "onclick=\"updateContact( '$id' )\" style=\"cursor: pointer;\"";
                 $clickNow = "onclick=\"doUpdateContactLastContacted( '$id' )\" style=\"cursor: pointer;\" title=\"Click to mark as contacted now\"";
                 return <<<RETVAL
@@ -187,6 +199,7 @@ RETVAL;
       <td $click>$aphone</td>
       <td $click>$bphone</td>
       <td $clickNow>$lastContacted</td>
+      <td><a href="#" class="note-count-link" id="noteCount-contact-$id" onclick="openNotesModal( 'contact', '$id', '$name' ); return false;">$noteCount</a></td>
       <td $click>$created</td>
       <td $click>$updated</td>
 

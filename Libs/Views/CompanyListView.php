@@ -39,6 +39,9 @@ class CompanyListView extends ListViewBase
     /** @var CompanyModel[] */
     private $_companyModels;
 
+    /** @var array */
+    private $_noteCounts = [];
+
     /**
      * Class constructor
      *
@@ -64,6 +67,8 @@ class CompanyListView extends ListViewBase
      */
     private function _getHtmlView()
     {
+        $noteController = new NoteController('read');
+        $this->_noteCounts = $noteController->countByTable('company');
         $rowStyle = "even";
         $body = <<<'HTML'
 <button id="AddButton" onclick="addCompany()">Add Company</button><br />
@@ -78,6 +83,7 @@ class CompanyListView extends ListViewBase
       <th>State</th>
       <th>Zip</th>
       <th>Last Contacted</th>
+      <th rowspan="2">Notes</th>
       <th>Created</th>
     </tr>
     <tr class="thead">
@@ -145,6 +151,7 @@ HTML;
       <td><input type="text" id="companyStateix$id" size="2" value="$companyState" /></td>
       <td><input type="text" id="companyZipix$id" size="10" value="$companyZip" /></td>
       <td><input type="text" id="lastContactedix$id" size="12" value="$lastContacted" class="datepicker" /></td>
+      <td rowspan="2"></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
@@ -156,6 +163,7 @@ HTML;
 HTML;
                 break;
             case 'delete':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 $row1 = <<<HTML
       <td rowspan="2">
         <button type="button" id="DeleteButton$id" onclick="doDeleteCompany( '$id' )">Confirm Delete</button>
@@ -168,6 +176,7 @@ HTML;
       <td>$companyState</td>
       <td>$companyZip</td>
       <td>$lastContacted</td>
+      <td rowspan="2">$noteCount</td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
@@ -179,6 +188,7 @@ HTML;
 HTML;
                 break;
             case 'list':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 $click = "onclick=\"updateCompany( '$id' )\" style=\"cursor: pointer;\"";
                 $row1 = <<<HTML
       <td rowspan="2">
@@ -193,6 +203,7 @@ HTML;
       <td $click>$companyState</td>
       <td $click>$companyZip</td>
       <td $click>$lastContacted</td>
+      <td rowspan="2"><a href="#" class="note-count-link" id="noteCount-company-$id" onclick="openNotesModal( 'company', '$id', '$companyName' ); return false;">$noteCount</a></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
@@ -204,6 +215,7 @@ HTML;
 HTML;
                 break;
             case 'update':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 $agencyList = $this->getAgencyList($id, $id);
                 $row1 = <<<HTML
       <td rowspan="2">
@@ -217,6 +229,7 @@ HTML;
       <td><input type="text" id="companyState$id" size="2" value="$companyState" /></td>
       <td><input type="text" id="companyZip$id" size="10" value="$companyZip" /></td>
       <td><input type="text" id="lastContacted$id" size="12" value="$lastContacted" class="datepicker" /></td>
+      <td rowspan="2"><a href="#" class="note-count-link" id="noteCount-company-$id" onclick="openNotesModal( 'company', '$id', '$companyName' ); return false;">$noteCount</a></td>
       <td>$created</td>
 HTML;
                 $row2 = <<<HTML
