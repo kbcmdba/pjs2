@@ -64,6 +64,7 @@ $csrfMeta  <link rel="stylesheet" href="css/main.css?v=$v" />
   <script src="js/ajaxContact.js?v=$v"></script>
   <script src="js/ajaxJob.js?v=$v"></script>
   <script src="js/ajaxKeyword.js?v=$v"></script>
+  <script src="js/ajaxNote.js?v=$v"></script>
   <script src="js/ajaxSearch.js?v=$v"></script>
   <script src="js/oldValidation.js?v=$v"></script>
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -87,7 +88,22 @@ HTML;
         ]);
         $this->setStyles('');
         $this->setTop($this->_getTop());
-        $this->setBottom('<div id="reviewOverlay"><div id="reviewBar"></div><div id="reviewToast"></div><iframe id="reviewFrame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe></div><!-- EndOfPage -->');
+        $notesModal = <<<'NOTES'
+<div id="notesOverlay">
+  <div id="notesModal">
+    <div id="notesHeader">
+      <span id="notesTitle">Notes</span>
+      <button onclick="closeNotesModal()">Close</button>
+    </div>
+    <div id="notesList"></div>
+    <div id="notesAdd">
+      <textarea id="noteNewText" rows="3" placeholder="Add a new note..."></textarea>
+      <button onclick="addNote()">Add Note</button>
+    </div>
+  </div>
+</div>
+NOTES;
+        $this->setBottom('<div id="reviewOverlay"><div id="reviewBar"></div><div id="reviewToast"></div><iframe id="reviewFrame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe></div>' . $notesModal . '<!-- EndOfPage -->');
         
         if ((! $skipAuth) && (! $auth->isAuthorized())) {
             $this->setBody($auth->getLoginPage());

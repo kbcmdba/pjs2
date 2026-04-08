@@ -144,6 +144,76 @@ SQL;
     }
 
     /**
+     * Get notes for a specific table and record ID.
+     *
+     * @param string $appliesToTable
+     * @param int $appliesToId
+     * @throws ControllerException
+     * @return NoteModel[]
+     */
+    public function getByTableAndId($appliesToTable, $appliesToId)
+    {
+        $sql = <<<SQL
+SELECT id
+     , appliesToTable
+     , appliesToId
+     , created
+     , updated
+     , noteText
+  FROM note
+ WHERE appliesToTable = ?
+   AND appliesToId = ?
+ ORDER
+    BY created DESC
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('si', $appliesToTable, $appliesToId)) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($id, $appliesToTable, $appliesToId, $created, $updated, $noteText);
+        $models = [];
+        while ($stmt->fetch()) {
+            $model = new NoteModel();
+            $model->setId($id);
+            $model->setAppliesToTable($appliesToTable);
+            $model->setAppliesToId($appliesToId);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setNoteText($noteText);
+            $models[] = $model;
+        }
+        return $models;
+    }
+
+    /**
+     * Get note counts grouped by appliesToId for a given table.
+     *
+     * @param string $appliesToTable
+     * @throws ControllerException
+     * @return array Associative array of appliesToId => count
+     */
+    public function countByTable($appliesToTable)
+    {
+        $sql = "SELECT appliesToId, COUNT(*) FROM note WHERE appliesToTable = ? GROUP BY appliesToId";
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('s', $appliesToTable)) {
+            throw new ControllerException('Failed to prepare SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($appliesToId, $count);
+        $counts = [];
+        while ($stmt->fetch()) {
+            $counts[$appliesToId] = $count;
+        }
+        return $counts;
+    }
+
+    /**
      *
      * @param NoteModel $model
      * @see ControllerBase::add()

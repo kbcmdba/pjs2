@@ -48,6 +48,9 @@ class JobListView extends ListViewBase
     /** @var string */
     private $_applicationStatusList;
 
+    /** @var array */
+    private $_noteCounts = [];
+
     /** @var string */
     private $_urgencyList;
 
@@ -79,6 +82,8 @@ class JobListView extends ListViewBase
         // @todo Display jobs in two rows
         // Urgency Location Title NextAction Url
         // Status Company Contact NADue LastStatusChange
+        $noteController = new NoteController('read');
+        $this->_noteCounts = $noteController->countByTable('job');
         $body = <<<'HTML'
 <button id="AddButton" onclick="addJob()">Add Job</button>
 <button id="ToggleClosedButton" onclick="toggleClosedJobs()">Hide Closed</button><br />
@@ -97,6 +102,7 @@ class JobListView extends ListViewBase
       <th>Next Action</th>
       <th>Next Action Due</th>
       <th>Last Status Change</th>
+      <th>Notes</th>
       <th>Created</th>
       <th>Updated</th>
     </tr>
@@ -227,12 +233,14 @@ HTML;
       <td><input type="text" id="nextActionix$id" value="$nextAction" /></td>
       <td $dueClass><input type="text" id="nextActionDueix$id" value="$nextActionDue" class="datepicker" /></td>
       <td><input type="text" id="lastStatusChangeix$id" value="$lastStatusChange" class="datepicker" /></td>
+      <td></td>
       <td>$created</td>
       <td>$updated</td>
 
 HTML;
                 break;
             case 'update':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 $this->_getListValues($id, $primaryContactId, $companyId, $applicationStatusId, $urgency);
                 return <<<HTML
       <td><button type="button" id="SaveButton$id" onclick="saveUpdateJob( '$id' )">Save</button>
@@ -249,12 +257,14 @@ HTML;
       <td><input type="text" id="nextAction$id" value="$nextAction" /></td>
       <td $dueClass><input type="text" id="nextActionDue$id" value="$nextActionDue" class="datepicker" /></td>
       <td><input type="text" id="lastStatusChange$id" value="$lastStatusChange" class="datepicker" /></td>
+      <td><a href="#" class="note-count-link" id="noteCount-job-$id" onclick="openNotesModal( 'job', '$id', '$positionTitle' ); return false;">$noteCount</a></td>
       <td>$created</td>
       <td>$updated</td>
 
 HTML;
                 break;
             case 'delete':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 return <<<HTML
       <td><button type="button" id="DeleteButton$id" onclick="doDeleteJob( '$id' )">Confirm Delete</button>
           <button type="button" id="CancelButton$id" onclick="cancelUpdateJobRow( '$id' )">Cancel</button>
@@ -270,12 +280,14 @@ HTML;
       <td>$nextAction</td>
       <td $dueClass>$nextActionDue</td>
       <td>$lastStatusChange</td>
+      <td>$noteCount</td>
       <td>$created</td>
       <td>$updated</td>
 
 HTML;
                 break;
             case 'list':
+                $noteCount = isset($this->_noteCounts[$id]) ? $this->_noteCounts[$id] : 0;
                 $click = "onclick=\"updateJob( '$id' )\" style=\"cursor: pointer;\"";
                 $clickNow = "onclick=\"updateJobSetNow( '$id' )\" style=\"cursor: pointer;\" title=\"Click to edit and set to today\"";
                 return <<<HTML
@@ -293,6 +305,7 @@ HTML;
       <td $click>$nextAction</td>
       <td $dueClass $click>$nextActionDue</td>
       <td $clickNow>$lastStatusChange</td>
+      <td><a href="#" class="note-count-link" id="noteCount-job-$id" onclick="openNotesModal( 'job', '$id', '$positionTitle' ); return false;">$noteCount</a></td>
       <td $click>$created</td>
       <td $click>$updated</td>
 
