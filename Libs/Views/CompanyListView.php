@@ -69,7 +69,7 @@ class CompanyListView extends ListViewBase
     {
         $noteController = new NoteController('read');
         $this->_noteCounts = $noteController->countByTable('company');
-        $rowStyle = "even";
+        $rowStyle = "treven";
         $body = <<<'HTML'
 <button id="AddButton" onclick="addCompany()">Add Company</button><br />
 <table id="companies">
@@ -98,10 +98,10 @@ class CompanyListView extends ListViewBase
 HTML;
         foreach ($this->getCompanyModels() as $companyModel) {
             $id = $companyModel->getId();
-            $rowStyle = ("even" === $rowStyle) ? 'odd' : 'even';
+            $rowStyle = ("treven" === $rowStyle) ? 'trodd' : 'treven';
             $rows = $this->displayCompanyRow($companyModel, 'list', $rowStyle);
-            $body .= "    <tr id='ux$id-1'>\n      {$rows[0]}\n    </tr>\n";
-            $body .= "    <tr id='ux$id-2'>\n      {$rows[1]}\n    </tr>\n";
+            $body .= "    <tr id='ux$id-1' class='$rowStyle'>\n      {$rows[0]}\n    </tr>\n";
+            $body .= "    <tr id='ux$id-2' class='$rowStyle'>\n      {$rows[1]}\n    </tr>\n";
         }
         $body .= "  </tbody>\n</table>\n";
         return $body;

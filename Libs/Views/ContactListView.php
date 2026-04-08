@@ -90,10 +90,12 @@ class ContactListView extends ListViewBase
   <tbody>
     
 HTML;
+        $rowStyle = 'treven';
         foreach ($this->getContactModels() as $contactModel) {
             $id = $contactModel->getId();
             $row = $this->displayContactRow($contactModel, 'list');
-            $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>";
+            $body .= "    <tr id=\"ux$id\" class=\"$rowStyle\">\n$row\n    </tr>";
+            $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
         }
         
         $body .= "  </tbody>\n</table>\n";

@@ -85,15 +85,17 @@ class SearchListView extends ListViewBase
   <tbody>
 
 HTML;
+        $rowStyle = 'treven';
         foreach ($this->getSearchModels() as $search) {
             $id = $search->getId();
             $row = $this->displaySearchRow($search, 'list');
             $body .= <<<HTML
-    <tr id="ux$id">
+    <tr id="ux$id" class="$rowStyle">
       $row
     </tr>
 
 HTML;
+            $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
         }
         $body .= "  </tbody>\n</table>\n";
         return $body;

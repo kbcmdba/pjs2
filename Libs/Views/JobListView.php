@@ -110,11 +110,16 @@ class JobListView extends ListViewBase
   <tbody>
 
 HTML;
+        $rowStyle = 'treven';
         foreach ($this->getJobModels() as $jobModel) {
             $id = $jobModel->getId();
             $row = $this->displayJobRow($jobModel, 'list');
-            $activeClass = $jobModel->getIsActiveSummary() ? '' : ' class="closed-job"';
-            $body .= "    <tr id=\"ux$id\"$activeClass>\n$row\n    </tr>";
+            $classes = $rowStyle;
+            if (! $jobModel->getIsActiveSummary()) {
+                $classes .= ' closed-job';
+            }
+            $body .= "    <tr id=\"ux$id\" class=\"$classes\">\n$row\n    </tr>";
+            $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
         }
         
         $body .= "  </tbody>\n</table>\n";
