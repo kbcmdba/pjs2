@@ -81,17 +81,19 @@ class ApplicationStatusListView extends ListViewBase
   <tbody>
 
 HTML;
+        $rowStyle = 'treven';
         foreach ($this->_applicationStatusModels as $applicationStatus) {
             $id = $applicationStatus->getId();
             $row = $this->displayApplicationStatusRow($applicationStatus, 'list');
             $body .= <<<HTML
-    <tr id="ux$id">
+    <tr id="ux$id" class="$rowStyle">
       $row
     </tr>
 
 HTML;
+            $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
         }
-        
+
         $body .= "  </tbody>\n</table>\n";
         return $body;
     }

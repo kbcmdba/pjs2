@@ -79,15 +79,17 @@ class KeywordListView extends ListViewBase
   <tbody>
 
 HTML;
+        $rowStyle = 'treven';
         foreach ($this->_keywordModels as $keywordModel) {
             $id = $keywordModel->getId();
             $row = $this->displayKeywordRow($keywordModel, 'list');
             $body .= <<<HTML
-    <tr id="ux$id">
+    <tr id="ux$id" class="$rowStyle">
       $row
     </tr>
 
 HTML;
+            $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
         }
         $body .= "  </tbody>\n</table>\n";
         return $body;
