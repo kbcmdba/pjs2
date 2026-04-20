@@ -28,42 +28,69 @@ require_once "Libs/autoload.php";
 ApiAuth::requireAuth();
 header('Content-Type: application/json; charset=utf-8');
 
+function jobToArray($job)
+{
+    return [
+        'id' => $job->getId(),
+        'primaryContactId' => $job->getPrimaryContactId(),
+        'companyId' => $job->getCompanyId(),
+        'applicationStatusId' => $job->getApplicationStatusId(),
+        'lastStatusChange' => $job->getLastStatusChange(),
+        'urgency' => $job->getUrgency(),
+        'nextActionDue' => $job->getNextActionDue(),
+        'nextAction' => $job->getNextAction(),
+        'positionTitle' => $job->getPositionTitle(),
+        'location' => $job->getLocation(),
+        'url' => $job->getUrl(),
+        'created' => $job->getCreated(),
+        'updated' => $job->getUpdated(),
+    ];
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        // Duplicate check by URL: GET api/jobs.php?url=X
+        $id = Tools::param('id');
         $url = Tools::param('url');
-        if ($url === '') {
-            http_response_code(400);
-            echo json_encode(['result' => 'FAILED', 'error' => 'url parameter is required']) . PHP_EOL;
-            exit(0);
-        }
         try {
             $jobController = new JobController('read');
-            $job = $jobController->getByUrl($url);
-            if ($job !== null) {
-                $companyName = '';
-                if ($job->getCompanyId()) {
-                    $cc = new CompanyController('read');
-                    $cm = $cc->get($job->getCompanyId());
-                    if ($cm) {
-                        $companyName = $cm->getCompanyName();
-                    }
+            if ($id !== '') {
+                // Get by ID: GET api/jobs.php?id=X
+                $job = $jobController->get($id);
+                if ($job === null) {
+                    http_response_code(404);
+                    echo json_encode(['result' => 'FAILED', 'error' => 'Job not found']) . PHP_EOL;
+                    exit(0);
                 }
                 echo json_encode([
                     'result' => 'OK',
-                    'found' => true,
-                    'job' => [
-                        'id' => $job->getId(),
-                        'positionTitle' => $job->getPositionTitle(),
-                        'companyId' => $job->getCompanyId(),
-                        'companyName' => $companyName,
-                        'url' => $job->getUrl(),
-                    ],
+                    'job' => jobToArray($job),
                 ]) . PHP_EOL;
+            } elseif ($url !== '') {
+                // Duplicate check by URL: GET api/jobs.php?url=X
+                $job = $jobController->getByUrl($url);
+                if ($job !== null) {
+                    echo json_encode([
+                        'result' => 'OK',
+                        'found' => true,
+                        'job' => jobToArray($job),
+                    ]) . PHP_EOL;
+                } else {
+                    echo json_encode(['result' => 'OK', 'found' => false]) . PHP_EOL;
+                }
             } else {
-                echo json_encode(['result' => 'OK', 'found' => false]) . PHP_EOL;
+                // List all: GET api/jobs.php
+                $jobs = $jobController->getAll();
+                $results = [];
+                foreach ($jobs as $job) {
+                    $results[] = jobToArray($job);
+                }
+                echo json_encode([
+                    'result' => 'OK',
+                    'count' => count($results),
+                    'jobs' => $results,
+                ]) . PHP_EOL;
             }
         } catch (ControllerException $e) {
             http_response_code(500);

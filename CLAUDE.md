@@ -85,17 +85,26 @@ JSON request bodies are decoded into `$_REQUEST`/`$_POST` by `ApiAuth::populateR
 
 | Method | URL | Purpose |
 |--------|-----|---------|
+| `GET` | `api/jobs.php` | List all jobs |
+| `GET` | `api/jobs.php?id=X` | Get job by ID |
 | `GET` | `api/jobs.php?url=X` | Check for duplicate job by URL |
 | `POST` | `api/jobs.php` | Create a job |
+| `GET` | `api/companies.php` | List all companies |
+| `GET` | `api/companies.php?id=X` | Get company by ID |
 | `GET` | `api/companies.php?name=X` | Find companies by name (returns all matches) |
 | `POST` | `api/companies.php` | Create a company |
+| `GET` | `api/contacts.php` | List all contacts |
+| `GET` | `api/contacts.php?id=X` | Get contact by ID |
 | `GET` | `api/contacts.php?email=X` | Find contact by email |
 | `POST` | `api/contacts.php` | Create a contact |
+| `GET` | `api/notes.php?id=X` | Get note by ID |
+| `GET` | `api/notes.php?appliesToTable=X&appliesToId=Y` | List notes for an entity |
 | `POST` | `api/notes.php` | Create a note |
 
 ### Response Format
 
 Success: HTTP 200/201 + `{"result": "OK", ...}`
+Not found: HTTP 404 + `{"result": "FAILED", "error": "... not found"}`
 Failure: HTTP 400/401/409/500 + `{"result": "FAILED", "error": "message"}`
 
 ### Consumer

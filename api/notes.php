@@ -28,9 +28,61 @@ require_once "Libs/autoload.php";
 ApiAuth::requireAuth();
 header('Content-Type: application/json; charset=utf-8');
 
+function noteToArray($n)
+{
+    return [
+        'id' => $n->getId(),
+        'appliesToTable' => $n->getAppliesToTable(),
+        'appliesToId' => $n->getAppliesToId(),
+        'noteText' => $n->getNoteText(),
+        'created' => $n->getCreated(),
+        'updated' => $n->getUpdated(),
+    ];
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
+    case 'GET':
+        $id = Tools::param('id');
+        $appliesToTable = Tools::param('appliesToTable');
+        $appliesToId = Tools::param('appliesToId');
+        try {
+            $noteController = new NoteController('read');
+            if ($id !== '') {
+                // Get by ID: GET api/notes.php?id=X
+                $note = $noteController->get($id);
+                if ($note === null) {
+                    http_response_code(404);
+                    echo json_encode(['result' => 'FAILED', 'error' => 'Note not found']) . PHP_EOL;
+                    exit(0);
+                }
+                echo json_encode([
+                    'result' => 'OK',
+                    'note' => noteToArray($note),
+                ]) . PHP_EOL;
+            } elseif ($appliesToTable !== '' && $appliesToId !== '') {
+                // List by entity: GET api/notes.php?appliesToTable=job&appliesToId=123
+                $notes = $noteController->getByTableAndId($appliesToTable, $appliesToId);
+                $results = [];
+                foreach ($notes as $n) {
+                    $results[] = noteToArray($n);
+                }
+                echo json_encode([
+                    'result' => 'OK',
+                    'count' => count($results),
+                    'notes' => $results,
+                ]) . PHP_EOL;
+            } else {
+                http_response_code(400);
+                echo json_encode(['result' => 'FAILED', 'error' => 'Provide id or appliesToTable+appliesToId']) . PHP_EOL;
+            }
+        } catch (ControllerException $e) {
+            http_response_code(500);
+            echo json_encode(['result' => 'FAILED', 'error' => $e->getMessage()]) . PHP_EOL;
+        }
+        break;
+
     case 'POST':
         // Create note: POST api/notes.php with JSON body
         ApiAuth::populateRequestFromJson();
@@ -57,7 +109,7 @@ switch ($method) {
 
     default:
         http_response_code(405);
-        header('Allow: POST');
+        header('Allow: GET, POST');
         echo json_encode(['result' => 'FAILED', 'error' => 'Method not allowed']) . PHP_EOL;
         break;
 }

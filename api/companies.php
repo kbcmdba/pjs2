@@ -28,36 +28,70 @@ require_once "Libs/autoload.php";
 ApiAuth::requireAuth();
 header('Content-Type: application/json; charset=utf-8');
 
+function companyToArray($c)
+{
+    return [
+        'id' => $c->getId(),
+        'agencyCompanyId' => $c->getAgencyCompanyId(),
+        'companyName' => $c->getCompanyName(),
+        'companyAddress1' => $c->getCompanyAddress1(),
+        'companyAddress2' => $c->getCompanyAddress2(),
+        'companyCity' => $c->getCompanyCity(),
+        'companyState' => $c->getCompanyState(),
+        'companyZip' => $c->getCompanyZip(),
+        'companyPhone' => $c->getCompanyPhone(),
+        'companyUrl' => $c->getCompanyUrl(),
+        'lastContacted' => $c->getLastContacted(),
+        'created' => $c->getCreated(),
+        'updated' => $c->getUpdated(),
+    ];
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        // Find companies by name: GET api/companies.php?name=X
-        // Returns all matches (a name may map to multiple locations).
+        $id = Tools::param('id');
         $name = Tools::param('name');
-        if ($name === '') {
-            http_response_code(400);
-            echo json_encode(['result' => 'FAILED', 'error' => 'name parameter is required']) . PHP_EOL;
-            exit(0);
-        }
         try {
             $companyController = new CompanyController('read');
-            $companies = $companyController->getByName($name);
-            $results = [];
-            foreach ($companies as $c) {
-                $results[] = [
-                    'id' => $c->getId(),
-                    'companyName' => $c->getCompanyName(),
-                    'companyCity' => $c->getCompanyCity(),
-                    'companyState' => $c->getCompanyState(),
-                    'companyUrl' => $c->getCompanyUrl(),
-                ];
+            if ($id !== '') {
+                // Get by ID: GET api/companies.php?id=X
+                $company = $companyController->get($id);
+                if ($company === null) {
+                    http_response_code(404);
+                    echo json_encode(['result' => 'FAILED', 'error' => 'Company not found']) . PHP_EOL;
+                    exit(0);
+                }
+                echo json_encode([
+                    'result' => 'OK',
+                    'company' => companyToArray($company),
+                ]) . PHP_EOL;
+            } elseif ($name !== '') {
+                // Find by name: GET api/companies.php?name=X
+                $companies = $companyController->getByName($name);
+                $results = [];
+                foreach ($companies as $c) {
+                    $results[] = companyToArray($c);
+                }
+                echo json_encode([
+                    'result' => 'OK',
+                    'count' => count($results),
+                    'companies' => $results,
+                ]) . PHP_EOL;
+            } else {
+                // List all: GET api/companies.php
+                $companies = $companyController->getAll();
+                $results = [];
+                foreach ($companies as $c) {
+                    $results[] = companyToArray($c);
+                }
+                echo json_encode([
+                    'result' => 'OK',
+                    'count' => count($results),
+                    'companies' => $results,
+                ]) . PHP_EOL;
             }
-            echo json_encode([
-                'result' => 'OK',
-                'count' => count($results),
-                'companies' => $results,
-            ]) . PHP_EOL;
         } catch (ControllerException $e) {
             http_response_code(500);
             echo json_encode(['result' => 'FAILED', 'error' => $e->getMessage()]) . PHP_EOL;
