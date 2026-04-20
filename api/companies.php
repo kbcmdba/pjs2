@@ -135,9 +135,48 @@ switch ($method) {
         }
         break;
 
+    case 'PUT':
+        // Update company: PUT api/companies.php with JSON body (id required)
+        ApiAuth::populateRequestFromJson();
+        $id = Tools::param('id');
+        if ($id === '') {
+            http_response_code(400);
+            echo json_encode(['result' => 'FAILED', 'error' => 'id is required']) . PHP_EOL;
+            exit(0);
+        }
+        try {
+            $companyController = new CompanyController();
+            $companyModel = $companyController->get($id);
+            if ($companyModel === null) {
+                http_response_code(404);
+                echo json_encode(['result' => 'FAILED', 'error' => 'Company not found']) . PHP_EOL;
+                exit(0);
+            }
+            $companyModel->setAgencyCompanyId(Tools::param('agencyCompanyId') ?: null);
+            $companyModel->setCompanyName(Tools::param('companyName'));
+            $companyModel->setCompanyAddress1(Tools::param('companyAddress1'));
+            $companyModel->setCompanyAddress2(Tools::param('companyAddress2'));
+            $companyModel->setCompanyCity(Tools::param('companyCity'));
+            $companyModel->setCompanyState(Tools::param('companyState'));
+            $companyModel->setCompanyZip(Tools::param('companyZip'));
+            $companyModel->setCompanyPhone(Tools::param('companyPhone'));
+            $companyModel->setCompanyUrl(Tools::param('companyUrl'));
+            $companyModel->setLastContacted(Tools::param('lastContacted'));
+            $result = $companyController->update($companyModel);
+            if (! ($result > 0)) {
+                throw new ControllerException("Update failed.");
+            }
+            $companyModel = $companyController->get($id);
+            echo json_encode(['result' => 'OK', 'company' => companyToArray($companyModel)]) . PHP_EOL;
+        } catch (ControllerException $e) {
+            http_response_code(400);
+            echo json_encode(['result' => 'FAILED', 'error' => $e->getMessage()]) . PHP_EOL;
+        }
+        break;
+
     default:
         http_response_code(405);
-        header('Allow: GET, POST');
+        header('Allow: GET, POST, PUT');
         echo json_encode(['result' => 'FAILED', 'error' => 'Method not allowed']) . PHP_EOL;
         break;
 }

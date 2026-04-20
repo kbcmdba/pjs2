@@ -151,9 +151,59 @@ switch ($method) {
         }
         break;
 
+    case 'PUT':
+        // Update job: PUT api/jobs.php with JSON body (id required)
+        ApiAuth::populateRequestFromJson();
+        $id = Tools::param('id');
+        if ($id === '') {
+            http_response_code(400);
+            echo json_encode(['result' => 'FAILED', 'error' => 'id is required']) . PHP_EOL;
+            exit(0);
+        }
+        try {
+            $jobController = new JobController();
+            $jobModel = $jobController->get($id);
+            if ($jobModel === null) {
+                http_response_code(404);
+                echo json_encode(['result' => 'FAILED', 'error' => 'Job not found']) . PHP_EOL;
+                exit(0);
+            }
+            $url = Tools::param('url');
+            if ($url !== '' && $url !== null) {
+                $existingJob = $jobController->getByUrl($url);
+                if ($existingJob !== null && $existingJob->getId() != $id) {
+                    http_response_code(409);
+                    echo json_encode([
+                        'result' => 'FAILED',
+                        'error' => 'Duplicate URL. Already exists as job #' . $existingJob->getId(),
+                    ]) . PHP_EOL;
+                    exit(0);
+                }
+            }
+            $jobModel->setPrimaryContactId(Tools::param('primaryContactId') ?: null);
+            $jobModel->setCompanyId(Tools::param('companyId') ?: null);
+            $jobModel->setApplicationStatusId(Tools::param('applicationStatusId'));
+            $jobModel->setLastStatusChange(Tools::param('lastStatusChange'));
+            $jobModel->setUrgency(Tools::param('urgency'));
+            $jobModel->setNextActionDue(Tools::param('nextActionDue'));
+            $jobModel->setNextAction(Tools::param('nextAction'));
+            $jobModel->setPositionTitle(Tools::param('positionTitle'));
+            $jobModel->setLocation(Tools::param('location'));
+            $jobModel->setUrl($url);
+            $result = $jobController->update($jobModel);
+            if (! ($result > 0)) {
+                throw new ControllerException("Update failed.");
+            }
+            echo json_encode(['result' => 'OK', 'job' => jobToArray($jobModel)]) . PHP_EOL;
+        } catch (ControllerException $e) {
+            http_response_code(400);
+            echo json_encode(['result' => 'FAILED', 'error' => $e->getMessage()]) . PHP_EOL;
+        }
+        break;
+
     default:
         http_response_code(405);
-        header('Allow: GET, POST');
+        header('Allow: GET, POST, PUT');
         echo json_encode(['result' => 'FAILED', 'error' => 'Method not allowed']) . PHP_EOL;
         break;
 }

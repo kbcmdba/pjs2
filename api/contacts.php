@@ -128,9 +128,43 @@ switch ($method) {
         }
         break;
 
+    case 'PUT':
+        // Update contact: PUT api/contacts.php with JSON body (id required)
+        ApiAuth::populateRequestFromJson();
+        $id = Tools::param('id');
+        if ($id === '') {
+            http_response_code(400);
+            echo json_encode(['result' => 'FAILED', 'error' => 'id is required']) . PHP_EOL;
+            exit(0);
+        }
+        try {
+            $contactController = new ContactController();
+            $contactModel = $contactController->get($id);
+            if ($contactModel === null) {
+                http_response_code(404);
+                echo json_encode(['result' => 'FAILED', 'error' => 'Contact not found']) . PHP_EOL;
+                exit(0);
+            }
+            $contactModel->setContactCompanyId(Tools::param('contactCompanyId') ?: null);
+            $contactModel->setContactName(Tools::param('contactName'));
+            $contactModel->setContactEmail(Tools::param('contactEmail'));
+            $contactModel->setContactPhone(Tools::param('contactPhone'));
+            $contactModel->setContactAlternatePhone(Tools::param('contactAlternatePhone'));
+            $contactModel->setLastContacted(Tools::param('lastContacted') ?: null);
+            $result = $contactController->update($contactModel);
+            if (! ($result > 0)) {
+                throw new ControllerException("Update failed.");
+            }
+            echo json_encode(['result' => 'OK', 'contact' => contactToArray($contactModel)]) . PHP_EOL;
+        } catch (ControllerException $e) {
+            http_response_code(400);
+            echo json_encode(['result' => 'FAILED', 'error' => $e->getMessage()]) . PHP_EOL;
+        }
+        break;
+
     default:
         http_response_code(405);
-        header('Allow: GET, POST');
+        header('Allow: GET, POST, PUT');
         echo json_encode(['result' => 'FAILED', 'error' => 'Method not allowed']) . PHP_EOL;
         break;
 }

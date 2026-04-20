@@ -107,9 +107,35 @@ switch ($method) {
         }
         break;
 
+    case 'PUT':
+        // Update note: PUT api/notes.php with JSON body (id required)
+        ApiAuth::populateRequestFromJson();
+        $id = Tools::param('id');
+        if ($id === '') {
+            http_response_code(400);
+            echo json_encode(['result' => 'FAILED', 'error' => 'id is required']) . PHP_EOL;
+            exit(0);
+        }
+        try {
+            $noteController = new NoteController();
+            $noteModel = $noteController->get($id);
+            if ($noteModel === null) {
+                http_response_code(404);
+                echo json_encode(['result' => 'FAILED', 'error' => 'Note not found']) . PHP_EOL;
+                exit(0);
+            }
+            $noteModel->setNoteText(Tools::param('noteText'));
+            $noteController->update($noteModel);
+            echo json_encode(['result' => 'OK', 'note' => noteToArray($noteModel)]) . PHP_EOL;
+        } catch (ControllerException $e) {
+            http_response_code(400);
+            echo json_encode(['result' => 'FAILED', 'error' => $e->getMessage()]) . PHP_EOL;
+        }
+        break;
+
     default:
         http_response_code(405);
-        header('Allow: GET, POST');
+        header('Allow: GET, POST, PUT');
         echo json_encode(['result' => 'FAILED', 'error' => 'Method not allowed']) . PHP_EOL;
         break;
 }
