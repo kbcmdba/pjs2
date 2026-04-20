@@ -77,7 +77,7 @@ class ContactListView extends ListViewBase
     <tr>
       <th>Actions</th>
       <th>Company</th>
-      <th>Name</th>
+      <th class="required" title="Required field">Name</th>
       <th>Email</th>
       <th>Phone</th>
       <th>Alternate Phone</th>
@@ -136,7 +136,7 @@ HTML;
           $errorMessage
       </td>
       <td>$companyNames</td>
-      <td><input type="text" id="nameix$id" value="$name"</td>
+      <td><input type="text" id="nameix$id" value="$name" class="required" title="Required field"</td>
       <td><input type="email" id="emailix$id" value="$email"</td>
       <td><input type="text" id="phoneix$id" value="$aphone"</td>
       <td><input type="text" id="alternatePhoneix$id" value="$bphone" /></td>
@@ -156,7 +156,7 @@ RETVAL;
           $errorMessage
       </td>
       <td>$companyNames</td>
-      <td><input type="text" id="name$id" value="$name"</td>
+      <td><input type="text" id="name$id" value="$name" class="required" title="Required field"</td>
       <td><input type="email" id="email$id" value="$email"</td>
       <td><input type="text" id="phone$id" value="$aphone"</td>
       <td><input type="text" id="alternatePhone$id" value="$bphone" /></td>

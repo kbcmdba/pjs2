@@ -61,7 +61,7 @@ class ContactModel extends ModelBase
      */
     public function validateForAdd()
     {
-        return ((Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('contactName'))) && (! Tools::isNullOrEmptyString(Tools::param('contactEmail'))));
+        return ((Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('contactName'))));
     }
 
     /**
@@ -71,7 +71,7 @@ class ContactModel extends ModelBase
      */
     public function validateForUpdate()
     {
-        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('contactName'))) && (! Tools::isNullOrEmptyString(Tools::param('contactEmail'))));
+        return ((! Tools::isNullOrEmptyString(Tools::param('id'))) && (! Tools::isNullOrEmptyString(Tools::param('contactName'))));
     }
 
     public function populateFromForm()

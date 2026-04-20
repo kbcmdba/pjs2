@@ -328,6 +328,88 @@ form input[type="submit"]:hover {
 	text-decoration: underline ;
 }
 
+/* Quick Add Company Modal */
+#addCompanyOverlay {
+	display: none ;
+	position: fixed ;
+	top: 0 ;
+	left: 0 ;
+	width: 100% ;
+	height: 100% ;
+	background-color: rgba(0, 0, 0, 0.5) ;
+	z-index: 1500 ;
+	justify-content: center ;
+	align-items: center ;
+}
+
+#addCompanyOverlay[style*="display: block"] {
+	display: flex !important ;
+}
+
+#addCompanyModal {
+	background-color: #fff ;
+	border-radius: 6px ;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) ;
+	width: 400px ;
+	max-width: 90% ;
+}
+
+#addCompanyHeader {
+	background-color: #4a4a8a ;
+	color: #fff ;
+	padding: 12px 16px ;
+	border-radius: 6px 6px 0 0 ;
+	display: flex ;
+	justify-content: space-between ;
+	align-items: center ;
+	font-weight: bold ;
+}
+
+#addCompanyBody {
+	padding: 16px ;
+}
+
+#addCompanyBody label {
+	display: block ;
+	margin-top: 8px ;
+	margin-bottom: 4px ;
+	font-size: 0.9em ;
+	color: #555 ;
+}
+
+#addCompanyBody label:first-child {
+	margin-top: 0 ;
+}
+
+#addCompanyBody input[type="text"] {
+	width: 100% ;
+	box-sizing: border-box ;
+	padding: 6px ;
+	border: 1px solid #c8c8d8 ;
+	border-radius: 3px ;
+}
+
+.quick-add-btn {
+	cursor: pointer ;
+	color: #4a4a8a ;
+	font-weight: bold ;
+	font-size: 1.1em ;
+	text-decoration: none ;
+	margin-left: 4px ;
+}
+
+/* Required field indicator */
+th.required::after,
+label.required::after {
+	content: " *" ;
+	color: #cc0000 ;
+	font-weight: bold ;
+}
+
+input.required {
+	border: 2px solid #cc0000 ;
+}
+
 /* Hide closed jobs toggle */
 table.hide-closed tr.closed-job {
 	display: none ;

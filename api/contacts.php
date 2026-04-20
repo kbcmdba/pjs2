@@ -28,34 +28,65 @@ require_once "Libs/autoload.php";
 ApiAuth::requireAuth();
 header('Content-Type: application/json; charset=utf-8');
 
+function contactToArray($c)
+{
+    return [
+        'id' => $c->getId(),
+        'contactCompanyId' => $c->getContactCompanyId(),
+        'contactName' => $c->getContactName(),
+        'contactEmail' => $c->getContactEmail(),
+        'contactPhone' => $c->getContactPhone(),
+        'contactAlternatePhone' => $c->getContactAlternatePhone(),
+        'lastContacted' => $c->getLastContacted(),
+        'created' => $c->getCreated(),
+        'updated' => $c->getUpdated(),
+    ];
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        // Find contact by email: GET api/contacts.php?email=X
+        $id = Tools::param('id');
         $email = Tools::param('email');
-        if ($email === '') {
-            http_response_code(400);
-            echo json_encode(['result' => 'FAILED', 'error' => 'email parameter is required']) . PHP_EOL;
-            exit(0);
-        }
         try {
             $contactController = new ContactController('read');
-            $contact = $contactController->getByEmail($email);
-            if ($contact !== null) {
+            if ($id !== '') {
+                // Get by ID: GET api/contacts.php?id=X
+                $contact = $contactController->get($id);
+                if ($contact === null) {
+                    http_response_code(404);
+                    echo json_encode(['result' => 'FAILED', 'error' => 'Contact not found']) . PHP_EOL;
+                    exit(0);
+                }
                 echo json_encode([
                     'result' => 'OK',
-                    'found' => true,
-                    'contact' => [
-                        'id' => $contact->getId(),
-                        'contactName' => $contact->getContactName(),
-                        'contactEmail' => $contact->getContactEmail(),
-                        'contactCompanyId' => $contact->getContactCompanyId(),
-                        'contactPhone' => $contact->getContactPhone(),
-                    ],
+                    'contact' => contactToArray($contact),
                 ]) . PHP_EOL;
+            } elseif ($email !== '') {
+                // Find by email: GET api/contacts.php?email=X
+                $contact = $contactController->getByEmail($email);
+                if ($contact !== null) {
+                    echo json_encode([
+                        'result' => 'OK',
+                        'found' => true,
+                        'contact' => contactToArray($contact),
+                    ]) . PHP_EOL;
+                } else {
+                    echo json_encode(['result' => 'OK', 'found' => false]) . PHP_EOL;
+                }
             } else {
-                echo json_encode(['result' => 'OK', 'found' => false]) . PHP_EOL;
+                // List all: GET api/contacts.php
+                $contacts = $contactController->getAll();
+                $results = [];
+                foreach ($contacts as $c) {
+                    $results[] = contactToArray($c);
+                }
+                echo json_encode([
+                    'result' => 'OK',
+                    'count' => count($results),
+                    'contacts' => $results,
+                ]) . PHP_EOL;
             }
         } catch (ControllerException $e) {
             http_response_code(500);
@@ -69,9 +100,9 @@ switch ($method) {
         $contactName = Tools::param('contactName');
         $contactEmail = Tools::param('contactEmail');
 
-        if ($contactName === '' || $contactEmail === '') {
+        if ($contactName === '') {
             http_response_code(400);
-            echo json_encode(['result' => 'FAILED', 'error' => 'contactName and contactEmail are required']) . PHP_EOL;
+            echo json_encode(['result' => 'FAILED', 'error' => 'contactName is required']) . PHP_EOL;
             exit(0);
         }
 
