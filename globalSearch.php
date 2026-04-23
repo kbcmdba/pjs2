@@ -69,7 +69,7 @@ if ($result->num_rows > 0) {
         $status = Tools::htmlOut($row['statusValue'] ?? '');
         $nextAction = Tools::htmlOut($row['nextAction']);
         $id = $row['id'];
-        $body .= "<tr style=\"cursor: pointer;\" onclick=\"window.location='jobs.php#ux$id'\">";
+        $body .= "<tr style=\"cursor: pointer;\" onclick=\"window.location='jobDetail.php?id=$id'\">";
         $body .= "<td>$title</td><td>$company</td><td>$location</td><td>$status</td><td>$nextAction</td>";
         $body .= "</tr>\n";
     }
@@ -102,7 +102,7 @@ if ($result->num_rows > 0) {
         $phone = Tools::htmlOut($row['companyPhone']);
         $url = Tools::htmlOut($row['companyUrl']);
         $id = $row['id'];
-        $body .= "<tr style=\"cursor: pointer;\" onclick=\"window.location='companies.php#ux$id-1'\">";
+        $body .= "<tr style=\"cursor: pointer;\" onclick=\"window.location='companyDetail.php?id=$id'\">";
         $body .= "<td>$name</td><td>$city</td><td>$state</td><td>$phone</td><td>$url</td></tr>\n";
     }
     $body .= "</tbody>\n</table>\n";
@@ -133,7 +133,7 @@ if ($result->num_rows > 0) {
         $phone = Tools::htmlOut($row['contactPhone']);
         $company = Tools::htmlOut($row['companyName'] ?? '');
         $id = $row['id'];
-        $body .= "<tr style=\"cursor: pointer;\" onclick=\"window.location='contacts.php#ux$id'\">";
+        $body .= "<tr style=\"cursor: pointer;\" onclick=\"window.location='contactDetail.php?id=$id'\">";
         $body .= "<td>$name</td><td>$email</td><td>$phone</td><td>$company</td></tr>\n";
     }
     $body .= "</tbody>\n</table>\n";
@@ -164,10 +164,10 @@ if ($result->num_rows > 0) {
         }
         $created = Tools::htmlOut($row['created']);
         // Map note's parent table to its listing page
-        $pageMap = ['job' => 'jobs.php', 'company' => 'companies.php', 'contact' => 'contacts.php'];
+        $pageMap = ['job' => 'jobDetail.php', 'company' => 'companyDetail.php', 'contact' => 'contactDetail.php'];
         $targetPage = isset($pageMap[$table]) ? $pageMap[$table] : '';
         if ($targetPage) {
-            $body .= "<tr style=\"cursor: pointer;\" onclick=\"window.location='$targetPage#ux$entityId'\">";
+            $body .= "<tr style=\"cursor: pointer;\" onclick=\"window.location='$targetPage?id=$entityId'\">";
         } else {
             $body .= "<tr>";
         }
