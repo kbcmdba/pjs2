@@ -154,3 +154,112 @@ function deleteRow( rowId ) {
     row.parentNode.removeChild( row ) ;
     return false ;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+// Quick Add Company modal
+
+var quickAddCompanyTargetSelectId = null ;
+
+/**
+ * Open the quick add company modal.
+ * After saving, the new company will be added to the target select and selected.
+ *
+ * @param {String} selectId  The DOM id of the company select dropdown to update
+ */
+function openAddCompanyModal( selectId ) {
+    quickAddCompanyTargetSelectId = selectId ;
+    document.getElementById( 'quickCompanyName' ).value = '' ;
+    document.getElementById( 'quickCompanyUrl' ).value = '' ;
+    document.getElementById( 'quickCompanyError' ).style.display = 'none' ;
+    document.getElementById( 'addCompanyOverlay' ).style.display = 'block' ;
+    document.getElementById( 'quickCompanyName' ).focus() ;
+}
+
+/**
+ * Close the quick add company modal.
+ */
+function closeAddCompanyModal() {
+    document.getElementById( 'addCompanyOverlay' ).style.display = 'none' ;
+    quickAddCompanyTargetSelectId = null ;
+}
+
+/**
+ * Save the new company and update the target dropdown.
+ */
+function saveQuickAddCompany() {
+    var name = document.getElementById( 'quickCompanyName' ).value.trim() ;
+    var url  = document.getElementById( 'quickCompanyUrl' ).value.trim() ;
+    var err  = document.getElementById( 'quickCompanyError' ) ;
+    if ( name === '' ) {
+        err.innerHTML = 'Company name is required.' ;
+        err.style.display = 'block' ;
+        return ;
+    }
+    var data = 'companyName=' + encodeURIComponent( name )
+             + '&companyUrl=' + encodeURIComponent( url ) ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXQuickAddCompany.php', data, 'quickAdd', true, function( xhttp, targetId ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        if ( jsonObj.result === 'OK' ) {
+            // Add the new company to the target select and select it
+            var sel = document.getElementById( quickAddCompanyTargetSelectId ) ;
+            if ( sel ) {
+                var opt = document.createElement( 'option' ) ;
+                opt.value = jsonObj.companyId ;
+                opt.text = jsonObj.companyName ;
+                opt.selected = true ;
+                // Insert alphabetically
+                var inserted = false ;
+                for ( var i = 1 ; i < sel.options.length ; i++ ) {
+                    if ( sel.options[ i ].text.toLowerCase() > jsonObj.companyName.toLowerCase() ) {
+                        sel.add( opt, sel.options[ i ] ) ;
+                        inserted = true ;
+                        break ;
+                    }
+                }
+                if ( ! inserted ) {
+                    sel.add( opt ) ;
+                }
+            }
+            // Also update any other company selects on the page
+            var allSelects = document.querySelectorAll( 'select[id^="companyId"]' ) ;
+            for ( var j = 0 ; j < allSelects.length ; j++ ) {
+                if ( allSelects[ j ].id !== quickAddCompanyTargetSelectId ) {
+                    var opt2 = document.createElement( 'option' ) ;
+                    opt2.value = jsonObj.companyId ;
+                    opt2.text = jsonObj.companyName ;
+                    var inserted2 = false ;
+                    for ( var k = 1 ; k < allSelects[ j ].options.length ; k++ ) {
+                        if ( allSelects[ j ].options[ k ].text.toLowerCase() > jsonObj.companyName.toLowerCase() ) {
+                            allSelects[ j ].add( opt2, allSelects[ j ].options[ k ] ) ;
+                            inserted2 = true ;
+                            break ;
+                        }
+                    }
+                    if ( ! inserted2 ) {
+                        allSelects[ j ].add( opt2 ) ;
+                    }
+                }
+            }
+            closeAddCompanyModal() ;
+        } else {
+            err.innerHTML = jsonObj.error || 'Failed to add company.' ;
+            err.style.display = 'block' ;
+        }
+    } ) ;
+}
+
+/**
+ * On page load, if the URL has a hash like #ux123, scroll to and highlight that row.
+ * Used by globalSearch.php to deep-link into listing pages.
+ */
+window.addEventListener( 'DOMContentLoaded', function() {
+    var hash = window.location.hash ;
+    if ( ! hash ) return ;
+    var id = hash.substring( 1 ) ;
+    var el = document.getElementById( id ) ;
+    if ( ! el ) return ;
+    el.scrollIntoView( { behavior: 'smooth', block: 'center' } ) ;
+    el.style.outline = '3px solid #4a4a8a' ;
+    setTimeout( function() { el.style.outline = '' ; }, 3000 ) ;
+} ) ;
