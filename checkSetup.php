@@ -25,6 +25,18 @@ namespace com\kbcmdba\pjs2;
 require_once 'Libs/autoload.php';
 
 $isCli = (php_sapi_name() === 'cli');
+// In browser mode, check if the user is authenticated (but don't require it).
+// Sensitive details (DB host, credentials, API key) are hidden from anonymous users.
+$isAuthenticated = $isCli;
+if (! $isCli) {
+    try {
+        $auth = new Auth();
+        $isAuthenticated = $auth->isAuthorized();
+    } catch (\Exception $e) {
+        // Auth may fail if DB isn't set up yet — that's fine, treat as unauthenticated
+        $isAuthenticated = false;
+    }
+}
 $pass = 0;
 $fail = 0;
 $warn = 0;
@@ -68,11 +80,11 @@ if ($config !== null) {
     $dbName = $config->getDbName();
     $dbPort = $config->getDbPort();
 
-    check('dbHost is set', $dbHost !== null && $dbHost !== '', "dbHost: $dbHost");
-    check('dbUser is set', $dbUser !== null && $dbUser !== '', "dbUser: $dbUser");
+    check('dbHost is set', $dbHost !== null && $dbHost !== '', $isAuthenticated ? "dbHost: $dbHost" : '');
+    check('dbUser is set', $dbUser !== null && $dbUser !== '', $isAuthenticated ? "dbUser: $dbUser" : '');
     check('dbPass is not the sample default', $dbPass !== 'SomethingComplicated', $dbPass === 'SomethingComplicated' ? 'Still using sample password' : '');
-    check('dbName is set', $dbName !== null && $dbName !== '', "dbName: $dbName");
-    check('dbPort is set', $dbPort !== null && $dbPort !== '', "dbPort: $dbPort");
+    check('dbName is set', $dbName !== null && $dbName !== '', $isAuthenticated ? "dbName: $dbName" : '');
+    check('dbPort is set', $dbPort !== null && $dbPort !== '', $isAuthenticated ? "dbPort: $dbPort" : '');
 
     // 4. API key configured
     $apiKey = $config->getApiKey();
@@ -337,7 +349,7 @@ if ($isCli) {
     echo sprintf("  %d passed, %d failed, %d warnings\n\n", $pass, $fail, $warn);
     exit($fail > 0 ? 1 : 0);
 } else {
-    $page = new PJSWebPage($config ? $config->getTitle() . ' - Setup Check' : 'PJS2 - Setup Check');
+    $page = new PJSWebPage($config ? $config->getTitle() . ' - Setup Check' : 'PJS2 - Setup Check', true);
     $body = "<h2>Setup Check</h2>\n<table>\n";
     $body .= "<thead><tr><th>Status</th><th>Check</th><th>Detail</th></tr></thead>\n<tbody>\n";
     foreach ($results as $r) {
