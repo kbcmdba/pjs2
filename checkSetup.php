@@ -158,7 +158,7 @@ if ($config !== null) {
     if ($apiKey !== '' && $apiKey !== 'ChangeThisToARandomString') {
         // Determine base URL
         if ($isCli) {
-            $baseUrl = 'http://127.0.0.1/pjs2/';
+            $baseUrl = 'http://' . gethostname() . '/pjs2/';
         } else {
             $scheme = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
             $host = $_SERVER['HTTP_HOST'];
