@@ -152,6 +152,189 @@ if ($config !== null) {
             check('Application statuses populated', $asCount > 0, $asCount == 0 ? 'No application statuses — job entry will fail' : "$asCount status(es)");
         }
     }
+
+    // 10. REST API connectivity
+    $apiKey = $config->getApiKey();
+    if ($apiKey !== '' && $apiKey !== 'ChangeThisToARandomString') {
+        // Determine base URL
+        if ($isCli) {
+            $baseUrl = 'http://127.0.0.1/pjs2/';
+        } else {
+            $scheme = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+            $host = $_SERVER['HTTP_HOST'];
+            $path = dirname($_SERVER['SCRIPT_NAME']);
+            $baseUrl = $scheme . '://' . $host . $path . '/';
+        }
+        $apiUrl = $baseUrl . 'api/companies.php';
+
+        // Test with valid API key
+        $validCtx = stream_context_create(['http' => [
+            'method' => 'GET',
+            'header' => "X-API-Key: $apiKey\r\n",
+            'timeout' => 5,
+            'ignore_errors' => true,
+        ]]);
+        $validResponse = @file_get_contents($apiUrl, false, $validCtx);
+        $validStatus = 0;
+        if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) {
+            $validStatus = (int) $m[1];
+        }
+        check('API responds with valid key', $validStatus === 200, $validStatus === 200 ? '' : "HTTP $validStatus from $apiUrl");
+
+        // Test with bad API key (should get 401)
+        $badCtx = stream_context_create(['http' => [
+            'method' => 'GET',
+            'header' => "X-API-Key: definitely-not-the-right-key\r\n",
+            'timeout' => 5,
+            'ignore_errors' => true,
+        ]]);
+        $badResponse = @file_get_contents($apiUrl, false, $badCtx);
+        $badStatus = 0;
+        if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) {
+            $badStatus = (int) $m[1];
+        }
+        check('API rejects bad key', $badStatus === 401, $badStatus === 401 ? '' : "Expected 401, got HTTP $badStatus");
+
+        // 11. API CRUD smoke tests
+        // Uses "__PJS2_SETUP_TEST__" prefix — data that can't exist in real usage.
+        // Cleanup happens via direct SQL regardless of pass/fail.
+        $testPrefix = '__PJS2_SETUP_TEST__';
+        $testCompanyName = $testPrefix . 'Company_' . time();
+        $testContactName = $testPrefix . 'Contact_' . time();
+        $testIds = ['company' => null, 'contact' => null, 'note' => null];
+
+        // Helper: make an API request and return [httpStatus, decodedBody]
+        $apiCall = function ($endpoint, $method, $body = null) use ($baseUrl, $apiKey) {
+            $headers = "X-API-Key: $apiKey\r\n";
+            $opts = [
+                'method' => $method,
+                'header' => $headers,
+                'timeout' => 5,
+                'ignore_errors' => true,
+            ];
+            if ($body !== null) {
+                $opts['header'] .= "Content-Type: application/json\r\n";
+                $opts['content'] = json_encode($body);
+            }
+            $ctx = stream_context_create(['http' => $opts]);
+            $url = $baseUrl . 'api/' . $endpoint;
+            $response = @file_get_contents($url, false, $ctx);
+            $status = 0;
+            if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) {
+                $status = (int) $m[1];
+            }
+            return [$status, json_decode($response, true)];
+        };
+
+        // Helper: clean up test data (always runs)
+        $cleanup = function () use ($testPrefix, $dbConnected, $dbh) {
+            if (! $dbConnected) {
+                return;
+            }
+            // Notes first (no FK but clean up by matching test entities)
+            $dbh->query("DELETE FROM note WHERE noteText LIKE '" . $dbh->real_escape_string($testPrefix) . "%'");
+            $dbh->query("DELETE FROM contact WHERE contactName LIKE '" . $dbh->real_escape_string($testPrefix) . "%'");
+            $dbh->query("DELETE FROM company WHERE companyName LIKE '" . $dbh->real_escape_string($testPrefix) . "%'");
+        };
+
+        // Clean up any leftovers from a prior failed run
+        $cleanup();
+
+        try {
+            // CREATE company
+            list($status, $body) = $apiCall('companies.php', 'POST', [
+                'companyName' => $testCompanyName,
+                'companyCity' => $testPrefix . 'City',
+            ]);
+            $companyCreated = ($status === 201 && isset($body['id']));
+            check('API: Create company', $companyCreated, $companyCreated ? "id={$body['id']}" : "HTTP $status");
+            if ($companyCreated) {
+                $testIds['company'] = $body['id'];
+            }
+
+            // GET company by ID
+            if ($testIds['company']) {
+                list($status, $body) = $apiCall('companies.php?id=' . $testIds['company'], 'GET');
+                $getOk = ($status === 200 && isset($body['company']['companyName']) && $body['company']['companyName'] === $testCompanyName);
+                check('API: Get company by ID', $getOk, $getOk ? '' : "HTTP $status");
+            }
+
+            // GET company by name (list/search)
+            if ($testIds['company']) {
+                list($status, $body) = $apiCall('companies.php?name=' . urlencode($testCompanyName), 'GET');
+                $searchOk = ($status === 200 && isset($body['count']) && $body['count'] >= 1);
+                check('API: Find company by name', $searchOk, $searchOk ? "count={$body['count']}" : "HTTP $status");
+            }
+
+            // UPDATE company
+            if ($testIds['company']) {
+                $updatedCity = $testPrefix . 'UpdatedCity';
+                list($status, $body) = $apiCall('companies.php', 'PUT', [
+                    'id' => $testIds['company'],
+                    'companyName' => $testCompanyName,
+                    'companyCity' => $updatedCity,
+                ]);
+                $updateOk = ($status === 200 && isset($body['company']['companyCity']) && $body['company']['companyCity'] === $updatedCity);
+                check('API: Update company', $updateOk, $updateOk ? '' : "HTTP $status");
+            }
+
+            // CREATE contact (linked to test company)
+            list($status, $body) = $apiCall('contacts.php', 'POST', [
+                'contactName' => $testContactName,
+                'companyId' => $testIds['company'],
+            ]);
+            $contactCreated = ($status === 201 && isset($body['id']));
+            check('API: Create contact', $contactCreated, $contactCreated ? "id={$body['id']}" : "HTTP $status");
+            if ($contactCreated) {
+                $testIds['contact'] = $body['id'];
+            }
+
+            // GET contact by ID
+            if ($testIds['contact']) {
+                list($status, $body) = $apiCall('contacts.php?id=' . $testIds['contact'], 'GET');
+                $getOk = ($status === 200 && isset($body['contact']['contactName']) && $body['contact']['contactName'] === $testContactName);
+                check('API: Get contact by ID', $getOk, $getOk ? '' : "HTTP $status");
+            }
+
+            // CREATE note (on test company)
+            if ($testIds['company']) {
+                list($status, $body) = $apiCall('notes.php', 'POST', [
+                    'appliesToTable' => 'company',
+                    'appliesToId' => $testIds['company'],
+                    'noteText' => $testPrefix . 'This is a test note',
+                ]);
+                $noteCreated = ($status === 201 && isset($body['id']));
+                check('API: Create note', $noteCreated, $noteCreated ? "id={$body['id']}" : "HTTP $status");
+                if ($noteCreated) {
+                    $testIds['note'] = $body['id'];
+                }
+            }
+
+            // GET notes by entity
+            if ($testIds['company']) {
+                list($status, $body) = $apiCall('notes.php?appliesToTable=company&appliesToId=' . $testIds['company'], 'GET');
+                $notesOk = ($status === 200 && isset($body['count']) && $body['count'] >= 1);
+                check('API: List notes by entity', $notesOk, $notesOk ? "count={$body['count']}" : "HTTP $status");
+            }
+
+            // UPDATE note
+            if ($testIds['note']) {
+                $updatedText = $testPrefix . 'Updated test note';
+                list($status, $body) = $apiCall('notes.php', 'PUT', [
+                    'id' => $testIds['note'],
+                    'noteText' => $updatedText,
+                ]);
+                $updateOk = ($status === 200 && isset($body['note']['noteText']) && $body['note']['noteText'] === $updatedText);
+                check('API: Update note', $updateOk, $updateOk ? '' : "HTTP $status");
+            }
+
+            // GET 404 for nonexistent ID
+            list($status, $body) = $apiCall('companies.php?id=999999999', 'GET');
+            check('API: 404 for nonexistent record', $status === 404, $status === 404 ? '' : "Expected 404, got HTTP $status");
+        } finally {
+            $cleanup();
+        }
+    }
 }
 
 // Output results
