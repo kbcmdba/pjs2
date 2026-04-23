@@ -95,13 +95,7 @@ if ($config !== null) {
         true
     );
 
-    // 5. Auth settings
-    check(
-        'skipAuth is disabled',
-        $config->getSkipAuth() !== '1',
-        $config->getSkipAuth() === '1' ? 'skipAuth is enabled — disable for production' : '',
-        true
-    );
+    // 5. Auth settings (skipAuth checked after user table, see below)
     check(
         'resetOk is disabled',
         $config->getResetOk() !== '1',
@@ -151,10 +145,21 @@ if ($config !== null) {
         }
 
         // 8. user table has at least one admin
+        $adminCount = 0;
         if (in_array('user', $actualTables)) {
             $userResult = $dbh->query("SELECT COUNT(*) AS cnt FROM user WHERE role = 'admin'");
-            $adminCount = $userResult ? $userResult->fetch_assoc()['cnt'] : 0;
+            $adminCount = $userResult ? (int) $userResult->fetch_assoc()['cnt'] : 0;
             check('At least one admin user exists', $adminCount > 0, $adminCount == 0 ? 'No admin users — login will not work' : "$adminCount admin user(s)");
+        }
+
+        // 8b. skipAuth — context depends on whether users exist
+        $skipAuth = $config->getSkipAuth() === '1';
+        if ($adminCount === 0) {
+            // No users — skipAuth SHOULD be enabled so the first user can be created
+            check('skipAuth enabled for initial setup', $skipAuth, $skipAuth ? 'Disable after creating the first admin user' : 'No admin users exist — enable skipAuth in config.xml to create the first user', ! $skipAuth);
+        } else {
+            // Users exist — skipAuth should be disabled
+            check('skipAuth is disabled', ! $skipAuth, $skipAuth ? 'skipAuth is enabled — disable for production' : '', $skipAuth);
         }
 
         // 9. applicationStatus has data (required for job entry)
