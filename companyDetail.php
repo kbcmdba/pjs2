@@ -51,8 +51,8 @@ if (! $company) {
 }
 
 $name = Tools::htmlOut($company['companyName']);
-$body = "<h2>$name</h2>\n";
-$body .= "<p><a href=\"companies.php\">&larr; Back to Companies</a></p>\n";
+$body = Breadcrumb::render('company', $company['companyName']);
+$body .= "<h2>$name</h2>\n";
 
 // Company info
 $body .= "<table>\n<caption>Company Information</caption>\n<tbody>\n";
@@ -106,7 +106,8 @@ if ($contacts->num_rows > 0) {
         $cName = Tools::htmlOut($c['contactName']);
         $cId = $c['id'];
         $body .= "<tr>";
-        $body .= "<td><a href=\"contactDetail.php?id=$cId\">$cName</a></td>";
+        $fromParams = Breadcrumb::buildFromParams('company', $id, $company['companyName']);
+        $body .= "<td><a href=\"contactDetail.php?id=$cId$fromParams\">$cName</a></td>";
         $body .= "<td>" . Tools::htmlOut($c['contactEmail']) . "</td>";
         $body .= "<td>" . Tools::htmlOut($c['contactPhone']) . "</td>";
         $body .= "<td>" . Tools::htmlOut($c['contactAlternatePhone']) . "</td>";
@@ -136,7 +137,8 @@ if ($jobs->num_rows > 0) {
         $jTitle = Tools::htmlOut($j['positionTitle']);
         $jId = $j['id'];
         $body .= "<tr>";
-        $body .= "<td><a href=\"jobDetail.php?id=$jId\">$jTitle</a></td>";
+        $fromParams = Breadcrumb::buildFromParams('company', $id, $company['companyName']);
+        $body .= "<td><a href=\"jobDetail.php?id=$jId$fromParams\">$jTitle</a></td>";
         $body .= "<td>" . Tools::htmlOut($j['location']) . "</td>";
         $body .= "<td>" . Tools::htmlOut($j['statusValue'] ?? '') . "</td>";
         $body .= "<td>" . Tools::htmlOut($j['lastStatusChange']) . "</td>";

@@ -59,8 +59,8 @@ if (! $job) {
 }
 
 $title = Tools::htmlOut($job['positionTitle']);
-$body = "<h2>$title</h2>\n";
-$body .= "<p><a href=\"jobs.php\">&larr; Back to Jobs</a></p>\n";
+$body = Breadcrumb::render('job', $job['positionTitle']);
+$body .= "<h2>$title</h2>\n";
 
 // Job info
 $body .= "<table>\n<caption>Job Information</caption>\n<tbody>\n";
@@ -69,7 +69,8 @@ $body .= "<table>\n<caption>Job Information</caption>\n<tbody>\n";
 $companyVal = '';
 if ($job['companyId']) {
     $companyName = Tools::htmlOut($job['companyName'] ?? '');
-    $companyVal = "<a href=\"companyDetail.php?id={$job['companyId']}\">$companyName</a>";
+    $fromParams = Breadcrumb::buildFromParams('job', $id, $job['positionTitle']);
+    $companyVal = "<a href=\"companyDetail.php?id={$job['companyId']}$fromParams\">$companyName</a>";
 }
 $body .= "  <tr><td style=\"font-weight: bold; width: 180px;\">Company</td><td>$companyVal</td></tr>\n";
 
@@ -77,7 +78,8 @@ $body .= "  <tr><td style=\"font-weight: bold; width: 180px;\">Company</td><td>$
 $contactVal = '';
 if ($job['primaryContactId']) {
     $contactName = Tools::htmlOut($job['contactName'] ?? '');
-    $contactVal = "<a href=\"contactDetail.php?id={$job['primaryContactId']}\">$contactName</a>";
+    $fromParams = Breadcrumb::buildFromParams('job', $id, $job['positionTitle']);
+    $contactVal = "<a href=\"contactDetail.php?id={$job['primaryContactId']}$fromParams\">$contactName</a>";
     if ($job['contactEmail']) {
         $contactVal .= ' (' . Tools::htmlOut($job['contactEmail']) . ')';
     }
