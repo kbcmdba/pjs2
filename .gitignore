@@ -1,6 +1,7 @@
 .buildpath
 .project
 .settings
+config.php
 config.xml
 config.xml.auth
 config.xml.noauth

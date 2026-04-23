@@ -93,92 +93,7 @@ class Config
      */
     public function __construct()
     {
-        if (! is_readable('config.xml')) {
-            throw new \Exception("Unable to load configuration from config.xml!");
-        }
-        $xml = simplexml_load_file('config.xml');
-        if (! $xml) {
-            throw new \Exception("Invalid syntax in config.xml!");
-        }
-        $errors = "";
-        $cfgValues = [
-            'resetOk' => 0,
-            'authTimeoutSeconds' => 3600,
-            'skipAuth' => 0,
-            'apiKey' => ''
-        ];
-        $paramList = [
-            'authTimeoutSeconds' => [
-                'isRequired' => 0,
-                'value' => 0
-            ],
-            'dbHost' => [
-                'isRequired' => 1,
-                'value' => 0
-            ],
-            'dbPass' => [
-                'isRequired' => 1,
-                'value' => 0
-            ],
-            'dbName' => [
-                'isRequired' => 1,
-                'value' => 0
-            ],
-            'dbPort' => [
-                'isRequired' => 1,
-                'value' => 0
-            ],
-            'dbUser' => [
-                'isRequired' => 1,
-                'value' => 0
-            ],
-            'resetOk' => [
-                'isRequired' => 0,
-                'value' => 0
-            ],
-            'skipAuth' => [
-                'isRequired' => 0,
-                'value' => 0
-            ],
-            'apiKey' => [
-                'isRequired' => 0,
-                'value' => 0
-            ],
-            'timeZone' => [
-                'isRequired' => 1,
-                'value' => 0
-            ],
-            'title' => [
-                'isRequired' => 1,
-                'value' => 0
-            ],
-            'userId' => [
-                'isRequired' => 1,
-                'value' => 0
-            ],
-            'userPassword' => [
-                'isRequired' => 1,
-                'value' => 0
-            ]
-        ];
-        // verify that all the parameters are present and just once.
-        foreach ($xml as $v) {
-            $key = (string) $v['name'];
-            if ((! isset($paramList[$key])) || ($paramList[$key]['value'] != 0)) {
-                $errors .= "Unset or multiply set name: " . $key . "\n";
-            } else {
-                $paramList[$key]['value'] ++;
-                $cfgValues[$key] = (string) $v;
-            }
-        }
-        foreach ($paramList as $key => $x) {
-            if ((1 === $x['isRequired']) && (0 === $x['value'])) {
-                $errors .= "Missing parameter: " . $key . "\n";
-            }
-        }
-        if ($errors !== '') {
-            throw new \Exception("\nConfiguration problem!\n\n" . $errors . "\n");
-        }
+        $cfgValues = $this->_loadConfig();
         $this->_authTimeoutSeconds = $cfgValues['authTimeoutSeconds'];
         $this->_dbHost = $cfgValues['dbHost'];
         $this->_dbPort = $cfgValues['dbPort'];
@@ -193,6 +108,103 @@ class Config
         $this->_userId = $cfgValues['userId'];
         $this->_userPassword = $cfgValues['userPassword'];
         ini_set('date.timezone', $this->_timeZone);
+    }
+
+    /**
+     * Load configuration from config.php (preferred) or config.xml (legacy).
+     *
+     * config.php is preferred because PHP files cannot be served raw by any
+     * web server, preventing accidental exposure of credentials.
+     *
+     * @return array Configuration values
+     * @throws \Exception on missing or invalid config
+     */
+    private function _loadConfig()
+    {
+        $defaults = [
+            'resetOk' => 0,
+            'authTimeoutSeconds' => 3600,
+            'skipAuth' => 0,
+            'apiKey' => ''
+        ];
+        $required = [
+            'dbHost', 'dbPass', 'dbName', 'dbPort', 'dbUser',
+            'timeZone', 'title', 'userId', 'userPassword'
+        ];
+
+        if (is_readable('config.php')) {
+            return $this->_loadPhpConfig($defaults, $required);
+        } elseif (is_readable('config.xml')) {
+            return $this->_loadXmlConfig($defaults, $required);
+        } else {
+            throw new \Exception(
+                "No configuration file found!\n"
+                . "Copy config_sample.php to config.php and update with your settings."
+            );
+        }
+    }
+
+    /**
+     * Load configuration from config.php (returns an array).
+     *
+     * @param array $defaults Default values for optional params
+     * @param array $required List of required parameter names
+     * @return array
+     * @throws \Exception
+     */
+    private function _loadPhpConfig($defaults, $required)
+    {
+        $cfgValues = require 'config.php';
+        if (! is_array($cfgValues)) {
+            throw new \Exception("config.php must return an array!");
+        }
+        $cfgValues = array_merge($defaults, $cfgValues);
+        $errors = '';
+        foreach ($required as $key) {
+            if (! isset($cfgValues[$key]) || $cfgValues[$key] === '') {
+                $errors .= "Missing parameter: $key\n";
+            }
+        }
+        if ($errors !== '') {
+            throw new \Exception("\nConfiguration problem!\n\n" . $errors . "\n");
+        }
+        return $cfgValues;
+    }
+
+    /**
+     * Load configuration from config.xml (legacy format).
+     *
+     * @param array $defaults Default values for optional params
+     * @param array $required List of required parameter names
+     * @return array
+     * @throws \Exception
+     */
+    private function _loadXmlConfig($defaults, $required)
+    {
+        $xml = simplexml_load_file('config.xml');
+        if (! $xml) {
+            throw new \Exception("Invalid syntax in config.xml!");
+        }
+        $cfgValues = $defaults;
+        $seen = [];
+        foreach ($xml as $v) {
+            $key = (string) $v['name'];
+            if (isset($seen[$key])) {
+                throw new \Exception("Multiply set parameter: $key\n");
+            }
+            $seen[$key] = true;
+            $cfgValues[$key] = (string) $v;
+        }
+        $errors = '';
+        foreach ($required as $key) {
+            if (! isset($cfgValues[$key]) || $cfgValues[$key] === '') {
+                $errors .= "Missing parameter: $key\n";
+            }
+        }
+        if ($errors !== '') {
+            throw new \Exception("\nConfiguration problem!\n\n" . $errors . "\n");
+        }
+        return $cfgValues;
     }
 
     /**

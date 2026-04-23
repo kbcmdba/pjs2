@@ -10,10 +10,12 @@ PJS2 is expected to evolve incrementally into PJS3 — a multi-user SaaS product
 
 ## Setup
 
-1. Copy `config_sample.xml` to `config.xml` and update with your database/auth settings
-2. Run `resetDb.php` in a browser to initialize the database (requires `resetOk=1` in config.xml)
+1. Copy `config_sample.php` to `config.php` and update with your database/auth settings
+2. Run `resetDb.php` in a browser to initialize the database (requires `resetOk=1` in config.php)
 3. Run `checkSetup.php` (CLI or browser) to verify configuration, database, tables, and API connectivity
-4. Configuration is never committed — `config.xml` contains DB credentials and auth settings
+4. Configuration is never committed — `config.php` contains DB credentials and auth settings
+
+**Why config.php, not config.xml?** PHP files are processed by the web server, never served raw. An XML file in the webroot can be accessed directly by any browser, exposing credentials. This applies to both Apache and nginx — `.htaccess` only protects Apache. Legacy `config.xml` is still supported but `checkSetup.php` will warn to migrate.
 
 ## Running Tests
 

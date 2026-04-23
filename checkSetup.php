@@ -57,9 +57,17 @@ function check($label, $ok, $detail = '', $isWarning = false)
     }
 }
 
-// 1. config.xml exists and is readable
-$configExists = is_readable('config.xml');
-check('config.xml exists and is readable', $configExists, $configExists ? '' : 'Copy config_sample.xml to config.xml and edit it');
+// 1. Config file exists and is readable
+$hasPhpConfig = is_readable('config.php');
+$hasXmlConfig = is_readable('config.xml');
+$configExists = $hasPhpConfig || $hasXmlConfig;
+if ($hasPhpConfig) {
+    check('config.php exists and is readable', true);
+} elseif ($hasXmlConfig) {
+    check('config.xml exists (legacy)', true, 'Migrate to config.php — XML config can be served raw by nginx', true);
+} else {
+    check('Configuration file exists', false, 'Copy config_sample.php to config.php and edit it');
+}
 
 // 2. Parse config.xml
 $config = null;
