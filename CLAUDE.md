@@ -44,6 +44,12 @@ This runs a PHP syntax check on all `.php` files, then runs PHPUnit integration 
 
 **Page Files:** Top-level PHP files (`jobs.php`, `companies.php`, `contacts.php`, `searches.php`, `applicationStatuses.php`, `keywords.php`) are the main page entry points. Each includes `Libs/autoload.php` and renders via `PJSWebPage`.
 
+**Detail Pages:** `jobDetail.php`, `companyDetail.php`, `contactDetail.php` show a single entity with all related data (cross-linked contacts, jobs, notes). Support breadcrumb navigation via `Libs/Breadcrumb.php` using `from`/`fromId`/`fromName` query parameters.
+
+**Global Search:** `globalSearch.php` searches across jobs, companies, contacts, and notes. Search box is in the nav bar on every page. Results link to detail pages with search context preserved in breadcrumbs.
+
+**Reports:** `reports.php` generates weekly/monthly job search activity reports for unemployment agency compliance. Printable output with date range selection.
+
 **Auth:** `Libs/Auth.php` handles authentication against the `user` database table (bcrypt passwords, roles: `admin`, `user`, `viewer`). Config.xml's `userId`/`userPassword` are legacy fields not used by the current auth flow. Session timeout is controlled by `authTimeoutSeconds` in config.xml (default 3600). Can be bypassed with `skipAuth=1` in config.xml for development.
 
 **Notes:** AJAX-based notes system (`js/ajaxNote.js`, `AJAXGetNotes.php`, `AJAXAddNote.php`, `AJAXUpdateNote.php`, `AJAXDeleteNote.php`) provides a shared modal for viewing, adding, editing, and deleting notes. Used by Jobs, Companies, and Contacts listings via `NoteController::countByTable()` for counts and `getByTableAndId()` for content.
@@ -118,7 +124,9 @@ Failure: HTTP 400/401/409/500 + `{"result": "FAILED", "error": "message"}`
 
 The primary API consumer is [JobImporter](~/claude/projects/JobImporter) — a cron job that parses forwarded job emails and imports them into PJS2.
 
-**Known issue:** The API is not yet reachable over HTTP on web1.hole. nginx returns 502 Bad Gateway for API requests. The nginx vhost config needs to be updated to proxy `/pjs2/api/` requests to Apache correctly. This is an Ansible infrastructure fix, not a PJS2 code issue. The PHP code works correctly when invoked directly (verified via `checkSetup.php` CLI).
+**Known issue:** The API is not reachable from web1.hole CLI (nginx returns 502/301 for local requests). External HTTP requests work correctly (verified via `checkSetup.php` in browser). The nginx vhost config on web1 may need adjustment for local loopback requests. This is an Ansible infrastructure issue, not a PJS2 code issue.
+
+**NoteModel gotcha:** `NoteModel::validateForUpdate()` requires `appliesToTable` and `appliesToId` in `$_REQUEST` even though they're immutable on update. The API PUT endpoint works around this by populating `$_REQUEST` from the existing model before calling update.
 
 ## Future Direction (PJS3)
 
@@ -133,3 +141,18 @@ PJS2 will evolve toward a hosted multi-user SaaS product. Key goals:
 - **Tech stack** — Node.js. PJS2 stays PHP; PJS3 will be a new implementation in Node.js.
 
 Features like RSS feed ingestion should be built now for single-user use and designed so they can be extended to multi-user later.
+
+### Planned Schema Changes
+
+New lookup tables (FK from job table) to support unemployment reporting and richer job tracking:
+
+| Lookup table | FK on job | Seed values |
+|---|---|---|
+| `positionType` | `positionTypeId` | FTE, CTH, PTE, Contract, Seasonal, Freelance |
+| `workModel` | `workModelId` | Remote, Hybrid, On-site |
+| `applicationMethod` | `applicationMethodId` | Online, Email, Phone, In-person, Referral, Staffing Agency |
+| `activityType` | `activityTypeId` | Applied, Networking, Job Fair, Workshop, Staffing Agency Visit, Training |
+
+Plus `compRange` (VARCHAR) on job table for compensation range (format varies too much to normalize).
+
+Each lookup table follows the `applicationStatus`/`searchStatus` pattern: id, value, sortKey.
