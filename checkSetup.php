@@ -165,34 +165,31 @@ if ($config !== null) {
             $path = dirname($_SERVER['SCRIPT_NAME']);
             $baseUrl = $scheme . '://' . $host . $path . '/';
         }
+        // Helper: make a single curl request, return [httpStatus, decodedBody]
+        $curlRequest = function ($url, $method, $headers, $body = null) {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            if ($body !== null) {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($body));
+            }
+            $response = curl_exec($ch);
+            $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            return [$status, json_decode($response, true)];
+        };
+
         $apiUrl = $baseUrl . 'api/companies.php';
 
         // Test with valid API key
-        $validCtx = stream_context_create(['http' => [
-            'method' => 'GET',
-            'header' => "X-API-Key: $apiKey\r\n",
-            'timeout' => 5,
-            'ignore_errors' => true,
-        ]]);
-        $validResponse = @file_get_contents($apiUrl, false, $validCtx);
-        $validStatus = 0;
-        if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) {
-            $validStatus = (int) $m[1];
-        }
+        list($validStatus, ) = $curlRequest($apiUrl, 'GET', ["X-API-Key: $apiKey"]);
         check('API responds with valid key', $validStatus === 200, $validStatus === 200 ? '' : "HTTP $validStatus from $apiUrl");
 
         // Test with bad API key (should get 401)
-        $badCtx = stream_context_create(['http' => [
-            'method' => 'GET',
-            'header' => "X-API-Key: definitely-not-the-right-key\r\n",
-            'timeout' => 5,
-            'ignore_errors' => true,
-        ]]);
-        $badResponse = @file_get_contents($apiUrl, false, $badCtx);
-        $badStatus = 0;
-        if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) {
-            $badStatus = (int) $m[1];
-        }
+        list($badStatus, ) = $curlRequest($apiUrl, 'GET', ['X-API-Key: definitely-not-the-right-key']);
         check('API rejects bad key', $badStatus === 401, $badStatus === 401 ? '' : "Expected 401, got HTTP $badStatus");
 
         // 11. API CRUD smoke tests
@@ -204,26 +201,13 @@ if ($config !== null) {
         $testIds = ['company' => null, 'contact' => null, 'note' => null];
 
         // Helper: make an API request and return [httpStatus, decodedBody]
-        $apiCall = function ($endpoint, $method, $body = null) use ($baseUrl, $apiKey) {
-            $headers = "X-API-Key: $apiKey\r\n";
-            $opts = [
-                'method' => $method,
-                'header' => $headers,
-                'timeout' => 5,
-                'ignore_errors' => true,
-            ];
-            if ($body !== null) {
-                $opts['header'] .= "Content-Type: application/json\r\n";
-                $opts['content'] = json_encode($body);
-            }
-            $ctx = stream_context_create(['http' => $opts]);
+        $apiCall = function ($endpoint, $method, $body = null) use ($baseUrl, $apiKey, $curlRequest) {
             $url = $baseUrl . 'api/' . $endpoint;
-            $response = @file_get_contents($url, false, $ctx);
-            $status = 0;
-            if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) {
-                $status = (int) $m[1];
+            $headers = ["X-API-Key: $apiKey"];
+            if ($body !== null) {
+                $headers[] = 'Content-Type: application/json';
             }
-            return [$status, json_decode($response, true)];
+            return $curlRequest($url, $method, $headers, $body);
         };
 
         // Helper: clean up test data (always runs)
