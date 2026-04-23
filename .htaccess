@@ -1,0 +1,13 @@
+# Block access to sensitive files
+<FilesMatch "\.(xml|md|sh)$">
+    Require all denied
+</FilesMatch>
+
+# Block specific sensitive files
+<Files "config.xml">
+    Require all denied
+</Files>
+
+<Files "config_sample.xml">
+    Require all denied
+</Files>
