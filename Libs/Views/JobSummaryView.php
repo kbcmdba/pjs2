@@ -74,18 +74,23 @@ class JobSummaryView extends ListViewBase
         foreach ($jobModels as $jobModel) {
             $id = (int) $jobModel->getId();
             $cid = $jobModel->getCompanyId();
-            $companyController = new CompanyController('read');
-            $companyModel = $companyController->get($cid);
-            $cName = Tools::htmlOut($companyModel->getCompanyName());
-            $cCity = $companyModel->getCompanyCity();
-            $cState = $companyModel->getCompanyState();
+            $cName = '';
             $cLocation = '';
-            if ($cCity !== '' && $cState !== '' && $cState !== 'XX') {
-                $cLocation = ' (' . Tools::htmlOut($cCity) . ', ' . Tools::htmlOut($cState) . ')';
-            } elseif ($cCity !== '') {
-                $cLocation = ' (' . Tools::htmlOut($cCity) . ')';
-            } elseif ($cState !== '' && $cState !== 'XX') {
-                $cLocation = ' (' . Tools::htmlOut($cState) . ')';
+            if ($cid) {
+                $companyController = new CompanyController('read');
+                $companyModel = $companyController->get($cid);
+                if ($companyModel) {
+                    $cName = Tools::htmlOut($companyModel->getCompanyName());
+                    $cCity = $companyModel->getCompanyCity();
+                    $cState = $companyModel->getCompanyState();
+                    if ($cCity !== '' && $cState !== '' && $cState !== 'XX') {
+                        $cLocation = ' (' . Tools::htmlOut($cCity) . ', ' . Tools::htmlOut($cState) . ')';
+                    } elseif ($cCity !== '') {
+                        $cLocation = ' (' . Tools::htmlOut($cCity) . ')';
+                    } elseif ($cState !== '' && $cState !== 'XX') {
+                        $cLocation = ' (' . Tools::htmlOut($cState) . ')';
+                    }
+                }
             }
             $cUrl = Tools::safeUrl($companyModel->getCompanyUrl());
             $jobUrl = Tools::safeUrl($jobModel->getUrl());
