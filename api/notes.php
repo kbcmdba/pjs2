@@ -125,6 +125,14 @@ switch ($method) {
                 exit(0);
             }
             $noteModel->setNoteText(Tools::param('noteText'));
+            // validateForUpdate requires appliesToTable and appliesToId in $_REQUEST
+            // even though they're immutable. Populate from the existing model.
+            if (! isset($_REQUEST['appliesToTable'])) {
+                $_REQUEST['appliesToTable'] = $noteModel->getAppliesToTable();
+            }
+            if (! isset($_REQUEST['appliesToId'])) {
+                $_REQUEST['appliesToId'] = $noteModel->getAppliesToId();
+            }
             $noteController->update($noteModel);
             echo json_encode(['result' => 'OK', 'note' => noteToArray($noteModel)]) . PHP_EOL;
         } catch (ControllerException $e) {
