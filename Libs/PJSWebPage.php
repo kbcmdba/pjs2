@@ -155,6 +155,7 @@ ADDCO;
   <li><a href="jobs.php">Jobs</a></li>
   <li><a href="keywords.php">Keywords</a></li>
   <li><a href="searches.php">Searches</a></li>
+  <li><a href="reports.php">Reports</a></li>
   <ul style="float: right; list-style-type: none;">
     <li style="padding: 4px 10px;">
       <form action="globalSearch.php" method="get" style="display: inline; margin: 0;">
