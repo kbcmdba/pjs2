@@ -103,7 +103,27 @@ HTML;
   </div>
 </div>
 NOTES;
-        $this->setBottom('<div id="reviewOverlay"><div id="reviewBar"></div><div id="reviewToast"></div><iframe id="reviewFrame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe></div>' . $notesModal . '<!-- EndOfPage -->');
+        $addCompanyModal = <<<'ADDCO'
+<div id="addCompanyOverlay">
+  <div id="addCompanyModal">
+    <div id="addCompanyHeader">
+      <span>Quick Add Company</span>
+      <button onclick="closeAddCompanyModal()">Close</button>
+    </div>
+    <div id="addCompanyBody">
+      <label>Company Name <span style="color: red;">*</span></label>
+      <input type="text" id="quickCompanyName" placeholder="Company name" />
+      <label>URL</label>
+      <input type="text" id="quickCompanyUrl" placeholder="https://..." />
+      <div style="margin-top: 8px;">
+        <button onclick="saveQuickAddCompany()">Add Company</button>
+      </div>
+      <div id="quickCompanyError" style="color: red; margin-top: 6px; display: none;"></div>
+    </div>
+  </div>
+</div>
+ADDCO;
+        $this->setBottom('<div id="reviewOverlay"><div id="reviewBar"></div><div id="reviewToast"></div><iframe id="reviewFrame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe></div>' . $notesModal . $addCompanyModal . '<!-- EndOfPage -->');
         
         if ((! $skipAuth) && (! $auth->isAuthorized())) {
             $this->setBody($auth->getLoginPage());
@@ -136,6 +156,11 @@ NOTES;
   <li><a href="keywords.php">Keywords</a></li>
   <li><a href="searches.php">Searches</a></li>
   <ul style="float: right; list-style-type: none;">
+    <li style="padding: 4px 10px;">
+      <form action="globalSearch.php" method="get" style="display: inline; margin: 0;">
+        <input type="text" name="q" placeholder="Search..." style="padding: 4px 8px; border: none; border-radius: 3px; font-size: 0.85em; width: 150px;" />
+      </form>
+    </li>
 $reset
 $logout
   </ul>
