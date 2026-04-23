@@ -12,7 +12,8 @@ PJS2 is expected to evolve incrementally into PJS3 — a multi-user SaaS product
 
 1. Copy `config_sample.xml` to `config.xml` and update with your database/auth settings
 2. Run `resetDb.php` in a browser to initialize the database (requires `resetOk=1` in config.xml)
-3. Configuration is never committed — `config.xml` contains DB credentials and auth settings
+3. Run `checkSetup.php` (CLI or browser) to verify configuration, database, tables, and API connectivity
+4. Configuration is never committed — `config.xml` contains DB credentials and auth settings
 
 ## Running Tests
 
@@ -105,6 +106,8 @@ JSON request bodies are decoded into `$_REQUEST`/`$_POST` by `ApiAuth::populateR
 | `POST` | `api/notes.php` | Create a note |
 | `PUT` | `api/notes.php` | Update a note (id required, noteText only) |
 
+No DELETE endpoints exist by design — deletions are done manually to prevent accidental data loss.
+
 ### Response Format
 
 Success: HTTP 200/201 + `{"result": "OK", ...}`
@@ -114,6 +117,8 @@ Failure: HTTP 400/401/409/500 + `{"result": "FAILED", "error": "message"}`
 ### Consumer
 
 The primary API consumer is [JobImporter](~/claude/projects/JobImporter) — a cron job that parses forwarded job emails and imports them into PJS2.
+
+**Known issue:** The API is not yet reachable over HTTP on web1.hole. nginx returns 502 Bad Gateway for API requests. The nginx vhost config needs to be updated to proxy `/pjs2/api/` requests to Apache correctly. This is an Ansible infrastructure fix, not a PJS2 code issue. The PHP code works correctly when invoked directly (verified via `checkSetup.php` CLI).
 
 ## Future Direction (PJS3)
 
