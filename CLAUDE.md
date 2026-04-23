@@ -130,6 +130,6 @@ PJS2 will evolve toward a hosted multi-user SaaS product. Key goals:
 - **Hosting** — Cloud deployment (AWS or another provider), accessible without requiring users to self-host or run a VPN.
 - **Scale** — PJS3 must be able to scale 10,000x over PJS2.
 - **Paid subscriptions** — Low monthly fee to cover infrastructure costs. Payment processor TBD (Stripe considered expensive for low price points; exploring alternatives like Square, Lemon Squeezy, or annual billing).
-- **Tech stack** — Undecided. PJS3 may stay in PHP or move to a different language/framework. The decision will be driven by concrete benefits, not change for its own sake. Frameworks are acceptable if they don't create heavy lock-in.
+- **Tech stack** — Node.js. PJS2 stays PHP; PJS3 will be a new implementation in Node.js.
 
 Features like RSS feed ingestion should be built now for single-user use and designed so they can be extended to multi-user later.
