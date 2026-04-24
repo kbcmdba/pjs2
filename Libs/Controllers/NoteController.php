@@ -283,7 +283,7 @@ SQL;
                 $id = $model->getId();
                 $appliesToTable = $model->getAppliesToTable();
                 $appliesToId = $model->getAppliesToId();
-                $noteText = htmlspecialchars($model->getNoteText());
+                $noteText = $model->getNoteText();
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query);

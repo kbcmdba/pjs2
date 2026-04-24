@@ -157,7 +157,7 @@ HTML;
             $searchStatusModel = $searchStatusController->get($searchStatusId);
             if ($searchStatusModel) {
                 $statusValue = $searchStatusModel->getStatusValue();
-                $statusStyle = $searchStatusModel->getStyle();
+                $statusStyle = Tools::htmlOut($searchStatusModel->getStyle());
             }
         }
         $statusValue = Tools::htmlOut($statusValue);

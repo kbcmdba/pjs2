@@ -41,7 +41,7 @@ class Breadcrumb
     {
         $from = Tools::param('from');
         $q = Tools::param('q');
-        $fromId = Tools::param('fromId');
+        $fromId = (int) Tools::param('fromId');
         $fromName = Tools::param('fromName');
 
         $listPages = [
