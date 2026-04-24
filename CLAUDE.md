@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PHP Job Seeker 2 (PJS2) is a single-user job search tracking web application. It tracks searches, companies, jobs, contacts, application statuses, keywords, and notes. Requires Apache, PHP 8.0+, and MySQL 8.0+.
+PHP Job Seeker 2 (PJS2) is a single-user job search tracking web application. It tracks searches, companies, jobs, contacts, application statuses, keywords, and notes. Requires Apache or nginx+PHP-FPM, PHP 8.0+, and MySQL 8.0+.
 
-PJS2 is expected to evolve incrementally into PJS3 — a multi-user SaaS product rather than a separate rewrite. The transition will happen through architectural changes made over time (REST API, multi-tenancy, responsive web frontend). There is no fixed boundary between PJS2 and PJS3.
+**Status: Maintenance mode.** PJS2 is feature-complete. Only bug fixes and security fixes are accepted. New feature development has moved to Personal Job Seeker 3 (PJS3) — a new codebase in Node.js. The "PJS" acronym is being rebranded from "PHP Job Seeker" to "Personal Job Seeker" for the SaaS version.
 
 ## Setup
 
@@ -130,23 +130,22 @@ The primary API consumer is [JobImporter](~/claude/projects/JobImporter) — a c
 
 **NoteModel gotcha:** `NoteModel::validateForUpdate()` requires `appliesToTable` and `appliesToId` in `$_REQUEST` even though they're immutable on update. The API PUT endpoint works around this by populating `$_REQUEST` from the existing model before calling update.
 
-## Future Direction (PJS3)
+## Successor: Personal Job Seeker 3 (PJS3)
 
-PJS2 will evolve toward a hosted multi-user SaaS product. Key goals:
+PJS2 is being succeeded by **Personal Job Seeker 3 (PJS3)** — a new codebase (not evolution) in Node.js. PJS3 goals:
 
-- **REST API** — Initial API endpoints exist in `api/` (see above). Expand to cover all entities and eventually replace AJAX endpoints.
-- **Multi-tenancy** — Add user management and per-user data isolation. Currently single-user with no user association on data rows.
-- **Mobile-friendly web client** — A responsive SPA frontend (no native mobile apps) that works on phones and desktops, consuming the REST API.
-- **Hosting** — Cloud deployment (AWS or another provider), accessible without requiring users to self-host or run a VPN.
-- **Scale** — PJS3 must be able to scale 10,000x over PJS2.
-- **Paid subscriptions** — Low monthly fee to cover infrastructure costs. Payment processor TBD (Stripe considered expensive for low price points; exploring alternatives like Square, Lemon Squeezy, or annual billing).
-- **Tech stack** — Node.js. PJS2 stays PHP; PJS3 will be a new implementation in Node.js.
+- **Multi-tenancy** — Per-user data isolation from day one
+- **Mobile-friendly web client** — Responsive SPA (no native apps) consuming a REST API
+- **Cloud hosting** — Available to others without self-hosting
+- **Unemployment reporting** — Jurisdiction-specific compliance (US states + Canada EI)
+- **Paid subscriptions** — Affordable monthly fee; payment processor TBD (alternatives to Stripe being evaluated for low price points)
+- **Tech stack** — Node.js
 
-Features like RSS feed ingestion should be built now for single-user use and designed so they can be extended to multi-user later.
+The schema improvements planned below will likely land in PJS3, not PJS2, since PJS2 is maintenance-only.
 
-### Planned Schema Changes
+### Schema Improvements Planned for PJS3
 
-New lookup tables (FK from job table) to support unemployment reporting and richer job tracking:
+Lookup tables to support unemployment reporting and richer job tracking:
 
 | Lookup table | FK on job | Seed values |
 |---|---|---|
