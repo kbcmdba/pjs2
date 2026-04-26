@@ -301,7 +301,7 @@ HTML;
           <button type="button" id="DeleteButton$id" onclick="deleteJob( '$id' )">Delete</button>
           $errorMessage
       </td>
-      <td><a href="#" onclick="reviewJob( '$id', '$safeUrl' ); return false;" data-status-id="$applicationStatusId">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
+      <td><a href="?jobId=$id" onclick="reviewJob( '$id', '$safeUrl' ); return false;" data-status-id="$applicationStatusId">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td $click>$urgency</td>
       <td $click>$positionTitle</td>
       <td $click>$location</td>
