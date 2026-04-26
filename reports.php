@@ -121,6 +121,7 @@ if ($result->num_rows === 0) {
       <th>Position Title</th>
       <th>Activity/Status</th>
       <th>Method</th>
+      <th>Application URL</th>
       <th>Result/Next Action</th>
     </tr>
   </thead>
@@ -153,6 +154,15 @@ HTML;
         // rare mail / phone / in-person / referral cases get reported correctly.
         $method = 'Online';
         $nextAction = Tools::htmlOut($row['nextAction'] ?? '');
+        // Unemployment activity reporting requires the URL used for online
+        // applications. Render as <a> so screen-view is clickable AND the
+        // URL text is visible when printed (link text == URL).
+        $applicationUrl = '';
+        if ($method === 'Online' && ! empty($row['url'])) {
+            $safeHref = Tools::htmlOut($row['url']);
+            $displayUrl = Tools::htmlOut($row['url']);
+            $applicationUrl = "<a href=\"$safeHref\" target=\"_blank\">$displayUrl</a>";
+        }
 
         $body .= "    <tr>";
         $body .= "<td>$date</td>";
@@ -163,6 +173,7 @@ HTML;
         $body .= "<td>$title</td>";
         $body .= "<td>$status</td>";
         $body .= "<td>$method</td>";
+        $body .= "<td style=\"word-break: break-all; max-width: 300px;\">$applicationUrl</td>";
         $body .= "<td>$nextAction</td>";
         $body .= "</tr>\n";
     }
