@@ -73,7 +73,8 @@ $result = [
         'nextAction' => $jobModel->getNextAction(),
         'nextActionDue' => $jobModel->getNextActionDue(),
         'lastStatusChange' => $jobModel->getLastStatusChange(),
-        'location' => $jobModel->getLocation()
+        'location' => $jobModel->getLocation(),
+        'url' => $jobModel->getUrl()
     ],
     'statuses' => $statusOptions
 ];

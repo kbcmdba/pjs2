@@ -28,6 +28,88 @@ var reviewAdvancedViaSaveNext = false ;
 var reviewActiveStatusIds = [] ;
 
 ///////////////////////////////////////////////////////////////////////////////
+// Review-panel URL state helpers.
+//
+// The review panel was originally state-only-in-JS. That meant a refresh blew
+// state away, URLs couldn't be forwarded ("here's the role I'm looking at"),
+// and printed pages had no machine-readable handle on which job they showed.
+// These helpers put the current jobId in the URL as ?jobId=X so all three
+// concerns are addressed.
+//
+// PJS2 is single-user; raw IDs in URLs are fine. PJS3 is multi-tenant and
+// will need opaque tokens (or workspace-aware authz on the read path) when
+// this pattern ports over.
+
+/**
+ * Put jobId in the URL as a query parameter.
+ *
+ * @param {String|Number} jobId
+ * @param {String}        method  'replace' (default; no new history entry) or
+ *                                'push' (new history entry — supports back/fwd)
+ */
+function setJobIdInUrl( jobId, method ) {
+    var url = new URL( window.location ) ;
+    url.searchParams.set( 'jobId', jobId ) ;
+    if ( method === 'push' ) {
+        history.pushState( { jobId: jobId }, '', url ) ;
+    } else {
+        history.replaceState( { jobId: jobId }, '', url ) ;
+    }
+}
+
+/**
+ * Remove jobId from the URL (called when the review panel closes).
+ */
+function clearJobIdFromUrl() {
+    var url = new URL( window.location ) ;
+    if ( url.searchParams.has( 'jobId' ) ) {
+        url.searchParams.delete( 'jobId' ) ;
+        history.replaceState( {}, '', url ) ;
+    }
+}
+
+/**
+ * Read jobId from the current URL, or null if absent.
+ *
+ * @returns {String|null}
+ */
+function getJobIdFromUrl() {
+    return new URL( window.location ).searchParams.get( 'jobId' ) ;
+}
+
+/**
+ * Open the review panel for whatever jobId is in the URL on page load,
+ * or after a back/forward navigation. Does nothing if no jobId is present.
+ *
+ * Fetches the job's URL via AJAXGetJobData.php, then calls reviewJob() with
+ * 'replace' so the URL doesn't get a duplicate history entry on auto-open.
+ */
+function autoOpenReviewFromUrl() {
+    var urlJobId = getJobIdFromUrl() ;
+    if ( ! urlJobId ) return ;
+    if ( reviewJobId === urlJobId ) return ;  // already open for this job
+    var data = 'id=' + encodeURIComponent( urlJobId ) ;
+    doLoadAjaxJsonResultWithCallback( 'AJAXGetJobData.php', data, urlJobId, true, function( xhttp ) {
+        var jsonObj = JSON.parse( xhttp.responseText ) ;
+        if ( jsonObj.result === 'OK' && jsonObj.job ) {
+            reviewJob( urlJobId, jsonObj.job.url || '', 'replace' ) ;
+        }
+    } ) ;
+}
+
+document.addEventListener( 'DOMContentLoaded', autoOpenReviewFromUrl ) ;
+
+// Sync the review panel with URL changes (back/forward navigation).
+window.addEventListener( 'popstate', function() {
+    var urlJobId = getJobIdFromUrl() ;
+    if ( urlJobId && urlJobId !== reviewJobId ) {
+        autoOpenReviewFromUrl() ;
+    } else if ( ! urlJobId && reviewJobId !== null ) {
+        closeReviewPanel() ;
+    }
+} ) ;
+
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Open the job review panel with an iframe showing the job URL
@@ -106,7 +188,7 @@ function reviewNext() {
         reviewAdvancedViaSaveNext = true ;
         reviewQueueIndex++ ;
         var next = reviewQueue[ reviewQueueIndex ] ;
-        reviewJob( next.id, next.url ) ;
+        reviewJob( next.id, next.url, 'push' ) ;
     }
     return false ;
 }
@@ -126,7 +208,7 @@ function reviewSkip() {
         reviewAdvancedViaSaveNext = false ;
         reviewQueueIndex++ ;
         var next = reviewQueue[ reviewQueueIndex ] ;
-        reviewJob( next.id, next.url ) ;
+        reviewJob( next.id, next.url, 'push' ) ;
     }
     return false ;
 }
@@ -136,13 +218,14 @@ function reviewPrev() {
         reviewAdvancedViaSaveNext = false ;
         reviewQueueIndex-- ;
         var prev = reviewQueue[ reviewQueueIndex ] ;
-        reviewJob( prev.id, prev.url ) ;
+        reviewJob( prev.id, prev.url, 'push' ) ;
     }
     return false ;
 }
 
-function reviewJob( id, url ) {
+function reviewJob( id, url, urlMethod ) {
     reviewJobId = id ;
+    setJobIdInUrl( id, urlMethod || 'replace' ) ;
     // Build queue on first open, find our position
     if ( reviewQueue.length === 0 ) {
         buildReviewQueue() ;
@@ -284,6 +367,7 @@ function closeReviewPanel() {
     if ( fallback ) fallback.style.display = 'none' ;
     reviewJobId = null ;
     reviewAdvancedViaSaveNext = false ;
+    clearJobIdFromUrl() ;
     return false ;
 }
 

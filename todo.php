@@ -54,4 +54,5 @@
 // DONE 06 Implement last contact date for contacts
 // DONE 06 Implement and test last contact date update button for contacts
 // DONE 10 Jobs list: Add Details button per row → jobDetail.php (2026-04-26)
+// DONE 20 Review panel: Encode state in URL via ?jobId=X (refresh-safe, forwardable, print-pasteable) (2026-04-26)
 // DONE 60 Write KeywordListView
