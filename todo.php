@@ -26,7 +26,6 @@
 // here are the minimum needed to keep PJS2 usable for daily job-search work.
 // Larger features moved to ~/work/pjs3/docs/POST_MVP_BACKLOG.md on 2026-04-26.
 //
-// @todo 10 Jobs list: Add a Details link (or icon) per row that opens jobDetail.php — currently nothing in the list links to the detail view, so the existing breadcrumbs and notes display on jobDetail.php are unreachable from the main workflow
 // @todo 15 Review panel: Show notes count badge + click-through to view/add notes — currently the bar shows status / next action / due but never notes (biggest spouse-visibility gap; Kathy can't see the deliberate effort otherwise)
 // @todo 25 Review panel: Add a View Details link to jobDetail.php — faster than closing review and clicking from the list
 // @todo 25 Review panel: Show Next/Skip even when reviewQueueActiveRemaining() === 0, OR add an "all jobs" toggle so the user can navigate beyond the active-queue end (encountered 2026-04-26 on the last active job — UX dead-end)
@@ -54,4 +53,5 @@
 // === Historical (PJS2 completed) ===
 // DONE 06 Implement last contact date for contacts
 // DONE 06 Implement and test last contact date update button for contacts
+// DONE 10 Jobs list: Add Details button per row → jobDetail.php (2026-04-26)
 // DONE 60 Write KeywordListView

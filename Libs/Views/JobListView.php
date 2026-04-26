@@ -297,6 +297,7 @@ HTML;
                 $clickNow = "onclick=\"updateJobSetNow( '$id' )\" style=\"cursor: pointer;\" title=\"Click to edit and set to today\"";
                 return <<<HTML
       <td><button type="button" id="UpdateButton$id" onclick="updateJob( '$id' )">Update</button>
+          <button type="button" id="DetailsButton$id" onclick="window.location.href='jobDetail.php?id=$id'" title="View full job detail page (with notes and breadcrumbs)">Details</button>
           <button type="button" id="DeleteButton$id" onclick="deleteJob( '$id' )">Delete</button>
           $errorMessage
       </td>
