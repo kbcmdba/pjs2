@@ -93,16 +93,23 @@ th, td {
 	border: 1px solid #c8c8d8 ;
 }
 
-thead th {
+th {
 	background-color: lightgray ;
 }
 
-.thead th {
-	background-color: #4a4a8a ;
-	color: #fff ;
-	font-weight: bold ;
+/* Default alternating rows for any tbody. Tables that group rows (e.g.,
+   CompanyListView's 2-row-per-company layout) override via .treven/.trodd
+   below. */
+tbody tr:nth-child(odd) td {
+	background-color: #ffffff ;
 }
 
+tbody tr:nth-child(even) td {
+	background-color: #e8f5e9 ;
+}
+
+/* Manual class assignments override nth-child for tables that need to
+   control row grouping explicitly. */
 .treven td {
 	background-color: #ffffff ;
 }
