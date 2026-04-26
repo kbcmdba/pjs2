@@ -121,13 +121,13 @@ if ($result->num_rows === 0) {
       <th>Position Title</th>
       <th>Activity/Status</th>
       <th>Method</th>
-      <th>Application URL</th>
       <th>Result/Next Action</th>
     </tr>
   </thead>
   <tbody>
 HTML;
 
+    $rowStyle = 'treven';
     while ($row = $result->fetch_assoc()) {
         $date = date('m/d/Y', strtotime($row['lastStatusChange']));
         $company = Tools::htmlOut($row['companyName'] ?? '');
@@ -155,16 +155,24 @@ HTML;
         $method = 'Online';
         $nextAction = Tools::htmlOut($row['nextAction'] ?? '');
         // Unemployment activity reporting requires the URL used for online
-        // applications. Render as <a> so screen-view is clickable AND the
-        // URL text is visible when printed (link text == URL).
-        $applicationUrl = '';
+        // applications. Rendered on its own full-width row beneath the data
+        // row so long ATS URLs (Workday, Greenhouse, Eightfold) get plenty of
+        // space, with a Copy button so KB can paste straight into the
+        // unemployment portal without manual select+copy.
+        $urlCellContent = '';
         if ($method === 'Online' && ! empty($row['url'])) {
-            $safeHref = Tools::htmlOut($row['url']);
-            $displayUrl = Tools::htmlOut($row['url']);
-            $applicationUrl = "<a href=\"$safeHref\" target=\"_blank\">$displayUrl</a>";
+            $safeUrl = Tools::htmlOut($row['url']);
+            $urlCellContent = '<strong>URL:</strong> '
+                . "<a href=\"$safeUrl\" target=\"_blank\">$safeUrl</a> "
+                . "<button type=\"button\" class=\"copy-url-btn\" data-url=\"$safeUrl\""
+                . " style=\"margin-left: 8px; padding: 2px 8px; font-size: 0.85em; cursor: pointer;\">Copy</button>";
+        } else {
+            $urlCellContent = '<em style="color: #999;">[no URL on file]</em>';
         }
 
-        $body .= "    <tr>";
+        // Row 1: data columns. Class on tr keeps both rows of one job grouped
+        // by background color (treven/trodd overrides the per-row nth-child).
+        $body .= "    <tr class=\"$rowStyle\">";
         $body .= "<td>$date</td>";
         $body .= "<td>$company</td>";
         $body .= "<td>$location</td>";
@@ -173,9 +181,13 @@ HTML;
         $body .= "<td>$title</td>";
         $body .= "<td>$status</td>";
         $body .= "<td>$method</td>";
-        $body .= "<td style=\"word-break: break-all; max-width: 300px;\">$applicationUrl</td>";
         $body .= "<td>$nextAction</td>";
         $body .= "</tr>\n";
+        // Row 2: URL spans the full table width.
+        $body .= "    <tr class=\"$rowStyle\">";
+        $body .= "<td colspan=\"9\" style=\"padding-left: 30px; word-break: break-all;\">$urlCellContent</td>";
+        $body .= "</tr>\n";
+        $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
     }
     $body .= "  </tbody>\n</table>\n";
 }
@@ -194,6 +206,25 @@ $body .= <<<'HTML'
     h2 { margin-top: 0; }
 }
 </style>
+
+<script>
+// Copy URL to clipboard from any .copy-url-btn. Used on the activity report
+// so KB can paste application URLs straight into the unemployment portal
+// without manual select+copy.
+document.querySelectorAll('.copy-url-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var url = btn.getAttribute('data-url');
+        navigator.clipboard.writeText(url).then(function() {
+            var orig = btn.textContent;
+            btn.textContent = 'Copied!';
+            setTimeout(function() { btn.textContent = orig; }, 1500);
+        }).catch(function() {
+            btn.textContent = 'Copy failed';
+            setTimeout(function() { btn.textContent = 'Copy'; }, 1500);
+        });
+    });
+});
+</script>
 HTML;
 
 $page->setBody($body);
