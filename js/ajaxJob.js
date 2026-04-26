@@ -22,6 +22,7 @@
 // This is local to this file.
 var rowNumber = 1 ;
 var reviewJobId = null ;
+var reviewJobTitle = null ;
 var reviewQueue = [] ;
 var reviewQueueIndex = -1 ;
 var reviewAdvancedViaSaveNext = false ;
@@ -297,6 +298,8 @@ function reviewJob( id, url, urlMethod ) {
                         + ' data-style="' + escapeHtml( optStyle ) + '"' + sel + '>'
                         + statuses[ i ].value + '</option>' ;
         }
+        reviewJobTitle = job.positionTitle ;
+        var noteCount = ( typeof job.noteCount === 'number' ) ? job.noteCount : 0 ;
         var html = '<span class="reviewTitle">' + escapeHtml( job.positionTitle ) + '</span>'
                  + '<span class="reviewCompany">' + escapeHtml( job.companyName ) + '</span>'
                  + ' <label>Status:</label>'
@@ -305,6 +308,7 @@ function reviewJob( id, url, urlMethod ) {
                  + '<input type="text" id="reviewNextAction" value="' + escapeHtml( job.nextAction || '' ) + '" size="30" />'
                  + ' <label>Due:</label>'
                  + '<input type="text" id="reviewNextActionDue" value="' + escapeHtml( job.nextActionDue || '' ) + '" size="12" class="datepicker" />'
+                 + ' <button onclick="reviewOpenNotes()" title="View / add notes for this job">Notes (<span id="reviewNoteCount-job-' + reviewJobId + '">' + noteCount + '</span>)</button>'
                  + ' <button onclick="saveReviewPanel()">Save</button>'
                  + ' <button onclick="closeReviewPanel()">Close</button>' ;
         if ( reviewAdvancedViaSaveNext ) {
@@ -366,8 +370,20 @@ function closeReviewPanel() {
     var fallback = document.getElementById( 'reviewFallback' ) ;
     if ( fallback ) fallback.style.display = 'none' ;
     reviewJobId = null ;
+    reviewJobTitle = null ;
     reviewAdvancedViaSaveNext = false ;
     clearJobIdFromUrl() ;
+    return false ;
+}
+
+/**
+ * Open the notes modal for the job currently shown in the review panel.
+ * Used by the Notes button on the review bar.
+ */
+function reviewOpenNotes() {
+    if ( reviewJobId !== null ) {
+        openNotesModal( 'job', reviewJobId, reviewJobTitle || '' ) ;
+    }
     return false ;
 }
 

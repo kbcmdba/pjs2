@@ -62,6 +62,9 @@ foreach ($statuses as $status) {
     ];
 }
 
+$noteController = new NoteController('read');
+$noteCount = count($noteController->getByTableAndId('job', $id));
+
 $result = [
     'result' => 'OK',
     'job' => [
@@ -74,7 +77,8 @@ $result = [
         'nextActionDue' => $jobModel->getNextActionDue(),
         'lastStatusChange' => $jobModel->getLastStatusChange(),
         'location' => $jobModel->getLocation(),
-        'url' => $jobModel->getUrl()
+        'url' => $jobModel->getUrl(),
+        'noteCount' => $noteCount
     ],
     'statuses' => $statusOptions
 ];

@@ -171,16 +171,27 @@ function addNote() {
 }
 
 /**
- * Update the note count badge on the listing page.
+ * Update the note count badge wherever it's displayed for this entity:
+ * - List pages use id "noteCount-<table>-<id>"
+ * - Review panel bar uses id "reviewNoteCount-<table>-<id>"
+ *
+ * Both update if present so adds/deletes from the modal stay in sync with
+ * whatever surface opened it.
  *
  * @param {String} appliesToTable
  * @param {String} appliesToId
  * @param {Number} count
  */
 function updateNoteCount( appliesToTable, appliesToId, count ) {
-    var badge = document.getElementById( 'noteCount-' + appliesToTable + '-' + appliesToId ) ;
-    if ( badge ) {
-        badge.innerHTML = count ;
+    var ids = [
+        'noteCount-' + appliesToTable + '-' + appliesToId,
+        'reviewNoteCount-' + appliesToTable + '-' + appliesToId
+    ] ;
+    for ( var i = 0 ; i < ids.length ; i++ ) {
+        var badge = document.getElementById( ids[ i ] ) ;
+        if ( badge ) {
+            badge.innerHTML = count ;
+        }
     }
 }
 
