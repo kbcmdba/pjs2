@@ -93,6 +93,10 @@ th, td {
 	border: 1px solid #c8c8d8 ;
 }
 
+thead th {
+	background-color: lightgray ;
+}
+
 .thead th {
 	background-color: #4a4a8a ;
 	color: #fff ;
