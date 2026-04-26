@@ -21,25 +21,37 @@
  *
  */
 
-// @todo 10 Implement data validation tests for all required fields
-// @todo 20 Add review panel workflow to Searches page (iframe + minimal controls, same pattern as Jobs)
-// @todo 30 Give users control over sorting in each page (e.g., Jobs by status, then next action due)
-// @todo 40 Jobs: Make it possible to log time and date together with jobs
-// @todo 40 Allow moving a job entry to a search (and vice versa) when a URL is a search page, not a posting
-// @todo 50 Add Notes column to Keywords listing (infrastructure exists, just needs wiring)
-// @todo 60 Write KeywordFormView — tag jobs with keywords
-// @todo 60 Write KeywordFormView::getKeywordSelectList( $selectedKeywordId, $readOnly )
-// @todo 80 Make the interface multiuser
-// @todo 80 User entitlements
-// @todo 80 REST API for external access
-// @todo 90 Make input fields mobile-friendly
-// @todo 90 Style the site
-// @todo 95 Add help to the site
-// @todo 99 Build a manual on how to use the site.
-// @todo 99 Future: Mobile-first hosted service — let job seekers track and
-//           direct their search entirely from their smartphone. Multi-tenant,
-//           billing, REST API, responsive/native UI.
+// === Active PJS2 punch list ===
+// PJS2 is in maintenance / dogfooding mode while PJS3 is being built. Items
+// here are the minimum needed to keep PJS2 usable for daily job-search work.
+// Larger features moved to ~/work/pjs3/docs/POST_MVP_BACKLOG.md on 2026-04-26.
 //
+// @todo 10 Jobs list: Add a Details link (or icon) per row that opens jobDetail.php — currently nothing in the list links to the detail view, so the existing breadcrumbs and notes display on jobDetail.php are unreachable from the main workflow
+// @todo 15 Review panel: Show notes count badge + click-through to view/add notes — currently the bar shows status / next action / due but never notes (biggest spouse-visibility gap; Kathy can't see the deliberate effort otherwise)
+// @todo 25 Review panel: Add a View Details link to jobDetail.php — faster than closing review and clicking from the list
+// @todo 25 Review panel: Show Next/Skip even when reviewQueueActiveRemaining() === 0, OR add an "all jobs" toggle so the user can navigate beyond the active-queue end (encountered 2026-04-26 on the last active job — UX dead-end)
+//
+// === Migrated to PJS3 (2026-04-26) ===
+// MIGRATED 20 Review panel workflow on Searches page → PJS3 docs/POST_MVP_BACKLOG.md
+// MIGRATED 30 User-controlled sorting per page → PJS3 docs/POST_MVP_BACKLOG.md
+// MIGRATED 40 Log time+date with jobs → PJS3 docs/POST_MVP_BACKLOG.md
+// MIGRATED 40 Move job ↔ search → PJS3 docs/POST_MVP_BACKLOG.md
+// MIGRATED 95 Help system → PJS3 docs/POST_MVP_BACKLOG.md
+// MIGRATED 99 User manual → PJS3 docs/POST_MVP_BACKLOG.md
+//
+// === Dropped — already addressed in PJS3 MVP scope or rejected (2026-04-26) ===
+// DROPPED 10 Data validation tests for all required fields — PJS3 ships TDD discipline as baseline; PJS2 will not be retrofitted
+// DROPPED 50 Notes column on Keywords listing — Keywords "Undecided" in PJS3 MVP_SCOPE.md (may not return)
+// DROPPED 60 KeywordFormView — Keywords-dependent (see above)
+// DROPPED 60 KeywordFormView::getKeywordSelectList — Keywords-dependent (see above)
+// DROPPED 80 Multiuser — PJS3 MVP ships workspace tenancy
+// DROPPED 80 User entitlements — PJS3 MVP ships workspace roles (Owner, Viewer)
+// DROPPED 80 REST API for external access — PJS3 already deferred-and-named (post-MVP)
+// DROPPED 90 Mobile-friendly inputs — PJS3 MVP "Responsive web UI" non-functional
+// DROPPED 90 Style the site — implicit in PJS3 React stack
+// DROPPED 99 Future: Mobile-first hosted service — this is what PJS3 is becoming
+//
+// === Historical (PJS2 completed) ===
 // DONE 06 Implement last contact date for contacts
 // DONE 06 Implement and test last contact date update button for contacts
 // DONE 60 Write KeywordListView
