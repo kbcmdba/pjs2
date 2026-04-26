@@ -315,10 +315,18 @@ function reviewJob( id, url, urlMethod ) {
         if ( reviewAdvancedViaSaveNext ) {
             html += ' <button onclick="reviewPrev()">Go Back</button>' ;
         }
-        var remaining = reviewQueueActiveRemaining() ;
-        if ( remaining > 0 ) {
-            html += ' <button onclick="reviewSkip()">Next (' + remaining + ')</button>' ;
-            html += ' <button onclick="reviewNext()">Save &amp; Next (' + remaining + ')</button>' ;
+        var activeRemaining = reviewQueueActiveRemaining() ;
+        var totalRemaining = reviewQueueRemaining() ;
+        if ( activeRemaining > 0 ) {
+            // Common case: show how many active jobs are still ahead.
+            html += ' <button onclick="reviewSkip()">Next (' + activeRemaining + ')</button>' ;
+            html += ' <button onclick="reviewNext()">Save &amp; Next (' + activeRemaining + ')</button>' ;
+        } else if ( totalRemaining > 0 ) {
+            // No active jobs left in the queue, but closed jobs remain — still
+            // navigable. Different label so the user knows they've crossed the
+            // active boundary (avoids the UX dead-end at the last active job).
+            html += ' <button onclick="reviewSkip()">Next (' + totalRemaining + ' closed)</button>' ;
+            html += ' <button onclick="reviewNext()">Save &amp; Next (' + totalRemaining + ' closed)</button>' ;
         }
         bar.innerHTML = html ;
         $( "#reviewNextActionDue" ).datepicker( { dateFormat: 'yy-mm-dd' } ) ;

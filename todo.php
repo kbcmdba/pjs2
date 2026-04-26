@@ -26,7 +26,7 @@
 // here are the minimum needed to keep PJS2 usable for daily job-search work.
 // Larger features moved to ~/work/pjs3/docs/POST_MVP_BACKLOG.md on 2026-04-26.
 //
-// @todo 25 Review panel: Show Next/Skip even when reviewQueueActiveRemaining() === 0, OR add an "all jobs" toggle so the user can navigate beyond the active-queue end (encountered 2026-04-26 on the last active job — UX dead-end)
+// @todo 35 index.php: Catch \Throwable (or at least \Exception) around the DBConnection construction. Currently only DaoException is caught, so a transient mysqli_sql_exception (DNS hiccup, mysqld restart, network blip) escapes and 500s the dashboard. Render a friendly "Database temporarily unavailable — retry in a few seconds" message instead. (DNS to mysql1.hole hiccupped 2026-04-26 and took the dashboard down until DNS recovered.)
 //
 // === Migrated to PJS3 (2026-04-26) ===
 // MIGRATED 20 Review panel workflow on Searches page → PJS3 docs/POST_MVP_BACKLOG.md
@@ -55,4 +55,5 @@
 // DONE 15 Review panel: Notes button with count badge → openNotesModal (2026-04-26)
 // DONE 20 Review panel: Encode state in URL via ?jobId=X (refresh-safe, forwardable, print-pasteable) (2026-04-26)
 // DONE 25 Review panel: Details button → jobDetail.php (2026-04-26)
+// DONE 25 Review panel: Show Next/Skip past last active job (labeled "N closed" so the boundary is visible) (2026-04-26)
 // DONE 60 Write KeywordListView
