@@ -309,6 +309,7 @@ function reviewJob( id, url, urlMethod ) {
                  + ' <label>Due:</label>'
                  + '<input type="text" id="reviewNextActionDue" value="' + escapeHtml( job.nextActionDue || '' ) + '" size="12" class="datepicker" />'
                  + ' <button onclick="reviewOpenNotes()" title="View / add notes for this job">Notes (<span id="reviewNoteCount-job-' + reviewJobId + '">' + noteCount + '</span>)</button>'
+                 + ' <button type="button" onclick="window.location.href=\'jobDetail.php?id=' + reviewJobId + '\'" title="View full job detail page (notes, breadcrumbs, all fields)">Details</button>'
                  + ' <button onclick="saveReviewPanel()">Save</button>'
                  + ' <button onclick="closeReviewPanel()">Close</button>' ;
         if ( reviewAdvancedViaSaveNext ) {

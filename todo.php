@@ -26,7 +26,6 @@
 // here are the minimum needed to keep PJS2 usable for daily job-search work.
 // Larger features moved to ~/work/pjs3/docs/POST_MVP_BACKLOG.md on 2026-04-26.
 //
-// @todo 25 Review panel: Add a View Details link to jobDetail.php — faster than closing review and clicking from the list
 // @todo 25 Review panel: Show Next/Skip even when reviewQueueActiveRemaining() === 0, OR add an "all jobs" toggle so the user can navigate beyond the active-queue end (encountered 2026-04-26 on the last active job — UX dead-end)
 //
 // === Migrated to PJS3 (2026-04-26) ===
@@ -55,4 +54,5 @@
 // DONE 10 Jobs list: Add Details button per row → jobDetail.php (2026-04-26)
 // DONE 15 Review panel: Notes button with count badge → openNotesModal (2026-04-26)
 // DONE 20 Review panel: Encode state in URL via ?jobId=X (refresh-safe, forwardable, print-pasteable) (2026-04-26)
+// DONE 25 Review panel: Details button → jobDetail.php (2026-04-26)
 // DONE 60 Write KeywordListView
