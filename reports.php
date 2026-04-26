@@ -148,8 +148,10 @@ HTML;
         $contact = Tools::htmlOut($row['contactName'] ?? '');
         $title = Tools::htmlOut($row['positionTitle']);
         $status = Tools::htmlOut($row['statusValue'] ?? '');
-        // Infer method from URL presence
-        $method = ($row['url'] && $row['url'] !== '') ? 'Online' : '';
+        // Default to 'Online'. The vast majority of applications are online; a
+        // per-job applicationMethod override field is the next feature so the
+        // rare mail / phone / in-person / referral cases get reported correctly.
+        $method = 'Online';
         $nextAction = Tools::htmlOut($row['nextAction'] ?? '');
 
         $body .= "    <tr>";

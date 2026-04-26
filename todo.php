@@ -27,6 +27,7 @@
 // Larger features moved to ~/work/pjs3/docs/POST_MVP_BACKLOG.md on 2026-04-26.
 //
 // @todo 35 index.php: Catch \Throwable (or at least \Exception) around the DBConnection construction. Currently only DaoException is caught, so a transient mysqli_sql_exception (DNS hiccup, mysqld restart, network blip) escapes and 500s the dashboard. Render a friendly "Database temporarily unavailable — retry in a few seconds" message instead. (DNS to mysql1.hole hiccupped 2026-04-26 and took the dashboard down until DNS recovered.)
+// @todo 40 Application Method: add applicationMethod column to job (VARCHAR DEFAULT 'Online'), expose via Model/Controller/API, add a select dropdown in the jobs list inline edit and the review panel bar (options: Online, Email, Phone, In-person, Referral, Staffing Agency), and update reports.php to read from j.applicationMethod with 'Online' fallback. Phase 1 (default-Online in reports.php) shipped 2026-04-26; this is phase 2. PJS3 MVP_SCOPE already includes applicationMethod as a workspace-scoped lookup table — if PJS3 ships before this becomes painful, defer.
 //
 // === Migrated to PJS3 (2026-04-26) ===
 // MIGRATED 20 Review panel workflow on Searches page → PJS3 docs/POST_MVP_BACKLOG.md
