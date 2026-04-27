@@ -26,7 +26,6 @@
 // here are the minimum needed to keep PJS2 usable for daily job-search work.
 // Larger features moved to ~/work/pjs3/docs/POST_MVP_BACKLOG.md on 2026-04-26.
 //
-// @todo 30 Activity Report: Add per-row Copy buttons for employer phone, employer email, and full company address (matching the existing Application URL Copy button). TN unemployment requires "one of" {phone, email, address, URL} per entry; the data already exists in c.companyPhone, ct.contactEmail, and c.companyAddress1+companyCity+companyState+companyZip but isn't fully exposed in the report. Surfacing each with copy buttons saves the manual "if URL is missing, scroll back to find an alternative" workflow. Identified 2026-04-26 from TN form screenshot review.
 // @todo 40 Application Method + Found Method: add two columns to job — applicationMethod and foundMethod (both VARCHAR with sensible defaults), expose via Model/Controller/API, add select dropdowns in the jobs list inline edit and the review panel bar, and update reports.php to read from these columns with 'Online' fallback. Two distinct concepts: applicationMethod = how the user applied (Online, Email, Phone, In-person, Referral, Staffing Agency), foundMethod = how the user discovered the job (Online, News, Paper, Referral, Word-of-Mouth, Agency, Other). Both are needed for unemployment activity reporting which wants breadth of search activity. Phase 1 (default applicationMethod 'Online' in reports.php) shipped 2026-04-26; this is phase 2. PJS3 MVP_SCOPE already includes applicationMethod as a workspace-scoped lookup; foundMethod placement (MVP vs post-MVP) is an open PJS3 decision as of 2026-04-26. If PJS3 ships before this becomes painful, defer entirely.
 //
 // === Migrated to PJS3 (2026-04-26) ===
@@ -57,5 +56,6 @@
 // DONE 20 Review panel: Encode state in URL via ?jobId=X (refresh-safe, forwardable, print-pasteable) (2026-04-26)
 // DONE 25 Review panel: Details button → jobDetail.php (2026-04-26)
 // DONE 25 Review panel: Show Next/Skip past last active job (labeled "N closed" so the boundary is visible) (2026-04-26)
-// DONE 35 index.php: main() pattern + outer try/catch \Throwable; renders friendly "Temporarily Unavailable" 503 on transient DB/DNS hiccups instead of leaking a 500 (2026-04-26)
+// DONE 30 Activity Report: Per-row Copy buttons for phone, email, address, URL (TN "one of" requirement) (2026-04-26)
+// DONE 35 index.php: main() pattern + outer try/catch on layered semantic exceptions (DaoException -> "Database Error" with DB-targeted causes, \Throwable -> "Unexpected" with honest "I don't know" fallback). DBConnection wraps mysqli_sql_exception so DaoException catches DB issues. (2026-04-26)
 // DONE 60 Write KeywordListView

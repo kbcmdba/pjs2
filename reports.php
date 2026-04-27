@@ -127,6 +127,22 @@ if ($result->num_rows === 0) {
   <tbody>
 HTML;
 
+    // Helper: build "Label: value [Copy]" line. Used in row 2 for each of
+    // the TN-unemployment "one of" required fields (phone, email, address,
+    // URL) so KB can paste any of them straight into the portal.
+    $buildCopyField = function (string $label, string $value, bool $isLink = false): string {
+        if ($value === '') {
+            return '<div><strong>' . $label . ':</strong> <em style="color: #999;">[not on file]</em></div>';
+        }
+        $safe = Tools::htmlOut($value);
+        $display = $isLink
+            ? "<a href=\"$safe\" target=\"_blank\">$safe</a>"
+            : $safe;
+        return '<div><strong>' . $label . ':</strong> ' . $display
+            . " <button type=\"button\" class=\"copy-url-btn\" data-url=\"$safe\""
+            . " style=\"margin-left: 8px; padding: 2px 8px; font-size: 0.85em; cursor: pointer;\">Copy</button></div>";
+    };
+
     $rowStyle = 'treven';
     while ($row = $result->fetch_assoc()) {
         $date = date('m/d/Y', strtotime($row['lastStatusChange']));
@@ -154,21 +170,34 @@ HTML;
         // rare mail / phone / in-person / referral cases get reported correctly.
         $method = 'Online';
         $nextAction = Tools::htmlOut($row['nextAction'] ?? '');
-        // Unemployment activity reporting requires the URL used for online
-        // applications. Rendered on its own full-width row beneath the data
-        // row so long ATS URLs (Workday, Greenhouse, Eightfold) get plenty of
-        // space, with a Copy button so KB can paste straight into the
-        // unemployment portal without manual select+copy.
-        $urlCellContent = '';
-        if ($method === 'Online' && ! empty($row['url'])) {
-            $safeUrl = Tools::htmlOut($row['url']);
-            $urlCellContent = '<strong>URL:</strong> '
-                . "<a href=\"$safeUrl\" target=\"_blank\">$safeUrl</a> "
-                . "<button type=\"button\" class=\"copy-url-btn\" data-url=\"$safeUrl\""
-                . " style=\"margin-left: 8px; padding: 2px 8px; font-size: 0.85em; cursor: pointer;\">Copy</button>";
-        } else {
-            $urlCellContent = '<em style="color: #999;">[no URL on file]</em>';
+        // Assemble full company address from the parts available on the
+        // company record. TN's form wants a complete street address, not
+        // just city/state.
+        $addressParts = [];
+        if (! empty($row['companyAddress1'])) {
+            $addressParts[] = $row['companyAddress1'];
         }
+        if (! empty($row['companyAddress2'])) {
+            $addressParts[] = $row['companyAddress2'];
+        }
+        $cityStateZip = trim(
+            ($row['companyCity'] ?? '')
+            . (! empty($row['companyState']) ? ', ' . $row['companyState'] : '')
+            . (! empty($row['companyZip']) ? ' ' . $row['companyZip'] : '')
+        );
+        if ($cityStateZip !== '' && $cityStateZip !== ',') {
+            $addressParts[] = $cityStateZip;
+        }
+        $fullAddress = implode(', ', $addressParts);
+
+        // Build all four "one of" fields (phone, email, address, URL). TN
+        // unemployment requires *any one* of these per entry; surfacing all
+        // four with copy buttons lets KB pick whichever the row supplies.
+        $urlValue = ($method === 'Online') ? ($row['url'] ?? '') : '';
+        $contactBlockContent = $buildCopyField('Phone', $row['companyPhone'] ?? '')
+                             . $buildCopyField('Email', $row['contactEmail'] ?? '')
+                             . $buildCopyField('Address', $fullAddress)
+                             . $buildCopyField('URL', $urlValue, true);
 
         // Row 1: data columns. Class on tr keeps both rows of one job grouped
         // by background color (treven/trodd overrides the per-row nth-child).
@@ -183,9 +212,9 @@ HTML;
         $body .= "<td>$method</td>";
         $body .= "<td>$nextAction</td>";
         $body .= "</tr>\n";
-        // Row 2: URL spans the full table width.
+        // Row 2: contact block spans the full table width.
         $body .= "    <tr class=\"$rowStyle\">";
-        $body .= "<td colspan=\"9\" style=\"padding-left: 30px; word-break: break-all;\">$urlCellContent</td>";
+        $body .= "<td colspan=\"9\" style=\"padding-left: 30px; word-break: break-all;\">$contactBlockContent</td>";
         $body .= "</tr>\n";
         $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
     }
