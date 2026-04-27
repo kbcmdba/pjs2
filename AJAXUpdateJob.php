@@ -43,13 +43,11 @@ $id = Tools::param('id');
 $primaryContactId = Tools::param('contactId');
 $companyId = Tools::param('companyId');
 $applicationStatusId = Tools::param('applicationStatusId');
+// lastStatusChange is server-managed: only updates when applicationStatusId
+// actually changes. If form sends empty + status unchanged, preserve existing.
+// If form sends empty + status changed, default to NOW(). If form sends a
+// value (manual override / backdating), honor it as-is.
 $lastStatusChange = Tools::param('lastStatusChange');
-// Default to NOW() if empty so a job with a zero-date stored history
-// (e.g., from an API create that didn't set it) can still be saved
-// from inline edit. Caught 2026-04-26.
-if ($lastStatusChange === '' || $lastStatusChange === null) {
-    $lastStatusChange = date('Y-m-d H:i:s');
-}
 $urgency = Tools::param('urgency');
 $nextActionDue = Tools::param('nextActionDue');
 $nextAction = Tools::param('nextAction');
@@ -85,10 +83,23 @@ try {
         }
     }
     $jobModel = $jobController->get($id);
+    $existingStatusId = $jobModel->getApplicationStatusId();
+    $existingLastStatusChange = $jobModel->getLastStatusChange();
     $jobModel->setPrimaryContactId($primaryContactId ?: null);
     $jobModel->setCompanyId($companyId ?: null);
     $jobModel->setApplicationStatusId($applicationStatusId);
-    $jobModel->setLastStatusChange($lastStatusChange);
+    // lastStatusChange logic: status drives the field. Form input is honored
+    // when explicit, ignored when empty (existing value preserved unless the
+    // status itself is changing, in which case NOW() is the implicit default).
+    if ($lastStatusChange === '' || $lastStatusChange === null) {
+        if ((int) $applicationStatusId === (int) $existingStatusId) {
+            $jobModel->setLastStatusChange($existingLastStatusChange);
+        } else {
+            $jobModel->setLastStatusChange(date('Y-m-d H:i:s'));
+        }
+    } else {
+        $jobModel->setLastStatusChange($lastStatusChange);
+    }
     $jobModel->setUrgency($urgency);
     $jobModel->setNextActionDue($nextActionDue);
     $jobModel->setNextAction($nextAction);

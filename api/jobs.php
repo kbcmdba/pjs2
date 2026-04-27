@@ -194,10 +194,27 @@ switch ($method) {
                     exit(0);
                 }
             }
+            // Capture pre-update values for lastStatusChange logic below.
+            $existingStatusId = $jobModel->getApplicationStatusId();
+            $existingLastStatusChange = $jobModel->getLastStatusChange();
+
             $jobModel->setPrimaryContactId(Tools::param('primaryContactId') ?: null);
             $jobModel->setCompanyId(Tools::param('companyId') ?: null);
-            $jobModel->setApplicationStatusId(Tools::param('applicationStatusId'));
-            $jobModel->setLastStatusChange(Tools::param('lastStatusChange'));
+            $newStatusId = Tools::param('applicationStatusId');
+            $jobModel->setApplicationStatusId($newStatusId);
+            // lastStatusChange is server-managed: form input wins when explicit;
+            // empty input preserves existing value unless the status itself is
+            // changing, in which case NOW() is the implicit default.
+            $reqLastStatusChange = Tools::param('lastStatusChange');
+            if ($reqLastStatusChange === '' || $reqLastStatusChange === null) {
+                if ((int) $newStatusId === (int) $existingStatusId) {
+                    $jobModel->setLastStatusChange($existingLastStatusChange);
+                } else {
+                    $jobModel->setLastStatusChange(date('Y-m-d H:i:s'));
+                }
+            } else {
+                $jobModel->setLastStatusChange($reqLastStatusChange);
+            }
             $jobModel->setUrgency(Tools::param('urgency'));
             $jobModel->setNextActionDue(Tools::param('nextActionDue'));
             $jobModel->setNextAction(Tools::param('nextAction'));

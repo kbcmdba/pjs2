@@ -671,8 +671,12 @@ function ajaxValidateJob( primaryContactId
         ) {
         message += "Next Action Due must be valid.\n" ;
     }
-    if  ( !  ( isDateValid( lastStatusChange, true )
-            || isDateTimeValid( lastStatusChange, true )
+    // lastStatusChange is server-managed: only updates when applicationStatusId
+    // actually changes. The form may pre-fill empty for jobs whose status has
+    // never changed. So validate as optional here; server preserves existing
+    // value if empty + status unchanged, defaults to NOW if status changed.
+    if  ( !  ( isDateValid( lastStatusChange, false )
+            || isDateTimeValid( lastStatusChange, false )
              )
         ) {
         message += "Last Status Change must be valid.\n" ;
