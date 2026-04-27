@@ -177,6 +177,17 @@ try {
         'Database has not been initialized (run resetDb.php)',
     ]);
     exit;
+} catch (ControllerException $e) {
+    // Controller-layer problem - usually a query error or unexpected
+    // controller logic failure (NOT a connection issue; that comes through
+    // as DaoException). Examples: prepared-statement bind error, missing
+    // required field, schema drift between controller code and DB.
+    renderErrorPage($e, 'Controller Error', [
+        'A controller failed mid-request - usually a SQL/schema mismatch',
+        'Recent code change may have introduced a query that does not match the deployed schema',
+        'Check the PHP error log for the underlying mysqli error message',
+    ]);
+    exit;
 } catch (\Throwable $e) {
     // Anything that isn't a known semantic exception type. Honest about
     // not knowing what category of problem this is.

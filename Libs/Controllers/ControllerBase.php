@@ -40,13 +40,14 @@ abstract class ControllerBase
      */
     public function __construct($readWriteMode = 'write')
     {
-        try {
-            $dbc = new DBConnection($readWriteMode);
-            $this->_dbh = $dbc->getConnection();
-            $this->_dbh->autocommit(true);
-        } catch (\Exception $e) {
-            throw new ControllerException('Problem connecting to database: ' . $this->_dbh->error);
-        }
+        // Let DaoException (DB-layer) propagate as-is so upstream catch
+        // hierarchies can categorize it correctly. The previous version
+        // caught \Exception (too broad), rewrapped as ControllerException,
+        // and tried to read $this->_dbh->error on a null _dbh in the catch
+        // handler — three bugs in five lines, fixed 2026-04-27.
+        $dbc = new DBConnection($readWriteMode);
+        $this->_dbh = $dbc->getConnection();
+        $this->_dbh->autocommit(true);
     }
 
     /**
