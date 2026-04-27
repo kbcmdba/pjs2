@@ -111,16 +111,21 @@ class JobListView extends ListViewBase
   <tbody>
 
 HTML;
-        $rowStyle = 'treven';
+        // No treven/trodd here — let CSS :nth-child handle the alternation so
+        // it follows DOM position. After client-side sort the rows reorder, and
+        // a class-based labeling scheme would carry stale colors with the rows
+        // (every-other-row pattern visibly breaks). nth-child stays correct
+        // regardless of sort. CompanyListView still uses the class-based
+        // pattern because its 2-row-per-company grouping needs both rows to
+        // share the same background — that case is the exception.
         foreach ($this->getJobModels() as $jobModel) {
             $id = $jobModel->getId();
             $row = $this->displayJobRow($jobModel, 'list');
-            $classes = $rowStyle;
+            $classAttr = '';
             if (! $jobModel->getIsActiveSummary()) {
-                $classes .= ' closed-job';
+                $classAttr = ' class="closed-job"';
             }
-            $body .= "    <tr id=\"ux$id\" class=\"$classes\">\n$row\n    </tr>";
-            $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
+            $body .= "    <tr id=\"ux$id\"$classAttr>\n$row\n    </tr>";
         }
         
         $body .= "  </tbody>\n</table>\n";
