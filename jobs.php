@@ -25,10 +25,53 @@ namespace com\kbcmdba\pjs2;
 require_once 'Libs/autoload.php';
 
 $config = new Config();
-$page = new PJSWebPage($config->getTitle() . " - Jobs");
-$body = "<h2>Jobs</h2>\n";
 $controller = new JobController('read');
-$modelList = $controller->getAll();
+
+// Filter params from the dashboard click-throughs. All "active-only" filters
+// inherently exclude closed-state statuses (CLOSED, INVALID, MISMATCH, etc.)
+// because the controller methods JOIN on applicationStatus.isActive = 1.
+$filter  = Tools::param('filter');
+$urgency = Tools::param('urgency');
+
+$pageTitle = 'Jobs';
+$heading   = 'Jobs';
+$modelList = null;
+
+if ($filter !== '') {
+    $now      = $controller->now();
+    $today    = $controller->today();
+    $tomorrow = $controller->tomorrow();
+    $nextWeek = ControllerBase::datestamp(time() + 7 * 86400);
+
+    if ($filter === 'overdue') {
+        $modelList = $controller->getActiveOverdue($now);
+        $pageTitle = 'Overdue Jobs';
+        $heading   = 'Overdue (active jobs whose next action is past due)';
+    } elseif ($filter === 'dueToday') {
+        $modelList = $controller->getActiveDueRange($today, $tomorrow);
+        $pageTitle = 'Due Today';
+        $heading   = 'Due Today (active jobs)';
+    } elseif ($filter === 'dueWeek') {
+        $modelList = $controller->getActiveDueRange($today, $nextWeek);
+        $pageTitle = 'Due This Week';
+        $heading   = 'Due This Week (active jobs)';
+    }
+} elseif ($urgency !== '' && in_array($urgency, ['high', 'medium', 'low'], true)) {
+    $modelList = $controller->getActiveByUrgency($urgency);
+    $pageTitle = ucfirst($urgency) . ' Urgency';
+    $heading   = ucfirst($urgency) . ' Urgency (active jobs)';
+}
+
+if ($modelList === null) {
+    // No filter (or unrecognized one) — show everything.
+    $modelList = $controller->getAll();
+}
+
+$page = new PJSWebPage($config->getTitle() . " - $pageTitle");
+$body = "<h2>" . Tools::htmlOut($heading) . "</h2>\n";
+if ($filter !== '' || $urgency !== '') {
+    $body .= '<p style="margin: 0 12px 12px;"><a href="jobs.php">&larr; Show all jobs</a></p>' . "\n";
+}
 $modelListView = new JobListView('html', $modelList);
 $body .= $modelListView->getView();
 $page->setBody($body);

@@ -602,6 +602,71 @@ SQL;
     }
 
     /**
+     * Get active jobs (excluding closed-state statuses) with the given urgency.
+     *
+     * @param string $urgency 'high' | 'medium' | 'low'
+     * @throws ControllerException
+     * @return JobModel[]
+     */
+    public function getActiveByUrgency($urgency)
+    {
+        $sql = <<<SQL
+SELECT j.id
+     , j.primaryContactId
+     , j.companyId
+     , j.applicationStatusId
+     , j.lastStatusChange
+     , j.urgency
+     , j.created
+     , j.updated
+     , j.nextActionDue
+     , j.nextAction
+     , j.positionTitle
+     , j.location
+     , j.url
+     , j.compRangeLow
+     , j.compRangeHigh
+  FROM job j
+  JOIN applicationStatus a ON a.id = j.applicationStatusId
+ WHERE a.isActive = 1
+   AND j.urgency = ?
+ ORDER
+    BY j.nextActionDue ASC
+     , j.lastStatusChange DESC
+
+SQL;
+        $stmt = $this->_dbh->prepare($sql);
+        if (! $stmt || ! $stmt->bind_param('s', $urgency)) {
+            throw new ControllerException('Failed to prepare statement. (' . $this->_dbh->error . ')');
+        }
+        if (! $stmt->execute()) {
+            throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
+        }
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh);
+        $models = [];
+        while ($stmt->fetch()) {
+            $model = new JobModel();
+            $model->setId($id);
+            $model->setPrimaryContactId($primaryContactId);
+            $model->setCompanyId($companyId);
+            $model->setApplicationStatusId($applicationStatusId);
+            $model->setLastStatusChange($lastStatusChange);
+            $model->setUrgency($urgency);
+            $model->setCreated($created);
+            $model->setUpdated($updated);
+            $model->setNextActionDue($nextActionDue);
+            $model->setNextAction($nextAction);
+            $model->setPositionTitle($positionTitle);
+            $model->setLocation($location);
+            $model->setUrl($url);
+            $model->setCompRangeLow($compRangeLow);
+            $model->setCompRangeHigh($compRangeHigh);
+            $models[] = $model;
+        }
+        return $models;
+    }
+
+    /**
      * Get active jobs with nextActionDue between two dates.
      *
      * @param string $from Date string (Y-m-d)

@@ -54,6 +54,9 @@ function main()
     $searchController = new SearchController('read');
     $searches = $searchController->countAll();
 
+    // Each number on the dashboard is a click-through to a filtered jobs
+    // list. Filters use the active-only controller methods, so closed-state
+    // jobs (CLOSED, INVALID, MISMATCH, ...) are excluded automatically.
     $body .= <<<HTML
 <h2>Dashboard</h2>
 <table id="dashboardSummary">
@@ -63,9 +66,13 @@ function main()
     <th>Saved Searches</th>
   </tr>
   <tr>
-    <td>$jobsOverdue</td><td>$jobsDueToday</td><td>$jobsDue7Days</td>
-    <td>$highUrgency</td><td>$mediumUrgency</td><td>$lowUrgency</td>
-    <td>$searches</td>
+    <td><a href="jobs.php?filter=overdue">$jobsOverdue</a></td>
+    <td><a href="jobs.php?filter=dueToday">$jobsDueToday</a></td>
+    <td><a href="jobs.php?filter=dueWeek">$jobsDue7Days</a></td>
+    <td><a href="jobs.php?urgency=high">$highUrgency</a></td>
+    <td><a href="jobs.php?urgency=medium">$mediumUrgency</a></td>
+    <td><a href="jobs.php?urgency=low">$lowUrgency</a></td>
+    <td><a href="searches.php">$searches</a></td>
   </tr>
 </table>
 
