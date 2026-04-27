@@ -871,3 +871,95 @@ function doDeleteJob( id ) {
     } ) ; // END OF doAjaxJsonResultWithCallback( 1 )
     return false ;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// Sortable jobs table.
+//
+// Each sortable <th> in the jobs table gets a ♦ indicator next to its label
+// signaling "this column can be sorted." Clicking a sortable column:
+//   - Sets it as the active sort column (replaces ♦ with ^ asc or v desc)
+//   - Resets all other columns back to ♦
+//   - Toggles direction on repeated clicks of the same column
+// Sort is client-side only (~50 rows; no need for SQL ORDER BY).
+//
+// data-sort-type on the <th> tells the comparator how to interpret cell
+// content: "text", "num", "date", or "urgency" (high > medium > low).
+// data-sort on a <td> overrides the cell's textContent for sort purposes
+// (used on the Comp Range cell since that one has stacked HTML).
+
+var jobsSortColumn = -1 ;
+var jobsSortDir = 'asc' ;
+
+function sortJobsTable( thEl, columnIndex ) {
+    var table = document.getElementById( 'jobs' ) ;
+    if ( ! table ) return ;
+    var tbody = table.tBodies[ 0 ] ;
+    if ( ! tbody ) return ;
+
+    // Determine direction: same column toggles, new column starts asc.
+    if ( jobsSortColumn === columnIndex ) {
+        jobsSortDir = ( jobsSortDir === 'asc' ) ? 'desc' : 'asc' ;
+    } else {
+        jobsSortColumn = columnIndex ;
+        jobsSortDir = 'asc' ;
+    }
+
+    var sortType = thEl.getAttribute( 'data-sort-type' ) || 'text' ;
+    var rows = Array.prototype.slice.call( tbody.rows ) ;
+
+    rows.sort( function( a, b ) {
+        var av = sortValueFromRow( a, columnIndex, sortType ) ;
+        var bv = sortValueFromRow( b, columnIndex, sortType ) ;
+        var cmp = 0 ;
+        if ( sortType === 'num' || sortType === 'urgency' ) {
+            cmp = av - bv ;
+        } else {
+            // text or date — both sort lexicographically (ISO dates work).
+            if ( av < bv ) cmp = -1 ;
+            else if ( av > bv ) cmp = 1 ;
+        }
+        return ( jobsSortDir === 'asc' ) ? cmp : -cmp ;
+    } ) ;
+
+    // Re-append in sorted order. Browsers move existing nodes rather than
+    // cloning, so all event handlers and IDs are preserved.
+    rows.forEach( function( r ) { tbody.appendChild( r ) ; } ) ;
+
+    updateSortIndicators( thEl, jobsSortDir ) ;
+}
+
+function sortValueFromRow( row, columnIndex, sortType ) {
+    var cell = row.cells[ columnIndex ] ;
+    if ( ! cell ) return ( sortType === 'num' || sortType === 'urgency' ) ? 0 : '' ;
+
+    // data-sort attribute wins when present (e.g., Comp Range cells).
+    var explicit = cell.getAttribute( 'data-sort' ) ;
+    var raw = ( explicit !== null && explicit !== '' ) ? explicit : cell.textContent ;
+    raw = ( raw || '' ).trim() ;
+
+    if ( sortType === 'num' ) {
+        if ( raw === '' ) return -Infinity ;  // empty sorts to end on desc, top on asc
+        return parseFloat( raw.replace( /[^0-9.\-]/g, '' ) ) || 0 ;
+    }
+    if ( sortType === 'urgency' ) {
+        var rank = { 'high': 3, 'medium': 2, 'low': 1 } ;
+        return rank[ raw.toLowerCase() ] || 0 ;
+    }
+    if ( sortType === 'date' ) {
+        return raw ;  // ISO format sorts lexicographically — empty sorts first
+    }
+    return raw.toLowerCase() ;
+}
+
+function updateSortIndicators( activeTh, dir ) {
+    var headers = document.querySelectorAll( '#jobs thead th.sortable' ) ;
+    for ( var i = 0 ; i < headers.length ; i++ ) {
+        var ind = headers[ i ].querySelector( '.sort-ind' ) ;
+        if ( ! ind ) continue ;
+        if ( headers[ i ] === activeTh ) {
+            ind.innerHTML = ( dir === 'asc' ) ? '&#94;' : 'v' ;  // ^ for asc, v for desc
+        } else {
+            ind.innerHTML = '&#9830;' ;  // ♦
+        }
+    }
+}

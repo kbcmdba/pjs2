@@ -93,19 +93,19 @@ class JobListView extends ListViewBase
     <tr>
       <th>Actions</th>
       <th>URL</th>
-      <th>Urgency</th>
-      <th>Title</th>
-      <th>Comp<br />Range</th>
-      <th>Location</th>
-      <th>Company</th>
-      <th>Contact</th>
-      <th>Status</th>
-      <th>Next Action</th>
-      <th>Next Action Due</th>
-      <th>Last Status Change</th>
-      <th>Notes</th>
-      <th>Created</th>
-      <th>Updated</th>
+      <th class="sortable" data-sort-type="urgency" onclick="sortJobsTable(this, 2)">Urgency <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 3)">Title <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="num" onclick="sortJobsTable(this, 4)">Comp<br />Range <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 5)">Location <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 6)">Company <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 7)">Contact <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 8)">Status <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 9)">Next Action <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="date" onclick="sortJobsTable(this, 10)">Next Action Due <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="date" onclick="sortJobsTable(this, 11)">Last Status Change <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="num" onclick="sortJobsTable(this, 12)">Notes <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="date" onclick="sortJobsTable(this, 13)">Created <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="date" onclick="sortJobsTable(this, 14)">Updated <span class="sort-ind">&#9830;</span></th>
     </tr>
   </thead>
   <tbody>
@@ -328,7 +328,7 @@ HTML;
       <td><a href="?jobId=$id" onclick="reviewJob( '$id', '$safeUrl' ); return false;" data-status-id="$applicationStatusId">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td $click>$urgency</td>
       <td $click>$positionTitle</td>
-      <td $click>$compRangeDisplay</td>
+      <td $click data-sort="$compRangeHighInput">$compRangeDisplay</td>
       <td $click>$location</td>
       <td $click>$companyName</td>
       <td $click>$contactName</td>

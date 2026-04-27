@@ -97,6 +97,17 @@ th {
 	background-color: lightgray ;
 }
 
+th.sortable {
+	cursor: pointer ;
+	user-select: none ;
+}
+
+th.sortable .sort-ind {
+	color: #888 ;
+	margin-left: 4px ;
+	font-size: 0.9em ;
+}
+
 /* Default alternating rows for any tbody. Tables that group rows (e.g.,
    CompanyListView's 2-row-per-company layout) override via .treven/.trodd
    below. */
