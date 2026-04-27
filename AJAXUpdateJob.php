@@ -44,6 +44,12 @@ $primaryContactId = Tools::param('contactId');
 $companyId = Tools::param('companyId');
 $applicationStatusId = Tools::param('applicationStatusId');
 $lastStatusChange = Tools::param('lastStatusChange');
+// Default to NOW() if empty so a job with a zero-date stored history
+// (e.g., from an API create that didn't set it) can still be saved
+// from inline edit. Caught 2026-04-26.
+if ($lastStatusChange === '' || $lastStatusChange === null) {
+    $lastStatusChange = date('Y-m-d H:i:s');
+}
 $urgency = Tools::param('urgency');
 $nextActionDue = Tools::param('nextActionDue');
 $nextAction = Tools::param('nextAction');

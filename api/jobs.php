@@ -106,7 +106,15 @@ switch ($method) {
         $primaryContactId = Tools::param('primaryContactId');
         $companyId = Tools::param('companyId');
         $applicationStatusId = Tools::param('applicationStatusId');
+        // Default to NOW() if caller didn't provide. Empty string would
+        // otherwise become a 0000-00-00 00:00:00 zero-date in the DB and
+        // block subsequent inline-edit saves (validator rejects empty
+        // dates). Caught 2026-04-26 after JobImporter-style API creates
+        // produced un-editable jobs.
         $lastStatusChange = Tools::param('lastStatusChange');
+        if ($lastStatusChange === '' || $lastStatusChange === null) {
+            $lastStatusChange = date('Y-m-d H:i:s');
+        }
         $urgency = Tools::param('urgency');
         $nextActionDue = Tools::param('nextActionDue');
         $nextAction = Tools::param('nextAction');
