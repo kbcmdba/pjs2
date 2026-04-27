@@ -730,6 +730,8 @@ function saveAddJob( id ) {
     var positionTitle       = document.getElementById( "positionTitle" + rowId ).value.trim() ;
     var location            = document.getElementById( "location" + rowId ).value.trim() ;
     var url                 = document.getElementById( "url" + rowId ).value.trim() ;
+    var compRangeLow        = document.getElementById( "compRangeLow" + rowId ).value.trim() ;
+    var compRangeHigh       = document.getElementById( "compRangeHigh" + rowId ).value.trim() ;
     var msg                 = ajaxValidateJob( primaryContactId
                                              , companyId
                                              , applicationStatusId
@@ -756,6 +758,8 @@ function saveAddJob( id ) {
              + "&positionTitle=" + encodeURIComponent( positionTitle )
              + "&location=" + encodeURIComponent( location )
              + "&url=" + encodeURIComponent( url )
+             + "&compRangeLow=" + encodeURIComponent( compRangeLow )
+             + "&compRangeHigh=" + encodeURIComponent( compRangeHigh )
              + "&rowId=" + encodeURIComponent( rowId )
              + "&rowStyle=add"
              ;
@@ -787,6 +791,8 @@ function saveUpdateJob( id ) {
     var positionTitle       = document.getElementById( "positionTitle" + id ).value.trim() ;
     var location            = document.getElementById( "location" + id ).value.trim() ;
     var url                 = document.getElementById( "url" + id ).value.trim() ;
+    var compRangeLow        = document.getElementById( "compRangeLow" + id ).value.trim() ;
+    var compRangeHigh       = document.getElementById( "compRangeHigh" + id ).value.trim() ;
     var msg                 = ajaxValidateJob( primaryContactId
                                              , companyId
                                              , applicationStatusId
@@ -814,6 +820,8 @@ function saveUpdateJob( id ) {
              + "&positionTitle=" + encodeURIComponent( positionTitle )
              + "&location=" + encodeURIComponent( location )
              + "&url=" + encodeURIComponent( url )
+             + "&compRangeLow=" + encodeURIComponent( compRangeLow )
+             + "&compRangeHigh=" + encodeURIComponent( compRangeHigh )
              + "&rowStyle=update"
              ;
     var isAsync = true ;

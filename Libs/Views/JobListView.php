@@ -95,6 +95,7 @@ class JobListView extends ListViewBase
       <th>URL</th>
       <th>Urgency</th>
       <th>Title</th>
+      <th>Comp<br />Range</th>
       <th>Location</th>
       <th>Company</th>
       <th>Contact</th>
@@ -201,6 +202,8 @@ HTML;
             $positionTitle = $jobModel->getPositionTitle();
             $location = $jobModel->getLocation();
             $url = $jobModel->getUrl();
+            $compRangeLow = $jobModel->getCompRangeLow();
+            $compRangeHigh = $jobModel->getCompRangeHigh();
             $now = Tools::currentTimestamp();
             $dueClass = (isset($nextActionDue) && ($nextActionDue !== '') && ($nextActionDue < $now)) ? "class=\"overdue\"" : "";
             // Escape all output variables to prevent XSS
@@ -219,6 +222,18 @@ HTML;
             $created = Tools::htmlOut($created);
             $updated = Tools::htmlOut($updated);
         }
+        // Comp range display: high on top, low on bottom (stacked) when both present
+        if (isset($compRangeHigh) && $compRangeHigh !== null && isset($compRangeLow) && $compRangeLow !== null) {
+            $compRangeDisplay = '$' . number_format($compRangeHigh) . '<br />$' . number_format($compRangeLow);
+        } elseif (isset($compRangeHigh) && $compRangeHigh !== null) {
+            $compRangeDisplay = '$' . number_format($compRangeHigh);
+        } elseif (isset($compRangeLow) && $compRangeLow !== null) {
+            $compRangeDisplay = '$' . number_format($compRangeLow) . '+';
+        } else {
+            $compRangeDisplay = '';
+        }
+        $compRangeLowInput = (isset($compRangeLow) && $compRangeLow !== null) ? (int) $compRangeLow : '';
+        $compRangeHighInput = (isset($compRangeHigh) && $compRangeHigh !== null) ? (int) $compRangeHigh : '';
         $errorMessage = Tools::htmlOut($errorMessage);
         switch ($displayMode) {
             case 'add':
@@ -231,6 +246,10 @@ HTML;
       <td><input type="text" id="urlix$id" value="$url" onblur="checkDuplicateUrl( 'urlix$id' )" /></td>
       <td>{$this->_urgencyList}</td>
       <td><input type="text" id="positionTitleix$id" value="$positionTitle" /></td>
+      <td>
+        <input type="number" id="compRangeHighix$id" value="$compRangeHighInput" placeholder="High" style="width: 90px; display: block; margin-bottom: 2px;" />
+        <input type="number" id="compRangeLowix$id" value="$compRangeLowInput" placeholder="Low" style="width: 90px; display: block;" />
+      </td>
       <td><input type="text" id="locationix$id" value="$location" /></td>
       <td>{$this->_companyList}</td>
       <td>{$this->_contactList}</td>
@@ -255,6 +274,10 @@ HTML;
       <td><input type="text" id="url$id" value="$url" onblur="checkDuplicateUrl( 'url$id', '$id' )" /></td>
       <td>{$this->_urgencyList}</td>
       <td><input type="text" id="positionTitle$id" value="$positionTitle" /></td>
+      <td>
+        <input type="number" id="compRangeHigh$id" value="$compRangeHighInput" placeholder="High" style="width: 90px; display: block; margin-bottom: 2px;" />
+        <input type="number" id="compRangeLow$id" value="$compRangeLowInput" placeholder="Low" style="width: 90px; display: block;" />
+      </td>
       <td><input type="text" id="location$id" value="$location" /></td>
       <td>{$this->_companyList}</td>
       <td>{$this->_contactList}</td>
@@ -278,6 +301,7 @@ HTML;
       <td><a href="$safeUrl">$url</a></td>
       <td>$urgency</td>
       <td>$positionTitle</td>
+      <td>$compRangeDisplay</td>
       <td>$location</td>
       <td>$companyName</td>
       <td>$contactName</td>
@@ -304,6 +328,7 @@ HTML;
       <td><a href="?jobId=$id" onclick="reviewJob( '$id', '$safeUrl' ); return false;" data-status-id="$applicationStatusId">Review</a> | <a href="$safeUrl" target="_blank">New Tab</a></td>
       <td $click>$urgency</td>
       <td $click>$positionTitle</td>
+      <td $click>$compRangeDisplay</td>
       <td $click>$location</td>
       <td $click>$companyName</td>
       <td $click>$contactName</td>

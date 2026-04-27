@@ -50,6 +50,8 @@ $nextAction = Tools::param('nextAction');
 $positionTitle = Tools::param('positionTitle');
 $location = Tools::param('location');
 $url = Tools::param('url');
+$compRangeLow = Tools::param('compRangeLow');
+$compRangeHigh = Tools::param('compRangeHigh');
 $rowId = Tools::param('rowId');
 $result = 'OK';
 $jobId = '';
@@ -87,6 +89,8 @@ try {
     $jobModel->setPositionTitle($positionTitle);
     $jobModel->setLocation($location);
     $jobModel->setUrl($url);
+    $jobModel->setCompRangeLow($compRangeLow !== '' ? $compRangeLow : null);
+    $jobModel->setCompRangeHigh($compRangeHigh !== '' ? $compRangeHigh : null);
     $result = $jobController->update($jobModel);
     
     if (! ($result > 0)) {
