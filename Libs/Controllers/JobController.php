@@ -712,7 +712,7 @@ SQL;
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query . ' - ' . $this->_dbh->error);
                 }
-                if (! ($stmt->bind_param('iiissssssssii', $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh))) {
+                if (! ($stmt->bind_param('iiisssssssii', $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh))) {
                     throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
