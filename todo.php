@@ -28,8 +28,6 @@
 //
 // @todo 40 Application Method + Found Method: add two columns to job — applicationMethod and foundMethod (both VARCHAR with sensible defaults), expose via Model/Controller/API, add select dropdowns in the jobs list inline edit and the review panel bar, and update reports.php to read from these columns with 'Online' fallback. Two distinct concepts: applicationMethod = how the user applied (Online, Email, Phone, In-person, Referral, Staffing Agency), foundMethod = how the user discovered the job (Online, News, Paper, Referral, Word-of-Mouth, Agency, Other). Both are needed for unemployment activity reporting which wants breadth of search activity. Phase 1 (default applicationMethod 'Online' in reports.php) shipped 2026-04-26; this is phase 2. PJS3 MVP_SCOPE already includes applicationMethod as a workspace-scoped lookup; foundMethod placement (MVP vs post-MVP) is an open PJS3 decision as of 2026-04-26. If PJS3 ships before this becomes painful, defer entirely.
 //
-// @todo 30 Jobs list: Add a Comp Range column with two-line header "Comp<br />Range" and stacked values — crh on top, crl on bottom (per KB 2026-04-26). Inline edit takes both as numeric inputs. Make the column sortable by either bound. Schema/Model/Controller/API plumbing already shipped 2026-04-26 (Phase 1 from todo 30 below); this is Phase 2 — UI only.
-
 // === Migrated to PJS3 (2026-04-26) ===
 // MIGRATED 20 Review panel workflow on Searches page → PJS3 docs/POST_MVP_BACKLOG.md
 // MIGRATED 30 User-controlled sorting per page → PJS3 docs/POST_MVP_BACKLOG.md
@@ -58,6 +56,7 @@
 // DONE 20 Review panel: Encode state in URL via ?jobId=X (refresh-safe, forwardable, print-pasteable) (2026-04-26)
 // DONE 25 Review panel: Details button → jobDetail.php (2026-04-26)
 // DONE 25 Review panel: Show Next/Skip past last active job (labeled "N closed" so the boundary is visible) (2026-04-26)
+// DONE 30 Jobs list: Comp Range column (stacked crh/crl, inline edit) + schema/Model/Controller/API plumbing for compRangeLow/compRangeHigh (2026-04-26)
 // DONE 30 Activity Report: Per-row Copy buttons for phone, email, address, URL (TN "one of" requirement) (2026-04-26)
 // DONE 35 index.php: main() pattern + outer try/catch on layered semantic exceptions (DaoException -> "Database Error" with DB-targeted causes, \Throwable -> "Unexpected" with honest "I don't know" fallback). DBConnection wraps mysqli_sql_exception so DaoException catches DB issues. (2026-04-26)
 // DONE 60 Write KeywordListView
