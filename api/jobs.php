@@ -42,6 +42,8 @@ function jobToArray($job)
         'positionTitle' => $job->getPositionTitle(),
         'location' => $job->getLocation(),
         'url' => $job->getUrl(),
+        'compRangeLow' => $job->getCompRangeLow(),
+        'compRangeHigh' => $job->getCompRangeHigh(),
         'created' => $job->getCreated(),
         'updated' => $job->getUpdated(),
     ];
@@ -111,6 +113,8 @@ switch ($method) {
         $positionTitle = Tools::param('positionTitle');
         $location = Tools::param('location');
         $url = Tools::param('url');
+        $compRangeLow = Tools::param('compRangeLow');
+        $compRangeHigh = Tools::param('compRangeHigh');
 
         try {
             $jobModel = new JobModel();
@@ -124,6 +128,8 @@ switch ($method) {
             $jobModel->setPositionTitle($positionTitle);
             $jobModel->setLocation($location);
             $jobModel->setUrl($url);
+            $jobModel->setCompRangeLow($compRangeLow);
+            $jobModel->setCompRangeHigh($compRangeHigh);
 
             $jobController = new JobController();
             if ($url !== '' && $url !== null) {
@@ -190,6 +196,8 @@ switch ($method) {
             $jobModel->setPositionTitle(Tools::param('positionTitle'));
             $jobModel->setLocation(Tools::param('location'));
             $jobModel->setUrl($url);
+            $jobModel->setCompRangeLow(Tools::param('compRangeLow') !== '' ? Tools::param('compRangeLow') : null);
+            $jobModel->setCompRangeHigh(Tools::param('compRangeHigh') !== '' ? Tools::param('compRangeHigh') : null);
             $result = $jobController->update($jobModel);
             if (! ($result > 0)) {
                 throw new ControllerException("Update failed.");

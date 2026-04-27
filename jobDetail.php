@@ -86,11 +86,24 @@ if ($job['primaryContactId']) {
 }
 $body .= "  <tr><td style=\"font-weight: bold;\">Primary Contact</td><td>$contactVal</td></tr>\n";
 
+// Format comp range from low/high integers (annual USD) into a display string.
+$crLow = $job['compRangeLow'] ?? null;
+$crHigh = $job['compRangeHigh'] ?? null;
+$compDisplay = '';
+if ($crLow !== null && $crHigh !== null) {
+    $compDisplay = '$' . number_format((int) $crLow) . ' - $' . number_format((int) $crHigh);
+} elseif ($crLow !== null) {
+    $compDisplay = '$' . number_format((int) $crLow) . '+';
+} elseif ($crHigh !== null) {
+    $compDisplay = 'up to $' . number_format((int) $crHigh);
+}
+
 $fields = [
     'Location' => $job['location'],
     'Status' => $job['statusValue'],
     'Last Status Change' => $job['lastStatusChange'],
     'Urgency' => $job['urgency'],
+    'Comp Range' => $compDisplay,
     'Next Action Due' => $job['nextActionDue'],
     'Next Action' => $job['nextAction'],
     'URL' => $job['url'],

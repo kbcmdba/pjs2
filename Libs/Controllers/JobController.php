@@ -63,6 +63,8 @@ CREATE TABLE IF NOT EXISTS job
      , positionTitle         VARCHAR(255) NOT NULL DEFAULT ''
      , location              VARCHAR(255) NOT NULL DEFAULT ''
      , url                   VARCHAR(768) NOT NULL DEFAULT ''
+     , compRangeLow          INT UNSIGNED NULL DEFAULT NULL
+     , compRangeHigh         INT UNSIGNED NULL DEFAULT NULL
      , PRIMARY KEY pk_jobId ( id )
      , FOREIGN KEY fk_primaryContactId ( primaryContactId )
         REFERENCES contact ( id )
@@ -211,6 +213,8 @@ SELECT id
      , positionTitle
      , location
      , url
+     , compRangeLow
+     , compRangeHigh
   FROM job
  WHERE id = ?
 
@@ -222,7 +226,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url)) {
+        if (! $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh)) {
             throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         if ($stmt->fetch()) {
@@ -240,6 +244,8 @@ SQL;
             $model->setPositionTitle($positionTitle);
             $model->setLocation($location);
             $model->setUrl($url);
+            $model->setCompRangeLow($compRangeLow);
+            $model->setCompRangeHigh($compRangeHigh);
         } else {
             $model = null;
         }
@@ -269,6 +275,8 @@ SELECT id
      , positionTitle
      , location
      , url
+     , compRangeLow
+     , compRangeHigh
   FROM job
  WHERE url = ?
 
@@ -280,7 +288,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        if (! $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url)) {
+        if (! $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh)) {
             throw new ControllerException('Failed to bind to result: (' . $this->_dbh->error . ')');
         }
         if ($stmt->fetch()) {
@@ -298,6 +306,8 @@ SQL;
             $model->setPositionTitle($positionTitle);
             $model->setLocation($location);
             $model->setUrl($url);
+            $model->setCompRangeLow($compRangeLow);
+            $model->setCompRangeHigh($compRangeHigh);
         } else {
             $model = null;
         }
@@ -326,6 +336,8 @@ SELECT j.id
      , j.positionTitle
      , j.location
      , j.url
+     , j.compRangeLow
+     , j.compRangeHigh
   FROM job j
   LEFT JOIN applicationStatus a ON a.id = j.applicationStatusId
  ORDER
@@ -340,7 +352,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute SELECT statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url);
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh);
         $models = [];
         while ($stmt->fetch()) {
             $model = new JobModel();
@@ -357,6 +369,8 @@ SQL;
             $model->setPositionTitle($positionTitle);
             $model->setLocation($location);
             $model->setUrl($url);
+            $model->setCompRangeLow($compRangeLow);
+            $model->setCompRangeHigh($compRangeHigh);
             $models[] = $model;
         }
         return ($models);
@@ -484,6 +498,8 @@ SELECT id
      , positionTitle
      , location
      , url
+     , compRangeLow
+     , compRangeHigh
   FROM job
  WHERE applicationStatusId = ?
  ORDER
@@ -497,7 +513,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url);
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh);
         $models = [];
         while ($stmt->fetch()) {
             $model = new JobModel();
@@ -514,6 +530,8 @@ SQL;
             $model->setPositionTitle($positionTitle);
             $model->setLocation($location);
             $model->setUrl($url);
+            $model->setCompRangeLow($compRangeLow);
+            $model->setCompRangeHigh($compRangeHigh);
             $models[] = $model;
         }
         return $models;
@@ -542,6 +560,8 @@ SELECT j.id
      , j.positionTitle
      , j.location
      , j.url
+     , j.compRangeLow
+     , j.compRangeHigh
   FROM job j
   JOIN applicationStatus a ON a.id = j.applicationStatusId
  WHERE a.isActive = 1
@@ -557,7 +577,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url);
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh);
         $models = [];
         while ($stmt->fetch()) {
             $model = new JobModel();
@@ -574,6 +594,8 @@ SQL;
             $model->setPositionTitle($positionTitle);
             $model->setLocation($location);
             $model->setUrl($url);
+            $model->setCompRangeLow($compRangeLow);
+            $model->setCompRangeHigh($compRangeHigh);
             $models[] = $model;
         }
         return $models;
@@ -603,6 +625,8 @@ SELECT j.id
      , j.positionTitle
      , j.location
      , j.url
+     , j.compRangeLow
+     , j.compRangeHigh
   FROM job j
   JOIN applicationStatus a ON a.id = j.applicationStatusId
  WHERE a.isActive = 1
@@ -618,7 +642,7 @@ SQL;
         if (! $stmt->execute()) {
             throw new ControllerException('Failed to execute statement. (' . $this->_dbh->error . ')');
         }
-        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url);
+        $stmt->bind_result($id, $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $created, $updated, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh);
         $models = [];
         while ($stmt->fetch()) {
             $model = new JobModel();
@@ -635,6 +659,8 @@ SQL;
             $model->setPositionTitle($positionTitle);
             $model->setLocation($location);
             $model->setUrl($url);
+            $model->setCompRangeLow($compRangeLow);
+            $model->setCompRangeHigh($compRangeHigh);
             $models[] = $model;
         }
         return $models;
@@ -664,8 +690,10 @@ INSERT job
      , positionTitle
      , location
      , url
+     , compRangeLow
+     , compRangeHigh
      )
-VALUES ( NULL, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ? )
+VALUES ( NULL, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?, ?, ? )
 
 SQL;
                 $primaryContactId = $model->getPrimaryContactId();
@@ -678,11 +706,13 @@ SQL;
                 $positionTitle = $model->getPositionTitle();
                 $location = $model->getLocation();
                 $url = $model->getUrl();
+                $compRangeLow = $model->getCompRangeLow();
+                $compRangeHigh = $model->getCompRangeHigh();
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query . ' - ' . $this->_dbh->error);
                 }
-                if (! ($stmt->bind_param('iiisssssss', $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $nextActionDue, $nextAction, $positionTitle, $location, $url))) {
+                if (! ($stmt->bind_param('iiissssssssii', $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh))) {
                     throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {
@@ -727,6 +757,8 @@ UPDATE job
      , positionTitle = ?
      , location = ?
      , url = ?
+     , compRangeLow = ?
+     , compRangeHigh = ?
  WHERE id = ?
 
 SQL;
@@ -741,11 +773,13 @@ SQL;
                 $positionTitle = $model->getPositionTitle();
                 $location = $model->getLocation();
                 $url = $model->getUrl();
+                $compRangeLow = $model->getCompRangeLow();
+                $compRangeHigh = $model->getCompRangeHigh();
                 $stmt = $this->_dbh->prepare($query);
                 if (! $stmt) {
                     throw new ControllerException('Prepared statement failed for ' . $query);
                 }
-                if (! ($stmt->bind_param('iiisssssssi', $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $nextActionDue, $nextAction, $positionTitle, $location, $url, $id))) {
+                if (! ($stmt->bind_param('iiisssssssiii', $primaryContactId, $companyId, $applicationStatusId, $lastStatusChange, $urgency, $nextActionDue, $nextAction, $positionTitle, $location, $url, $compRangeLow, $compRangeHigh, $id))) {
                     throw new ControllerException('Binding parameters for prepared statement failed.');
                 }
                 if (! $stmt->execute()) {

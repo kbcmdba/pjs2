@@ -56,6 +56,10 @@ class JobModel extends ModelBase
 
     private $_url;
 
+    private $_compRangeLow;
+
+    private $_compRangeHigh;
+
     /**
      * class constructor
      */
@@ -415,5 +419,31 @@ class JobModel extends ModelBase
     public function setUrl($url)
     {
         $this->_url = $url;
+    }
+
+    /**
+     * @return int|null Annual USD; NULL means not disclosed.
+     */
+    public function getCompRangeLow()
+    {
+        return $this->_compRangeLow;
+    }
+
+    public function setCompRangeLow($v)
+    {
+        $this->_compRangeLow = ($v === null || $v === '') ? null : (int) $v;
+    }
+
+    /**
+     * @return int|null Annual USD; NULL means not disclosed / open-ended.
+     */
+    public function getCompRangeHigh()
+    {
+        return $this->_compRangeHigh;
+    }
+
+    public function setCompRangeHigh($v)
+    {
+        $this->_compRangeHigh = ($v === null || $v === '') ? null : (int) $v;
     }
 }
