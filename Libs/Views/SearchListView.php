@@ -85,17 +85,16 @@ class SearchListView extends ListViewBase
   <tbody>
 
 HTML;
-        $rowStyle = 'treven';
+        // No treven/trodd: CSS :nth-child handles alternation, survives sort.
         foreach ($this->getSearchModels() as $search) {
             $id = $search->getId();
             $row = $this->displaySearchRow($search, 'list');
             $body .= <<<HTML
-    <tr id="ux$id" class="$rowStyle">
+    <tr id="ux$id">
       $row
     </tr>
 
 HTML;
-            $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
         }
         $body .= "  </tbody>\n</table>\n";
         return $body;

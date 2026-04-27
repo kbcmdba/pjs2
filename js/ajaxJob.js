@@ -887,45 +887,85 @@ function doDeleteJob( id ) {
 // data-sort on a <td> overrides the cell's textContent for sort purposes
 // (used on the Comp Range cell since that one has stacked HTML).
 
-var jobsSortColumn = -1 ;
-var jobsSortDir = 'asc' ;
+// Per-table sort state keyed by table id.
+var sortStateByTable = {} ;
 
 function sortJobsTable( thEl, columnIndex ) {
-    var table = document.getElementById( 'jobs' ) ;
+    sortTable( thEl, columnIndex, 'jobs' ) ;
+}
+
+function sortContactsTable( thEl, columnIndex ) {
+    sortTable( thEl, columnIndex, 'contacts' ) ;
+}
+
+function sortCompaniesTable( thEl, columnIndex ) {
+    sortTable( thEl, columnIndex, 'companies', { pairRows: true } ) ;
+}
+
+/**
+ * Generic table sort. Reorders rows in tbody based on the clicked column.
+ *
+ * @param {HTMLElement} thEl       The clicked <th>
+ * @param {Number}      columnIndex Zero-based column index to sort on
+ * @param {String}      tableId    The <table> element's id
+ * @param {Object}      opts       { pairRows: bool } - when true, treat
+ *                                 every consecutive pair of <tr>s as one
+ *                                 logical row (used for CompanyListView's
+ *                                 2-row-per-company layout).
+ */
+function sortTable( thEl, columnIndex, tableId, opts ) {
+    opts = opts || {} ;
+    var pairRows = !! opts.pairRows ;
+    var table = document.getElementById( tableId ) ;
     if ( ! table ) return ;
     var tbody = table.tBodies[ 0 ] ;
     if ( ! tbody ) return ;
 
-    // Determine direction: same column toggles, new column starts asc.
-    if ( jobsSortColumn === columnIndex ) {
-        jobsSortDir = ( jobsSortDir === 'asc' ) ? 'desc' : 'asc' ;
+    var state = sortStateByTable[ tableId ] || { column: -1, dir: 'asc' } ;
+    if ( state.column === columnIndex ) {
+        state.dir = ( state.dir === 'asc' ) ? 'desc' : 'asc' ;
     } else {
-        jobsSortColumn = columnIndex ;
-        jobsSortDir = 'asc' ;
+        state.column = columnIndex ;
+        state.dir = 'asc' ;
     }
+    sortStateByTable[ tableId ] = state ;
 
     var sortType = thEl.getAttribute( 'data-sort-type' ) || 'text' ;
-    var rows = Array.prototype.slice.call( tbody.rows ) ;
+    var allRows = Array.prototype.slice.call( tbody.rows ) ;
 
-    rows.sort( function( a, b ) {
-        var av = sortValueFromRow( a, columnIndex, sortType ) ;
-        var bv = sortValueFromRow( b, columnIndex, sortType ) ;
+    // For paired-row tables (CompanyListView), bundle every pair so they
+    // sort together. The sort key comes from the first row of each pair
+    // (where the primary fields live; the second row holds secondary fields).
+    var units ;
+    if ( pairRows ) {
+        units = [] ;
+        for ( var i = 0 ; i < allRows.length ; i += 2 ) {
+            units.push( [ allRows[ i ], allRows[ i + 1 ] ].filter( Boolean ) ) ;
+        }
+    } else {
+        units = allRows.map( function( r ) { return [ r ] ; } ) ;
+    }
+
+    units.sort( function( a, b ) {
+        var av = sortValueFromRow( a[ 0 ], columnIndex, sortType ) ;
+        var bv = sortValueFromRow( b[ 0 ], columnIndex, sortType ) ;
         var cmp = 0 ;
         if ( sortType === 'num' || sortType === 'urgency' ) {
             cmp = av - bv ;
         } else {
-            // text or date — both sort lexicographically (ISO dates work).
             if ( av < bv ) cmp = -1 ;
             else if ( av > bv ) cmp = 1 ;
         }
-        return ( jobsSortDir === 'asc' ) ? cmp : -cmp ;
+        return ( state.dir === 'asc' ) ? cmp : -cmp ;
     } ) ;
 
     // Re-append in sorted order. Browsers move existing nodes rather than
-    // cloning, so all event handlers and IDs are preserved.
-    rows.forEach( function( r ) { tbody.appendChild( r ) ; } ) ;
+    // cloning, so event handlers and IDs are preserved across the reorder.
+    units.forEach( function( unit ) {
+        unit.forEach( function( r ) { tbody.appendChild( r ) ; } ) ;
+    } ) ;
 
-    updateSortIndicators( thEl, jobsSortDir ) ;
+    updateSortIndicators( thEl, state.dir, tableId ) ;
 }
 
 function sortValueFromRow( row, columnIndex, sortType ) {
@@ -951,8 +991,9 @@ function sortValueFromRow( row, columnIndex, sortType ) {
     return raw.toLowerCase() ;
 }
 
-function updateSortIndicators( activeTh, dir ) {
-    var headers = document.querySelectorAll( '#jobs thead th.sortable' ) ;
+function updateSortIndicators( activeTh, dir, tableId ) {
+    var selector = ( tableId ? '#' + tableId : '#jobs' ) + ' thead th.sortable' ;
+    var headers = document.querySelectorAll( selector ) ;
     for ( var i = 0 ; i < headers.length ; i++ ) {
         var ind = headers[ i ].querySelector( '.sort-ind' ) ;
         if ( ! ind ) continue ;

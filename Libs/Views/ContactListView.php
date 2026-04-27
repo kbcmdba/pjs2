@@ -76,26 +76,25 @@ class ContactListView extends ListViewBase
   <thead>
     <tr>
       <th>Actions</th>
-      <th>Company</th>
-      <th class="required" title="Required field">Name</th>
-      <th>Email</th>
-      <th>Phone</th>
-      <th>Alternate Phone</th>
-      <th>Last Contacted</th>
-      <th>Notes</th>
-      <th>Created</th>
-      <th>Updated</th>
+      <th class="sortable" data-sort-type="text" onclick="sortContactsTable(this, 1)">Company <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable required" data-sort-type="text" title="Required field" onclick="sortContactsTable(this, 2)">Name <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortContactsTable(this, 3)">Email <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortContactsTable(this, 4)">Phone <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortContactsTable(this, 5)">Alternate Phone <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="date" onclick="sortContactsTable(this, 6)">Last Contacted <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="num" onclick="sortContactsTable(this, 7)">Notes <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="date" onclick="sortContactsTable(this, 8)">Created <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="date" onclick="sortContactsTable(this, 9)">Updated <span class="sort-ind">&#9830;</span></th>
     </tr>
   </thead>
   <tbody>
-    
+
 HTML;
-        $rowStyle = 'treven';
+        // No treven/trodd: CSS :nth-child handles alternation, survives sort.
         foreach ($this->getContactModels() as $contactModel) {
             $id = $contactModel->getId();
             $row = $this->displayContactRow($contactModel, 'list');
-            $body .= "    <tr id=\"ux$id\" class=\"$rowStyle\">\n$row\n    </tr>";
-            $rowStyle = ($rowStyle === 'treven') ? 'trodd' : 'treven';
+            $body .= "    <tr id=\"ux$id\">\n$row\n    </tr>";
         }
         
         $body .= "  </tbody>\n</table>\n";

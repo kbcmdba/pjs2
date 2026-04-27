@@ -77,14 +77,14 @@ class CompanyListView extends ListViewBase
   <thead>
     <tr class="thead">
       <th rowspan="2">Actions</th>
-      <th><font size="+2">Company</font></th>
-      <th>Address 1</th>
-      <th>City</th>
-      <th>State</th>
-      <th>Zip</th>
-      <th>Last Contacted</th>
+      <th class="sortable" data-sort-type="text" onclick="sortCompaniesTable(this, 1)"><font size="+2">Company</font> <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortCompaniesTable(this, 2)">Address 1 <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortCompaniesTable(this, 3)">City <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortCompaniesTable(this, 4)">State <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="text" onclick="sortCompaniesTable(this, 5)">Zip <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="date" onclick="sortCompaniesTable(this, 6)">Last Contacted <span class="sort-ind">&#9830;</span></th>
       <th rowspan="2">Notes</th>
-      <th>Created</th>
+      <th class="sortable" data-sort-type="date" onclick="sortCompaniesTable(this, 8)">Created <span class="sort-ind">&#9830;</span></th>
     </tr>
     <tr class="thead">
       <th>Agency</th>
@@ -96,12 +96,14 @@ class CompanyListView extends ListViewBase
   </thead>
   <tbody>
 HTML;
+        // No treven/trodd: per-company pair grouping comes from a #companies-
+        // specific CSS rule using :nth-child(4n+1/4n+2 vs 4n+3/4n+4) so the
+        // pattern survives client-side sort.
         foreach ($this->getCompanyModels() as $companyModel) {
             $id = $companyModel->getId();
-            $rowStyle = ("treven" === $rowStyle) ? 'trodd' : 'treven';
-            $rows = $this->displayCompanyRow($companyModel, 'list', $rowStyle);
-            $body .= "    <tr id='ux$id-1' class='$rowStyle'>\n      {$rows[0]}\n    </tr>\n";
-            $body .= "    <tr id='ux$id-2' class='$rowStyle'>\n      {$rows[1]}\n    </tr>\n";
+            $rows = $this->displayCompanyRow($companyModel, 'list', '');
+            $body .= "    <tr id='ux$id-1'>\n      {$rows[0]}\n    </tr>\n";
+            $body .= "    <tr id='ux$id-2'>\n      {$rows[1]}\n    </tr>\n";
         }
         $body .= "  </tbody>\n</table>\n";
         return $body;
@@ -301,6 +303,7 @@ HTML;
             $retVal .= "  <option value=\"$cid\" $selected>$cname</option>\n";
         }
         $retVal .= "</select>\n";
+        $retVal .= "<a href=\"#\" class=\"quick-add-btn\" onclick=\"openAddCompanyModal( 'companyId$id' ); return false;\" title=\"Quick add company\">+</a>\n";
         return $retVal;
     }
 
