@@ -24,36 +24,37 @@ namespace com\kbcmdba\pjs2;
 
 require_once 'Libs/autoload.php';
 
-$config = new Config();
-try {
-    $dbc = new DBConnection();
-} catch (DaoException $ex) {
-    echo "Database connection failed. Has this system been set up yet? Have you used resetDb.php?\n";
-    exit(255);
-}
+function main()
+{
+    $config = new Config();
+    try {
+        $dbc = new DBConnection();
+    } catch (DaoException $ex) {
+        echo "Database connection failed. Has this system been set up yet? Have you used resetDb.php?\n";
+        exit(255);
+    }
 
-$config = new Config();
-$page = new PJSWebPage($config->getTitle());
-$body = '';
+    $page = new PJSWebPage($config->getTitle());
+    $body = '';
 
-$jobController = new JobController('read');
-$now = $jobController->now();
-$today = $jobController->today();
-$tomorrow = $jobController->tomorrow();
-$nextWeek = ControllerBase::datestamp(time() + 7 * 86400);
+    $jobController = new JobController('read');
+    $now = $jobController->now();
+    $today = $jobController->today();
+    $tomorrow = $jobController->tomorrow();
+    $nextWeek = ControllerBase::datestamp(time() + 7 * 86400);
 
-// Counts
-$jobsOverdue = $jobController->countActiveOverdue($now);
-$jobsDueToday = $jobController->countActiveDueRange($today, $tomorrow);
-$jobsDue7Days = $jobController->countActiveDueRange($today, $nextWeek);
-$highUrgency = $jobController->countActiveByUrgency('high');
-$mediumUrgency = $jobController->countActiveByUrgency('medium');
-$lowUrgency = $jobController->countActiveByUrgency('low');
+    // Counts
+    $jobsOverdue = $jobController->countActiveOverdue($now);
+    $jobsDueToday = $jobController->countActiveDueRange($today, $tomorrow);
+    $jobsDue7Days = $jobController->countActiveDueRange($today, $nextWeek);
+    $highUrgency = $jobController->countActiveByUrgency('high');
+    $mediumUrgency = $jobController->countActiveByUrgency('medium');
+    $lowUrgency = $jobController->countActiveByUrgency('low');
 
-$searchController = new SearchController('read');
-$searches = $searchController->countAll();
+    $searchController = new SearchController('read');
+    $searches = $searchController->countAll();
 
-$body .= <<<HTML
+    $body .= <<<HTML
 <h2>Dashboard</h2>
 <table id="dashboardSummary">
   <tr>
@@ -70,35 +71,70 @@ $body .= <<<HTML
 
 HTML;
 
-// Overdue jobs detail
-$overdueJobs = $jobController->getActiveOverdue($now);
-if (count($overdueJobs) > 0) {
-    $overdueView = new JobSummaryView('html', $overdueJobs);
-    $overdueView->setLabel('Overdue Jobs');
-    $body .= $overdueView->getView();
+    // Overdue jobs detail
+    $overdueJobs = $jobController->getActiveOverdue($now);
+    if (count($overdueJobs) > 0) {
+        $overdueView = new JobSummaryView('html', $overdueJobs);
+        $overdueView->setLabel('Overdue Jobs');
+        $body .= $overdueView->getView();
+    }
+
+    // Due today detail
+    $dueTodayJobs = $jobController->getActiveDueRange($today, $tomorrow);
+    if (count($dueTodayJobs) > 0) {
+        $dueTodayView = new JobSummaryView('html', $dueTodayJobs);
+        $dueTodayView->setLabel('Due Today');
+        $body .= $dueTodayView->getView();
+    }
+
+    // Due this week detail
+    $dueWeekJobs = $jobController->getActiveDueRange($tomorrow, $nextWeek);
+    if (count($dueWeekJobs) > 0) {
+        $dueWeekView = new JobSummaryView('html', $dueWeekJobs);
+        $dueWeekView->setLabel('Due This Week');
+        $body .= $dueWeekView->getView();
+    }
+
+    // Application status summary
+    $applicationStatusController = new ApplicationStatusController('read');
+    $asmList = $applicationStatusController->getAll();
+    $asv = new ApplicationStatusSummaryView('html', $asmList);
+    $body .= $asv->getView();
+
+    $page->setBody($body);
+    $page->displayPage();
 }
 
-// Due today detail
-$dueTodayJobs = $jobController->getActiveDueRange($today, $tomorrow);
-if (count($dueTodayJobs) > 0) {
-    $dueTodayView = new JobSummaryView('html', $dueTodayJobs);
-    $dueTodayView->setLabel('Due Today');
-    $body .= $dueTodayView->getView();
+try {
+    main();
+} catch (\Throwable $e) {
+    // Outer safety net: catches anything main() didn't handle (transient DB
+    // hiccups, DNS failures, mysqli_sql_exception, etc.). DaoException for
+    // "have you run resetDb?" is still caught inside main() with its specific
+    // hint message; this catch is the durability fallback.
+    error_log(
+        'PJS2 index.php fatal: ' . $e->getMessage()
+        . ' at ' . $e->getFile() . ':' . $e->getLine()
+    );
+    http_response_code(503);
+    ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>PJS2 - Temporarily Unavailable</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 80px auto; padding: 0 20px; color: #333; line-height: 1.5; }
+        h2 { color: #4a4a8a; }
+        .hint { color: #888; font-size: 0.9em; margin-top: 24px; }
+    </style>
+</head>
+<body>
+    <h2>Temporarily Unavailable</h2>
+    <p>PJS2 is having trouble reaching the database right now. This is usually transient &mdash; try refreshing in a few seconds.</p>
+    <p class="hint">If the issue persists, check the database service (mysql1.hole) and DNS resolution. Details have been logged for diagnosis.</p>
+</body>
+</html>
+    <?php
+    exit;
 }
-
-// Due this week detail
-$dueWeekJobs = $jobController->getActiveDueRange($tomorrow, $nextWeek);
-if (count($dueWeekJobs) > 0) {
-    $dueWeekView = new JobSummaryView('html', $dueWeekJobs);
-    $dueWeekView->setLabel('Due This Week');
-    $body .= $dueWeekView->getView();
-}
-
-// Application status summary
-$applicationStatusController = new ApplicationStatusController('read');
-$asmList = $applicationStatusController->getAll();
-$asv = new ApplicationStatusSummaryView('html', $asmList);
-$body .= $asv->getView();
-
-$page->setBody($body);
-$page->displayPage();
