@@ -28,6 +28,8 @@
 //
 // @todo 40 Application Method + Found Method: add two columns to job — applicationMethod and foundMethod (both VARCHAR with sensible defaults), expose via Model/Controller/API, add select dropdowns in the jobs list inline edit and the review panel bar, and update reports.php to read from these columns with 'Online' fallback. Two distinct concepts: applicationMethod = how the user applied (Online, Email, Phone, In-person, Referral, Staffing Agency), foundMethod = how the user discovered the job (Online, News, Paper, Referral, Word-of-Mouth, Agency, Other). Both are needed for unemployment activity reporting which wants breadth of search activity. Phase 1 (default applicationMethod 'Online' in reports.php) shipped 2026-04-26; this is phase 2. PJS3 MVP_SCOPE already includes applicationMethod as a workspace-scoped lookup; foundMethod placement (MVP vs post-MVP) is an open PJS3 decision as of 2026-04-26. If PJS3 ships before this becomes painful, defer entirely.
 //
+// @todo 30 Jobs list: Add a Comp Range column with two-line header "Comp<br />Range" and stacked values — crh on top, crl on bottom (per KB 2026-04-26). Inline edit takes both as numeric inputs. Make the column sortable by either bound. Schema/Model/Controller/API plumbing already shipped 2026-04-26 (Phase 1 from todo 30 below); this is Phase 2 — UI only.
+
 // === Migrated to PJS3 (2026-04-26) ===
 // MIGRATED 20 Review panel workflow on Searches page → PJS3 docs/POST_MVP_BACKLOG.md
 // MIGRATED 30 User-controlled sorting per page → PJS3 docs/POST_MVP_BACKLOG.md
