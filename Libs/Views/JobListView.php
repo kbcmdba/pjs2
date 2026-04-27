@@ -99,7 +99,7 @@ class JobListView extends ListViewBase
       <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 5)">Location <span class="sort-ind">&#9830;</span></th>
       <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 6)">Company <span class="sort-ind">&#9830;</span></th>
       <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 7)">Contact <span class="sort-ind">&#9830;</span></th>
-      <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 8)">Status <span class="sort-ind">&#9830;</span></th>
+      <th class="sortable" data-sort-type="num" onclick="sortJobsTable(this, 8)">Status <span class="sort-ind">&#9830;</span></th>
       <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 9)">Next Action <span class="sort-ind">&#9830;</span></th>
       <th class="sortable" data-sort-type="date" onclick="sortJobsTable(this, 10)">Next Action Due <span class="sort-ind">&#9830;</span></th>
       <th class="sortable" data-sort-type="date" onclick="sortJobsTable(this, 11)">Last Status Change <span class="sort-ind">&#9830;</span></th>
@@ -189,9 +189,11 @@ HTML;
                 $applicationStatusModel = $applicationStatusController->get($applicationStatusId);
                 $applicationStatusValue = $applicationStatusModel->getStatusValue();
                 $applicationStatusStyle = $applicationStatusModel->getStyle();
+                $applicationStatusSortKey = $applicationStatusModel->getSortKey();
             } else {
                 $applicationStatusValue = '---';
                 $applicationStatusStyle = '';
+                $applicationStatusSortKey = 9999;
             }
             $lastStatusChange = $jobModel->getLastStatusChange();
             $urgency = $jobModel->getUrgency();
@@ -332,7 +334,7 @@ HTML;
       <td $click>$location</td>
       <td $click>$companyName</td>
       <td $click>$contactName</td>
-      <td style="$applicationStatusStyle cursor: pointer;" onclick="updateJob( '$id' )">$applicationStatusValue</td>
+      <td style="$applicationStatusStyle cursor: pointer;" onclick="updateJob( '$id' )" data-sort="$applicationStatusSortKey">$applicationStatusValue</td>
       <td $click>$nextAction</td>
       <td $dueClass $click>$nextActionDue</td>
       <td $clickNow>$lastStatusChange</td>
