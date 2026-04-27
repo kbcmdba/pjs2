@@ -112,27 +112,48 @@ try {
     // hiccups, DNS failures, mysqli_sql_exception, etc.). DaoException for
     // "have you run resetDb?" is still caught inside main() with its specific
     // hint message; this catch is the durability fallback.
+    //
+    // PJS2 is single-user on a private network (web1.hole) — surface the
+    // actual error message and location so the operator (KB) can diagnose
+    // without digging into PHP error logs. Also written to error_log() for
+    // historical record.
     error_log(
         'PJS2 index.php fatal: ' . $e->getMessage()
         . ' at ' . $e->getFile() . ':' . $e->getLine()
     );
     http_response_code(503);
+    $errClass = htmlspecialchars(get_class($e), ENT_QUOTES, 'UTF-8');
+    $errMsg   = htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
+    $errFile  = htmlspecialchars($e->getFile(), ENT_QUOTES, 'UTF-8');
+    $errLine  = (int) $e->getLine();
     ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>PJS2 - Temporarily Unavailable</title>
+    <title>PJS2 - Error</title>
     <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 80px auto; padding: 0 20px; color: #333; line-height: 1.5; }
+        body { font-family: sans-serif; max-width: 760px; margin: 60px auto; padding: 0 20px; color: #333; line-height: 1.5; }
         h2 { color: #4a4a8a; }
-        .hint { color: #888; font-size: 0.9em; margin-top: 24px; }
+        .err { background: #fee; padding: 12px 16px; border-left: 4px solid #c00; margin: 16px 0; font-family: monospace; word-break: break-word; }
+        .where { color: #555; font-family: monospace; font-size: 0.9em; }
+        ul { color: #444; }
+        .hint { color: #888; font-size: 0.85em; margin-top: 24px; }
     </style>
 </head>
 <body>
-    <h2>Temporarily Unavailable</h2>
-    <p>PJS2 is having trouble reaching the database right now. This is usually transient &mdash; try refreshing in a few seconds.</p>
-    <p class="hint">If the issue persists, check the database service (mysql1.hole) and DNS resolution. Details have been logged for diagnosis.</p>
+    <h2>PJS2 - Error</h2>
+    <p>The dashboard couldn't render. The actual error:</p>
+    <div class="err"><strong><?= $errClass ?>:</strong> <?= $errMsg ?></div>
+    <p class="where">at <?= $errFile ?>:<?= $errLine ?></p>
+    <p><strong>Likely causes:</strong></p>
+    <ul>
+        <li>Database server (mysql1.hole) is down or restarting</li>
+        <li>DNS resolution failed for mysql1.hole (check your DNS resolver / Pi-hole)</li>
+        <li>Network blip between web1 and mysql1</li>
+        <li>Schema or query change broke a controller call (less likely if nothing was deployed recently)</li>
+    </ul>
+    <p class="hint">Same details also written to the PHP error log on web1.</p>
 </body>
 </html>
     <?php
