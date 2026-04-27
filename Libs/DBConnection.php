@@ -92,7 +92,21 @@ class DBConnection
                 if (! $mysqli->options(MYSQLI_OPT_CONNECT_TIMEOUT, 2)) {
                     throw new DaoException('Failed setting connection timeout.');
                 }
-                $result = $mysqli->real_connect($oConfig->getDbHost(), $oConfig->getDbUser(), $oConfig->getDbPass(), null, $oConfig->getDbPort());
+                // PHP 8.1+ makes mysqli throw mysqli_sql_exception on connect
+                // failure (DNS, refused, timeout, auth, etc.) BEFORE the return-
+                // value check below ever runs. Wrap the call so the low-level
+                // exception gets converted into the semantic DaoException the
+                // rest of the code expects — callers can then catch DaoException
+                // and know it's a database-layer problem.
+                try {
+                    $result = $mysqli->real_connect($oConfig->getDbHost(), $oConfig->getDbUser(), $oConfig->getDbPass(), null, $oConfig->getDbPort());
+                } catch (\mysqli_sql_exception $e) {
+                    throw new DaoException(
+                        'Error connecting to database server(' . $oConfig->getDbHost() . '): ' . $e->getMessage(),
+                        (int) $e->getCode(),
+                        $e
+                    );
+                }
                 if ((! $result) || ($mysqli->connect_errno)) {
                     throw new DaoException('Error connecting to database server(' . $oConfig->getDbHost() . ')! : ' . $mysqli->connect_error);
                 }

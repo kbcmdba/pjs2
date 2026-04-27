@@ -105,20 +105,15 @@ HTML;
     $page->displayPage();
 }
 
-try {
-    main();
-} catch (\Throwable $e) {
-    // Outer safety net: catches anything main() didn't handle (transient DB
-    // hiccups, DNS failures, mysqli_sql_exception, etc.). DaoException for
-    // "have you run resetDb?" is still caught inside main() with its specific
-    // hint message; this catch is the durability fallback.
-    //
-    // PJS2 is single-user on a private network (web1.hole) — surface the
-    // actual error message and location so the operator (KB) can diagnose
-    // without digging into PHP error logs. Also written to error_log() for
-    // historical record.
+/**
+ * Render the error page. The reason text varies by exception type so the
+ * suggested causes are targeted (DaoException -> DB-layer issues; anything
+ * else -> honest "I'm not sure" with logs pointer).
+ */
+function renderErrorPage(\Throwable $e, string $kind, array $likelyCauses)
+{
     error_log(
-        'PJS2 index.php fatal: ' . $e->getMessage()
+        'PJS2 index.php (' . get_class($e) . '): ' . $e->getMessage()
         . ' at ' . $e->getFile() . ':' . $e->getLine()
     );
     http_response_code(503);
@@ -126,12 +121,13 @@ try {
     $errMsg   = htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
     $errFile  = htmlspecialchars($e->getFile(), ENT_QUOTES, 'UTF-8');
     $errLine  = (int) $e->getLine();
+    $kindHtml = htmlspecialchars($kind, ENT_QUOTES, 'UTF-8');
     ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>PJS2 - Error</title>
+    <title>PJS2 - <?= $kindHtml ?></title>
     <style>
         body { font-family: sans-serif; max-width: 760px; margin: 60px auto; padding: 0 20px; color: #333; line-height: 1.5; }
         h2 { color: #4a4a8a; }
@@ -142,20 +138,43 @@ try {
     </style>
 </head>
 <body>
-    <h2>PJS2 - Error</h2>
+    <h2>PJS2 - <?= $kindHtml ?></h2>
     <p>The dashboard couldn't render. The actual error:</p>
     <div class="err"><strong><?= $errClass ?>:</strong> <?= $errMsg ?></div>
     <p class="where">at <?= $errFile ?>:<?= $errLine ?></p>
+    <?php if (! empty($likelyCauses)): ?>
     <p><strong>Likely causes:</strong></p>
     <ul>
-        <li>Database server (mysql1.hole) is down or restarting</li>
-        <li>DNS resolution failed for mysql1.hole (check your DNS resolver / Pi-hole)</li>
-        <li>Network blip between web1 and mysql1</li>
-        <li>Schema or query change broke a controller call (less likely if nothing was deployed recently)</li>
+        <?php foreach ($likelyCauses as $cause): ?>
+        <li><?= htmlspecialchars($cause, ENT_QUOTES, 'UTF-8') ?></li>
+        <?php endforeach; ?>
     </ul>
+    <?php endif; ?>
     <p class="hint">Same details also written to the PHP error log on web1.</p>
 </body>
 </html>
     <?php
+}
+
+try {
+    main();
+} catch (DaoException $e) {
+    // DB-layer problem. DBConnection wraps mysqli_sql_exception (PHP 8.1+
+    // throws on connect failure) into DaoException so this catch fires for
+    // DNS failures, refused connections, auth issues, missing schemas, etc.
+    renderErrorPage($e, 'Database Error', [
+        'Database server (mysql1.hole) is down, restarting, or unreachable',
+        'DNS resolution failed for mysql1.hole (check resolver / Pi-hole)',
+        'Network blip between web1 and mysql1',
+        'Wrong credentials or permissions in the PJS2 config',
+        'Database has not been initialized (run resetDb.php)',
+    ]);
+    exit;
+} catch (\Throwable $e) {
+    // Anything that isn't a known semantic exception type. Honest about
+    // not knowing what category of problem this is.
+    renderErrorPage($e, 'Unexpected Error', [
+        "I'm not sure what category of problem this is - check the logs for context",
+    ]);
     exit;
 }
