@@ -134,6 +134,7 @@ function renderErrorPage(\Throwable $e, string $kind, array $likelyCauses)
 <html lang="en">
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="60" />
     <title>PJS2 - <?= $kindHtml ?></title>
     <style>
         body { font-family: sans-serif; max-width: 760px; margin: 60px auto; padding: 0 20px; color: #333; line-height: 1.5; }
@@ -157,7 +158,7 @@ function renderErrorPage(\Throwable $e, string $kind, array $likelyCauses)
         <?php endforeach; ?>
     </ul>
     <?php endif; ?>
-    <p class="hint">Same details also written to the PHP error log on web1.</p>
+    <p class="hint">Same details also written to the PHP error log on web1. This page will retry every 60 seconds.</p>
 </body>
 </html>
     <?php
