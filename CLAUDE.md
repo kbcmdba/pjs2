@@ -130,6 +130,20 @@ The primary API consumer is [JobImporter](~/claude/projects/JobImporter) — a c
 
 **NoteModel gotcha:** `NoteModel::validateForUpdate()` requires `appliesToTable` and `appliesToId` in `$_REQUEST` even though they're immutable on update. The API PUT endpoint works around this by populating `$_REQUEST` from the existing model before calling update.
 
+**`appliesToTable` value: singular, not plural.** POST and GET on `/api/notes.php` both expect singular table names (`company`, `job`, `contact`). Sending plural returns HTTP 500. Verified 2026-04-26.
+
+## Notes as durable cross-session memory
+
+Notes attached to jobs / companies / contacts are not just convenience tracking — they're the system's persistence layer for the *why* behind decisions across sessions. When a session ends, the conversational thread fades; PJS2 notes carry the decision rationale forward so the next session (or a future Claude session, or KB days later) can pick up without losing context. Examples from 2026-04-26 / 2026-04-27:
+
+- F500 sweep results captured per-company so Kathy can see effort breadth
+- HHAeXchange email-format research (RocketReach 76% pattern, best-guess addresses for Bill Thomalla and Juan Fernandez)
+- Tandem re-engagement strategy (pivot to management framing after the careers@ inbox went silent)
+- Airbnb values-veto rationale (so future sweeps don't re-surface)
+- Ritesh Shrestha's connection-points (Akron alumni, Denver-metro overlap) used to draft the LinkedIn outreach
+
+When adding a note, write it to be useful to a *future reader*, not just the current moment.
+
 ## Successor: Personal Job Seeker 3 (PJS3)
 
 PJS2 is being succeeded by **Personal Job Seeker 3 (PJS3)** — a new codebase (not evolution) in Node.js. PJS3 goals:
@@ -152,8 +166,41 @@ Lookup tables to support unemployment reporting and richer job tracking:
 | `positionType` | `positionTypeId` | FTE, CTH, PTE, Contract, Seasonal, Freelance |
 | `workModel` | `workModelId` | Remote, Hybrid, On-site |
 | `applicationMethod` | `applicationMethodId` | Online, Email, Phone, In-person, Referral, Staffing Agency |
+| `foundMethod` | `foundMethodId` | Online, News, Paper, Referral, Word-of-Mouth, Agency, Other |
 | `activityType` | `activityTypeId` | Applied, Networking, Job Fair, Workshop, Staffing Agency Visit, Training |
 
-Plus `compRange` (VARCHAR) on job table for compensation range (format varies too much to normalize).
+`applicationMethod` is in PJS3 MVP scope; `foundMethod` is in `~/work/pjs3/docs/POST_MVP_BACKLOG.md`. Each lookup table follows the `applicationStatus`/`searchStatus` pattern: id, value, sortKey.
 
-Each lookup table follows the `applicationStatus`/`searchStatus` pattern: id, value, sortKey.
+### Schema changes shipped in PJS2 (daily-friction overrides maintenance discipline)
+
+- **`compRangeLow` / `compRangeHigh`** (`INT UNSIGNED NULL`) on `job`. Whole USD/year. NULL = not disclosed; one-bound-only displays as "$170,000+" or "up to $200,000". Sortable in the jobs list (sort uses upper bound). Shipped 2026-04-26 because the friction of NOT having it was real every job-add session. PJS3 should consider per-workspace currency.
+
+## UI / Workflow Patterns
+
+### Sortable list columns (jobs.php, contacts.php, companies.php)
+
+Column headers: `class="sortable"`, `data-sort-type` ("text" | "num" | "date" | "urgency"), and `onclick="sortTable(this, columnIndex, tableId)"` (or table-specific wrapper like `sortJobsTable`). Cells whose visible content has HTML stacking (Comp Range, Status when ordered by `sortKey`) carry `data-sort` with the comparable raw value. Active column shows `^` (asc) or `v` (desc); inactive sortable columns show `♦`. Sort is client-side (~50-row scale; no SQL ORDER BY round-trip).
+
+Paired-row tables (CompanyListView's 2-rows-per-company) pass `{ pairRows: true }` so units stay glued during sort. Pair-grouping is preserved visually via `table#companies tbody tr:nth-child(4n+1/4n+2 vs 4n+3/4n+4)` CSS bands rather than `treven`/`trodd` classes (which carry with rows on sort and break alternation).
+
+### Dashboard click-through filters
+
+`jobs.php` reads `?filter=overdue|dueToday|dueWeek` and `?urgency=high|medium|low` URL params and renders a filtered list using "active-only" controller methods that JOIN on `applicationStatus.isActive = 1`. Closed-state statuses (CLOSED, INVALID, MISMATCH, DUPLICATE, MISSING, UNAVAILABLE) are excluded automatically. Filtered views show a "← Show all jobs" link.
+
+### Error page hierarchy on entry-point scripts
+
+Wrap the body in `function main()` and put `try { main(); } catch (...)` on the *caller* — KB's preferred shape for entry-point scripts because adding/widening defensive error handling stays trivial later. Catch tiers, in order:
+
+1. `DaoException` → "Database Error" with DB-targeted causes (DNS to mysql1, network, refused, schema)
+2. `ControllerException` → "Controller Error" (query / schema-drift / bind_param mismatch)
+3. `\Throwable` → "Unexpected Error" with honest "I'm not sure what category" message + logs pointer
+
+`DBConnection.php` wraps `mysqli_sql_exception` (PHP 8.1+ throws on connect failure) into `DaoException` so the layered hierarchy actually fires. `ControllerBase.__construct` does NOT catch+rewrap (the previous code lost the original type and dereferenced a null `_dbh` in its catch handler — fixed 2026-04-27).
+
+Currently applied to `index.php`. Other entry-point scripts (jobs.php, jobDetail.php, companies.php, etc.) still have older shapes and will be migrated as they're touched next.
+
+## Additional gotchas (continued)
+
+**`JobController` bind_param type-string fragility:** The `INSERT` and `UPDATE` queries use positional `?` placeholders with a manual type-string ('iiisssssssii...') paired to a positional variable list. Adding a column means updating: SELECT list, bind_result vars + setters, INSERT column list, INSERT VALUES placeholders, INSERT bind_param + type-string, UPDATE SET clause, UPDATE bind_param + type-string. Off-by-one in the type-string hits at runtime as `mysqli_stmt::bind_param: ArgumentCountError`. Bit twice on the comp-range column add 2026-04-27. Refactor candidate: array-based binding via `mysqli_stmt::execute([...])` so the type-string can be inferred or omitted.
+
+**`lastStatusChange` zero-date trap:** `DBConnection.php` sets `SQL_MODE = 'ALLOW_INVALID_DATES'`, so an empty timestamp from an API POST silently lands as `'0000-00-00 00:00:00'`. The job's inline-edit form then renders empty for that field, the JS date validator rejects empty, and the user can't save *any* change to that job. Fix is server-side defaulting on writes — for state-change timestamps, default conditionally: preserve existing value when the triggering state (`applicationStatusId`) is unchanged; default to NOW only when the state actually changed. Otherwise NOW corrupts the field's semantics on every save.
