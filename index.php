@@ -157,6 +157,7 @@ function renderErrorPage(\Throwable $e, string $kind, array $likelyCauses)
     <p>The dashboard couldn't render. The actual error:</p>
     <div class="err"><strong><?= $errClass ?>:</strong> <?= $errMsg ?></div>
     <p class="where">at <?= $errFile ?>:<?= $errLine ?></p>
+    <p class="where">rendered: <?= htmlspecialchars(date('Y-m-d H:i:s T'), ENT_QUOTES, 'UTF-8') ?></p>
     <?php if (! empty($likelyCauses)): ?>
     <p><strong>Likely causes:</strong></p>
     <ul>
