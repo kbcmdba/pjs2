@@ -28,6 +28,10 @@
 //
 // @todo 40 Application Method + Found Method: add two columns to job — applicationMethod and foundMethod (both VARCHAR with sensible defaults), expose via Model/Controller/API, add select dropdowns in the jobs list inline edit and the review panel bar, and update reports.php to read from these columns with 'Online' fallback. Two distinct concepts: applicationMethod = how the user applied (Online, Email, Phone, In-person, Referral, Staffing Agency), foundMethod = how the user discovered the job (Online, News, Paper, Referral, Word-of-Mouth, Agency, Other). Both are needed for unemployment activity reporting which wants breadth of search activity. Phase 1 (default applicationMethod 'Online' in reports.php) shipped 2026-04-26; this is phase 2. PJS3 MVP_SCOPE already includes applicationMethod as a workspace-scoped lookup; foundMethod placement (MVP vs post-MVP) is an open PJS3 decision as of 2026-04-26. If PJS3 ships before this becomes painful, defer entirely.
 //
+// @todo 30 Surface most-recent note on jobs/contacts list view (Kathy-visibility): when she glances at PJS2 to see what KB has been doing, the dashboard shows status + urgency + due dates but NOT the activity log. Notes only appear inside the per-row review/Notes modal. Add a "Last Activity" column or last-note-snippet that surfaces the most recent note's text (truncated ~80 chars) + timestamp, so the at-a-glance view tells the trust story. Surfaced 2026-04-28 after a session of intensive outreach (3 LinkedIn touches + 1 email bounce logged) was invisible on the summary view.
+//
+// @todo 30 Surface Comp Range on jobs list summary: compRangeLow/compRangeHigh shipped 2026-04-26 with stacked crh/crl display + inline edit, but the values aren't visible on the summary/dashboard view that Kathy reads. Confirm column is rendering on the main jobs list (not just the review panel), and if missing, add the stacked-pair display there. Surfaced 2026-04-28.
+//
 // === Migrated to PJS3 (2026-04-26) ===
 // MIGRATED 20 Review panel workflow on Searches page → PJS3 docs/POST_MVP_BACKLOG.md
 // MIGRATED 30 User-controlled sorting per page → PJS3 docs/POST_MVP_BACKLOG.md
