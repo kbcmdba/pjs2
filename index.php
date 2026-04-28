@@ -129,12 +129,19 @@ function renderErrorPage(\Throwable $e, string $kind, array $likelyCauses)
     $errFile  = htmlspecialchars($e->getFile(), ENT_QUOTES, 'UTF-8');
     $errLine  = (int) $e->getLine();
     $kindHtml = htmlspecialchars($kind, ENT_QUOTES, 'UTF-8');
+
+    // Refresh interval comes from ?refresh=N (seconds). Validated as int in
+    // [1, 3600] to prevent malicious meta-refresh content (e.g. URL=...) and
+    // pathological values. Default 60s when missing or invalid.
+    $refreshSec = filter_input(INPUT_GET, 'refresh', FILTER_VALIDATE_INT, [
+        'options' => ['default' => 60, 'min_range' => 1, 'max_range' => 3600],
+    ]);
     ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="60" />
+    <meta http-equiv="refresh" content="<?= $refreshSec ?>" />
     <title>PJS2 - <?= $kindHtml ?></title>
     <style>
         body { font-family: sans-serif; max-width: 760px; margin: 60px auto; padding: 0 20px; color: #333; line-height: 1.5; }
@@ -158,7 +165,7 @@ function renderErrorPage(\Throwable $e, string $kind, array $likelyCauses)
         <?php endforeach; ?>
     </ul>
     <?php endif; ?>
-    <p class="hint">Same details also written to the PHP error log on web1. This page will retry every 60 seconds.</p>
+    <p class="hint">Same details also written to the PHP error log on web1. This page will retry every <?= $refreshSec ?> seconds (override with <code>?refresh=N</code>).</p>
 </body>
 </html>
     <?php
