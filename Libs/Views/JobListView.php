@@ -195,10 +195,12 @@ HTML;
                 $applicationStatusValue = $applicationStatusModel->getStatusValue();
                 $applicationStatusStyle = $applicationStatusModel->getStyle();
                 $applicationStatusSortKey = $applicationStatusModel->getSortKey();
+                $applicationStatusIsActive = (bool) $applicationStatusModel->getIsActive();
             } else {
                 $applicationStatusValue = '---';
                 $applicationStatusStyle = '';
                 $applicationStatusSortKey = 9999;
+                $applicationStatusIsActive = false;
             }
             $lastStatusChange = $jobModel->getLastStatusChange();
             $urgency = $jobModel->getUrgency();
@@ -212,7 +214,16 @@ HTML;
             $compRangeLow = $jobModel->getCompRangeLow();
             $compRangeHigh = $jobModel->getCompRangeHigh();
             $now = Tools::currentTimestamp();
-            $dueClass = (isset($nextActionDue) && ($nextActionDue !== '') && ($nextActionDue < $now)) ? "class=\"overdue\"" : "";
+            // Highlight Next Action Due cell when it has elapsed AND the job is
+            // still active (not in a closed status). Already-closed jobs don't
+            // get the overdue treatment - if it's CLOSED/MISMATCH/etc. there's
+            // no action to be late on.
+            $dueClass = (
+                isset($nextActionDue)
+                && ($nextActionDue !== '')
+                && ($nextActionDue < $now)
+                && $applicationStatusIsActive
+            ) ? "class=\"overdue\"" : "";
             // Escape all output variables to prevent XSS
             $positionTitle = Tools::htmlOut($positionTitle);
             $location = Tools::htmlOut($location);

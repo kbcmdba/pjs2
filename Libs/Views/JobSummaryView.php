@@ -98,12 +98,21 @@ class JobSummaryView extends ListViewBase
             $jobNextAction = Tools::htmlOut($jobModel->getNextAction());
             $rawNextActDue = $jobModel->getNextActionDue();
             $jobNextActDue = Tools::htmlOut($rawNextActDue);
-            $dueClass = (isset($rawNextActDue) && ($rawNextActDue !== '') && ($rawNextActDue < date('Y-m-d H:i:s'))) ? ' class="overdue"' : '';
             $jobUrgency = Tools::htmlOut($jobModel->getUrgency());
             $asId = $jobModel->getApplicationStatusId();
             $statusModel = $applicationStatusController->get($asId);
             $statusValue = $statusModel ? Tools::htmlOut($statusModel->getStatusValue()) : '---';
             $statusStyle = $statusModel ? Tools::htmlOut($statusModel->getStyle()) : '';
+            $statusIsActive = $statusModel ? (bool) $statusModel->getIsActive() : false;
+            // Overdue NAD highlight only fires for active statuses - already
+            // closed jobs have nothing to be late on. See JobListView for the
+            // matching logic.
+            $dueClass = (
+                isset($rawNextActDue)
+                && ($rawNextActDue !== '')
+                && ($rawNextActDue < date('Y-m-d H:i:s'))
+                && $statusIsActive
+            ) ? ' class="overdue"' : '';
             $output .= "  <tr>\n" . "    <td>$jobUrgency</td>\n" . "    <td><a href=\"jobs.php#ux$id\">$jobTitle</a></td>\n" . "    <td>$cName$cLocation</td>\n" . "    <td style=\"$statusStyle\">$statusValue</td>\n" . "    <td><a href=\"#\" onclick=\"reviewJob( '$id', '$jobUrl' ); return false;\">Review</a> | <a href=\"$jobUrl\" target=\"_blank\">New Tab</a></td>\n" . "    <td>$jobNextAction</td>\n" . "    <td$dueClass>$jobNextActDue</td>\n" . "  </tr>\n";
         }
         $output .= "</table>\n";
