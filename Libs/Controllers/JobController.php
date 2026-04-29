@@ -118,6 +118,16 @@ BEFORE INSERT
           SET jss.statusCount = jss.statusCount + 1
         WHERE jss.id = NEW.applicationStatusId
             ;
+       /* Default Next Action Due to creation + 14 days when not specified
+          (NULL or zero-date). Catches every insert path - API, AJAX,
+          direct SQL - so the silent zero-date trap doesn't keep biting. */
+         IF NEW.nextActionDue IS NULL
+             OR YEAR(NEW.nextActionDue) < 2000
+       THEN
+              SET NEW.nextActionDue = NOW() + INTERVAL 14 DAY
+                ;
+        END IF
+          ;
    END
 
 SQL;
