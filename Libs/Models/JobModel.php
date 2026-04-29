@@ -92,9 +92,9 @@ class JobModel extends ModelBase
         if (Tools::isNullOrEmptyString(Tools::param('positionTitle'))) {
             $messages[] = "Position Title is required";
         }
-        if (Tools::isNullOrEmptyString(Tools::param('location'))) {
-            $messages[] = "Location is required";
-        }
+        // Location is intentionally NOT required - many postings (especially
+        // remote-first or "to be discussed") legitimately have no location at
+        // intake time. Empty string is fine.
         if (! empty($messages)) {
             $errors = implode('. ', $messages) . '.';
             return false;
@@ -123,9 +123,7 @@ class JobModel extends ModelBase
         if (Tools::isNullOrEmptyString(Tools::param('positionTitle'))) {
             $messages[] = "Position Title is required";
         }
-        if (Tools::isNullOrEmptyString(Tools::param('location'))) {
-            $messages[] = "Location is required";
-        }
+        // Location intentionally not required (see validateForAdd note).
         if (! empty($messages)) {
             $errors = implode('. ', $messages) . '.';
             return false;
@@ -220,8 +218,22 @@ class JobModel extends ModelBase
     public function setApplicationStatusId($applicationStatusId)
     {
         $this->_applicationStatusId = $applicationStatusId;
+        // Defensive: if no status was selected (form submitted with "---"),
+        // or the id doesn't resolve, leave isActiveSummary null. Calling
+        // getIsActive() on a null lookup result was throwing a fatal in
+        // populateFromForm() before validateForAdd() could surface a clean
+        // "Application Status is required" message - the fatal nuked the
+        // JSON response and the AJAX handler showed nothing to the user.
+        if (Tools::isNullOrEmptyString($applicationStatusId)) {
+            $this->_setIsActiveSummary(null);
+            return;
+        }
         $applicationStatusController = new ApplicationStatusController('read');
         $applicationStatusModel = $applicationStatusController->get($applicationStatusId);
+        if ($applicationStatusModel === null) {
+            $this->_setIsActiveSummary(null);
+            return;
+        }
         $this->_setIsActiveSummary($applicationStatusModel->getIsActive());
     }
 
