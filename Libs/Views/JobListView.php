@@ -92,7 +92,7 @@ class JobListView extends ListViewBase
   <thead>
     <tr>
       <th>Actions</th>
-      <th>URL</th>
+      <th>Posting URL</th>
       <th class="sortable" data-sort-type="urgency" onclick="sortJobsTable(this, 2)">Urgency <span class="sort-ind">&#9830;</span></th>
       <th class="sortable" data-sort-type="text" onclick="sortJobsTable(this, 3)">Title <span class="sort-ind">&#9830;</span></th>
       <th class="sortable" data-sort-type="num" onclick="sortJobsTable(this, 4)">Comp<br />Range <span class="sort-ind">&#9830;</span></th>
