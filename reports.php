@@ -197,7 +197,7 @@ HTML;
         $contactBlockContent = $buildCopyField('Phone', $row['companyPhone'] ?? '')
                              . $buildCopyField('Email', $row['contactEmail'] ?? '')
                              . $buildCopyField('Address', $fullAddress)
-                             . $buildCopyField('URL', $urlValue, true);
+                             . $buildCopyField('Posting URL', $urlValue, true);
 
         // Row 1: data columns. Class on tr keeps both rows of one job grouped
         // by background color (treven/trodd overrides the per-row nth-child).
