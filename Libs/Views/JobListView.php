@@ -214,16 +214,16 @@ HTML;
             $compRangeLow = $jobModel->getCompRangeLow();
             $compRangeHigh = $jobModel->getCompRangeHigh();
             $now = Tools::currentTimestamp();
-            // Highlight Next Action Due cell when it has elapsed AND the job is
-            // still active (not in a closed status). Already-closed jobs don't
-            // get the overdue treatment - if it's CLOSED/MISMATCH/etc. there's
-            // no action to be late on.
-            $dueClass = (
-                isset($nextActionDue)
-                && ($nextActionDue !== '')
-                && ($nextActionDue < $now)
-                && $applicationStatusIsActive
-            ) ? "class=\"overdue\"" : "";
+            // NAD cell coloring (active statuses only):
+            //   past due  -> .overdue (highlighter yellow, matches APPLIED)
+            //   future    -> .upcoming (lightgreen, matches FOUND)
+            //   no NAD    -> no class (silent "no plan" by absence)
+            // Closed statuses get no NAD coloring -- nothing to be late on
+            // and no plan to anticipate.
+            $dueClass = "";
+            if ($applicationStatusIsActive && isset($nextActionDue) && $nextActionDue !== '') {
+                $dueClass = ($nextActionDue < $now) ? "class=\"overdue\"" : "class=\"upcoming\"";
+            }
             // Escape all output variables to prevent XSS
             $positionTitle = Tools::htmlOut($positionTitle);
             $location = Tools::htmlOut($location);
