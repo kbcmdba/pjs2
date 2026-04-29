@@ -27,6 +27,27 @@ require_once "Libs/autoload.php";
 $config = new Config();
 $page = new PJSWebPage($config->getTitle() . ' - API Docs');
 
+// Render the applicationStatus enum table dynamically so it stays in sync
+// with the database. Also drives the rendering of the state-machine flow
+// chart below (terminal vs active states are determined by isActive).
+$asController = new ApplicationStatusController('read');
+$statuses = $asController->getAll();
+
+$enumRowsHtml = '';
+foreach ($statuses as $s) {
+    $style = htmlspecialchars($s->getStyle(), ENT_QUOTES, 'UTF-8');
+    $value = htmlspecialchars($s->getStatusValue(), ENT_QUOTES, 'UTF-8');
+    $active = $s->getIsActive() ? 'Yes' : 'No (closed)';
+    $enumRowsHtml .= sprintf(
+        '<tr><td>%d</td><td style="%s padding: 4px 10px;">%s</td><td>%s</td><td>%d</td></tr>' . "\n",
+        (int) $s->getId(),
+        $style,
+        $value,
+        $active,
+        (int) $s->getSortKey()
+    );
+}
+
 $body = <<<HTML
 <style>
   .docs { max-width: 980px; margin: 0 auto; padding: 0 16px; line-height: 1.5; }
@@ -123,22 +144,60 @@ curl -sk -H "X-API-Key: \$API_KEY" "https://web1.hole/pjs2/api/jobs.php"</pre>
   "https://web1.hole/pjs2/api/jobs.php"</pre>
 
 <h4>Application Status enum</h4>
+<p>Rendered dynamically from <code>applicationStatus</code> table via <code>ApplicationStatusController::getAll()</code> so this stays in sync as statuses are added or modified. Cell color reflects each status's actual <code>style</code> column.</p>
 <table>
-<tr><th>id</th><th>statusValue</th><th>Active in dashboard</th></tr>
-<tr><td>1</td><td>FOUND</td><td>Yes</td></tr>
-<tr><td>2</td><td>CONTACTED</td><td>Yes</td></tr>
-<tr><td>3</td><td>APPLIED</td><td>Yes</td></tr>
-<tr><td>4</td><td>INTERVIEWING</td><td>Yes</td></tr>
-<tr><td>5</td><td>FOLLOWUP</td><td>Yes</td></tr>
-<tr><td>6</td><td>CHASING</td><td>Yes</td></tr>
-<tr><td>7</td><td>NETWORKING</td><td>Yes</td></tr>
-<tr><td>8</td><td>UNAVAILABLE</td><td>No (closed)</td></tr>
-<tr><td>9</td><td>INVALID</td><td>No (closed)</td></tr>
-<tr><td>10</td><td>DUPLICATE</td><td>No (closed)</td></tr>
-<tr><td>11</td><td>CLOSED</td><td>No (closed)</td></tr>
-<tr><td>12</td><td>MISSING</td><td>No (closed)</td></tr>
-<tr><td>13</td><td>MISMATCH</td><td>No (closed)</td></tr>
-</table>
+<tr><th>id</th><th>statusValue</th><th>Active in dashboard</th><th>sortKey</th></tr>
+{$enumRowsHtml}</table>
+
+<p>The enum is also exposed as a read-only API endpoint:</p>
+<h4><span class="method m-get">GET</span> <code>api/applicationStatuses.php</code></h4>
+<p>List all application statuses (active and closed). Returns array of <code>{id, statusValue, isActive, sortKey, style, summaryCount, created, updated}</code>.</p>
+<pre>curl -sk -H "X-API-Key: \$API_KEY" "https://web1.hole/pjs2/api/applicationStatuses.php"</pre>
+
+<h4><span class="method m-get">GET</span> <code>api/applicationStatuses.php?id=X</code></h4>
+<p>Get one status by id.</p>
+
+<div class="note">This endpoint is <strong>read-only</strong> by design. applicationStatus rows are reference data managed via SQL/migrations, not arbitrary user CRUD. POST/PUT return 405.</div>
+
+<h4>State-machine convention</h4>
+<p>The diagram below shows the <strong>conventional</strong> transitions between application statuses as KB uses them in practice. <strong>The flow is NOT enforced anywhere in PJS</strong> — any status can transition to any other status at the data layer (e.g., CHASING &rarr; NETWORKING or CHASING &rarr; FOUND is legal SQL even though it's not a typical workflow). The diagram is a reading aid, not a constraint.</p>
+
+<div class="note">
+<strong>Notes on the diagram:</strong>
+<ul>
+<li>Solid arrows show the most common forward transitions during a real job-search cycle.</li>
+<li>NETWORKING is treated as a parallel ambient state for relationship-building; it may feed into CONTACTED but often stands alone.</li>
+<li>Any active state (FOUND / CONTACTED / APPLIED / INTERVIEWING / FOLLOWUP / CHASING / NETWORKING / STALE) can transition directly to any terminal state (UNAVAILABLE / INVALID / DUPLICATE / MISSING / MISMATCH / CLOSED) — these "shut down at any time" edges are not drawn for clarity.</li>
+<li>STALE is rendered as an active state (isActive=1) but semantically sits between active pursuit and closed; treat it as "soft-paused, may revive."</li>
+</ul>
+</div>
+
+<pre class="mermaid">
+flowchart LR
+    FOUND --> CONTACTED
+    FOUND --> APPLIED
+    CONTACTED --> APPLIED
+    CONTACTED --> STALE
+    APPLIED --> INTERVIEWING
+    APPLIED --> FOLLOWUP
+    APPLIED --> STALE
+    FOLLOWUP --> INTERVIEWING
+    FOLLOWUP --> CHASING
+    CHASING --> INTERVIEWING
+    CHASING --> STALE
+    INTERVIEWING --> CLOSED
+    NETWORKING -.parallel.-> CONTACTED
+
+    classDef terminal fill:#222,color:#fff
+    class CLOSED terminal
+    classDef stale fill:#E0FFFF,color:#000
+    class STALE stale
+</pre>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, theme: 'default' });
+</script>
 
 <h3>Companies</h3>
 
