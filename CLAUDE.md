@@ -82,6 +82,8 @@ The project follows PSR-2 coding standards (recent commits focus on PSR-2 compli
 
 ## REST API
 
+**Canonical browser-rendered docs:** `https://web1.hole/pjs2/docs.php` (also linked in the nav bar as "Docs"). The page documents every endpoint with method, params, curl examples, and the operational gotchas. The table in this file is a quick reference; `docs.php` is the source of truth that gets updated when endpoints change.
+
 API endpoints live in `api/` and are authenticated via API key (not session/CSRF). The key is set in `config.xml` as `apiKey` and passed in the `X-API-Key` request header. Validated by `Libs/ApiAuth.php` using `hash_equals()`.
 
 JSON request bodies are decoded into `$_REQUEST`/`$_POST` by `ApiAuth::populateRequestFromJson()` so that existing model validation methods (which read `Tools::param()`) work without modification. **Note:** Not all models need this — `CompanyModel::validateForAdd()` reads from model properties, but `JobModel` and `ContactModel` read from `$_REQUEST`. Call `populateRequestFromJson()` for any endpoint where the model's validation uses `Tools::param()`.
