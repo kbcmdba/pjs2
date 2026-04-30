@@ -156,6 +156,7 @@ ADDCO;
   <li><a href="keywords.php">Keywords</a></li>
   <li><a href="searches.php">Searches</a></li>
   <li><a href="reports.php">Reports</a></li>
+  <li><a href="exportCsv.php">Export CSV</a></li>
   <li><a href="docs.php">Docs</a></li>
   <ul style="float: right; list-style-type: none;">
     <li style="padding: 4px 10px;">
