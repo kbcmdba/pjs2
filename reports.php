@@ -73,6 +73,8 @@ $body = <<<HTML
   </label>
   <button type="submit" style="margin-left: 12px;">Generate</button>
   <button type="button" onclick="window.print()" style="margin-left: 8px;">Print</button>
+  <button type="button" onclick="window.location='exportCsv.php'" style="margin-left: 8px;">Non-Closed CSV</button>
+  <button type="button" onclick="window.location='exportCsv.php?all=1'" style="margin-left: 8px;">Complete CSV</button>
 </form>
 
 HTML;
